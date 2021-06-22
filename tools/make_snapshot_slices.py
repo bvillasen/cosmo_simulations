@@ -47,7 +47,7 @@ fields = [ 'density' ]
 
 n_snap = 16
 data_snap = load_snapshot_data_distributed( data_type, fields, n_snap, input_dir, box_size, grid_size,  precision, show_progess=show_progess )
-current_z = data_gas['Current_z']
+current_z = data_snap['Current_z']
 
 slice_depth = 64
 n_slices = n_points // slice_depth 
@@ -63,7 +63,7 @@ outfile = h5.File( out_file_name, 'w' )
 outfile.attrs['current_z'] = current_z
 
 for field in fields:
-  data = data_gas[field]
+  data = data_snap[field]
   data_slice = data[slice_start:end, :, :] 
   outfile.create_dataset( field, data=data_slice )
 
