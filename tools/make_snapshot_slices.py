@@ -14,7 +14,7 @@ sys.path.extend(subDirectories)
 from load_data import load_snapshot_data_distributed
 from tools import *
 
-use_mpi = False
+use_mpi = True
 if use_mpi :
   from mpi4py import MPI
   comm = MPI.COMM_WORLD
@@ -45,7 +45,7 @@ precision = np.float32
 data_type = 'hydro'
 fields = [ 'density' ]
 
-n_snap = 16
+n_snap = rank+1 
 data_snap = load_snapshot_data_distributed( data_type, fields, n_snap, input_dir, box_size, grid_size,  precision, show_progess=show_progess )
 current_z = data_snap['Current_z']
 
