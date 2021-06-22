@@ -27,19 +27,14 @@ else:
 show_progess = False
 if rank == 0: show_progess = True
 
-sim_id = rank
 
-# params_type = 'He'
-# params_type = 'H'
 
 # data_dir = '/raid/bruno/data/'
 # data_dir = '/data/groups/comp-astro/bruno/'
 data_dir = '/gpfs/alpine/csc434/proj-shared/cholla/'
-input_dir = data_dir + f'cosmo_sims/rescaled_P19/snapshot_files/'
-output_dir = data_dir + f'cosmo_sims/rescaled_P19/snapshot_files/'
+input_dir = data_dir + f'cosmo_sims/rescaled_P19/1024_50Mpc/snapshot_files/'
+output_dir = data_dir + f'cosmo_sims/rescaled_P19/1024_50Mpc/slices/'
 create_directory( output_dir )
-  
-  
   
 n_points = 1024
 Lbox = 50000.0 #kpc/h
@@ -50,7 +45,6 @@ precision = np.float32
 data_type = 'hydro'
 fields = [ 'density' ]
 
-  
 n_snap = 16
 data_snap = load_snapshot_data_distributed( data_type, fields, n_snap, input_dir, box_size, grid_size,  precision, show_progess=show_progess )
 current_z = data_gas['Current_z']
