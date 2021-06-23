@@ -13,6 +13,11 @@ green = 'C2'
 red = 'C3'
 purple_2 = 'C4'
 
+
+cmap_haline = palettable.cmocean.sequential.Haline_10.mpl_colormap
+cmap_deep_r = palettable.cmocean.sequential.Deep_20_r.mpl_colormap
+
+
 haline = palettable.cmocean.sequential.Haline_10_r.mpl_colors
 matter = palettable.cmocean.sequential.Matter_20.mpl_colors
 colors_1 = palettable.colorbrewer.sequential.PuBu_9.mpl_colors

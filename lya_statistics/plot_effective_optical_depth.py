@@ -33,10 +33,11 @@ for n_file in range(10,56):
   file = h5.File( file_name, 'r' )
   z = file.attrs['current_z'][0]
   F_mean =file['lya_statistics'].attrs['Flux_mean_HI'][0]
-  F_los_snap = file['lya_statistics']['skewers_x']['los_transmitted_flux_HI'][...]
   F_mean_snap = []
-  for F_los in F_los_snap:
-    F_mean_snap.append( F_los.mean() )
+  for skewers in [ 'skewers_x', 'skewers_y', 'skewers_z' ]:
+    F_los_snap = file['lya_statistics'][skewers]['los_transmitted_flux_HI'][...]
+    for F_los in F_los_snap:
+      F_mean_snap.append( F_los.mean() )
   F_mean_snap = np.array( F_mean_snap )  
   F_mean_distribution, bin_centers = compute_distribution( F_mean_snap, 100, log=False )
   F_l, F_h, F_max, sum = get_highest_probability_interval( bin_centers, F_mean_distribution, 0.67, log=True )
