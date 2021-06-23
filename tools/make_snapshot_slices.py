@@ -42,31 +42,33 @@ box_size = [ Lbox, Lbox, Lbox ]
 grid_size = [ n_points, n_points, n_points ]
 precision = np.float32
   
-data_type = 'hydro'
 fields = [ 'density' ]
+data_types = [ 'hydro', 'particles' ]
 
-n_snap = rank+1 
-data_snap = load_snapshot_data_distributed( data_type, fields, n_snap, input_dir, box_size, grid_size,  precision, show_progess=show_progess )
-current_z = data_snap['Current_z']
+for data_type in data_types:
 
-slice_depth = 64
-n_slices = n_points // slice_depth 
-slice_id = 3
-slice_start = slice_id * slice_depth
+  n_snap = rank+1 
+  data_snap = load_snapshot_data_distributed( data_type, fields, n_snap, input_dir, box_size, grid_size,  precision, show_progess=show_progess )
+  current_z = data_snap['Current_z']
 
-start = max( 0, slice_start )
-end   = min( n_points, slice_start+slice_depth )
-# print( f' Slice:  start:{start}   end:{end}' )
+  slice_depth = 64
+  n_slices = n_points // slice_depth 
+  slice_id = 3
+  slice_start = slice_id * slice_depth
 
-out_file_name = output_dir + f'slice_{data_type}_{n_snap}_start{slice_start}_depth{slice_depth}.h5'
-outfile = h5.File( out_file_name, 'w' )
-outfile.attrs['current_z'] = current_z
+  start = max( 0, slice_start )
+  end   = min( n_points, slice_start+slice_depth )
+  # print( f' Slice:  start:{start}   end:{end}' )
 
-for field in fields:
-  data = data_snap[field]
-  data_slice = data[slice_start:end, :, :] 
-  outfile.create_dataset( field, data=data_slice )
+  out_file_name = output_dir + f'slice_{data_type}_{n_snap}_start{slice_start}_depth{slice_depth}.h5'
+  outfile = h5.File( out_file_name, 'w' )
+  outfile.attrs['current_z'] = current_z
 
-outfile.close()
-print( f'Saved File: {out_file_name}' )
+  for field in fields:
+    data = data_snap[field]
+    data_slice = data[slice_start:end, :, :] 
+    outfile.create_dataset( field, data=data_slice )
+
+  outfile.close()
+  print( f'Saved File: {out_file_name}' )
 
