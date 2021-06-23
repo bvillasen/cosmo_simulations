@@ -34,7 +34,7 @@ if rank == 0: show_progess = True
 data_dir = '/gpfs/alpine/csc434/proj-shared/cholla/'
 input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m0.5kev/snapshot_files/'
 output_dir = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m0.5kev/slices/'
-create_directory( output_dir )
+if rank == 0: create_directory( output_dir )
   
 n_points = 1024
 Lbox = 50000.0 #kpc/h
