@@ -17,7 +17,7 @@ matplotlib.rcParams['mathtext.rm'] = 'serif'
 # data_dir = '/gpfs/alpine/csc434/scratch/bvilasen/'
 data_dir = '/data/groups/comp-astro/bruno/'
 # data_dir = '/raid/bruno/data/'
-input_dir_0 = data_dir + 'cosmo_sims/256_hydro_50Mpc/output_files_original/'
+input_dir_0 = data_dir + 'cosmo_sims/256_hydro_50Mpc/output_original/'
 input_dir_1 = data_dir + 'cosmo_sims/256_hydro_50Mpc/output_files/'
 output_dir = data_dir + 'cosmo_sims/256_hydro_50Mpc/figures/'
 create_directory( output_dir ) 
