@@ -66,6 +66,9 @@ for n_file in range(56):
     F_H_0[ F_H_0 < f_min ] = f_min
     F_He_0[ F_He_0 < f_min ] = f_min
     
+  ps_0 = file['lya_statistics']['power_spectrum']['p(k)'][...]
+  k_vals_0 = file['lya_statistics']['power_spectrum']['k_vals'][...]    
+    
     
   file_name = input_dir_1 + f'analysis_files/{n_file}_analysis.h5'
   file = h5.File( file_name, 'r' )
@@ -83,7 +86,18 @@ for n_file in range(56):
   diff_H, diff_He = 0, 0
   diff_H = ( np.abs( F_H_1 - F_H_0) / F_H_0 ).max()
   diff_He = ( np.abs( F_He_1 - F_He_0) / F_He_0 ).max()
+
+
+  ps_1 = file['lya_statistics']['power_spectrum']['p(k)'][...]
+  k_vals_1 = file['lya_statistics']['power_spectrum']['k_vals'][...]    
+
+
+  ps_0[ ps_0 < ps_min ] = ps_min
+  ps_1[ ps_1 < ps_min ] = ps_min
+  
+  diff_k = ( np.abs( k_vals_1 - k_vals_0) / k_vals_0 ).max()
+  diff_ps = ( np.abs( ps_1 - ps_0) / ps_0 ).max()
     
-  print( diff_H )
-  print( diff_He )
+  print( diff_k )
+  print( diff_ps )
   
