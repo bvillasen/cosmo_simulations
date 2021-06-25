@@ -85,7 +85,7 @@ for n_file in range(56):
     F_He_1[ F_He_1 < f_min ] = f_min
     skewers_1[skewers_key] = {'v':v_1, 'F_H':F_H_1, 'F_He':F_He_1 }
   
-  for key in ['v', 'F_H_0', 'F_H_1' ]:
+  for key in ['v', 'F_H', 'F_He' ]:
     print (f'Key: {key}')
     for skewers_key in skewers_keys:
       print( f' Skewers: {skewers_key}' )
