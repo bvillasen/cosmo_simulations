@@ -17,8 +17,7 @@ matplotlib.rcParams['mathtext.rm'] = 'serif'
 # data_dir = '/gpfs/alpine/csc434/scratch/bvilasen/'
 data_dir = '/data/groups/comp-astro/bruno/'
 # data_dir = '/raid/bruno/data/'
-input_dir_0 = data_dir + 'cosmo_sims/256_hydro_50Mpc/'
-input_dir_1 = data_dir + 'cosmo_sims/256_hydro_50Mpc/'
+input_dir = data_dir + 'cosmo_sims/256_hydro_50Mpc/'
 output_dir = data_dir + 'cosmo_sims/256_hydro_50Mpc/figures/'
 create_directory( output_dir ) 
 
@@ -54,7 +53,7 @@ z_all = []
 f_min = 1e-3 
 ps_min = 1e-10 
 for n_file in range(56):
-  file_name = input_dir_0 + f'analysis_files/{n_file}_analysis.h5'
+  file_name = input_dir + f'analysis_files/{n_file}_analysis.h5'
   file = h5.File( file_name, 'r' )
   pd = file['phase_diagram']['data'][...]
   skewers_keys = [ 'skewers_x', 'skewers_y', 'skewers_z' ]
@@ -94,7 +93,7 @@ for n_file in range(56):
       diff = ( np.abs( F_H_1 - F_H_0) / F_H_0 ).max() 
       print(f'  diff: {diff} ')
     
-  file_name = input_dir_1 + f'analysis_files_1/{n_file}_analysis.h5'
+  file_name = input_dir + f'analysis_files_1/{n_file}_analysis.h5'
   file = h5.File( file_name, 'r' )
   pd = file['phase_diagram']['data'][...]
   ps_1 = file['lya_statistics']['power_spectrum']['p(k)'][...]
