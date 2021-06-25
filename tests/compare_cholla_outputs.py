@@ -51,7 +51,7 @@ z_all = []
 # 
 #   diff_all.append( diff.max() )
 
-f_min = 1e-5 
+f_min = 1e-3 
   
 for n_file in range(56):
   file_name = input_dir_0 + f'analysis_files/{n_file}_analysis.h5'
