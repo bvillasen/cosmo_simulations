@@ -52,7 +52,7 @@ z_all = []
 #   diff_all.append( diff.max() )
   
 n_file = 0
-file_name = input_dir_0 + f'analysis_files/{n_file}_analysis.h5'
+file_name = input_dir_1 + f'analysis_files/{n_file}_analysis.h5'
 file = h5.File( file_name, 'r' )
 pd = file['phase_diagram']['data'][...]
 skewers_keys = [ 'skewers_x', 'skewers_y', 'skewers_z' ]
