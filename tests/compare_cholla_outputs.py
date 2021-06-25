@@ -54,7 +54,11 @@ z_all = []
 n_file = 0
 file_name = input_dir_0 + f'analysis_files/{n_file}_analysis.h5'
 file = h5.File( file_name, 'r' )
-# pd = 
+pd = file['phase_diagram']['data'][...]
+skewers_keys = [ 'skewers_x', 'skewers_y', 'skewers_z' ]
+for skewers_key in skewers_keys:
+  skewers = file['lya_statistics'][skewers_key]
+  # F_HI = skewers
 
   
   
