@@ -17,8 +17,8 @@ matplotlib.rcParams['mathtext.rm'] = 'serif'
 # data_dir = '/gpfs/alpine/csc434/scratch/bvilasen/'
 data_dir = '/data/groups/comp-astro/bruno/'
 # data_dir = '/raid/bruno/data/'
-input_dir_0 = data_dir + 'cosmo_sims/256_hydro_50Mpc/output_original/'
-input_dir_1 = data_dir + 'cosmo_sims/256_hydro_50Mpc/output_new/'
+input_dir_0 = data_dir + 'cosmo_sims/256_hydro_50Mpc/output_files_0/'
+input_dir_1 = data_dir + 'cosmo_sims/256_hydro_50Mpc/output_files/'
 output_dir = data_dir + 'cosmo_sims/256_hydro_50Mpc/figures/'
 create_directory( output_dir ) 
 
@@ -38,10 +38,10 @@ z_all = []
 for n_snapshot in range(n_snaps):
 
   #Load DM data
-  data = load_snapshot_data_distributed( 'hydro', fields, n_snapshot, input_dir_0 + 'snapshot_files/', box_size, grid_size,  precision, show_progess=True, print_fields=True )
+  data = load_snapshot_data_distributed( 'hydro', fields, n_snapshot, input_dir_0, box_size, grid_size,  precision, show_progess=True, print_fields=True )
   dens_0 = data['density']          
   
-  data = load_snapshot_data_distributed( 'hydro', fields, n_snapshot, input_dir_1 + 'snapshot_files/', box_size, grid_size,  precision, show_progess=True, print_fields=True )
+  data = load_snapshot_data_distributed( 'hydro', fields, n_snapshot, input_dir_1, box_size, grid_size,  precision, show_progess=True, print_fields=True )
   dens_1 = data['density']    
 
   diff = np.abs( dens_0 - dens_1 ) / dens_0
