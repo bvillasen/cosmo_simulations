@@ -58,7 +58,10 @@ pd = file['phase_diagram']['data'][...]
 skewers_keys = [ 'skewers_x', 'skewers_y', 'skewers_z' ]
 for skewers_key in skewers_keys:
   skewers = file['lya_statistics'][skewers_key]
-  # F_HI = skewers
+  v = skewers['vel_Hubble'][...]
+  F_H  = skewers['los_transmitted_flux_HI'][...]
+  F_He = skewers['los_transmitted_flux_HeII'][...]
+  
 
   
   
