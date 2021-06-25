@@ -48,25 +48,28 @@ val_max = None
 projections = {}
 for i in range(n_sims):
   input_dir = input_dirs[i]
-  file_name = input_dir + f'slice_{data_type}_{n_snap}_start{slice_start}_depth{slice_depth}.h5'
-  file = h5.File( file_name, 'r' )
-  current_z = file.attrs['current_z']
+  data_sim = {}
+  for data_type in ['particles', 'hydro']:
+    file_name = input_dir + f'slice_{data_type}_{n_snap}_start{slice_start}_depth{slice_depth}.h5'
+    file = h5.File( file_name, 'r' )
+    current_z = file.attrs['current_z']
 
-  slice = file[field][...]
-  proj2 = (slice**2).sum( axis=0 )
-  proj  = slice.sum( axis=0 )
-  projection = proj2 / proj
-  if data_type == 'hydro': scale = 0.01
-  if data_type == 'particles': scale = 0.1
-  if not val_max: val_max = scale*projection.max()
-  projection[projection > val_max] = val_max
-  projection = np.log10( projection )
-  projections[i] = { 'proj': projection }
+    slice = file[field][...]
+    proj2 = (slice**2).sum( axis=0 )
+    proj  = slice.sum( axis=0 )
+    projection = proj2 / proj
+    if data_type == 'hydro': scale = 0.01
+    if data_type == 'particles': scale = 0.1
+    if not val_max: val_max = scale*projection.max()
+    projection[projection > val_max] = val_max
+    projection = np.log10( projection )
+    data_sim[data_type] = projection
+  projections[i] = data_sim
   
 
 
 font_size = 12
-figure_text_size = 12
+figure_text_size = 16
 text_color = 'black'
 
 black_background = True
@@ -80,44 +83,54 @@ if system == 'Lux':      prop = matplotlib.font_manager.FontProperties( fname=os
 if system == 'Shamrock': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=12)
 
 
-if data_type == 'particles': color_map = 'inferno'
-if data_type == 'hydro': color_map = cmap_haline
-if data_type == 'hydro': color_map = cmap_deep_r
 
-nrows, ncols = 2, 2
+nrows, ncols = 2, 4
 fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(4*ncols,4*nrows))
 plt.subplots_adjust( hspace = 0.01, wspace=0.01)
 
 for i in range(nrows):
   for j in range(ncols):
-    fig_id = i*ncols + j
+    # fig_id = i*ncols + j
+    fig_id = j
     ax = ax_l[i][j]
     
-    projection = projections[fig_id]['proj']
-    
+    if i == 0: data_type = 'particles'
+    if i == 1: data_type = 'hydro' 
+    projection = projections[fig_id][data_type]
+
+    if data_type == 'particles': color_map = 'inferno'
+    if data_type == 'hydro': color_map = cmap_deep_r
+  
     ax.imshow( projection, cmap=color_map )
     
-    text_pos_x = 0.85
-    ax.text(text_pos_x, 0.95, r'$z={0:.1f}$'.format(current_z), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
-  
+      
+      
     text_pos_x = 0.05
     ax.text(text_pos_x, 0.95, labels[fig_id], horizontalalignment='left',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
-
-
-    ax.set_axis_off()
+    
+    ax.set_yticklabels([])
+    ax.set_xticklabels([])
+    
+    # ax.set_axis_off()
+    if j == 0: 
+      text_pos_x = 0.15
+      ax.text(text_pos_x, 0.05, r'$z={0:.1f}$'.format(current_z), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=16, color=text_color) 
+      if data_type == 'particles': ylabel = r'$\mathrm{DM\,\, Density}$'
+      if data_type == 'hydro': ylabel = r'$\mathrm{Gas\,\, Density}$'
+      ax.set_ylabel( ylabel, fontsize=14, color=text_color, labelpad=-4 )
     
     leg = ax.legend(loc=2, frameon=False, fontsize=22, prop=prop)
     for text in leg.get_texts():
       plt.setp(text, color = text_color)
-
+    
     if black_background: 
       fig.patch.set_facecolor('black') 
       ax.set_facecolor('k')
-      [ spine.set_edgecolor(text_color) for spine in list(ax.spines.values()) ]
+      [ spine.set_edgecolor('black') for spine in list(ax.spines.values()) ]
 
 
 
-figure_name = output_dir + f'fig_{data_type}_density_wdm_{n_snap}.png'
+figure_name = output_dir + f'fig_density_wdm_{n_snap}.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
 
