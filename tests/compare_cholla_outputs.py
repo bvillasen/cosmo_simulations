@@ -35,22 +35,27 @@ fields = [ 'density'  ]
 
 diff_all = []
 z_all = []
-for n_snapshot in range(n_snaps):
+# for n_snapshot in range(n_snaps):
+# 
+#   #Load DM data
+#   data = load_snapshot_data_distributed( 'hydro', fields, n_snapshot, input_dir_0+'snapshot_files/', box_size, grid_size,  precision, show_progess=True, print_fields=True )
+#   dens_0 = data['density']          
+# 
+#   data = load_snapshot_data_distributed( 'hydro', fields, n_snapshot, input_dir_1, box_size, grid_size,  precision, show_progess=True, print_fields=True )
+#   dens_1 = data['density']    
+# 
+#   diff = np.abs( dens_0 - dens_1 ) / dens_0
+# 
+#   print( f'\nDiff Mean: {diff.mean()}')
+#   print( f'Diff Max: {diff.max()}')
+# 
+#   diff_all.append( diff.max() )
+  
+n_file = 0
+file_name = input_dir_0 + 'analysis_files/{n_file}_analysis.h5'
+file = h5.File( file_name, 'r' )
+# pd = 
 
-  #Load DM data
-  data = load_snapshot_data_distributed( 'hydro', fields, n_snapshot, input_dir_0+'snapshot_files/', box_size, grid_size,  precision, show_progess=True, print_fields=True )
-  dens_0 = data['density']          
-  
-  data = load_snapshot_data_distributed( 'hydro', fields, n_snapshot, input_dir_1, box_size, grid_size,  precision, show_progess=True, print_fields=True )
-  dens_1 = data['density']    
-
-  diff = np.abs( dens_0 - dens_1 ) / dens_0
-  
-  print( f'\nDiff Mean: {diff.mean()}')
-  print( f'Diff Max: {diff.max()}')
-  
-  diff_all.append( diff.max() )
-  
   
   
   
