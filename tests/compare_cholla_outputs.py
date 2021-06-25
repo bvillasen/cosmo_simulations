@@ -41,7 +41,7 @@ for n_snapshot in range(n_snaps):
   data = load_snapshot_data_distributed( 'hydro', fields, n_snapshot, input_dir_0 + 'snapshot_files/', box_size, grid_size,  precision, show_progess=True, print_fields=True )
   dens_0 = data['density']          
   
-  data = load_snapshot_data_distributed( 'hydro', fields, n_snapshot, input_dir_1 + 'snapshot_files', box_size, grid_size,  precision, show_progess=True, print_fields=True )
+  data = load_snapshot_data_distributed( 'hydro', fields, n_snapshot, input_dir_1 + 'snapshot_files/', box_size, grid_size,  precision, show_progess=True, print_fields=True )
   dens_1 = data['density']    
 
   diff = np.abs( dens_0 - dens_1 ) / dens_0
