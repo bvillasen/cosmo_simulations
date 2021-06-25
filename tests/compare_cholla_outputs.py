@@ -53,7 +53,7 @@ z_all = []
 f_min = 1e-3 
 ps_min = 1e-10 
 # for n_file in range(56):
-n_file = 55
+n_file = 54
 file_name = input_dir + f'analysis_files/{n_file}_analysis.h5'
 file = h5.File( file_name, 'r' )
 pd = file['phase_diagram']['data'][...]
