@@ -72,7 +72,7 @@ for n_file in range(56):
   k_vals_0 = file['lya_statistics']['power_spectrum']['k_vals'][...]    
     
 
-  file_name = input_dir + f'skewers_files_1/{n_file}_skewers.h5'
+  file_name = input_dir + f'skewers_files/{n_file}_skewers.h5'
   file = h5.File( file_name, 'r' )
   skewers_1 = {} 
   for skewers_key in skewers_keys:
