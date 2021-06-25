@@ -81,8 +81,8 @@ for skewers_key in skewers_keys:
 F_H_1  = F_H_1[indices_H]
 F_He_1 = F_He_1[indices_He]
 
-diff_H = np.abs( F_H_1 - F_H_0) / F_H_0
-diff_He = np.abs( F_He_1 - F_He_0) / F_He_0
+diff_H = ( np.abs( F_H_1 - F_H_0) / F_H_0 ).max()
+diff_He = ( np.abs( F_He_1 - F_He_0) / F_He_0 ).max()
   
 print( diff_H )
 print( diff_He )
