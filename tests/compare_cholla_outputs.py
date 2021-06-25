@@ -45,6 +45,13 @@ for n_snapshot in range(n_snaps):
   dens_1 = data['density']    
 
   diff = np.abs( dens_0 - dens_1 ) / dens_0
+  
+  print( f'\nDiff Mean: {diff.mean()}')
+  print( f'Diff Max: {diff.max()}')
+  
   diff_all.append( diff.max() )
+  
+  
+  
   
 print( diff_all )
