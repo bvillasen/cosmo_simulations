@@ -38,10 +38,10 @@ z_all = []
 for n_snapshot in range(n_snaps):
 
   #Load DM data
-  data = load_snapshot_data_distributed( 'hydro', fields, n_snapshot, input_dir_0, box_size, grid_size,  precision, show_progess=True, print_fields=True )
+  data = load_snapshot_data_distributed( 'particles', fields, n_snapshot, input_dir_0, box_size, grid_size,  precision, show_progess=True, print_fields=True )
   dens_0 = data['density']          
   
-  data = load_snapshot_data_distributed( 'hydro', fields, n_snapshot, input_dir_1, box_size, grid_size,  precision, show_progess=True, print_fields=True )
+  data = load_snapshot_data_distributed( 'particles', fields, n_snapshot, input_dir_1, box_size, grid_size,  precision, show_progess=True, print_fields=True )
   dens_1 = data['density']    
 
   diff = np.abs( dens_0 - dens_1 ) / dens_0
