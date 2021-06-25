@@ -97,7 +97,7 @@ for n_file in range(56):
   file_name = input_dir_1 + f'analysis_files/{n_file}_analysis.h5'
   file = h5.File( file_name, 'r' )
   pd = file['phase_diagram']['data'][...]
-    ps_1 = file['lya_statistics']['power_spectrum']['p(k)'][...]
+  ps_1 = file['lya_statistics']['power_spectrum']['p(k)'][...]
   k_vals_1 = file['lya_statistics']['power_spectrum']['k_vals'][...]    
 
 
