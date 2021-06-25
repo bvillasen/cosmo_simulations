@@ -97,22 +97,7 @@ for n_file in range(56):
   file_name = input_dir_1 + f'analysis_files/{n_file}_analysis.h5'
   file = h5.File( file_name, 'r' )
   pd = file['phase_diagram']['data'][...]
-  skewers_keys = [ 'skewers_x', 'skewers_y', 'skewers_z' ]
-  for skewers_key in skewers_keys:
-    skewers = file['lya_statistics'][skewers_key]
-    v_1 = skewers['vel_Hubble'][...]
-    F_H_1  = skewers['los_transmitted_flux_HI'][...]
-    F_He_1 = skewers['los_transmitted_flux_HeII'][...]
-    
-  F_H_1[ F_H_1 < f_min ] = f_min
-  F_He_1[ F_He_1 < f_min ] = f_min
-  
-  diff_H, diff_He = 0, 0
-  diff_H = ( np.abs( F_H_1 - F_H_0) / F_H_0 ).max()
-  diff_He = ( np.abs( F_He_1 - F_He_0) / F_He_0 ).max()
-
-
-  ps_1 = file['lya_statistics']['power_spectrum']['p(k)'][...]
+    ps_1 = file['lya_statistics']['power_spectrum']['p(k)'][...]
   k_vals_1 = file['lya_statistics']['power_spectrum']['k_vals'][...]    
 
 
