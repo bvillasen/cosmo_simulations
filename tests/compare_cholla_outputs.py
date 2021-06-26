@@ -92,7 +92,7 @@ for skewers_key in skewers_keys:
 #     vals_0 = skewers_0[skewers_key][key]
 #     vals_1 = skewers_1[skewers_key][key]
 #     diff = ( np.abs( F_H_1 - F_H_0) / F_H_0 ).max() 
-    print(f'  diff: {diff} ')
+    # print(f'  diff: {diff} ')
   
 file_name = input_dir + f'analysis_files_1/{n_file}_analysis.h5'
 file = h5.File( file_name, 'r' )
