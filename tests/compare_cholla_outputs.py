@@ -54,19 +54,19 @@ f_min = 1e-3
 ps_min = 1e-10 
 # for n_file in range(56):
 n_file = 55
-file_name = input_dir + f'analysis_files/{n_file}_analysis.h5'
+file_name = input_dir + f'analysis_files_0/{n_file}_analysis.h5'
 file = h5.File( file_name, 'r' )
 pd = file['phase_diagram']['data'][...]
 skewers_keys = [ 'skewers_x', 'skewers_y', 'skewers_z' ]
 skewers_0 = {} 
-# for skewers_key in skewers_keys:
-#   skewers = file['lya_statistics'][skewers_key]
-#   v_0 = skewers['vel_Hubble'][...]
-#   F_H_0  = skewers['los_transmitted_flux_HI'][...]
-#   F_He_0 = skewers['los_transmitted_flux_HeII'][...]
-#   F_H_0[ F_H_0 < f_min ] = f_min
-#   F_He_0[ F_He_0 < f_min ] = f_min
-#   skewers_0[skewers_key] = {'v':v_0, 'F_H':F_H_0, 'F_He':F_He_0 }
+for skewers_key in skewers_keys:
+  skewers = file['lya_statistics'][skewers_key]
+  v_0 = skewers['vel_Hubble'][...]
+  F_H_0  = skewers['los_transmitted_flux_HI'][...]
+  F_He_0 = skewers['los_transmitted_flux_HeII'][...]
+  F_H_0[ F_H_0 < f_min ] = f_min
+  F_He_0[ F_He_0 < f_min ] = f_min
+  skewers_0[skewers_key] = {'v':v_0, 'F_H':F_H_0, 'F_He':F_He_0 }
   
   
 ps_0 = file['lya_statistics']['power_spectrum']['p(k)'][...]
@@ -84,17 +84,17 @@ for skewers_key in skewers_keys:
   F_H_1[ F_H_1 < f_min ] = f_min
   F_He_1[ F_He_1 < f_min ] = f_min
   skewers_1[skewers_key] = {'v':v_1, 'F_H':F_H_1, 'F_He':F_He_1 }
-# 
-# for key in ['v', 'F_H', 'F_He' ]:
-#   print (f'Key: {key}')
-#   for skewers_key in skewers_keys:
-#     print( f' Skewers: {skewers_key}' )
-#     vals_0 = skewers_0[skewers_key][key]
-#     vals_1 = skewers_1[skewers_key][key]
-#     diff = ( np.abs( F_H_1 - F_H_0) / F_H_0 ).max() 
-    # print(f'  diff: {diff} ')
+
+for key in ['v', 'F_H', 'F_He' ]:
+  print (f'Key: {key}')
+  for skewers_key in skewers_keys:
+    print( f' Skewers: {skewers_key}' )
+    vals_0 = skewers_0[skewers_key][key]
+    vals_1 = skewers_1[skewers_key][key]
+    diff = ( np.abs( F_H_1 - F_H_0) / F_H_0 ).max() 
+    print(f'  diff: {diff} ')
   
-file_name = input_dir + f'analysis_files_1/{n_file}_analysis.h5'
+file_name = input_dir + f'analysis_files/{n_file}_analysis.h5'
 file = h5.File( file_name, 'r' )
 pd = file['phase_diagram']['data'][...]
 ps_1 = file['lya_statistics']['power_spectrum']['p(k)'][...]
