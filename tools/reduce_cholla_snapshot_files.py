@@ -41,7 +41,7 @@ if rank == 0: create_directory( output_dir )
 input_dir = root_dir + f'snapshot_files_{data_type}/'
 simulations_dirs = os.listdir( input_dir ) 
 simulations_dirs.sort()
-n_sims = len( simulation_dir )
+n_sims = len( simulations_dir )
 
 
 snapshot_ids = range( 2, 17 )
