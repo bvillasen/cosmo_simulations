@@ -58,41 +58,50 @@ if print_out:
   print( f'Destiny: {dst_dir}' )
 if use_mpi: comm.Barrier()
 
-snapshot_id = snapshot_ids[0]
-if print_out: print( f' Copying snapshot: {snapshot_id}' )
 
-for file_id in local_files:
-
-  file_name = f'{snapshot_id}{file_name_base}.{file_id}'
+for snapshot_id in snapshots:
+  file_name = f'{snapshot_id}{file_name_base}.{0}'
   in_file = h5.File( simulation_dir + file_name, 'r' )
-  out_file = h5.File( dst_dir + file_name, 'w' )
-  
-  # Copy the header
-  for key in in_file.attrs.keys():
-    out_file.attrs[key] = in_file.attrs[key]
-  
-  # Copy the fields
-  for field in fields_list:
-    # print( f'  Copying Field: {field}')
-    data = in_file[field][...].astype( precision )
-    out_file.create_dataset( field, data=data )
-    
-  in_file.close()
-  out_file.close()
-  
-if use_mpi: comm.Barrier()
-n_snaps_copied += 1  
+  z = in_file.attrs['Current_z'][0]
+  print( snapshot_id, z )
 
-if rank == 0: 
-  files_copied = os.listdir( dst_dir )  
-  if len( files_copied ) != n_snaps_copied * files_per_snapshot: 
-    print('ERROR: Number of files in output dir is incorrect')
-    exit(-1)
-     
-  
-if print_out:   print( '\nFinised Successfully')
-  
 
+# 
+# for snapshot_id in snapshots:
+#   if print_out: print( f' Copying snapshot: {snapshot_id}' )
+# 
+#   for file_id in local_files:
+# 
+#     file_name = f'{snapshot_id}{file_name_base}.{file_id}'
+#     in_file = h5.File( simulation_dir + file_name, 'r' )
+#     out_file = h5.File( dst_dir + file_name, 'w' )
+# 
+#     # Copy the header
+#     for key in in_file.attrs.keys():
+#       out_file.attrs[key] = in_file.attrs[key]
+# 
+#     # Copy the fields
+#     for field in fields_list:
+#       # print( f'  Copying Field: {field}')
+#       data = in_file[field][...].astype( precision )
+#       out_file.create_dataset( field, data=data )
+# 
+#     in_file.close()
+#     out_file.close()
+# 
+#   if use_mpi: comm.Barrier()
+#   n_snaps_copied += 1  
+# 
+#   if rank == 0: 
+#     files_copied = os.listdir( dst_dir )  
+#     if len( files_copied ) != n_snaps_copied * files_per_snapshot: 
+#       print('ERROR: Number of files in output dir is incorrect')
+#       exit(-1)
+# 
+# 
+# if print_out:   print( '\nFinised Successfully')
+# 
+# 
 
 
 
