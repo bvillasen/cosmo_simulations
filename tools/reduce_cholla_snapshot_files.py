@@ -4,7 +4,7 @@ import time
 import h5py as h5
 from tools import *
 
-use_mpi = False
+use_mpi = True
 if use_mpi:
   from mpi4py import MPI
   comm = MPI.COMM_WORLD
@@ -43,6 +43,7 @@ simulations_dirs = os.listdir( input_dir )
 simulations_dirs.sort()
 
 snapshot_ids = range( 2, 17 )
+n_snapshots = len( snapshot_ids )
 files_per_snapshot = 128
 local_files = split_indices( range(files_per_snapshot), rank, n_procs )
 
@@ -80,9 +81,15 @@ for file_id in local_files:
   
   in_file.close()
   out_file.close()
-  break
   
   
+if use_mpi: comm.Barrier()
+if rank == 0: 
+  files_copied = os.listdir( dst_dir )  
+  if len( files_copied ) != n_snapshots * files_per_snapshot: 
+    print('ERROR: Number of files in output dir is incorrect')
+    exit(-1)
+     
   
 if print_out:   print( '\nFinised Successfully')
   
