@@ -36,8 +36,8 @@ files_per_snapshot = 128
 
 
 snapshot_dir = snapshot_dirs[0]
-if rank == 0: 
+if print_out: print( f'Copying {snapshot_dir}' ) 
 snapshot_id = snapshot_ids[0]
-
+if print_out: print( f' Copying snapshot: {snapshot_id}' )
 
 
