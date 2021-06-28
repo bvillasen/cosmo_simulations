@@ -23,6 +23,7 @@ data_type = 'hydro'
 precision = np.float32
 
 fields_hydro = [ 'density', 'temperature', 'HI_density', 'HeII_density', 'HeIII_density' ]
+fields_hydro = [ 'density', ]
 fields_particles = [ 'density' ]
 
 if data_type == 'hydro': fields_list = fields_hydro
@@ -33,7 +34,7 @@ if data_type == 'particles': file_name_base = '_particles.h5'
 
 data_dir = '/gpfs/alpine/csc434/proj-shared/cholla/'
 root_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim256/'
-output_dir = data_dir + 'cosmo_sims/rescaled_P19/2048_50Mpc/reduced_snapshot_files/'
+output_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim256/reduced_snapshot_files/'
 if rank == 0: create_directory( output_dir )
 
 
@@ -96,7 +97,7 @@ for snapshot_id in snapshots_to_copy:
   if rank == 0: 
     files_copied = os.listdir( dst_dir )  
     if len( files_copied ) != n_snaps_copied * files_per_snapshot: 
-      print('ERROR: Number of files in output dir is incorrect')
+      print(f'ERROR: Number of files in output dir is incorrect: {files_copied}    {n_snaps_copied * files_per_snapshot}')
       exit(-1)
   
   if rank == 0: print_progress( n_snaps_copied, n_snapshots*n_sims, time_start )
