@@ -20,6 +20,7 @@ print_out = True if rank == 0 else False
 data_type = 'hydro'
 # data_type = 'particles'
 
+precision = np.float32
 
 fields_hydro = [ 'density', 'temperature']
 fields_particles = [ 'density' ]
