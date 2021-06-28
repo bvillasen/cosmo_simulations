@@ -49,9 +49,11 @@ local_files = split_indices( range(files_per_snapshot), rank, n_procs )
 
 simulation_dir = input_dir + simulations_dirs[0] + '/'
 dst_dir = output_dir + simulations_dirs[0] + '/'
+if rank == 0: create_directory( dst_dir )
 if print_out: 
   print( f'Copying: {simulation_dir}' ) 
   print( f'Destiny: {dst_dir}' )
+if use_mpi: comm.Barrier()
 
 snapshot_id = snapshot_ids[0]
 if print_out: print( f' Copying snapshot: {snapshot_id}' )
