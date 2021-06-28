@@ -23,7 +23,6 @@ data_type = 'hydro'
 precision = np.float32
 
 fields_hydro = [ 'density', 'temperature', 'HI_density', 'HeII_density', 'HeIII_density' ]
-fields_hydro = [ 'density', ]
 fields_particles = [ 'density' ]
 
 if data_type == 'hydro': fields_list = fields_hydro
