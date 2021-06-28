@@ -20,8 +20,15 @@ print_out = True if rank == 0 else False
 data_type = 'hydro'
 # data_type = 'particles'
 
+
+fields_hydro = [ 'density', 'temperature']
+fields_particles = [ 'density' ]
+
+if data_type == 'hydro': fields_list = fields_hydro
+if data_type == 'particles': fields_list = fields_particles  
+  
 if data_type == 'hydro': file_name_base = '.h5'
-if data_type == 'hydro': file_name_base = '_particles.h5' 
+if data_type == 'particles': file_name_base = '_particles.h5' 
 
 data_dir = '/gpfs/alpine/csc434/proj-shared/cholla/'
 root_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim256/'
@@ -52,9 +59,29 @@ if print_out: print( f' Copying snapshot: {snapshot_id}' )
 for file_id in local_files:
 
   file_name = f'{snapshot_id}{file_name_base}.{file_id}'
-  print( file_name )
-  # in_file = h5
+  in_file = h5.File( simulation_dir + file_name, 'r' )
+  out_file = h5.File( dst_dir + file_name, 'w' )
   
+  # Copy the header
+  for key in in_file.attrs.keys():
+    out_file.attrs[key] = in_file.attrs[key]
+  
+  # Copy the fields
+  for field in fields_list:
+    print( f'  Copying Field: {field}')
+    data = in_file[field][...].astype( precision )
+    out_file.create_dataset( field, data=data )
+  
+  
+  
+  
+  in_file.close()
+  out_file.close()
+  break
+  
+  
+  
+if print_out:   print( '\nFinised Successfully')
   
 
 
