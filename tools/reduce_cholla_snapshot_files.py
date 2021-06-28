@@ -59,7 +59,7 @@ if print_out:
 if use_mpi: comm.Barrier()
 
 
-for snapshot_id in snapshots:
+for snapshot_id in snapshot_ids:
   file_name = f'{snapshot_id}{file_name_base}.{0}'
   in_file = h5.File( simulation_dir + file_name, 'r' )
   z = in_file.attrs['Current_z'][0]
