@@ -96,7 +96,7 @@ for snapshot_id in snapshots_to_copy:
   if rank == 0: 
     files_copied = os.listdir( dst_dir )  
     if len( files_copied ) != n_snaps_copied * files_per_snapshot: 
-      print(f'ERROR: Number of files in output dir is incorrect: {files_copied}    {n_snaps_copied * files_per_snapshot}')
+      print(f'ERROR: Number of files in output dir is incorrect: {len(files_copied)}    {n_snaps_copied * files_per_snapshot}')
       exit(-1)
   
   if rank == 0: print_progress( n_snaps_copied, n_snapshots*n_sims, time_start )
