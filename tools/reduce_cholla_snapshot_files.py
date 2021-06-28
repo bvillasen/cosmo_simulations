@@ -41,7 +41,7 @@ input_dir = root_dir + f'snapshot_files_{data_type}/'
 simulations_dirs = os.listdir( input_dir ) 
 simulations_dirs.sort()
 
-snapshot_ids = range( 1, 17 )
+snapshot_ids = range( 2, 17 )
 files_per_snapshot = 128
 local_files = split_indices( range(files_per_snapshot), rank, n_procs )
 
