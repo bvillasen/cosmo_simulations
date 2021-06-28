@@ -4,7 +4,7 @@ import time
 import h5py as h5
 from tools import *
 
-use_mpi = True
+use_mpi = False
 if use_mpi:
   from mpi4py import MPI
   comm = MPI.COMM_WORLD
