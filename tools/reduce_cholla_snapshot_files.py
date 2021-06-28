@@ -48,6 +48,7 @@ files_per_snapshot = 128
 local_files = split_indices( range(files_per_snapshot), rank, n_procs )
 
 
+n_snaps_copied = 0
 
 simulation_dir = input_dir + simulations_dirs[0] + '/'
 dst_dir = output_dir + simulations_dirs[0] + '/'
@@ -72,21 +73,19 @@ for file_id in local_files:
   
   # Copy the fields
   for field in fields_list:
-    print( f'  Copying Field: {field}')
+    # print( f'  Copying Field: {field}')
     data = in_file[field][...].astype( precision )
     out_file.create_dataset( field, data=data )
-  
-  
-  
-  
+    
   in_file.close()
   out_file.close()
   
-  
 if use_mpi: comm.Barrier()
+n_snaps_copied += 1  
+
 if rank == 0: 
   files_copied = os.listdir( dst_dir )  
-  if len( files_copied ) != n_snapshots * files_per_snapshot: 
+  if len( files_copied ) != n_snaps_copied * files_per_snapshot: 
     print('ERROR: Number of files in output dir is incorrect')
     exit(-1)
      
