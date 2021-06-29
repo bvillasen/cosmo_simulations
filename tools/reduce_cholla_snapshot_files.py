@@ -32,7 +32,7 @@ if data_type == 'hydro': file_name_base = '.h5'
 if data_type == 'particles': file_name_base = '_particles.h5' 
 
 data_dir = '/gpfs/alpine/csc434/proj-shared/cholla/'
-root_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim320/'
+root_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/'
 output_dir = root_dir + f'reduced_snapshot_files_{data_type}/'
 if rank == 0: create_directory( output_dir )
 
