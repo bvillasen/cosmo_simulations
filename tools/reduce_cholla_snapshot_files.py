@@ -32,7 +32,7 @@ if data_type == 'hydro': file_name_base = '.h5'
 if data_type == 'particles': file_name_base = '_particles.h5' 
 
 data_dir = '/gpfs/alpine/csc434/proj-shared/cholla/'
-root_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim256/'
+root_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim320/'
 output_dir = root_dir + f'reduced_snapshot_files_{data_type}/'
 if rank == 0: create_directory( output_dir )
 
@@ -42,7 +42,6 @@ input_dir = root_dir + f'snapshot_files_{data_type}/'
 simulations_dirs = os.listdir( input_dir ) 
 simulations_dirs.sort()
 simulations_dirs = [ sim_dir for sim_dir in simulations_dirs if len( os.listdir(input_dir+sim_dir)) > 0 ]
-simulations_dirs = [ simulations_dirs[0] ]
 n_sims = len( simulations_dirs )
 if print_out:
   print( f'N simulations: {n_sims}')
