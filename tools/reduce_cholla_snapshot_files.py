@@ -17,8 +17,8 @@ else:
 # print_out = False
 print_out = True if rank == 0 else False
 
-data_type = 'hydro'
-# data_type = 'particles'
+# data_type = 'hydro'
+data_type = 'particles'
 
 precision = np.float32
 
