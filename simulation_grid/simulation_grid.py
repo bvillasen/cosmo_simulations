@@ -343,7 +343,7 @@ class Simulation_Grid:
         finished += 1
       if status == 'error':
         error += 1
-      print( f' id: {sim_id:0 n_zero_pad}   status: {status}   {queue_line}')
+      print( ' id: {sim_id:0{n_zero_pad}}   status: {status}   {queue_line}'.format(sim_id=sim_id, n_zero_pad=n_zero_pad, status=status, queue_line=queue_line ))
       self.Grid[sim_id]['status'] = status
     print( f'Submitted: {submitted} / {n}' )
     print( f'Running:   {running} / {n}' )
