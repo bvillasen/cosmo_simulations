@@ -297,6 +297,28 @@ class Simulation_Grid:
     return sim_in_queue, queue_line
 
 ###############################################################################################    
+  def Cancel_Simulation_Job( self, sim_id ):
+    status = self.Get_Simulation_Status( sim_id )
+    queue = self.Get_Queue_Staus()
+    sim_in_queue, q_line = self.Find_Simulation_In_Queue( sim_id, queue )
+    if sim_in_queue:
+      elem = q_line[0]
+      while elem == " ":
+        q_line = q_line[1:]
+        elem = q_line[0]
+      job_id = q_line.split( ' ')[0]
+      if system == 'Lux': command = f'scancel {job_id}'
+      if system == 'Summit': command = f'bkill {job_id}'
+      print( command )
+      os.system( command )
+###############################################################################################          
+  def Cancel_Grid_Jobs( self, avoid=[] ):
+    sim_ids = self.sim_ids
+    for sim_id in sim_ids:
+      if sim_id in avoid: continue
+      self.Cancel_Simulation_Job( sim_id )
+
+###############################################################################################    
   def Get_Simulation_Status( self, sim_id ):
     sim_dir = self.Get_Simulation_Directory( sim_id )
     file_name = sim_dir + 'run_output.log'
