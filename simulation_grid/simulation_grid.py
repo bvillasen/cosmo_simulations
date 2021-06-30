@@ -308,7 +308,7 @@ class Simulation_Grid:
     sim_ids = self.Grid.keys()
     n = len(sim_ids)
     submitted, running, error, finished, failed = 0, 0, 0, 0, 0
-    n_zero_pad = len( str(sim_ids.max()) )
+    n_zero_pad = len( str(max(list(sim_ids)) )
     for sim_id in sim_ids:
       queue_line = ''
       status = self.Get_Simulation_Status( sim_id )
