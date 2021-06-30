@@ -1,8 +1,8 @@
 
 
 # system = 'Lux'
-# system = 'Shamrock'
-system = 'Summit'
+system = 'Shamrock'
+# system = 'Summit'
 
 n_points = 1024
 
@@ -79,6 +79,8 @@ job_params['partition'] = 'gpu'
 job_params['summit_project'] = 'CSC434'
 
 if system == 'Lux':
+  job_params['n_tasks_per_node'] = 2
+  job_params['time'] = '24:00:00'
   if n_points == 512:
     job_params['n_mpi'] = 8
     job_params['n_nodes'] = 4
@@ -88,18 +90,22 @@ if system == 'Lux':
     
 
 if system == 'Summit':
+  job_params['time'] = '2:00'
   if n_points == 1024:
     job_params['n_mpi'] = 128
     job_params['n_nodes'] = 22
-    
-if system == 'Lux':    
-  job_params['n_tasks_per_node'] = 2
-  job_params['time'] = '24:00:00'
-
-if system == 'Summit':  
-  job_params['time'] = '2:00'
 
 job_params['output'] = 'output'
 job_params['command'] = cholla_dir + 'cholla'
 job_params['command_params'] = 'param.txt'
+
+
+
+def Get_ICs_dir_wdm( wdm_mass, sim_params ):
+  global ics_dir, Lbox
+  n_points = sim_params['nx']
+  L_Mpc = int( Lbox / 1000 )
+  input_dir = ics_dir + f'wdm/{n_points}_{L_Mpc}Mpc_wdm_m{wdm_mass}kev'
+  return input_dir
+  
 
