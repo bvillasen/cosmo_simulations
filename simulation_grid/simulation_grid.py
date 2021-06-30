@@ -1,6 +1,7 @@
 import os, sys
 from pathlib import Path
 import numpy as np
+import submit_str
 root_dir = os.path.dirname(os.getcwd()) + '/'
 sys.path.append( root_dir + 'tools')
 from tools import *
