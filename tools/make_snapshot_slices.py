@@ -43,7 +43,7 @@ grid_size = [ n_points, n_points, n_points ]
 precision = np.float32
   
 fields = [ 'temperature' ]
-data_type 'hydro'
+data_type = 'hydro'
 
 slice_depth = 128
 slice_id = 3
