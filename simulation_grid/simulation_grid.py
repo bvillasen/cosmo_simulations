@@ -277,7 +277,7 @@ class Simulation_Grid:
       command = f'submit_script {partition_key} submit_job_lux {exclude_comand}'
     # print( f'Changed Directory to: {sim_dir}')
     print( f' Submitting: {command}' )
-    # os.system( command )
+    os.system( command )
     f = open("run_output.log", "a")
     f.write('Job Submitted.\n')
     f.close()
