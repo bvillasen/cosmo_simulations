@@ -308,6 +308,7 @@ class Simulation_Grid:
     sim_ids = self.Grid.keys()
     n = len(sim_ids)
     submitted, running, error, finished, failed = 0, 0, 0, 0, 0
+    n_zero_pad = len( str(sim_ids.max()) )
     for sim_id in sim_ids:
       queue_line = ''
       status = self.Get_Simulation_Status( sim_id )
@@ -342,7 +343,7 @@ class Simulation_Grid:
         finished += 1
       if status == 'error':
         error += 1
-      print( f' id: {sim_id:04}   status: {status}   {queue_line}')
+      print( f' id: {sim_id:0 n_zero_pad}   status: {status}   {queue_line}')
       self.Grid[sim_id]['status'] = status
     print( f'Submitted: {submitted} / {n}' )
     print( f'Running:   {running} / {n}' )
