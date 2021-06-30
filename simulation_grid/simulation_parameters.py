@@ -1,8 +1,14 @@
-
+import os
 
 # system = 'Lux'
-system = 'Shamrock'
+# system = 'Shamrock'
 # system = 'Summit'
+system = None
+system = os.getenv('SYSTEM_NAME')
+if not system:
+  print( 'Can not find the system name')
+  exit(-1)
+print( f'System: {system}')
 
 n_points = 1024
 
