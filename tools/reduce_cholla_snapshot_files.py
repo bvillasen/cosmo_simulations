@@ -51,8 +51,8 @@ for snapshot_id in snapshot_ids:
   for file_id in local_files:
 
     file_name = f'{snapshot_id}{file_name_base}.{file_id}'
-    in_file = h5.File( simulation_dir + file_name, 'r' )
-    out_file = h5.File( dst_dir + file_name, 'w' )
+    in_file = h5.File( input_dir + file_name, 'r' )
+    out_file = h5.File( output_dir + file_name, 'w' )
 
     # Copy the header
     for key in in_file.attrs.keys():
