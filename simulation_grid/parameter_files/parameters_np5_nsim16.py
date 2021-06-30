@@ -16,12 +16,12 @@ param_wdm_UVB_Rates[1]['values'] = [ 0.2,  1.0 ]
 param_wdm_UVB_Rates[2] = {}
 param_wdm_UVB_Rates[2]['key'] = 'C'
 param_wdm_UVB_Rates[2]['name'] = 'scale_H'
-param_wdm_UVB_Rates[2]['values'] = [ 0.4,  1.0 ]
+param_wdm_UVB_Rates[2]['values'] = [ 0.4,  1.2 ]
 
 param_wdm_UVB_Rates[3] = {}
 param_wdm_UVB_Rates[3]['key'] = 'D'
 param_wdm_UVB_Rates[3]['name'] = 'deltaZ_He'
-param_wdm_UVB_Rates[3]['values'] = [ -0.2, 0.6 ]
+param_wdm_UVB_Rates[3]['values'] = [ -0.4, 0.6 ]
 
 param_wdm_UVB_Rates[4] = {}
 param_wdm_UVB_Rates[4]['key'] = 'E'
