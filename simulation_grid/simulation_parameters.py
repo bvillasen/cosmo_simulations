@@ -78,6 +78,7 @@ sim_params['analysis_scale_outputs_file'] = cholla_dir + 'scale_output_files/out
 
 
 job_params = {}
+job_params['root_dir'] = root_dir
 job_params['exclude'] = ['gpu006', 'gpu023' ] 
 job_params['partition'] = 'gpu'
 # job_params['partition'] = 'comp-astro'
