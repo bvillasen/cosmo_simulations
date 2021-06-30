@@ -19,7 +19,7 @@ def Create_Submit_Job_Script_Summit( job_params, save_file=True, file_name='subm
   sim_directory = job_params['sim_directory']
   root_dir = job_params['root_dir']
 
-submit_str = f"""#!/bin/bash          
+  submit_str = f"""#!/bin/bash          
 #BSUB -P {summit_project}       
 #BSUB -W {time}          
 #BSUB -nnodes {n_nodes}               
@@ -40,10 +40,7 @@ date
 export OMP_NUM_THREADS=7
 jsrun --smpiargs="-gpu" -n{n_mpi_tasks} -a1 -c7 -g1 --bind packed:7 $CHOLLA_HOME/cholla.paris.summit $WORK_DIR/param.txt > $WORK_DIR/run_output.log |sort
 """
-  
-  
-  if save_file:
-    
+  if save_file:  
     if sim_directory[-1] != '/': sim_directory += '/'
     file_name = sim_directory + file_name
     file = open( file_name, 'w' )
