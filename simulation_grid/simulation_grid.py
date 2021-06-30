@@ -237,6 +237,19 @@ class Simulation_Grid:
     print( f'Jobs Submitted: {n_submitted} ')
 
 ###############################################################################################    
+  def Create_Submit_Job_Script( self, sim_id, save_file=True, partition='gpuq' ):
+    root_dir = self.root_dir
+    if root_dir[-1] != '/': root_dir += '/'
+    simulation = self.Grid[sim_id]
+    name = simulation['key']
+    job_params = self.job_parameters.copy()
+    job_params['name'] = name
+    job_params['sim_directory'] = root_dir + name
+    job_params['partition'] = partition
+    if system == 'Lux': Create_Submit_Job_Script_Lux( job_params, save_file=save_file )
+    if system == 'Summit': Create_Submit_Job_Script_Summit( job_params, save_file=save_file )
+    
+###############################################################################################    
   def Submit_Simulation_Job( self, sim_id, partition=None ):
     sim_dir = self.Get_Simulation_Directory( sim_id )
     job = self.job_parameters
