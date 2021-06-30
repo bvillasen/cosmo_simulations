@@ -54,7 +54,7 @@ subgrid = [ [start, end], [0, n_points], [0, n_points] ]
 
 
 n_snap = 169 
-data_snap = load_snapshot_data_distributed( data_type, fields, n_snap, input_dir, box_size, grid_size,  precision, subgrid=subgrid, show_progess=show_progess )
+data_snap = load_snapshot_data_distributed( data_type, fields, n_snap, input_dir, box_size, grid_size,  precision, subgrid=subgrid, show_progess=show_progess,  print_fields=True )
 current_z = data_snap['Current_z']
 
 # print( f' Slice:  start:{start}   end:{end}' )
