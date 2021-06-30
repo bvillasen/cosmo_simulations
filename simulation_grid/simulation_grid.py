@@ -284,6 +284,19 @@ class Simulation_Grid:
     os.chdir( cwd ) 
 
 ###############################################################################################    
+  def Find_Simulation_In_Queue( self, sim_id, queue ):
+    sim_key = 'S{0:03}'.format(sim_id)
+    sim_in_queue = False
+    queue_line = None
+    for line in queue:
+      indx = line.find( sim_key )
+      if indx >= 0:
+        sim_in_queue =  True
+        queue_line = line
+        break
+    return sim_in_queue, queue_line
+
+###############################################################################################    
   def Get_Simulation_Status( self, sim_id ):
     sim_dir = self.Get_Simulation_Directory( sim_id )
     file_name = sim_dir + 'run_output.log'
