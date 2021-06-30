@@ -345,7 +345,8 @@ class Simulation_Grid:
         error += 1
       # print( ' id: {sim_id:0{n_zero_pad}}   status: {status}   {queue_line}'.format(sim_id=sim_id, n_zero_pad=n_zero_pad, status=status, queue_line=queue_line ))
       n_spaces = n_zero_pad - len( str(sim_id))
-      print( f' id: {' '*n_spaces}{sim_id}   status: {status}   {queue_line}' )
+      spaces = ' '*n_spaces
+      print( f' id: {spaces}{sim_id}   status: {status}   {queue_line}' )
       # print( ' id: {sim_id:0{n_zero_pad}}   status: {status}   {queue_line}'.format(sim_id=sim_id, n_zero_pad=n_zero_pad, status=status, queue_line=queue_line ))
       self.Grid[sim_id]['status'] = status
     print( f'Submitted: {submitted} / {n}' )
