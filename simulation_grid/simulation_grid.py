@@ -244,7 +244,7 @@ class Simulation_Grid:
     name = simulation['key']
     job_params = self.job_parameters.copy()
     job_params['name'] = name
-    job_params['sim_directory'] = root_dir + name
+    job_params['sim_directory'] = self.Get_Simulation_Directory( sim_id )
     job_params['partition'] = partition
     if system == 'Lux': Create_Submit_Job_Script_Lux( job_params, save_file=save_file )
     if system == 'Summit': Create_Submit_Job_Script_Summit( job_params, save_file=save_file )
