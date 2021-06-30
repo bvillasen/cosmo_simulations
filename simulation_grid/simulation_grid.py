@@ -289,6 +289,16 @@ class Simulation_Grid:
     else:
       status = 'not submitted'
     return status
+
+
+###############################################################################################    
+  def Get_Queue_Staus( self ):
+    if system == 'Lux': command = [ 'squeue', '--user=brvillas' ]
+    if system == 'Summit': command = [ 'bjobs' ]
+    if system == 'Shamrock': return ''
+    queue = str( subprocess.check_output( command ) )
+    queue = queue.split('\\n')
+    return queue
     
 ###############################################################################################
   def Get_Grid_Status( self, check_queue=True ):
