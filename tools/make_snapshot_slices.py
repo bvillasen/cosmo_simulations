@@ -52,23 +52,25 @@ start = max( 0, slice_start )
 end   = min( n_points, slice_start+slice_depth )
 subgrid = [ [start, end], [0, n_points], [0, n_points] ]
 
+snapshots = range( 0, 170 )
+snapshot_ids = split_indices( snapshots, rank, n_procs )
 
-n_snap = 169 
-data_snap = load_snapshot_data_distributed( data_type, fields, n_snap, input_dir, box_size, grid_size,  precision, subgrid=subgrid, show_progess=show_progess,  print_fields=True )
-current_z = data_snap['Current_z']
+for n_snap in snapshot_ids:
+  data_snap = load_snapshot_data_distributed( data_type, fields, n_snap, input_dir, box_size, grid_size,  precision, subgrid=subgrid, show_progess=show_progess,  print_fields=True )
+  current_z = data_snap['Current_z']
 
-# print( f' Slice:  start:{start}   end:{end}' )
+  # print( f' Slice:  start:{start}   end:{end}' )
 
-out_file_name = output_dir + f'slice_{data_type}_{n_snap}_start{slice_start}_depth{slice_depth}.h5'
-outfile = h5.File( out_file_name, 'w' )
-outfile.attrs['current_z'] = current_z
+  out_file_name = output_dir + f'slice_{data_type}_{n_snap}_start{slice_start}_depth{slice_depth}.h5'
+  outfile = h5.File( out_file_name, 'w' )
+  outfile.attrs['current_z'] = current_z
 
-for field in fields:
-  data = data_snap[field]
-  data_slice = data 
-  # data_slice = data[slice_start:end, :, :] 
-  outfile.create_dataset( field, data=data_slice )
+  for field in fields:
+    data = data_snap[field]
+    data_slice = data 
+    # data_slice = data[slice_start:end, :, :] 
+    outfile.create_dataset( field, data=data_slice )
 
-outfile.close()
-print( f'Saved File: {out_file_name}' )
+  outfile.close()
+  print( f'Saved File: {out_file_name}' )
 
