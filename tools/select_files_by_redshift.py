@@ -11,7 +11,7 @@ create_directory( output_dir )
 
 slice_start, slice_depth = 384, 128
 
-snap_ids = np.range(170)
+snap_ids = range(170)
 z_vals = []
 for snap_id in snap_ids:
   file_name = input_dir + f'slice_hydro_{snap_id}_start{slice_start}_depth{slice_depth}.h5'
