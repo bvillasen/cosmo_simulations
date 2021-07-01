@@ -45,7 +45,7 @@ n_snapshots = len( snapshot_ids )
 
 
 time_start = time.time()
-n_snaps_copied = 0
+n_snaps_copied = 170
 for snapshot_id in snapshot_ids:
   
   for file_id in local_files:
