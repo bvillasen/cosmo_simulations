@@ -63,8 +63,9 @@ out_file_name = output_dir + f'slice_{data_type}_{n_snap}_start{slice_start}_dep
 outfile = h5.File( out_file_name, 'w' )
 outfile.attrs['current_z'] = current_z
 
-# for field in fields:
-#   data = data_snap[field]
+for field in fields:
+  data = data_snap[field]
+  print( data.shape )
 #   data_slice = data[slice_start:end, :, :] 
 #   outfile.create_dataset( field, data=data_slice )
 # 
