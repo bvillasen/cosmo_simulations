@@ -334,7 +334,7 @@ class Simulation_Grid:
           status = 'submitted'
         elif last_line.find('Starting calculations') >= 0: 
           status = 'running'
-        elif last_line.find('Simulation completed successfully.') >= 0: 
+        elif last_line.find('Reached Last Cosmological Output: Ending Simulation') >= 0: 
           status = 'finished'
         else: status = 'error'
     else:
