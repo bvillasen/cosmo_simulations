@@ -21,7 +21,7 @@ for snap_id in snap_ids:
   z_vals.append( z )
 z_vals = np.array( z_vals )
 
-selected_z = np.arange( 2, 10.1, 0.5 )
+selected_z = np.arange( 2, 10.1, 0.25 )
 selected_snaps = []
 for z in selected_z:
   diff = np.abs( z_vals - z )
