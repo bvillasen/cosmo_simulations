@@ -38,7 +38,7 @@ cd {root_dir}
 
 date
 export OMP_NUM_THREADS=7
-jsrun --smpiargs="-gpu" -n{n_mpi_tasks} -a1 -c7 -g1 --bind packed:7 $CHOLLA_HOME/cholla.paris.summit $WORK_DIR/param.txt > $WORK_DIR/run_output.log |sort
+jsrun --smpiargs="-gpu" -n{n_mpi_tasks} -a1 -c7 -g1 --bind packed:7 $CHOLLA_HOME/cholla.paris.summit $WORK_DIR/param.txt > $WORK_DIR/simulation_output.log |sort
 """
   if save_file:  
     if sim_directory[-1] != '/': sim_directory += '/'
