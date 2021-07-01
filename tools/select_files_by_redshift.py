@@ -6,7 +6,7 @@ from tools import *
 
 data_dir = '/data/groups/comp-astro/bruno/'
 input_dir  = data_dir + 'cosmo_sims/rescaled_P19/2048_50Mpc/slices_temperature/'
-output_dir = input_dir + 'selected_slices/
+output_dir = input_dir + 'selected_slices/'
 create_directory( output_dir )
 
 slice_start, slice_depth = 384, 128
