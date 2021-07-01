@@ -38,14 +38,14 @@ output_dir = root_dir + f'reduced_snapshots_{data_type}_temperature/'
 if rank == 0: create_directory( output_dir )
 
 
-snapshot_ids = range( 200, 340 )
+snapshot_ids = range( 170, 340 )
 files_per_snapshot = 512
 local_files = split_indices( range(files_per_snapshot), rank, n_procs )
 n_snapshots = len( snapshot_ids )
 
 
 time_start = time.time()
-n_snaps_copied = 170
+n_snaps_copied = 0
 for snapshot_id in snapshot_ids:
   
   for file_id in local_files:
@@ -70,11 +70,11 @@ for snapshot_id in snapshot_ids:
   if use_mpi: comm.Barrier()
   n_snaps_copied += 1  
 
-  if rank == 0: 
-    files_copied = os.listdir( output_dir )  
-    if len( files_copied ) != n_snaps_copied * files_per_snapshot: 
-      print(f'ERROR: Number of files in output dir is incorrect: {len(files_copied)}    {n_snaps_copied * files_per_snapshot}')
-      exit(-1)
+  # if rank == 0: 
+  #   files_copied = os.listdir( output_dir )  
+  #   if len( files_copied ) != n_snaps_copied * files_per_snapshot: 
+  #     print(f'ERROR: Number of files in output dir is incorrect: {len(files_copied)}    {n_snaps_copied * files_per_snapshot}')
+  #     exit(-1)
 
   if rank == 0: print_progress( n_snaps_copied, n_snapshots, time_start )
 
