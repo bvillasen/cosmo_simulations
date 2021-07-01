@@ -65,8 +65,8 @@ outfile.attrs['current_z'] = current_z
 
 for field in fields:
   data = data_snap[field]
-  print( data.shape )
-#   data_slice = data[slice_start:end, :, :] 
+  data_slice = data[slice_start:end, :, :] 
+  print( data_slice.shape )
 #   outfile.create_dataset( field, data=data_slice )
 # 
 # outfile.close()
