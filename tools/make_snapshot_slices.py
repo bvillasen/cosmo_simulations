@@ -30,10 +30,10 @@ if rank == 0: show_progess = True
 
 
 # data_dir = '/raid/bruno/data/'
-data_dir = '/data/groups/comp-astro/bruno/'
-# data_dir = '/gpfs/alpine/csc434/proj-shared/cholla/'
-input_dir  = data_dir + f'cosmo_sims/rescaled_P19/2048_50Mpc/reduced_snapshots_hydro/'
-output_dir = data_dir + f'cosmo_sims/rescaled_P19/2048_50Mpc/slices/'
+# data_dir = '/data/groups/comp-astro/bruno/'
+data_dir = '/gpfs/alpine/csc434/proj-shared/cholla/'
+input_dir  = data_dir + f'cosmo_sims/rescaled_P19/2048_50Mpc/reduced_snapshots_hydro_temperature/'
+output_dir = data_dir + f'cosmo_sims/rescaled_P19/2048_50Mpc/slices_temperature/'
 if rank == 0: create_directory( output_dir )
   
 n_points = 2048
