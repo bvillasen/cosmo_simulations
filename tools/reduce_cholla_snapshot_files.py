@@ -38,7 +38,7 @@ output_dir = root_dir + f'reduced_snapshots_{data_type}_temperature/'
 if rank == 0: create_directory( output_dir )
 
 
-snapshot_ids = range( 0, 170 )
+snapshot_ids = range( 170, 340 )
 files_per_snapshot = 512
 local_files = split_indices( range(files_per_snapshot), rank, n_procs )
 n_snapshots = len( snapshot_ids )
