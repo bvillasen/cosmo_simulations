@@ -29,6 +29,7 @@ for z in selected_z:
   selected_snaps.append( indx )
 
 for indx, snap_id in enumerate(selected_snaps):
+  print( f' {indx}  {len(selected_snaps)}' )
   src_file = input_dir  + f'slice_hydro_{snap_id}_start{slice_start}_depth{slice_depth}.h5'
   dst_file = output_dir + f'slice_hydro_{indx}.h5'
   copyfile( src_file, dst_file )
