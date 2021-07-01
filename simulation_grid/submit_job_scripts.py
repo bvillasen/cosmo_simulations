@@ -34,7 +34,7 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/ccs/home/bvilasen/code/grackle/lib
 
 export CHOLLA_HOME=/gpfs/alpine/ast169/scratch/bvilasen/cosmo_sims
 export WORK_DIR={sim_directory}
-cd {root_dir}
+cd {sim_directory}
 
 date
 export OMP_NUM_THREADS=7
