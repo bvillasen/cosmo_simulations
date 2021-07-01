@@ -21,16 +21,16 @@ for snap_id in snap_ids:
   z_vals.append( z )
 z_vals = np.array( z_vals )
 
-selected_z = np.arange( 2, 10.1, 0.2 )
+selected_z = np.arange( 2, 10.1, 0.5 )
 selected_snaps = []
 for z in selected_z:
   diff = np.abs( z_vals - z )
   indx = np.where( diff == diff.min() )[0][0]
   selected_snaps.append( indx )
 
-for snap_id in selected_snaps:
+for indx, snap_id in enumerate(selected_snaps):
   src_file = input_dir  + f'slice_hydro_{snap_id}_start{slice_start}_depth{slice_depth}.h5'
-  dst_file = output_dir + f'slice_hydro_{snap_id}_start{slice_start}_depth{slice_depth}.h5'
+  dst_file = output_dir + f'slice_hydro_{indx}.h5'
   copyfile( src_file, dst_file )
   
 
