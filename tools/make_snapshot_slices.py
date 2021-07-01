@@ -53,7 +53,7 @@ end   = min( n_points, slice_start+slice_depth )
 subgrid = [ [start, end], [0, n_points], [0, n_points] ]
 
 snapshots = range( 0, 170 )
-snapshot_ids = split_indices( snapshots, rank, n_procs )
+snapshot_ids = split_indices( snapshots, rank, nprocs )
 
 for n_snap in snapshot_ids:
   data_snap = load_snapshot_data_distributed( data_type, fields, n_snap, input_dir, box_size, grid_size,  precision, subgrid=subgrid, show_progess=show_progess,  print_fields=True )
