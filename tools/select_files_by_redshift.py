@@ -23,6 +23,6 @@ z_vals = np.array( z_vals )
 selected_z = np.arange( 2, 10.1, 0.2 )
 selected_snaps = []
 for z in selected_z:
-  diff = nmp.abs( z_vals - z )
+  diff = np.abs( z_vals - z )
   indx = np.where( diff == diff.min() )[0][0]
   selected_snaps.append( indx )
