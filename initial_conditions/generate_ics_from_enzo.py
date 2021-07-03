@@ -22,7 +22,7 @@ nBoxes  = 16
 data_dir = '/data/groups/comp-astro/bruno/'
 # data_dir = '/home/bruno/Desktop/ssd_0/data/'
 input_dir = data_dir + f'cosmo_sims/ics/enzo/1024_50Mpc/raw/'
-output_dir = data_dir + f'cosmo_sims/{nPoints}_50Mpc/ics_{nBoxes}_z100/'
+output_dir = data_dir + f'cosmo_sims/ics/{nPoints}_50Mpc/ics_{nBoxes}_z100/'
 print(f'Input Dir: {input_dir}' )
 print(f'Output Dir: {output_dir}' )
 create_directory( output_dir )
