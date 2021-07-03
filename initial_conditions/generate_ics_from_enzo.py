@@ -16,13 +16,13 @@ from ics_grid import expand_data_grid_to_cholla
 # Box Size
 Lbox = 50000.0    #kpc
 nPoints = 1024
-nBoxes  = 128
+nBoxes  = 16
 
 # data_dir = '/raid/bruno/data/'
 data_dir = '/data/groups/comp-astro/bruno/'
 # data_dir = '/home/bruno/Desktop/ssd_0/data/'
-input_dir = data_dir + f'cosmo_sims/ics/enzo/wdm/1024_hydro_50Mpc_wdm_m2.0kev/raw/'
-output_dir = data_dir + f'cosmo_sims/wdm/{nPoints}_50Mpc_wdm_m2.0kev/ics_{nBoxes}_z100/'
+input_dir = data_dir + f'cosmo_sims/ics/enzo/1024_50Mpc/raw/'
+output_dir = data_dir + f'cosmo_sims/{nPoints}_50Mpc/ics_{nBoxes}_z100/'
 print(f'Input Dir: {input_dir}' )
 print(f'Output Dir: {output_dir}' )
 create_directory( output_dir )

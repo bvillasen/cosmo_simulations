@@ -1,6 +1,22 @@
 import numpy as np
 
 
+#from Bosman et al 2020
+data = data = np.array([ #z     mean_F  delta_F_up  delta_F_low
+[ 4.826, 0.1974, 0.0140, 0.0144 ],
+[ 5.015, 0.1330, 0.0049, 0.0048 ],
+[ 5.201, 0.0979, 0.0032, 0.0032 ],
+[ 5.399, 0.0742, 0.0026, 0.0026 ],
+[ 5.596, 0.0432, 0.0022, 0.0022 ],
+[ 5.789, 0.0222, 0.0024, 0.0025 ],
+[ 5.981, 0.0117, 0.0036, 0.0036 ] ]).T
+z = data[0]
+mean_F = data[1]
+delta_F_p = data[2]
+delta_F_l = data[1]
+mean_F_sigma = 0.5 * ( delta_F_p + delta_F_l )
+data_mean_flux_bosman_2020 = {'name':'Bosman et al. 2020', 'z':z, 'F_mean':mean_F, 'sigma_F_mean':mean_F_sigma, 'delta_F_upper':delta_F_p, 'delta_F_lower':delta_F_l }
+
 # From SAZERAC Sara's Bosman talk
 data = np.array([ #z     mean_F  mean_F_up  mean_F_low
 [ 4.80,  0.19433, 0.20981, 0.179306 ],

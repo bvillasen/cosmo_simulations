@@ -1,10 +1,10 @@
 import numpy as np
 
 
-def compute_distribution( values, n_bins, log=False ):
+def compute_distribution( values, n_bins=None, log=False, edges=None ):
   if log: values = np.log10( values )
   val_min, val_max = values.min(), values.max()
-  edges = np.linspace( val_min, val_max, n_bins+1 )
+  if not edges: edges = np.linspace( val_min, val_max, n_bins+1 )
   hist, edges = np.histogram( values, bins=edges )
   # print( edges )
   hist = hist.astype( np.float )

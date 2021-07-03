@@ -14,10 +14,11 @@ output_dir = input_dir
 slice_width = 2048
 slice_depth = 128
 
-n_slices = 17
+n_slices = 33
 slices_ids = range( n_slices )
 z_vals, slices = [], []
 for slice_id in slices_ids:
+  print( f' {slice_id} / {len(slices_ids)} ' )
   file_name = input_dir + f'slice_hydro_{slice_id}.h5'
   file = h5.File( file_name, 'r' )
   z = file.attrs['current_z']
@@ -28,7 +29,7 @@ z_vals = np.array( z_vals )
 
   
 image_heigth, image_width = 2048,  2048* 5
-z_start, z_end = 2, 10
+z_start, z_end = 2, 9
 delta_z = ( z_end - z_start ) / image_width
 
 image_data = np.zeros( (slice_depth, image_heigth, image_width ), dtype=np.float32 ) 

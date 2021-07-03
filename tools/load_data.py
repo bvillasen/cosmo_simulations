@@ -7,6 +7,21 @@ import pickle
 
 
 
+def Load_Skewers_File( n_file, input_dir, chem_type = 'HI', axis_list = [ 'x', 'y', 'z' ] ):
+  file_name = input_dir + f'{n_file}_skewers.h5'
+  file = h5.File( file_name, 'r' )
+  data_out = { key:file.attrs[key][0] for key in file.attrs }
+  skewers = []
+  for axis in axis_list:
+    skewers_axis = file[f'skewers_{axis}'][f'los_transmitted_flux_{chem_type}'][...]
+    skewers.append( skewers_axis )
+  skewers = np.concatenate( skewers )
+  data_out[f'skewers_flux_{chem_type}'] = skewers
+  data_out[f'vel_Hubble'] = file['skewers_x']['vel_Hubble'][...]
+  file.close()
+  return data_out
+  
+
 def load_analysis_data( n_file, input_dir, phase_diagram=True, lya_statistics=True, load_skewer=False, load_fit=False, load_flux_Pk=True, mcmc_fit_dir=None):
   file_name = input_dir + f'{n_file}_analysis.h5'
   file = h5.File( file_name, 'r' ) 
