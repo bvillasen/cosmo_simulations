@@ -22,11 +22,6 @@ else:
   rank = 0
   n_procs = 1
 
-# data_dir = '/home/bruno/Desktop/data/'
-# data_dir = '/home/bruno/Desktop/ssd_0/data/'
-# data_dir = '/raid/bruno/data/'
-data_dir = '/data/groups/comp-astro/bruno/'
-# data_dir = '/gpfs/alpine/csc434/scratch/bvilasen/'
 input_dir  = data_dir + 'cosmo_sims/rescaled_P19/1024_50Mpc_high_z/snapshot_files/'
 output_dir = data_dir + 'cosmo_sims/rescaled_P19/1024_50Mpc_high_z/neutral_fraction/'
 if rank == 0: create_directory( output_dir )
