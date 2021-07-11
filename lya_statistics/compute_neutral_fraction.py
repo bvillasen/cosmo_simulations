@@ -48,16 +48,25 @@ rho_gas_mean = rho_crit * Omega_b
 dens_max = 1.2 * rho_gas_mean
 dens_min = 0.8 * rho_gas_mean
 
+z_vals, HI_frac_mean = [], []
 
-n_snap = 1
-data = load_snapshot_data_distributed( data_type, fields,  n_snap, input_dir, box_size, grid_size, precision )
-dens = data['density']
-HI_dens = data['HI_density']
-indices = ( dens > dens_min ) * ( dens < dens_max )
-dens = dens[indices]
-HI_dens = HI_dens[indices]
-H_dens  = dens * X
-HI_frac = HI_dens / H_dens
+for n_file in range(2):
+  n_snap = n_file + 1
+  data = load_snapshot_data_distributed( data_type, fields,  n_snap, input_dir, box_size, grid_size, precision )
+  z = data['Current_z']
+  dens = data['density']
+  HI_dens = data['HI_density']
+  indices = ( dens > dens_min ) * ( dens < dens_max )
+  dens = dens[indices]
+  HI_dens = HI_dens[indices]
+  H_dens  = dens * X
+  HI_frac = HI_dens / H_dens
+  z_vals.append( z )
+  HI_frac_mean.append( HI_frac.mean() ) 
+  
+  
+data_out = np.array( [ z, HI_frac_mean ])  
+ 
 
 
 
