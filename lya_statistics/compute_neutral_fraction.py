@@ -50,7 +50,7 @@ dens_min = 0.8 * rho_gas_mean
 
 z_vals, HI_frac_mean = [], []
 
-for n_file in range(2):
+for n_file in range(17):
   n_snap = n_file + 1
   data = load_snapshot_data_distributed( data_type, fields,  n_snap, input_dir, box_size, grid_size, precision )
   z = data['Current_z']
@@ -65,7 +65,7 @@ for n_file in range(2):
   HI_frac_mean.append( HI_frac.mean() ) 
   
   
-data_out = np.array( [ z_vals, HI_frac_mean ])  
+data_out = np.array( [ z_vals, HI_frac_mean ]).T  
 file_name = output_dir + 'neutral_fraction_data.txt'
 np.savetxt( file_name, data_out )
 print( f'Saved File: {file_name}' )
