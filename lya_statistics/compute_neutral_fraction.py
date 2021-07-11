@@ -11,6 +11,7 @@ from tools import *
 #Append analysis directories to path
 extend_path()
 from constants_cosmo import G_COSMO
+from load_data import load_snapshot_data_distributed
 
 use_mpi = True
 if use_mpi:
