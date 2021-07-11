@@ -56,6 +56,11 @@ HI_dens = data['HI_density']
 indices = ( dens > dens_min ) * ( dens < dens_max )
 dens = dens[indices]
 HI_dens = HI_dens[indices]
+H_dens  = dens * X
+HI_frac = HI_dens / H_dens
+
+
+
 
 
 
