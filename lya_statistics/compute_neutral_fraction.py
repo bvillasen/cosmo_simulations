@@ -39,11 +39,23 @@ precision = np.float32
 fields = ['density', 'HI_density']
 
 
+H0 = 67.66
+Omega_b =  0.0497 
+h = H0 / 100
+X = 0.75984603480
+rho_crit =  3*(H0*1e-3)**2/(8*np.pi*G_COSMO)/ h**2
+rho_gas_mean = rho_crit * Omega_b 
+dens_max = 1.2 * rho_gas_mean
+dens_min = 0.8 * rho_gas_mean
+
+
 n_snap = 1
-
-
-
 data = load_snapshot_data_distributed( data_type, fields,  n_snap, input_dir, box_size, grid_size, precision )
+dens = data['density']
+HI_dens = data['HI_density']
+indices = ( dens > dens_min ) * ( dens < dens_max )
+dens = dens[indices]
+HI_dens = HI_dens[indices]
 
 
 
