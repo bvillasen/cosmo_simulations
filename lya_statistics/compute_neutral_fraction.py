@@ -27,12 +27,23 @@ output_dir = data_dir + 'cosmo_sims/rescaled_P19/1024_50Mpc_high_z/neutral_fract
 if rank == 0: create_directory( output_dir )
 
 
+# Box parameters
+n_points = 1024
+Lbox = 50000.0  #kpc/h
+grid_size = [ n_points, n_points, n_points ]
+box_size = [ Lbox, Lbox, Lbox ]
+
+# Data parameters
+data_type = 'hydro'
 precision = np.float32
 fields = ['density', 'HI_density']
 
-n_file = 0 
 
-data = load_snapshot_data_distributed( data_type, fields,  nSnap, inDir,  box_size, grid_size,    precision,)
+n_snap = 0 
+
+
+
+data = load_snapshot_data_distributed( data_type, fields,  n_snap, input_dir, box_size, grid_size, precision )
 
 
 
