@@ -39,7 +39,7 @@ precision = np.float32
 fields = ['density', 'HI_density']
 
 
-n_snap = 0 
+n_snap = 1
 
 
 
