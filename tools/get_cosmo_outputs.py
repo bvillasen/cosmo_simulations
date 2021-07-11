@@ -19,4 +19,7 @@ a_vals = 1./(z_vals + 1)
 z_vals = np.array([ 2.0, 2.4, 2.6, 3.0, 3.6, 4.0, 5.0 ])[::-1]
 a_vals = 1./(z_vals + 1)
 
-np.savetxt( '/home/bruno/Desktop/cosmo.txt', a_vals )
+z_vals = np.arange( 4.8, 6.5, 0.1 )[::-1]
+a_vals = 1./(z_vals + 1)
+
+np.savetxt( '/home/bruno/Desktop/cosmo_outputs_high_redshift.txt', a_vals )

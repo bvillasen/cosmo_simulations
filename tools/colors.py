@@ -6,12 +6,13 @@ import palettable
 bright_green = pylab.cm.viridis(.7)
 light_blue = pylab.cm.cool(.3)
 dark_blue = pylab.cm.viridis(.3) 
-purple = pylab.cm.Purples(.7)
+dark_purple = pylab.cm.Purples(.7)
 blue = 'C0'
 orange = 'C1'
 green = 'C2'
 red = 'C3'
-purple_2 = 'C4'
+purple = 'C4'
+cyan = 'C9' 
 
 
 cmap_haline = palettable.cmocean.sequential.Haline_10.mpl_colormap

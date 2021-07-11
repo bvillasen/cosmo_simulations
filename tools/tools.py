@@ -5,6 +5,14 @@ import numpy as np
 import h5py as h5
 import time
 
+system = None
+system = os.getenv('SYSTEM_NAME')
+if not system:
+  print( 'Can not find the system name')
+  exit(-1)
+print( f'System: {system}')
+
+
 def print_progress( i, n, time_start ):
   import time
   time_now = time.time()

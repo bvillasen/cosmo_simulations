@@ -143,6 +143,15 @@ data_optical_depth_Bosman_2018 = {
 'tau_sigma_m': tau_error
 }
 
+from mean_transmitted_flux import data_mean_flux_bosman_2020
+z = data_mean_flux_bosman_2020['z']
+F_mean = data_mean_flux_bosman_2020['F_mean']
+sigma_F_mean = data_mean_flux_bosman_2020['sigma_F_mean']
+tau = -np.log( F_mean )
+sigma_tau = 1/F_mean*sigma_F_mean
+data_optical_depth_Bosman_2020 = {'name':'Bosman et al. (2020)', 'z':z, 'tau':tau, 'tau_sigma':sigma_tau  }
+
+
 from mean_transmitted_flux import data_mean_flux_bosman_2021
 z = data_mean_flux_bosman_2021['z']
 F_mean = data_mean_flux_bosman_2021['F_mean']
@@ -150,6 +159,20 @@ sigma_F_mean = data_mean_flux_bosman_2021['sigma_F_mean']
 tau = -np.log( F_mean )
 sigma_tau = 1/F_mean*sigma_F_mean
 data_optical_depth_Bosman_2021 = {'name':'Bosman et al. (from SAZERAC)', 'z':z, 'tau':tau, 'tau_sigma':sigma_tau  }
+
+
+data_yang = np.array([
+[ 5.355, 2.885, 2.947, 2.801 ],
+[ 5.506, 3.682, 3.755, 3.611 ],
+[ 5.665, 4.217, 4.271, 4.157 ], 
+[ 5.823, 5.091, 5.166, 5.022 ],
+[ 5.994, 6.316, 6.484, 6.137 ] ]).T
+z = data_yang[0]
+tau = data_yang[1]
+tau_p = data_yang[2]
+tau_m = data_yang[3]
+sigma_tau = 0.5 * ( tau_p - tau_m )
+data_optical_depth_Yang_2020 = {'name':'Yang et al. (2020)', 'z':z, 'tau':tau, 'tau_sigma':sigma_tau  }
 
 # 
 # data_optical_depth_Gaikward_2020 = np.array([
