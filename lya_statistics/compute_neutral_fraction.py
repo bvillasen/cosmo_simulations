@@ -65,7 +65,10 @@ for n_file in range(2):
   HI_frac_mean.append( HI_frac.mean() ) 
   
   
-data_out = np.array( [ z, HI_frac_mean ])  
+data_out = np.array( [ z_vals, HI_frac_mean ])  
+file_name = output_dir + 'neutral_fraction_data.txt'
+np.savetxt( file_name, data_out )
+print( f'Saved File: {file_name}' )
  
 
 
