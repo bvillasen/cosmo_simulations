@@ -3,10 +3,9 @@ from pathlib import Path
 import h5py as h5
 import numpy as np
 import matplotlib.pyplot as plt
-cwd = os.getcwd()
-cosmo_dir = cwd[: cwd.find('simulation_analysis')] + 'simulation_analysis/'
-tools_dir = cosmo_dir + 'tools'
-sys.path.append( tools_dir )
+root_dir = os.path.dirname(os.getcwd()) + '/'
+subDirectories = [x[0] for x in os.walk(root_dir)]
+sys.path.extend(subDirectories)
 from tools import *
 #Append analysis directories to path
 extend_path()
@@ -38,7 +37,7 @@ fields = ['density', 'HI_density']
 
 n_file = 0 
 
-load_snapshot_data_distributed( data_type, fields,  nSnap, inDir,  box_size, grid_size,    precision,)
+data = load_snapshot_data_distributed( data_type, fields,  nSnap, inDir,  box_size, grid_size,    precision,)
 
 
 
