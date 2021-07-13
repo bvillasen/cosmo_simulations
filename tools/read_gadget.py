@@ -167,3 +167,52 @@ def loadgadget_pos(filename):
             data = np.vstack([data,mydata])
 
     return header, data
+    
+  
+  
+  
+  
+  def loadgadget_pos_box(filename):
+      '''
+      Load gadget file
+      ---------
+      filename: base of filename (if split into multiple files, leave off '.x')
+      ---------
+      header: pandas object with snapshot info
+      data: Nx3 array x, y, z
+      '''
+
+      header, Numfiles = loadgadget_header(filename)
+      Numfiles = 1
+      data = np.array([])
+
+      print('Reading ' + str(Numfiles)+ ' files:')
+      for i in range(Numfiles):
+
+          #Open file
+          if Numfiles>1:
+              myfilename=filename+'.'+str(i)
+          else:
+              myfilename=filename
+          f = open(myfilename,'rb')
+          print(myfilename)
+
+          #Read header
+          myheader = f.read(256+4)
+          N_arr = np.array(struct.unpack('i'*6,myheader[4:28]))
+          f.read(8)
+          if i!=0:
+              header['N'] = header['N']+ N_arr[1]
+
+          #Read positions
+          temp = f.read(8*3*N_arr[1])
+          temp = np.ndarray((1, 3*N_arr[1]), 'f', temp)[0]
+          mydata = np.reshape(temp,(N_arr[1],3))
+          f.close()
+
+          if data.shape[0]==0:
+              data = mydata.copy()
+          else:
+              data = np.vstack([data,mydata])
+
+      return header, data
