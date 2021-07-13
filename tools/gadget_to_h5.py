@@ -6,7 +6,7 @@ from tools import *
 
 
 
-input_dir = '/data/groups/comp-astro/nicole/wfirst1024/'
+input_dir = '/data/groups/comp-astro/nicole/wfirst1024/Gadget/'
 
 
 n_snap = 500
