@@ -16,7 +16,7 @@ snapshots = np.arange( 50, 501, 50 )
 
 # for n_snap in snapshots:
 n_snap = 500
-infile_name =  input_dir + f'snapshot_{n_snap:03}.{n_box}'
+infile_name =  input_dir + f'snapshot_{n_snap:03}
 print('\nLoading Gadget file:', infile_name)
 header, data = gdt.loadgadget_pos( infile_name )
 redshift = header.redshift
