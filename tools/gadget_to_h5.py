@@ -9,7 +9,7 @@ from tools import *
 input_dir = '/data/groups/comp-astro/nicole/wfirst1024/Gadget/'
 
 
-n_snap = 500
+n_snap = 499
 
 infile_name =  input_dir + f'snapshot_{n_snap:03}'
 print('\nLoading Gadget file:', infile_name)
