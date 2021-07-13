@@ -62,7 +62,7 @@ color_map = 'inferno'
 
 nrows, ncols = 3, 3
 fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(4*ncols,4*nrows))
-plt.subplots_adjust( hspace = 0.02, wspace=0.02)
+plt.subplots_adjust( hspace = 0.015, wspace=0.015)
 
 for i in range(nrows):
   for j in range(ncols):
@@ -72,34 +72,30 @@ for i in range(nrows):
 
     z = projections[fig_id]['z']
     projection = projections[fig_id]['projection']
-    ax.imshow( projection, cmap=color_map )
+    ax.imshow( projection, cmap=color_map, extent=[0,115, 0,115] )
     
-    text_pos_x = 0.05
+    text_pos_x = 0.75
     ax.text(text_pos_x, 0.95, r'$z={0:.1f}$'.format(z), horizontalalignment='left',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
     
     ax.set_yticklabels([])
     ax.set_xticklabels([])
     # 
-    # # ax.set_axis_off()
-    # if j == 0: 
-    #   text_pos_x = 0.15
-    #   ax.text(text_pos_x, 0.05, r'$z={0:.1f}$'.format(current_z), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=16, color=text_color) 
-    #   if data_type == 'particles': ylabel = r'$\mathrm{DM\,\, Density}$'
-    #   if data_type == 'hydro': ylabel = r'$\mathrm{Gas\,\, Density}$'
-    #   ax.set_ylabel( ylabel, fontsize=14, color=text_color, labelpad=-4 )
-    # 
-    # leg = ax.legend(loc=2, frameon=False, fontsize=22, prop=prop)
-    # for text in leg.get_texts():
-    #   plt.setp(text, color = text_color)
-
+    ax.set_axis_off()
+    
     if black_background: 
       fig.patch.set_facecolor('black') 
       ax.set_facecolor('k')
       [ spine.set_edgecolor('black') for spine in list(ax.spines.values()) ]
-
+      
+  
+    if i == nrows - 1 and j == 0:
+      ax.text(0.1, 0.1, r'$35 \, h^{-1}\mathrm{Mpc}$', horizontalalignment='left',  verticalalignment='center', transform=ax.transAxes, fontsize=14, color=text_color) 
+      line_start, line_width = 11.5,35 
+      line_y = 6
+      ax.plot( [line_start, line_start+line_width], [ line_y, line_y], c=text_color, lw=2)
 
 
 figure_name = output_dir + f'fig_density_wdm_{n_snap}.png'
-fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
+fig.savefig( figure_name, bbox_inches='tight', dpi=400, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
 

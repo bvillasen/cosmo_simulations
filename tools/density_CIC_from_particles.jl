@@ -6,12 +6,11 @@ using density_CIC_functions
 using Statistics
 
 # Input File
-dataDir = "/raid/bruno/data/"
-# dataDir = "/home/bruno/Desktop/data/"
-# dataDir = "/home/bruno/Desktop/data/"
+# dataDir = "/raid/bruno/data/"
 # dataDir = "/home/bruno/Desktop/ssd_0/data/"
+dataDir = "/data/groups/comp-astro/bruno/"
 inDir = dataDir * "cosmo_sims/wfirst_1024/snapshots/h5_files/"
-outDir = inDir
+outDir = inDir * "grid_files/"
 in_base_name = "snapshot_"
 out_base_name = "grid_CIC_"
 
@@ -45,51 +44,51 @@ const dz = Lz / nz
 # c_pos_z = linspace( z_min + dz/2, z_max - dz/2, nz)
 
 
-nSnap = 500
+for nSnap in [ 50, 100, 150, 200, 250, 300, 350, 400, 450, 500 ]
 
-println( "\nSnapshot: $(nSnap)")
-snapKey = lpad(nSnap,3,'0')
-inFileName = inDir * in_base_name * snapKey * ".h5"
+  println( "\nSnapshot: $(nSnap)")
+  snapKey = lpad(nSnap,3,'0')
+  inFileName = inDir * in_base_name * snapKey * ".h5"
 
-print(" Loading File: $(inFileName)\n")
-inFile = h5open( inFileName, "r")
-
-
-current_a = read( attrs(inFile), "current_a" )
-current_z = read( attrs(inFile), "current_z" )
-p_mass = read( attrs(inFile), "particle_mass" ) *1e10
-print(" Current redshift: $(current_z)\n")
-print(" Particle Mass: $(p_mass)  Msun/h\n")
- 
-print(" Loading pos_x\n")
-pos_x = read( inFile, "pos_x" )
-print(" Loading pos_y\n")
-pos_y = read( inFile, "pos_y" )
-print(" Loading pos_z\n")
-pos_z = read( inFile, "pos_z" )
+  print(" Loading File: $(inFileName)\n")
+  inFile = h5open( inFileName, "r")
 
 
-nParticles = size( pos_x )[1]
-println( "N particles: $(nParticles)")
-p_inside = ones( Bool, nParticles )
-get_particles_outside_CIC( p_inside, pos_x, pos_y, pos_z, x_min, x_max, y_min, y_max, z_min, z_max, dx, dy, dz  )
-# dens = get_interp_CIC( p_inside, field, field, field, pos_x, pos_y, pos_z, nx, ny, nz, x_min, y_min, z_min, x_max, y_max, z_max, dx, dy, dz,  true, true )
-dens = get_interp_CIC( p_inside, p_mass, pos_x, pos_y, pos_z, nx, ny, nz, x_min, y_min, z_min, x_max, y_max, z_max, dx, dy, dz, true, true )
-dens_avrg = mean(dens)
-println( "  Dens mean: $(dens_avrg)")
+  current_a = read( attrs(inFile), "current_a" )
+  current_z = read( attrs(inFile), "current_z" )
+  p_mass = read( attrs(inFile), "particle_mass" ) *1e10
+  print(" Current redshift: $(current_z)\n")
+  print(" Particle Mass: $(p_mass)  Msun/h\n")
+   
+  print(" Loading pos_x\n")
+  pos_x = read( inFile, "pos_x" )
+  print(" Loading pos_y\n")
+  pos_y = read( inFile, "pos_y" )
+  print(" Loading pos_z\n")
+  pos_z = read( inFile, "pos_z" )
 
 
-outFileName = outDir * out_base_name * snapKey * ".h5"
-print(" Writing File: $(outFileName)\n")
-outFile = h5open( outFileName, "w")
-attrs(outFile)["current_a"] = current_a
-attrs(outFile)["current_z"] = current_z
+  nParticles = size( pos_x )[1]
+  println( "N particles: $(nParticles)")
+  p_inside = ones( Bool, nParticles )
+  get_particles_outside_CIC( p_inside, pos_x, pos_y, pos_z, x_min, x_max, y_min, y_max, z_min, z_max, dx, dy, dz  )
+  # dens = get_interp_CIC( p_inside, field, field, field, pos_x, pos_y, pos_z, nx, ny, nz, x_min, y_min, z_min, x_max, y_max, z_max, dx, dy, dz,  true, true )
+  dens = get_interp_CIC( p_inside, p_mass, pos_x, pos_y, pos_z, nx, ny, nz, x_min, y_min, z_min, x_max, y_max, z_max, dx, dy, dz, true, true )
+  dens_avrg = mean(dens)
+  println( "  Dens mean: $(dens_avrg)")
 
 
-outFile["/density"] = dens
-close(inFile)
-close(outFile)
+  outFileName = outDir * out_base_name * snapKey * ".h5"
+  print(" Writing File: $(outFileName)\n")
+  outFile = h5open( outFileName, "w")
+  attrs(outFile)["current_a"] = current_a
+  attrs(outFile)["current_z"] = current_z
 
+
+  outFile["/density"] = dens
+  close(inFile)
+  close(outFile)
+end
 
 
 
