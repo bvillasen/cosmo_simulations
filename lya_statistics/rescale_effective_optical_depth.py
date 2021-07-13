@@ -58,7 +58,10 @@ z_sims = np.array([ data_sims[i]['z'] for i in data_sims ])
 data = data_optical_depth_Bosman_2021
 data_z = data['z']
 data_tau = data['tau']
-data_F_mean = np.exp( -data_tau )
+data_tau_sigma = data['tau_sigma']
+data_tau_p = data_tau + data_tau_sigma 
+data_tau_l = data_tau - data_tau_sigma 
+data_F_mean = np.exp( -data_tau_l )
 
 z_vals, alpha_vals = [], []
 for z, F_mean  in zip(data_z, data_F_mean):
@@ -74,11 +77,11 @@ for z, F_mean  in zip(data_z, data_F_mean):
   print(z, alpha)
   z_vals.append( z )
   alpha_vals.append( alpha )
-  
+
 data_out = np.array([ z_vals, alpha_vals ]).T
-file_name = output_dir + 'rescale_tau_to_Bosman_2021.txt'
+file_name = output_dir + 'rescale_tau_to_Bosman_2021_lower.txt'
 np.savetxt( file_name, data_out )
 print( f'Saved File: {file_name}' )  
-  
+
 
 

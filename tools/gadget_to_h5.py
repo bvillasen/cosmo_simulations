@@ -12,7 +12,7 @@ output_dir =  data_dir + 'cosmo_sims/wfirst_2048/snapshots/h5_files/'
 create_directory( output_dir )
 
 
-snapshots = np.arange( 50, 501, 50 )
+snapshots = np.arange( 200, 501, 50 )
 
 n_boxes = 8
 
