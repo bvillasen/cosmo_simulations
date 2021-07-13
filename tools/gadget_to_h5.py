@@ -8,12 +8,11 @@ import read_gadget as gdt
 
 
 input_dir = '/data/groups/comp-astro/nicole/wfirst1024/Gadget/'
-input_dir = '/raid/bruno/data/cosmo_sims/wfirst_1024/snapshots/'
-output_dir = input_dir + 'h5_files/'
+output_dir =  data_dir + 'cosmo_sims/wfirst_1024/snapshots/h5_files/'
 create_directory( output_dir )
 
 
-snapshots = np.arange( 50, 451, 50 )
+snapshots = np.arange( 50, 501, 50 )
 
 for n_snap in snapshots:
   infile_name =  input_dir + f'snapshot_{n_snap:03}'
