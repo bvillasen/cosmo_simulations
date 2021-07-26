@@ -15,7 +15,7 @@ def Fit_Grid_Phase_Diagram_MPI( self, n_mpi=30, n_nodes=1 ):
 def Fit_Simulation_Phase_Diagram_MPI( self, sim_id, n_mpi=30,  n_nodes=1  ):
   print( f' Fitting Simulation: {sim_id}')
   sim_key = SG.Grid[sim_id]['key']
-  input_dir = = SG.analysis_dir + sim_key + '/'
+  input_dir = SG.analysis_dir + sim_key + '/'
   run_file = root_dir + '/phase_diagram/fit_phase_diagram_mpi.py'
   parameters = input_dir
   n_per_node = n_mpi // n_nodes + 1
