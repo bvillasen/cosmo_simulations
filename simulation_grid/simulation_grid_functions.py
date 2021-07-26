@@ -6,7 +6,13 @@ sys.path.append( root_dir + 'tools')
 from tools import *
 
 
-
+def Delete_core_files( self, sim_id ):
+ sim_dir = self.Get_Simulation_Directory( sim_id )
+ files = os.listdir( sim_dir )
+ for file in files:
+   if file.find('core') == 0:
+     print( sim_dir + file )
+ 
 def Load_Grid_UVB_Rates( self ):
   print( 'Loading UVB Rates Files')
   sim_ids = self.Grid.keys()

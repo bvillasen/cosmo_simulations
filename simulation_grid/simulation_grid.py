@@ -123,6 +123,7 @@ class Simulation_Grid:
 ###############################################################################################    
   Load_Grid_UVB_Rates = Load_Grid_UVB_Rates
   Load_Simulation_UVB_Rates = Load_Simulation_UVB_Rates
+  Delete_core_files = Delete_core_files
 
 ###############################################################################################    
   def Create_Grid_Directory_Structure( self ):

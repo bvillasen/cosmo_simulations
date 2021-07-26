@@ -4,6 +4,21 @@ import h5py as h5
 from scipy.interpolate import interp1d
 
 
+
+def Reaplace_Gamma_Parttial( z, gamma, change_z, change_gamma ):
+  ind_sort = np.argsort( change_z )
+  change_z = change_z[ind_sort]
+  change_gamma = change_gamma[ind_sort]
+  r_zmin, r_zmax =  change_z[0], change_z[-1]
+  indices = np.where( (z>=r_zmin) * (z<=r_zmax) == True )
+  original_z = z[indices] 
+  gamma_replce = np.interp( original_z, change_z, change_gamma )
+  gamma_new = gamma.copy()
+  gamma_new[indices] = gamma_replce
+  indx_last = indices[0][-1]
+  gamma_new[indx_last] = np.sqrt( gamma_new[indx_last-1]*gamma_new[indx_last+1])
+  return gamma_new
+
 def Load_Grackle_File( grackle_file_name ):
   grackle_file = h5.File( grackle_file_name, 'r' )
 

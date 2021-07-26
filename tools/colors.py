@@ -28,3 +28,6 @@ greens = palettable.colorbrewer.sequential.YlGn_9.mpl_colors
 blues = palettable.colorbrewer.sequential.Blues_9.mpl_colors 
 reds = palettable.colorbrewer.sequential.Reds_9.mpl_colors 
 yellow_green_blues =  palettable.colorbrewer.sequential.YlGnBu_5.mpl_colors 
+
+light_orange = yellows[3]
+dark_green = haline[3]

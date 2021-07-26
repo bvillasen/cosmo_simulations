@@ -20,13 +20,12 @@ import matplotlib.font_manager
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
 matplotlib.rcParams['mathtext.rm'] = 'serif'
 
-
-# print(matplotlib.font_manager.get_cachedir())
-
+ps_data_dir = root_dir + 'lya_statistics/data/'
 
 
 
-def plot_power_spectrum_grid( ps_data_dir, output_dir, ps_data=None, scales='large', line_colors=None, sim_data_sets=None, black_background=False, system=None, high_z_only=False, plot_ps_normalized=False  ):
+
+def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_colors=None, sim_data_sets=None, black_background=False, high_z_only=False, plot_ps_normalized=False  ):
   
   if system == 'Lux' or system == 'Summit': matplotlib.use('Agg')
   import matplotlib.pyplot as plt
@@ -76,7 +75,7 @@ def plot_power_spectrum_grid( ps_data_dir, output_dir, ps_data=None, scales='lar
   data_irsic = load_data_irsic( data_filename )
   data_z_irsic = data_irsic['z_vals']
 
-  z_vals_small_scale  = [ 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 4.2, 4.6, 5.0, 5.4 ]
+  z_vals_small_scale  = [ 4.2, 4.6, 5.0, 5.4 ]
   z_vals_large_scale  = [ 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4 ]
   z_vals_middle_scale = [   3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4  ]
   z_vals_small_scale_walther  = [ 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4,  ]
@@ -107,6 +106,8 @@ def plot_power_spectrum_grid( ps_data_dir, output_dir, ps_data=None, scales='lar
   nrows = 3
   ncols = 4
   
+  
+  if scales == 'small':  nrows, ncols = 1, 4
   if scales == 'small_walther': nrows = 2
   if high_z_only:    nrows, ncols = 1, 2
   if scales == 'large_middle': ncols, nrows = 3, 2
@@ -129,6 +130,7 @@ def plot_power_spectrum_grid( ps_data_dir, output_dir, ps_data=None, scales='lar
   if scales == 'all': plot_boss, plot_boera, plot_irsic = True, True, True
   if scales == 'middle': plot_boss, plot_irsic = True, True,
   if scales == 'small_highz': plot_boss, plot_boera = True, True,
+  if scales == 'small': plot_boera, plot_viel = True, True,
   if scales == 'large_middle': plot_boss, plot_irsic = True, True
   if scales == 'large_reduced': plot_boss = True
   if scales == 'small_reduced': 
@@ -376,6 +378,9 @@ def plot_power_spectrum_grid( ps_data_dir, output_dir, ps_data=None, scales='lar
       x_min, x_max = 4e-3, 2e-1
       if indx_i == 0: y_min, y_max = 4e-2, 7e-1
 
+    if scales == 'small':
+      x_min, x_max = 4e-3, 3e-1
+      if indx_i == 0: y_min, y_max = 8e-3, 2e-0
       
       
     if high_z_only: y_min, y_max = 5e-2, 3

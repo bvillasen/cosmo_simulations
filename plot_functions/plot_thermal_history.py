@@ -19,41 +19,50 @@ from tools import *
 from colors import *
 from interpolation_functions import interp_line_cubic
 
+matplotlib.rcParams['mathtext.fontset'] = 'cm'
+matplotlib.rcParams['mathtext.rm'] = 'serif'
 
-def Plot_T0_evolution( output_dir, data_sets=None, system='Shamrock', label='', fig_name='fig_T0_evolution', black_background=False, interpolate_lines=True, n_samples_interp=10000 ):
+matplotlib.font_manager.findSystemFonts(fontpaths=['/home/bruno/Helvetica'], fontext='ttf')
+matplotlib.rcParams['font.sans-serif'] = "Helvetica"
+matplotlib.rcParams['font.family'] = "sans-serif"
+
+tick_size_major, tick_size_minor = 6, 4
+tick_label_size_major, tick_label_size_minor = 12, 12
+tick_width_major, tick_width_minor = 1.5, 1
+
+font_size = 16
+legend_font_size = 12
+alpha = 0.5
+
+border_width = 1.5
+
+color_line = 'C0'
+
+color_data_0 = orange
+color_data_1 = 'C3'
+
+
+# color_data_0 = purple
+# color_data_1 = dark_green
+
+colors_lines = [ 'C0', 'C1' ]
+colors_lines = [ 'k']
   
-    
-  matplotlib.rcParams['mathtext.fontset'] = 'cm'
-  matplotlib.rcParams['mathtext.rm'] = 'serif'
+if system == 'Lux':      prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/brvillas/fonts', "Helvetica.ttf"), size=legend_font_size )
+if system == 'Shamrock': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=legend_font_size )
+if system == 'Tornado': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=legend_font_size )
 
-
-
-  tick_size_major, tick_size_minor = 6, 4
-  tick_label_size_major, tick_label_size_minor = 12, 12
-  tick_width_major, tick_width_minor = 1.5, 1
-
-  font_size = 16
-  legend_font_size = 12
-  alpha = 0.6
+def Plot_T0_evolution( output_dir, data_sets=None, time_axis=None, system='Shamrock', label='', fig_name='fig_T0_evolution', black_background=False, interpolate_lines=False, n_samples_interp=10000, plot_interval=False  ):
   
-  border_width = 1.5
-
   text_color  = 'black'
-  color_line = 'C0'
-  
-  color_data_0 = orange
-  color_data_1 = 'C3'
   
   if black_background:
     text_color = 'white'
     
-  if system == 'Lux':      prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/brvillas/fonts', "Helvetica.ttf"), size=legend_font_size )
-  if system == 'Shamrock': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=legend_font_size )
-  
-  ymin, ymax = 0.6, 1.7  
+  ymin, ymax = 0.6, 1.8
   xmin, xmax = 1.95, 9  
   nrows, ncols = 1, 1
-  plt.rcParams['xtick.top'] = True
+  # plt.rcParams['xtick.top'] = True
   fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(10*ncols,6*nrows))
   
   if data_sets:
@@ -61,31 +70,28 @@ def Plot_T0_evolution( output_dir, data_sets=None, system='Shamrock', label='', 
       data_set = data_sets[data_id]
       label = data_set['label']
       z = data_set['z']
-      mean = data_set['line'] / 1e4
-      high = data_set['high'] / 1e4
-      low  = data_set['low'] / 1e4
-      color = data_set['color']
+      T0 = data_set['T0'] / 1e4
+      z0 = z.copy()
+      T0_0 = T0.copy()
+      # mean = data_set['line'] / 1e4
+      color = colors_lines[data_id]
       if interpolate_lines:
         z_interp = np.linspace( z[0], z[-1], n_samples_interp ) 
-        mean = interp_line_cubic( z, z_interp, mean )
-        high = interp_line_cubic( z, z_interp, high )
-        low  = interp_line_cubic( z, z_interp, low )
+        T0 = interp_line_cubic( z, z_interp, T0 )
         z = z_interp
-      ax.plot( z, mean, color=color, zorder=1, label=label )
-      ax.fill_between( z, high, low, color=color, alpha=alpha, zorder=1 )  
-  # 
-  #   sort_indices = np.argsort( z )
-  #   z = z[sort_indices]
-  #   mean = mean[sort_indices]
-  #   high = high[sort_indices]
-  #   low  = low[sort_indices]
-  #   n_samples_intgerp = 10000
-  #   z_interp = np.linspace( z[0], z[-1], n_samples_intgerp )  
-  #   f_mean = interp.interp1d( z, mean, kind='cubic' )
-  #   f_high = interp.interp1d( z, high, kind='cubic' )
-  #   f_low  = interp.interp1d( z, low,  kind='cubic' )
-  #   ax.plot( z_interp, f_mean(z_interp) / 1e4, color=color_line, zorder=1, label=label )
-  #   ax.fill_between( z_interp, f_high(z_interp) / 1e4, f_low(z_interp) / 1e4, color=color_bar, alpha=alpha, zorder=1 )  
+      ax.plot( z, T0, color=color, zorder=1, label=label )
+      if plot_interval:
+        high = data_set['high'] / 1e4
+        low  = data_set['low'] / 1e4
+        high[12] *= 1.005
+        low[12] *= 0.995
+        high[14] *= 0.995
+        low[14] *= 1.005
+        low[13] *= 1.002
+        if interpolate_lines:
+          high = interp_line_cubic( z0, z_interp, high )
+          low  = interp_line_cubic( z0, z_interp, low )
+        ax.fill_between( z, high, low, color=color, alpha=alpha, zorder=1 )  
 
   data_set = data_thermal_history_Gaikwad_2020a
   data_z = data_set['z']
@@ -103,8 +109,10 @@ def Plot_T0_evolution( output_dir, data_sets=None, system='Shamrock', label='', 
   
   ax.tick_params(axis='both', which='major', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major  )
   ax.tick_params(axis='both', which='minor', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor  )
-  ax.set_ylabel( r'$T_0   \,\,\,\, [10^4 \,\,\,\mathrm{K}\,]$', fontsize=font_size, color=text_color  )
-  ax.set_xlabel( r'$z$', fontsize=font_size, color=text_color )
+  # ax.set_ylabel( r'$T_0   \,\,\,\, [10^4 \,\,\,\mathrm{K}\,]$', fontsize=font_size, color=text_color  )
+  ax.set_ylabel( r'$T_0$        ', fontsize=font_size, color=text_color  )
+  ax.set_xlabel( r'Redshift  $z$', fontsize=font_size, color=text_color )
+  # ax.set_xlabel( r'$z$', fontsize=font_size, color=text_color )
   ax.set_xlim( xmin, xmax )
   ax.set_ylim( ymin, ymax)
   leg = ax.legend(loc=3, frameon=False, fontsize=22, prop=prop)
@@ -117,10 +125,54 @@ def Plot_T0_evolution( output_dir, data_sets=None, system='Shamrock', label='', 
     [ spine.set_edgecolor(text_color) for spine in list(ax.spines.values()) ]
       
   [sp.set_linewidth(border_width) for sp in ax.spines.values()]
-        
+  
+  if time_axis is not None:
+    z = time_axis['z']
+    t = time_axis['t']
+    print (t)
+    def z_to_time( x ):
+      return np.interp( x, z, t )
+    def time_to_z( x ):
+      return np.interp( x, t[::-1], z[::-1])
+    secax = ax.secondary_xaxis('top', functions=(z_to_time, time_to_z))    
+    # secax.set_xlabel( 'Time after the Big Bang  [Gyr]', fontsize=font_size, labelpad=-35)
+    # secax.set_ticks( [0.6, 0.8,  1.0, 1.4, 2.0, 3.0 ])
+    secax.set_ticks( [0.6, 0.8,  1.5, 2.0, 3.0 ])
+    secax.tick_params(pad=-20, axis='both', which='major', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major  )
+  
+  alpha_sec = 0.3
+  z_lims = [ 1, 3, 4.6, 6.2, 10]
+  
+  c0 = 'C0'
+  c1 = 'gray' 
+  c2 = 'C0' 
+  c3 = 'gray'
+  ax.fill_between( [ z_lims[0], z_lims[1] ], [0, 0 ], [2, 2], color=c0, alpha=alpha_sec)
+  ax.fill_between( [ z_lims[1], z_lims[2] ], [0, 0 ], [2, 2], color=c1, alpha=alpha_sec)
+  ax.fill_between( [ z_lims[2], z_lims[3] ], [0, 0 ], [2, 2], color=c2, alpha=alpha_sec)
+  ax.fill_between( [ z_lims[3], z_lims[4] ], [0, 0 ], [2, 2], color=c3, alpha=alpha_sec)
+  
+  
+  font_size_text = 10
+  text_y = 0.95
+  
+  text = 'Heating from the ionization \nof Hydrogen by radiation \nfrom early galaxies.'
+  ax.text(0.8, text_y, text, horizontalalignment='center',  verticalalignment='top', transform=ax.transAxes, fontsize=font_size_text, color='black') 
+
+  text = 'Cooling from \ncosmic expansion.'
+  ax.text(0.495, text_y, text, horizontalalignment='center',  verticalalignment='top', transform=ax.transAxes, fontsize=font_size_text, color='black') 
+
+  text = 'Reheating from the\nionization of Helium\nby radiation from\nactive galactic nuclei.'
+  ax.text(0.26, text_y, text, horizontalalignment='center',  verticalalignment='top', transform=ax.transAxes, fontsize=font_size_text, color='black') 
+
+  text = 'Cooling from\ncosmic expansion.'
+  ax.text(0.076, text_y, text, horizontalalignment='center',  verticalalignment='top', transform=ax.transAxes, fontsize=font_size_text, color='black') 
+
+    
   figure_name = output_dir + f'{fig_name}'
   if black_background: figure_name += '_black'
   figure_name += '.png'
   fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
   print( f'Saved Figure: {figure_name}' )
+  return secax
   

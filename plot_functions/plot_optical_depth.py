@@ -18,9 +18,12 @@ import matplotlib.font_manager
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
 matplotlib.rcParams['mathtext.rm'] = 'serif'
 
-colors_data = [ orange, purple, dark_blue, cyan ]
 
-def Plot_tau_HI( samples_tau_HI, output_dir, system='Shamrock', labels='', black_background = False ):
+colors_data = [ green, purple, dark_blue, cyan ]
+colors_lines = [ 'C0', 'C1' ]
+
+ 
+def Plot_tau_HI( output_dir,  samples_tau_HI=None, labels='', black_background=False, figure_name='fig_tau_HI.png' ):
 
   if system == 'Lux':      prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/brvillas/fonts', "Helvetica.ttf"), size=12)
   if system == 'Shamrock': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=12)
@@ -46,44 +49,15 @@ def Plot_tau_HI( samples_tau_HI, output_dir, system='Shamrock', labels='', black
   fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(10*ncols,8*nrows))
   colors_new = ['C0', 'C1']
 
-
-  # for data_id in samples_tau_HI_multiple:
-  #   colormap = color_map_list[data_id]
-  #   colors = colormap.mpl_colors
-  #   n_colors = len( colors )
-  #   if use_color_from_colormap: color_line = colors[n_colors//2]
-  #   else:color_line = color_lines_list[data_id]
-  #   if black_background:
-  #     colormap = color_map_list_balck[data_id]
-  #     colors = colormap.mpl_colors
-  #     color_line = colors[4]
-  #     color_bar  = colors[4]
-  # 
-  # 
-  #   label = labels_multiple[data_id]
-  #   samples = samples_tau_HI_multiple[data_id]
-  #   z = samples['z']
-  #   mean = samples['mean']
-  #   high = samples['higher']
-  #   low = samples['lower']
-  #   if 'Highest_Likelihood' in samples:
-  #     print( 'Plotting Highest_Likelihood T0')
-  #     mean = samples['Highest_Likelihood']
-  #   # ax.plot( z, mean, color=color_line, zorder=1, label=label )
-  #   # ax.fill_between( z, high, low, color=color_line, alpha=alpha, zorder=1 )  
-  #   sort_indices = np.argsort( z )
-  #   z = z[sort_indices]
-  #   mean = mean[sort_indices]
-  #   high = high[sort_indices]
-  #   low  = low[sort_indices]
-  #   n_samples_intgerp = 10000
-  #   z_interp = np.linspace( z[0], z[-1], n_samples_intgerp )  
-  #   f_mean = interp.interp1d( z, mean, kind='cubic' )
-  #   f_high = interp.interp1d( z, high, kind='cubic' )
-  #   f_low  = interp.interp1d( z, low,  kind='cubic' )
-  #   color_line = colors_new[data_id]
-  #   ax.plot( z_interp, f_mean(z_interp), color=color_line, zorder=1, label=label )
-  #   ax.fill_between( z_interp, f_high(z_interp), f_low(z_interp), color=color_line, alpha=alpha, zorder=1 )  
+  if samples_tau_HI:
+    for data_id in samples_tau_HI:
+      samples = samples_tau_HI[data_id]
+      z = samples['z']
+      tau = samples['tau_vals']
+      color_line = colors_lines[data_id]
+      if 'label' in samples: label = samples['label']
+      else: label = ''
+      ax.plot( z, tau, color=color_line, zorder=1, label=label )
   
   data_set = data_optical_depth_Bosman_2020
   data_name = data_set['name']
@@ -139,7 +113,7 @@ def Plot_tau_HI( samples_tau_HI, output_dir, system='Shamrock', labels='', black
       
   [sp.set_linewidth(border_width) for sp in ax.spines.values()]
 
-  figure_name = output_dir + f'fig_tau_HI_sampling.png'
+  figure_name = output_dir + figure_name
   fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
   print( f'Saved Figure: {figure_name}' )
 
