@@ -6,7 +6,12 @@ sys.path.append( root_dir + 'tools')
 from tools import *
 
 
-def Delete_core_files( self, sim_id ):
+def Delete_grid_core_files( self ):
+ sim_ids = self.sim_ids
+ for sim_id in sim_ids:
+   self.Delete_simulation_core_files( sim_id )
+ 
+def Delete_simulation_core_files( self, sim_id ):
  sim_dir = self.Get_Simulation_Directory( sim_id )
  files = os.listdir( sim_dir )
  for file in files:
