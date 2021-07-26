@@ -10,7 +10,7 @@ system = os.getenv('SYSTEM_NAME')
 if not system:
   print( 'Can not find the system name')
   exit(-1)
-print( f'System: {system}')
+# print( f'System: {system}')
 
 if system == 'Eagle':    data_dir = '/home/bruno/Desktop/data/'
 if system == 'Tornado':  data_dir = '/home/bruno/Desktop/ssd_0/data/'
