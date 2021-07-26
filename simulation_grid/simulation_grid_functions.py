@@ -17,7 +17,7 @@ def Fit_Simulation_Phase_Diagram_MPI( self, sim_id, n_mpi=30,  n_nodes=1  ):
   sim_dir = self.Get_Simulation_Directory( sim_id )
   input_dir = sim_dir + 'analysis_files/'
   cwd = os.getcwd()
-  run_file = cwd + '/phase_diagram/fit_phase_diagram_mpi.py'
+  run_file = root_dir + '/phase_diagram/fit_phase_diagram_mpi.py'
   parameters = sim_dir + 'analysis_files/'
   n_per_node = n_mpi // n_nodes + 1
   command = f'mpirun -n {n_mpi} --map-by ppr:{n_per_node}:node --oversubscribe python {run_file} {parameters}'
