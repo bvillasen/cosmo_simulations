@@ -4,7 +4,25 @@ import numpy as np
 root_dir = os.path.dirname(os.getcwd()) + '/'
 sys.path.append( root_dir + 'tools')
 from tools import *
+# from phase_diagram_functions import fit_thermal_parameters_mcmc, get_density_temperature_values_to_fit
 
+
+def Fit_Grid_Phase_Diagram_MPI( self, n_mpi=30, n_nodes=1 ):
+  print("Fitting Phase Diagram:")
+  for sim_id in self.Grid.keys():
+    self.Fit_Simulation_Phase_Diagram_MPI( sim_id, n_mpi=n_mpi, n_nodes=n_nodes )
+
+def Fit_Simulation_Phase_Diagram_MPI( self, sim_id, n_mpi=30,  n_nodes=1  ):
+  print( f' Fitting Simulation: {sim_id}')
+  sim_dir = self.Get_Simulation_Directory( sim_id )
+  input_dir = sim_dir + 'analysis_files/'
+  cwd = os.getcwd()
+  run_file = cwd + '/phase_diagram/fit_phase_diagram_mpi.py'
+  parameters = sim_dir + 'analysis_files/'
+  n_per_node = n_mpi // n_nodes + 1
+  command = f'mpirun -n {n_mpi} --map-by ppr:{n_per_node}:node --oversubscribe python {run_file} {parameters}'
+  print( f' Submitting: {command}' )
+  os.system( command )
 
 def Delete_grid_core_files( self ):
  sim_ids = self.sim_ids
