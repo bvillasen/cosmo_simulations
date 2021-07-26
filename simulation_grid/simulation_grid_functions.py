@@ -16,7 +16,8 @@ def Delete_simulation_core_files( self, sim_id ):
  files = os.listdir( sim_dir )
  for file in files:
    if file.find('core') == 0:
-     print( sim_dir + file )
+     print( f'Removing: {sim_dir + file} ' )
+     os.remove( sim_dir + file )
  
 def Load_Grid_UVB_Rates( self ):
   print( 'Loading UVB Rates Files')
