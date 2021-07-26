@@ -8,7 +8,7 @@ extend_path()
 from load_grid_parameters import Grid_Parameters
 from simulation_grid import Simulation_Grid
 from simulation_parameters import *
-from plot_UVB_Rates import Plot_Grid_UVB_Rates
+from plot_uvb_Rates import Plot_Grid_UVB_Rates
 
 check_queue = True
 if system == 'Shamrock': check_queue = False
