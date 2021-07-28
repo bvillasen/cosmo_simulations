@@ -19,7 +19,7 @@ nPoints = 1024
 nBoxes  = 16
 
 input_dir = data_dir + f'cosmo_sims/ics/enzo/wdm/1024_hydro_50Mpc_wdm_m1.5kev/raw/'
-output_dir = data_dir + f'cosmo_sims/ics/1024_hydro_50Mpc_wdm_m1.5kev/ics_{nBoxes}_z100/'
+output_dir = data_dir + f'cosmo_sims/ics/wdm/1024_hydro_50Mpc_wdm_m1.5kev/ics_{nBoxes}_z100/'
 print(f'Input Dir: {input_dir}' )
 print(f'Output Dir: {output_dir}' )
 create_directory( output_dir )
