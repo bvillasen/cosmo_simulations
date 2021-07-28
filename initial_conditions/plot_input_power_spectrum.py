@@ -17,7 +17,7 @@ create_directory( output_dir )
 
 
 sim_names = [ 'cdm', 'wdm_m3.0kev', 'wdm_m1.0kev', 'wdm_m0.5kev' ]
-labels = ['CDM', 'WDM m = 3.00 keV', 'WDM m = 1.0 keV', 'WDM m = 0.5 keV' ]
+labels = ['CDM', r'WDM $m \,= \,3.0 \,\mathrm{keV}$', r'WDM $m \,= \,1.0 \,\mathrm{keV}$', r'WDM $m \,= \,0.5 \,\mathrm{keV}$' ]
 
 data_all = {}
 for i,sim_name in enumerate(sim_names):
@@ -29,35 +29,35 @@ for i,sim_name in enumerate(sim_names):
   
 
 
-font_size = 16
+font_size = 20
+label_size = 18
+legend_font_size = 16
+figure_text_size = 12
 tick_size_major, tick_size_minor = 6, 4
 tick_label_size_major, tick_label_size_minor = 14, 12
 tick_width_major, tick_width_minor = 1.5, 1
 border_width = 1.5
 
 
-figure_text_size = 12
 text_color = 'black'
+  
 
+colors = [ sky_blue, ocean_green, ocean_blue, dark_purple  ]    
 
-blue = blues[4]
-yellow = yellows[2]
-green = greens[5]
-colors = [ 'C0', 'C1', green,    yellow  ]
-
-black_background = True
+black_background = False
 if black_background:
-  text_color = 'white'
+  green = greens[5]
+  yellow = yellows[2]
   color_line = blues[4]
+  colors = [ 'C0', 'C1', green,    yellow  ]
+  text_color = 'white'
 
 nrows, ncols = 1, 1
 fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(10*ncols,8*nrows))
 
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
 matplotlib.rcParams['mathtext.rm'] = 'serif'
-prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=12)
-font_size = 18
-label_size = 16
+prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=legend_font_size)
 
 type = 'P_vcdm'
 
@@ -69,7 +69,8 @@ for i in data_all:
   label = data['label']
   ax.plot( k, lambda_ps, label=label, color=colors[i], lw=2 )
 
-ax.set_xlim( 1e-3, 100 )
+
+ax.set_xlim( 2e-3, 200 )
 ax.set_ylim( 1e-4, 300 )
 
 ax.set_xscale('log')
@@ -78,9 +79,9 @@ ax.tick_params(axis='both', which='major', direction='in', color=text_color, lab
 ax.tick_params(axis='both', which='minor', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor  )
 
 
-ax.set_ylabel( r'$ \frac{1}{2\pi^3} k^3 P(k)  $', fontsize=font_size, color=text_color   )
+ax.set_ylabel( r'$ \frac{1}{2\pi^3} k^3 P_m(k)  $', fontsize=font_size, color=text_color   )
 ax.set_xlabel(  r'$ k   \,\,\,  [h\,\mathrm{Mpc}^{-1}] $', fontsize=font_size, color=text_color  )
-leg = ax.legend(loc=2, frameon=False, fontsize=font_size, prop=prop)
+leg = ax.legend(loc=2, frameon=False, fontsize=legend_font_size, prop=prop)
 for text in leg.get_texts():
   plt.setp(text, color = text_color)
   
@@ -93,6 +94,6 @@ if black_background:
 
 
 
-figure_name = output_dir + f'fig_wdm_{type}.png'
+figure_name = output_dir + f'input_power_spectrum_wdm.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )

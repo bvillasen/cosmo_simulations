@@ -51,6 +51,4 @@ z_array, time_array = cosmo.z_vals, cosmo.t_vals/Myear/1000
 time_axis = { 'z':z_array[::-1], 't':time_array[::-1] }
 
 time_axis = None
-
-
-secax = Plot_T0_evolution( output_dir, data_sets=data_to_plot, system='Shamrock', label='', fig_name='fig_T0_evolution_nature', black_background=False, plot_interval=True, interpolate_lines=True, time_axis=time_axis )
+Plot_T0_evolution( output_dir, data_sets=data_to_plot, system='Shamrock', label='', fig_name='fig_T0_evolution_nature', black_background=False, plot_interval=True, interpolate_lines=True, time_axis=time_axis )
