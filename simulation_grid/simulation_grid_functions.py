@@ -39,9 +39,11 @@ def Delete_simulation_core_files( self, sim_id ):
 def Load_Grid_UVB_Rates( self ):
   print( 'Loading UVB Rates Files')
   sim_ids = self.Grid.keys()
+  rates_data = {}
   for sim_id in sim_ids:
-    self.Load_Simulation_UVB_Rates( sim_id )
-  
+    rates = self.Load_Simulation_UVB_Rates( sim_id )
+    rates_data[sim_id] = rates
+  return rates_data
   
 def Load_Simulation_UVB_Rates( self, sim_id ):
   sim_dir = self.Get_Simulation_Directory( sim_id )
@@ -59,3 +61,4 @@ def Load_Simulation_UVB_Rates( self, sim_id ):
     else:
       rates_out[root_key] = data_group[...]
   self.Grid[sim_id]['UVB_rates'] = rates_out
+  return { 'UVBRates': rates_out }

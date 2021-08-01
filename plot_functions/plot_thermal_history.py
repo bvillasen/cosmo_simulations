@@ -18,9 +18,7 @@ from data_thermal_history import *
 from tools import *
 from colors import *
 from interpolation_functions import interp_line_cubic
-
-matplotlib.rcParams['mathtext.fontset'] = 'cm'
-matplotlib.rcParams['mathtext.rm'] = 'serif'
+from figure_functions import *
 
 matplotlib.font_manager.findSystemFonts(fontpaths=['/home/bruno/Helvetica'], fontext='ttf')
 matplotlib.rcParams['font.sans-serif'] = "Helvetica"
@@ -48,10 +46,6 @@ color_data_2 = dark_blue
 
 colors_lines = [ 'C0', 'C1' ]
 colors_lines = [ 'k']
-  
-if system == 'Lux':      prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/brvillas/fonts', "Helvetica.ttf"), size=legend_font_size )
-if system == 'Shamrock': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=legend_font_size )
-if system == 'Tornado': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=legend_font_size )
 
 
 def Plot_T0_gamma_evolution( output_dir, data_sets=None, time_axis=None, system='Shamrock', label='', fig_name='fig_T0_evolution', black_background=False, interpolate_lines=False, n_samples_interp=10000, plot_interval=False  ):
@@ -62,12 +56,26 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, time_axis=None, system=
     text_color = 'white'
     
   ymin, ymax = 0.6, 1.8
-  xmin, xmax = 1.95, 9  
-  nrows, ncols = 1, 1
+  xmin, xmax = 1.95, 7.0
+  nrows, ncols = 1, 2
   # plt.rcParams['xtick.top'] = True
-  fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(10*ncols,6*nrows))
   
+  
+  fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(figure_width*ncols,6*nrows))
+  plt.subplots_adjust( hspace = 0.1, wspace=0.15)
+  
+  ax = ax_l[0]
   if data_sets:
+    n_lines = len( data_sets )
+
+    # colormap = colormap = palettable.cmocean.sequential.Algae_20_r.mpl_colormap
+    # colormap = palettable.colorbrewer.sequential.YlGnBu_9_r.mpl_colormap
+    # colormap = palettable.scientific.sequential.Nuuk_20_r.mpl_colormap
+    colormap = palettable.scientific.sequential.LaPaz_20.mpl_colormap
+    if black_background: colormap = palettable.colorbrewer.sequential.Blues_9_r.mpl_colormap
+    
+    alpha = 0.5
+    colors = colormap( np.linspace(0,1,n_lines) )
     for data_id in data_sets:
       data_set = data_sets[data_id]
       if 'label' in data_set: label = data_set['label']
@@ -75,22 +83,17 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, time_axis=None, system=
       z = data_set['z']
       T0 = data_set['T0'] / 1e4
       z0 = z.copy()
-      T0_0 = T0.copy()
-      # mean = data_set['line'] / 1e4
-      # color = colors_lines[data_id]
+      color = colors[data_id]
       if interpolate_lines:
         z_interp = np.linspace( z[0], z[-1], n_samples_interp ) 
         T0 = interp_line_cubic( z, z_interp, T0 )
         z = z_interp
-      ax.plot( z, T0,  zorder=1, label=label )
+      if data_id == 0: label = 'Simulation'
+      else: label = ''
+      ax.plot( z, T0, c=color, zorder=1, label=label, alpha=alpha, lw=1 )
       if plot_interval:
         high = data_set['high'] / 1e4
         low  = data_set['low'] / 1e4
-        high[12] *= 1.005
-        low[12] *= 0.995
-        high[14] *= 0.995
-        low[14] *= 1.005
-        low[13] *= 1.002
         if interpolate_lines:
           high = interp_line_cubic( z0, z_interp, high )
           low  = interp_line_cubic( z0, z_interp, low )
@@ -99,7 +102,7 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, time_axis=None, system=
   data_set = data_thermal_history_Gaikwad_2020a
   data_z = data_set['z']
   data_mean = data_set['T0'] 
-  data_error = 0.5 * ( data_set['T0_sigma_plus'] + data_set['T0_sigma_minus'] )
+  data_error = 0.4 * ( data_set['T0_sigma_plus'] + data_set['T0_sigma_minus'] )
   name = data_set['name']   
   ax.errorbar( data_z, data_mean/1e4, yerr=data_error/1e4, label=name, fmt='o', color= color_data_1, zorder=2)
 
@@ -113,8 +116,64 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, time_axis=None, system=
 
   ax.tick_params(axis='both', which='major', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major  )
   ax.tick_params(axis='both', which='minor', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor  )
-  # ax.set_ylabel( r'$T_0   \,\,\,\, [10^4 \,\,\,\mathrm{K}\,]$', fontsize=font_size, color=text_color  )
-  ax.set_ylabel( r'$T_0$        ', fontsize=font_size, color=text_color  )
+  ax.set_ylabel( r'$T_0   \,\,\,\, [10^4 \,\,\,\mathrm{K}\,]$', fontsize=font_size, color=text_color  )
+  ax.set_xlabel( r'Redshift  $z$', fontsize=font_size, color=text_color )
+  # ax.set_xlabel( r'$z$', fontsize=font_size, color=text_color )
+  ax.set_xlim( xmin, xmax )
+  ax.set_ylim( ymin, ymax)
+  leg = ax.legend(loc=4, frameon=False, fontsize=22, prop=prop)
+  for text in leg.get_texts():
+    plt.setp(text, color = text_color)
+  if black_background: 
+    fig.patch.set_facecolor('black') 
+    ax.set_facecolor('k')
+    [ spine.set_edgecolor(text_color) for spine in list(ax.spines.values()) ]      
+  [sp.set_linewidth(border_width) for sp in ax.spines.values()]
+  
+  ax = ax_l[1]
+  if data_sets:
+    for data_id in data_sets:
+      data_set = data_sets[data_id]
+      if 'label' in data_set: label = data_set['label']
+      else: label = ''
+      z = data_set['z']
+      gamma = data_set['gamma'] + 1
+      z0 = z.copy()
+      color = colors[data_id]
+      if interpolate_lines:
+        z_interp = np.linspace( z[0], z[-1], n_samples_interp ) 
+        gamma = interp_line_cubic( z, z_interp, gamma )
+        z = z_interp
+      if data_id == 0: label = 'Simulation'
+      else: label = ''
+      ax.plot( z, gamma, c=color, zorder=1, label=label, alpha=alpha, lw=1 )
+      if plot_interval:
+        high = data_set['high'] + 1
+        low  = data_set['low'] + 1
+        if interpolate_lines:
+          high = interp_line_cubic( z0, z_interp, high )
+          low  = interp_line_cubic( z0, z_interp, low )
+        ax.fill_between( z, high, low, alpha=alpha, zorder=1 )  
+
+  data_set = data_thermal_history_Gaikwad_2020a
+  data_z = data_set['z']
+  data_mean = data_set['gamma'] 
+  data_error = 0.4 * ( data_set['gamma_sigma_plus'] + data_set['gamma_sigma_minus'] )
+  name = data_set['name']   
+  ax.errorbar( data_z, data_mean, yerr=data_error, label=name, fmt='o', color= color_data_1, zorder=2)
+
+  data_set = data_thermal_history_Gaikwad_2020b
+  data_z = data_set['z']
+  data_mean = data_set['gamma'] 
+  data_error = 0.5 * ( data_set['gamma_sigma_plus'] + data_set['gamma_sigma_minus'] )
+  name = data_set['name']   
+  ax.errorbar( data_z, data_mean, yerr=data_error, label=name, fmt='o', color= color_data_0, zorder=2)
+  
+
+  ymin, ymax = 0.8, 1.8
+  ax.tick_params(axis='both', which='major', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major  )
+  ax.tick_params(axis='both', which='minor', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor  )
+  ax.set_ylabel( r'$\gamma$', fontsize=font_size, color=text_color  )
   ax.set_xlabel( r'Redshift  $z$', fontsize=font_size, color=text_color )
   # ax.set_xlabel( r'$z$', fontsize=font_size, color=text_color )
   ax.set_xlim( xmin, xmax )
@@ -122,13 +181,13 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, time_axis=None, system=
   leg = ax.legend(loc=3, frameon=False, fontsize=22, prop=prop)
   for text in leg.get_texts():
     plt.setp(text, color = text_color)
-
   if black_background: 
     fig.patch.set_facecolor('black') 
     ax.set_facecolor('k')
-    [ spine.set_edgecolor(text_color) for spine in list(ax.spines.values()) ]
-      
+    [ spine.set_edgecolor(text_color) for spine in list(ax.spines.values()) ]      
   [sp.set_linewidth(border_width) for sp in ax.spines.values()]
+  
+  
   
     
   figure_name = output_dir + f'{fig_name}'
@@ -137,8 +196,7 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, time_axis=None, system=
   fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
   print( f'Saved Figure: {figure_name}' )
   
-
-
+  
 
 
 def Plot_T0_evolution( output_dir, data_sets=None, time_axis=None, system='Shamrock', label='', fig_name='fig_T0_evolution', black_background=False, interpolate_lines=False, n_samples_interp=10000, plot_interval=False  ):
@@ -168,6 +226,23 @@ def Plot_T0_evolution( output_dir, data_sets=None, time_axis=None, system='Shamr
         z_interp = np.linspace( z[0], z[-1], n_samples_interp ) 
         T0 = interp_line_cubic( z, z_interp, T0 )
         z = z_interp
+        
+        temp = T0
+        indices_H  = z >  4.5
+        indices_He = z <= 4.5
+        z_H = z[indices_H]
+        temp_H = temp[indices_H] 
+        indx_max_H = np.where(temp_H == temp_H.max())
+        z_max_H = z_H[indx_max_H]
+        temp_max_H = temp_H[indx_max_H]
+        print( f'H   z_peak:{z_max_H}   T0_peak:{temp_max_H}')
+        z_He = z[indices_He]
+        temp_He = temp[indices_He] 
+        indx_max_He = np.where(temp_He == temp_He.max())
+        z_max_He = z_He[indx_max_He]
+        temp_max_He = temp_He[indx_max_He]
+        print( f'He  z_peak:{z_max_He}   T0_peak:{temp_max_He}')
+          
       ax.plot( z, T0, color=color, zorder=1, label=label )
       if plot_interval:
         high = data_set['high'] / 1e4
@@ -180,6 +255,36 @@ def Plot_T0_evolution( output_dir, data_sets=None, time_axis=None, system='Shamr
         if interpolate_lines:
           high = interp_line_cubic( z0, z_interp, high )
           low  = interp_line_cubic( z0, z_interp, low )
+          temp = high
+          indices_H  = z >  4.5
+          indices_He = z <= 4.5
+          z_H = z[indices_H]
+          temp_H = temp[indices_H] 
+          # indx_max = np.where(temp_H == temp_H.max())
+          z_max_H = z_H[indx_max_H]
+          temp_max_H = temp_H[indx_max_H]
+          print( f'H   z_peak:{z_max_H}   T0_peak High:{temp_max_H}')
+          z_He = z[indices_He]
+          temp_He = temp[indices_He] 
+          # indx_max = np.where(temp_He == temp_He.max())
+          z_max_He = z_He[indx_max_He]
+          temp_max_He = temp_He[indx_max_He]
+          print( f'He  z_peak:{z_max_He}   T0_peak High:{temp_max_He}')
+          temp = low
+          indices_H  = z >  4.5
+          indices_He = z <= 4.5
+          z_H = z[indices_H]
+          temp_H = temp[indices_H] 
+          # indx_max = np.where(temp_H == temp_H.max())
+          z_max_H = z_H[indx_max_H]
+          temp_max_H = temp_H[indx_max_H]
+          print( f'H   z_peak:{z_max_H}   T0_peak Low:{temp_max_H}')
+          z_He = z[indices_He]
+          temp_He = temp[indices_He] 
+          # indx_max = np.where(temp_He == temp_He.max())
+          z_max_He = z_He[indx_max_He]
+          temp_max_He = temp_He[indx_max_He]
+          print( f'He  z_peak:{z_max_He}   T0_peak Low:{temp_max_He}')
         ax.fill_between( z, high, low, color=color, alpha=alpha, zorder=1 )  
 
   data_set = data_thermal_history_Gaikwad_2020a
@@ -274,5 +379,11 @@ def Plot_T0_evolution( output_dir, data_sets=None, time_axis=None, system='Shamr
   figure_name += '.png'
   fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
   print( f'Saved Figure: {figure_name}' )
+  
+  
+  
+#########################################################################
+
+
   
   

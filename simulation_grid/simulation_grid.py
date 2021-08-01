@@ -212,19 +212,21 @@ class Simulation_Grid:
     return param_values
 
 ###############################################################################################
-  def Create_UVB_Rates_Files( self, max_delta_z=0.1 ):
+  def Create_UVB_Rates_Files( self, max_delta_z=0.1, input_file_name=None, input_UVB_rates=None, constant_parameters=None ):
     print("Creating UVB Rates Files:")
     for sim_id in self.Grid.keys():
-      self.Create_UVB_Rates_File( sim_id, max_delta_z=max_delta_z )
+      self.Create_UVB_Rates_File( sim_id, max_delta_z=max_delta_z, input_file_name=input_file_name, input_UVB_rates=input_UVB_rates, constant_parameters=constant_parameters )
       
 ###############################################################################################
-  def Create_UVB_Rates_File( self, sim_id, max_delta_z=0.1 ):
+  def Create_UVB_Rates_File( self, sim_id, max_delta_z=0.1, input_UVB_rates=None, input_file_name=None, constant_parameters=None ):
     simulation = self.Grid[sim_id]
-    grackle_in_file_name =  root_dir + 'rates_uvb/CloudyData_UVB_Puchwein2019_cloudy.h5' 
     param_values =  self.Get_Simulation_Parameter_Values( sim_id )
     sim_dir = self.Get_Simulation_Directory( sim_id )
     out_file_name = sim_dir + 'UVB_rates.h5'
-    Generate_Modified_Rates_File( grackle_in_file_name, out_file_name, param_values, max_delta_z=max_delta_z  )
+    if constant_parameters is not None:
+      for p_name in constant_parameters:
+        param_values[p_name] = constant_parameters[p_name]
+    Generate_Modified_Rates_File(  out_file_name, param_values, max_delta_z=max_delta_z, input_file_name=input_file_name, input_UVB_rates=input_UVB_rates  )
 
 ###############################################################################################    
   def Submit_Grid_Jobs( self, n_submit=None, partition=None ):

@@ -1,6 +1,19 @@
 import numpy as np
 
 
+def get_HPI_2D( hist_2D, frac_final ):
+  max = hist_2D.max()
+  sum_total = hist_2D.sum()
+  level = max
+  factor = 0.99
+  frac_enclosed = 0
+  while  frac_enclosed < frac_final:
+    level = level * factor
+    indices_enclosed = np.where( hist_2D >= level )
+    sum_enclosed = (hist_2D[indices_enclosed]).sum()
+    frac_enclosed = sum_enclosed / sum_total
+  return level, indices_enclosed
+
 def compute_distribution( values, n_bins=None, log=False, edges=None ):
   if log: values = np.log10( values )
   val_min, val_max = values.min(), values.max()

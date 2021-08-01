@@ -12,7 +12,8 @@ print( f'System: {system}')
 
 n_points = 1024
 
-grid_name = f'{n_points}_np5_nsim16'
+# grid_name = f'{n_points}_np5_nsim16'
+grid_name = f'{n_points}_np2_nsim16'
 
 
 if system == 'Lux':
@@ -29,6 +30,12 @@ if system == 'Summit':
   root_dir   = f'/gpfs/alpine/ast169/scratch/bvilasen/cosmo_sims/sim_grid/{grid_name}/'
   ics_dir    = f'/gpfs/alpine/ast169/scratch/bvilasen/cosmo_sims/ics/'
   cholla_dir = '/ccs/home/bvilasen/cholla/'    
+
+
+if system == 'Tornado':
+  root_dir   = f'/home/bruno/Desktop/ssd_0/data/cosmo_sims/sim_grid/{grid_name}/'
+  ics_dir    = f'/home/bruno/Desktop/ssd_0/data/cosmo_sims/sim_grid/ics/'
+  cholla_dir = '/home/bruno/cholla/'    
 
 
 
@@ -72,6 +79,7 @@ if system == 'Lux':
   if n_points == 1024: sim_params['indir'] = ics_dir + f'1024_50Mpc/ics_16_z20/'
 if system == 'Summit':
   if n_points == 1024: sim_params['indir'] = ics_dir + f'1024_50Mpc/ics_128_z16/'
+if system == 'Shamrock': sim_params['indir'] = ics_dir + f'1024_50Mpc/ics_128_z16/'
 if system == 'Lux':    sim_params['scale_outputs_file'] = cholla_dir + 'scale_output_files/outputs_single_output_z2.txt'
 if system == 'Summit': sim_params['scale_outputs_file'] = cholla_dir + 'scale_output_files/outputs_ps_comparison_n6.txt'
 sim_params['analysis_scale_outputs_file'] = cholla_dir + 'scale_output_files/outputs_cosmo_analysis_56.txt'

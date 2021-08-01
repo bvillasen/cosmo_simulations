@@ -3,6 +3,60 @@ import numpy as np
 import h5py as h5
 from scipy.interpolate import interp1d
 
+def sigmoid( x, alpha=1, x0=0 ):
+  sig = 1 / ( 1 + np.exp( -alpha * (x + x0) ))
+  return sig
+
+def  Modify_UVB_Rates_sigmoid( uvb_rates, z_range, alpha, x0 ):
+  rates_sigma = Copy_Grakle_UVB_Rates( uvb_rates )
+  z_min = min( z_range )
+  z_max = max( z_range )
+  z = rates_sigma['UVBRates']['z']
+  indices_to_change = np.where( (z>= z_min) * (z<=z_max) )[0]
+  chem_key = 'k24'
+  for chem_key in [ 'k24', 'k26' ]:  
+    if chem_key == 'k24': heat_key = 'piHI'
+    if chem_key == 'k26': heat_key = 'piHeI'
+    gamma = rates_sigma['UVBRates']['Chemistry'][chem_key]
+    heat  = rates_sigma['UVBRates']['Photoheating'][heat_key]
+    z_mod = z[indices_to_change[0]-1:indices_to_change[-1]+2]
+    gamma_mod = gamma[indices_to_change[0]-1:indices_to_change[-1]+2]
+    zmax = z_mod.max()
+    x = np.abs(z_mod - zmax)
+    gamma_l = np.log10(gamma_mod[0])
+    gamma_r = np.log10(gamma_mod[-1])
+    delta_gamma = gamma_l - gamma_r
+    sig = sigmoid( x, alpha=alpha, x0=x0 )
+    sig -= sig.min()
+    sig_res = sig / sig.max() * delta_gamma + gamma_r
+    sig_res = 10**sig_res
+    gamma[indices_to_change[0]-1:indices_to_change[-1]+2] = sig_res
+    gamma_0 = uvb_rates['UVBRates']['Chemistry'][chem_key]
+    heat_0  = uvb_rates['UVBRates']['Photoheating'][heat_key]
+    heat = heat_0 * gamma / gamma_0
+    rates_sigma['UVBRates']['Chemistry'][chem_key] = gamma
+    rates_sigma['UVBRates']['Photoheating'][heat_key] = heat
+  return rates_sigma
+  
+def Modify_Gamma_sigmoid(  z, gamma, z_range, alpha, x0 ):
+  z_min = min( z_range )
+  z_max = max( z_range )
+  indices_mod = np.where( (z>= z_min) * (z<=z_max) )[0]
+  z_mod = z[indices_mod[0]-1:indices_mod[-1]+2]
+  gamma_mod = gamma[indices_mod[0]-1:indices_mod[-1]+2]
+  zmax = z_mod.max()
+  x = np.abs(z_mod - zmax)
+  gamma_l = np.log10(gamma_mod[0])
+  gamma_r = np.log10(gamma_mod[-1])
+  delta_gamma = gamma_l - gamma_r
+  sig = sigmoid( x, alpha=alpha, x0=x0 )
+  sig -= sig.min()
+  sig_res = sig / sig.max() * delta_gamma + gamma_r
+  sig_res = 10**sig_res
+  gamma_sigma = gamma.copy()
+  gamma_sigma[indices_mod[0]-1:indices_mod[-1]+2] = sig_res
+  if z.shape != gamma_sigma.shape:  print( 'ERROR: Shape mismatch' ) 
+  return gamma_sigma
 
 
 def Reaplace_Gamma_Parttial( z, gamma, change_z, change_gamma ):
@@ -20,6 +74,7 @@ def Reaplace_Gamma_Parttial( z, gamma, change_z, change_gamma ):
   return gamma_new
 
 def Load_Grackle_File( grackle_file_name ):
+  print( f'Loadig File: {grackle_file_name}')
   grackle_file = h5.File( grackle_file_name, 'r' )
 
   data_out = {}
@@ -33,6 +88,7 @@ def Load_Grackle_File( grackle_file_name ):
     data_out[root_key][key_gk] = {}
     for key in data_gk.keys():
       data_out[root_key][key_gk][key] = data_gk[key][...]
+  grackle_file.close()
   return data_out
   
   
@@ -124,7 +180,7 @@ def Extend_Rates_Redshift( max_delta_z, grackle_data ):
 
 def Modify_UVB_Rates( parameter_values, rates ):
   input_rates = rates.copy()
-  rates_modified = Modify_Rates_From_Grackle_File( None, parameter_values, rates_data=input_rates )
+  rates_modified = Modify_Rates_From_Grackle_File( parameter_values, rates_data=input_rates, input_file_name=None )
   uvb_rates = rates_modified['UVBRates']
   z = uvb_rates['z']
   heat_HI   = uvb_rates['Photoheating']['piHI']
@@ -144,9 +200,9 @@ def Modify_UVB_Rates( parameter_values, rates ):
   return rates_modified
   
 
-def Modify_Rates_From_Grackle_File( grackle_file_name, parameter_values, max_delta_z = 0.1, rates_data=None ):
+def Modify_Rates_From_Grackle_File(  parameter_values, max_delta_z = 0.1, rates_data=None, input_file_name=None ):
   if not rates_data:
-    grackle_data = Load_Grackle_File( grackle_file_name )
+    grackle_data = Load_Grackle_File( input_file_name )
     rates = grackle_data.copy()  
     rates_data = Extend_Rates_Redshift( max_delta_z, rates )
   
@@ -165,18 +221,16 @@ def Modify_Rates_From_Grackle_File( grackle_file_name, parameter_values, max_del
       rates_data['UVBRates']['Chemistry']['k25'] *= p_val
       rates_data['UVBRates']['Photoheating']['piHeII'] *= p_val
 
-    if p_name == 'scale_H_photoion':
+    if p_name == 'scale_H_ion':
       rates_data['UVBRates']['Chemistry']['k24'] *= p_val
       rates_data['UVBRates']['Chemistry']['k26'] *= p_val
     
-    if p_name == 'scale_H_photoheat':
+    if p_name == 'scale_H_heat':
       rates_data['UVBRates']['Photoheating']['piHI'] *= p_val
       rates_data['UVBRates']['Photoheating']['piHeI'] *= p_val
   
-    if p_name == 'scale_He_photoion':  rates_data['UVBRates']['Chemistry']['k25'] *= p_val
-    if p_name == 'scale_He_photoheat': rates_data['UVBRates']['Photoheating']['piHeII'] *= p_val
-
-      
+    if p_name == 'scale_He_ion':  rates_data['UVBRates']['Chemistry']['k25'] *= p_val
+    if p_name == 'scale_He_heat': rates_data['UVBRates']['Photoheating']['piHeII'] *= p_val
  
     if p_name  == 'deltaZ_H': Shift_UVB_Rates( p_val, rates_data['UVBRates'], 'shift_H' )
     if p_name  == 'deltaZ_He': Shift_UVB_Rates( p_val, rates_data['UVBRates'], 'shift_He' )
@@ -206,10 +260,10 @@ def Write_Rates_Grackle_File( out_file_name, rates ):
   out_file.close()
   print( f' Saved File: {out_file_name}')
       
+  
       
-      
-def Generate_Modified_Rates_File( grackle_file_name, out_file_name, parameter_values, max_delta_z=0.1 ):      
-  rates = Modify_Rates_From_Grackle_File( grackle_file_name, parameter_values, max_delta_z=max_delta_z )
+def Generate_Modified_Rates_File( out_file_name, parameter_values, max_delta_z=0.1, input_file_name=None, input_UVB_rates=None ):      
+  rates = Modify_Rates_From_Grackle_File( parameter_values, max_delta_z=max_delta_z, input_file_name=input_file_name, rates_data=input_UVB_rates )
   Write_Rates_Grackle_File( out_file_name, rates )
       
 

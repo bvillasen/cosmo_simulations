@@ -93,7 +93,7 @@ def Plot_HI_Photoionization( output_dir, rates_data=None, figure_name='fig_photh
   print( f'Saved Figure: {figure_name}' )
 
 
-def Plot_UVB_Rates( output_dir, rates=None, ids_to_plot=None, plot_label=None, SG=None ):
+def Plot_UVB_Rates( output_dir, rates_data=None, ids_to_plot=None, plot_label=None, SG=None, figure_name='grid_UVB_rates.png' ):
 
 
   nrows = 2
@@ -106,15 +106,17 @@ def Plot_UVB_Rates( output_dir, rates=None, ids_to_plot=None, plot_label=None, S
   second_keys = {'Chemistry':['k24', 'k26', 'k25'], 'Photoheating':['piHI', 'piHeI', 'piHeII', ] }
 
   for j, root_key in enumerate(root_keys):
-    if rates:
-      for i,key in enumerate(second_keys[root_key]):
-        ax = ax_l[j][i]
-        z = rates['z'][...]
-        rates_data = rates[root_key][key][...]
-        label = plot_label
-        ax.plot( z, rates_data, label = label )
-        ax.set_ylabel( key, fontsize=font_size  )
-        if plot_label: ax.legend( frameon = False, fontsize=font_size )\
+    if rates_data is not None:
+      for id in rates_data.keys():
+        rates = rates_data[id]['UVBRates']
+        for i,key in enumerate(second_keys[root_key]):
+          ax = ax_l[j][i]
+          z = rates['z'][...]
+          rate = rates[root_key][key][...]
+          label = plot_label
+          ax.plot( z, rate, label = label )
+          ax.set_ylabel( key, fontsize=font_size  )
+          if plot_label: ax.legend( frameon = False, fontsize=font_size )
     
     if SG:
       sim_ids = SG.Grid.keys()
@@ -126,12 +128,12 @@ def Plot_UVB_Rates( output_dir, rates=None, ids_to_plot=None, plot_label=None, S
         for i,key in enumerate(second_keys[root_key]):
           ax = ax_l[j][i]
           z = sim_rates['z'][...]
-          rates_data = sim_rates[root_key][key][...]
+          rates = sim_rates[root_key][key][...]
           label = ''
           if plot_label != None:
             val = SG.Grid[sim_id]['parameters'][plot_label]
             label = plot_label + ' = {0:.2f}'.format(val)          
-          ax.plot( z, rates_data, label = label )
+          ax.plot( z, rates, label = label )
           ax.set_ylabel( key, fontsize=font_size  )
           if plot_label: ax.legend( frameon = False, fontsize=font_size )
         
@@ -140,7 +142,7 @@ def Plot_UVB_Rates( output_dir, rates=None, ids_to_plot=None, plot_label=None, S
       ax.set_xlabel( r'$z$', fontsize=font_size )  
       ax.set_yscale('log')
 
-  figure_name = output_dir + 'grid_UVB_rates.png'
+  figure_name = output_dir + figure_name
   fig.savefig( figure_name, bbox_inches='tight', dpi=300 )
   print( f'Saved Figure: {figure_name}' )
 

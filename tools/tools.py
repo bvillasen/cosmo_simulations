@@ -19,6 +19,17 @@ if system == 'Lux':      data_dir = '/data/groups/comp-astro/bruno/'
 if system == 'Summit':   data_dir = '/gpfs/alpine/csc434/scratch/bvilasen/'
 
 
+def Combine_List_Pair( a, b ):
+  output = []
+  for a_i in a:
+    for b_i in b:
+      if type(b_i) == list:
+        add_in = [a_i] + b_i
+      else:
+        add_in = [ a_i, b_i ]
+      output.append( add_in )
+  return output
+
 def print_progress( i, n, time_start ):
   import time
   time_now = time.time()

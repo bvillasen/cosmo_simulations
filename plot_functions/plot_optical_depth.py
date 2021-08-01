@@ -54,10 +54,10 @@ def Plot_tau_HI( output_dir,  samples_tau_HI=None, labels='', black_background=F
       samples = samples_tau_HI[data_id]
       z = samples['z']
       tau = samples['tau_vals']
-      color_line = colors_lines[data_id]
+      # color_line = colors_lines[data_id]
       if 'label' in samples: label = samples['label']
       else: label = ''
-      ax.plot( z, tau, color=color_line, zorder=1, label=label )
+      ax.plot( z, tau,  zorder=1, label=label )
   
   data_set = data_optical_depth_Bosman_2020
   data_name = data_set['name']
