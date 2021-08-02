@@ -11,10 +11,10 @@ import pylab
 cosmo_dir = os.path.dirname(os.getcwd()) + '/'
 subDirectories = [x[0] for x in os.walk(cosmo_dir)]
 sys.path.extend(subDirectories)
-from tools import *
-from colors import * 
+# from tools import *
+# from colors import * 
 
-
+data_dir = '/data/groups/comp-astro/bruno/'
 input_dir = data_dir + 'cosmo_sims/wfirst_1024/snapshots/h5_files/grid_files/'
 output_dir = data_dir + 'cosmo_sims/wfirst_1024/figures/'
 create_directory( output_dir ) 
@@ -131,7 +131,7 @@ ax.cax.toggle_label(True)
 cbar.ax.tick_params(labelsize=12, size=5, width=2, length=3, direction='in' )
 cbar.set_label_text( r'$\log_{10}  \,( \rho_{\mathrm{DM}} /   h^2 \mathrm{M_\odot } \mathrm{kpc}^{-3} ) $', fontsize=14 )
 
-figure_name = output_dir + f'fig_density_dm_{slice_start}.png'
+figure_name = output_dir + f'fig_density_dm.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=400, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
 
