@@ -17,7 +17,7 @@ sys.path.extend(subDirectories)
 data_dir = '/data/groups/comp-astro/bruno/'
 input_dir = data_dir + 'cosmo_sims/wfirst_1024/snapshots/h5_files/grid_files/'
 output_dir = data_dir + 'cosmo_sims/wfirst_1024/figures/'
-create_directory( output_dir ) 
+# create_directory( output_dir ) 
 
 
 slice_width = 64
