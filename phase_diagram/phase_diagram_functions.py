@@ -2,6 +2,37 @@ import os, sys
 import numpy as np
 
 
+def get_phase_diagram_from_data(  pd_data ):
+  phase = pd_data['data'][...]
+  n_dens = pd_data['n_dens']
+  n_temp = pd_data['n_temp']
+  temp_max = pd_data['temp_max']
+  temp_min = pd_data['temp_min']
+  dens_max = pd_data['dens_max']
+  dens_min = pd_data['dens_min']
+  log_temp_max = np.log10(temp_max)
+  log_temp_min = np.log10(temp_min) 
+  log_dens_max = np.log10(dens_max)
+  log_dens_min = np.log10(dens_min) 
+  log_temp_vals = np.linspace( log_temp_min, log_temp_max, n_temp )
+  log_dens_vals = np.linspace( log_dens_min, log_dens_max, n_dens )
+  dens_points, temp_points = np.meshgrid( log_dens_vals, log_temp_vals )
+  temp_points = temp_points.flatten()
+  dens_points = dens_points.flatten()
+  phase_1D = phase.flatten() 
+  indices = np.where(phase_1D > 0 )
+  phase_1D = phase_1D[indices]
+  dens_points = dens_points[indices]
+  temp_points = temp_points[indices]
+  indices = np.where( phase_1D > 1*phase_1D.min() )
+  phase_1D = phase_1D[indices]
+  dens_points = dens_points[indices]
+  temp_points = temp_points[indices]
+  phase_1D = np.log10( phase_1D )
+  data_out = { 'dens_points':dens_points, 'temp_points':temp_points, 'phase_1D':phase_1D }
+  return data_out
+  
+
 def get_phase_diagram_bins( density, temperature, bins_dens, bins_temp  ):
   density = density / density.mean()
   density = np.log10(density).flatten()
