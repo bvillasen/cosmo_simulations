@@ -14,7 +14,7 @@ from ics_particles import generate_ics_particles
 from ics_grid import expand_data_grid_to_cholla
 
 # Box Size
-Lbox = 50000.0    #kpc
+Lbox = 500000.0    #kpc
 nPoints = 256
 nBoxes  = 8
 
