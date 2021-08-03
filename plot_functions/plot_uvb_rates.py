@@ -7,10 +7,7 @@ cosmo_dir = os.path.dirname(os.getcwd()) + '/'
 subDirectories = [x[0] for x in os.walk(cosmo_dir)]
 sys.path.extend(subDirectories)
 from tools import *
-
-import matplotlib
-matplotlib.rcParams['mathtext.fontset'] = 'cm'
-matplotlib.rcParams['mathtext.rm'] = 'serif'
+from figure_functions import *
 
 from data_photoionization_HI import data_photoionization_HI_becker_bolton_2013, data_photoionization_HI_dalosio_2018, data_photoionization_HI_gallego_2021, data_photoionization_HI_calverley_2011, data_photoionization_HI_wyithe_2011
 
@@ -28,7 +25,7 @@ def Plot_HI_Photoionization( output_dir, rates_data=None, figure_name='fig_photh
   nrows = 1
   ncols = 1
   fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(10*ncols,8*nrows))
-
+  
 
   if rates_data is not None:
     for data_id in rates_data:
@@ -94,16 +91,30 @@ def Plot_HI_Photoionization( output_dir, rates_data=None, figure_name='fig_photh
 
 
 def Plot_UVB_Rates( output_dir, rates_data=None, ids_to_plot=None, plot_label=None, SG=None, figure_name='grid_UVB_rates.png' ):
-
+  
+  tick_label_size_major = 16
+  tick_label_size_minor = 13
+  tick_size_major = 5
+  tick_size_minor = 3
+  tick_width_major = 1.5
+  tick_width_minor = 1
 
   nrows = 2
   ncols = 3
-  fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(10*ncols,8*nrows))
+  fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(10*ncols,8*nrows), sharex='col')
+  plt.subplots_adjust( hspace = 0.0, wspace=0.15)
 
-
-  font_size = 15
+  font_size = 20
   root_keys = [ 'Chemistry', 'Photoheating' ]
   second_keys = {'Chemistry':['k24', 'k26', 'k25'], 'Photoheating':['piHI', 'piHeI', 'piHeII', ] }
+
+  ylabels = {'k24':r'HI photoionization rate  $\Gamma_{\mathrm{HI}}$   [s$^{-1}$]',
+             'k26':r'HeI photoionization rate  $\Gamma_{\mathrm{HeI}}$   [s$^{-1}$]',
+             'k25':r'HeII photoionization rate  $\Gamma_{\mathrm{HeII}}$   [s$^{-1}$]',
+             'piHI':r'HI photoheating rate  $\mathcal{H}_{\mathrm{HI}}$   [eV s$^{-1}$]',
+             'piHeI':r'HeI photoheating rate  $\mathcal{H}_{\mathrm{HeI}}$   [eV s$^{-1}$]',
+             'piHeII':r'HeII photoheating rate  $\mathcal{H}_{\mathrm{HeII}}$   [eV s$^{-1}$]',
+}
 
   for j, root_key in enumerate(root_keys):
     if rates_data is not None:
@@ -115,8 +126,10 @@ def Plot_UVB_Rates( output_dir, rates_data=None, ids_to_plot=None, plot_label=No
           rate = rates[root_key][key][...]
           label = plot_label
           ax.plot( z, rate, label = label )
-          ax.set_ylabel( key, fontsize=font_size  )
+          ylabel = ylabels[key]
+          ax.set_ylabel( ylabel, fontsize=font_size  )
           if plot_label: ax.legend( frameon = False, fontsize=font_size )
+          
     
     if SG:
       sim_ids = SG.Grid.keys()
@@ -139,8 +152,12 @@ def Plot_UVB_Rates( output_dir, rates_data=None, ids_to_plot=None, plot_label=No
         
     for i,key in enumerate(second_keys[root_key]):
       ax = ax_l[j][i]
-      ax.set_xlabel( r'$z$', fontsize=font_size )  
+      ax.set_xlabel( r'$z$', fontsize=font_size+2 )  
       ax.set_yscale('log')
+      ax.set_xlim( -0.3, 15 )
+      ax.tick_params(axis='both', which='major', labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in' )
+      ax.tick_params(axis='both', which='minor', labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in')
+
 
   figure_name = output_dir + figure_name
   fig.savefig( figure_name, bbox_inches='tight', dpi=300 )
