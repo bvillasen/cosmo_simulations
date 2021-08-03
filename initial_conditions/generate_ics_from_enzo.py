@@ -14,17 +14,17 @@ from ics_particles import generate_ics_particles
 from ics_grid import expand_data_grid_to_cholla
 
 # Box Size
-Lbox = 500000.0    #kpc
-nPoints = 256
-nBoxes  = 8
+Lbox = 50000.0    #kpc
+nPoints = 1024
+nBoxes  = 16
 
-input_dir = data_dir + f'cosmo_sims/ics/enzo/256_500Mpc/raw/'
-output_dir = data_dir + f'cosmo_sims/ics/256_500Mpc/ics_{nBoxes}_z100/'
+input_dir = data_dir + f'cosmo_sims/ics/enzo/wdm/1024_hydro_50Mpc_wdm_m1.5kev/raw/'
+output_dir = data_dir + f'cosmo_sims/ics/wdm/1024_50Mpc_wdm_m1.5kev/ics_{nBoxes}_z100/'
 print(f'Input Dir: {input_dir}' )
 print(f'Output Dir: {output_dir}' )
 create_directory( output_dir )
 
-hydro = True
+hydro = False
 particles = True
 
 # hydro = True
