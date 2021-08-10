@@ -21,7 +21,7 @@ nBoxes  = 128
 input_dir = data_dir + f'cosmo_sims/ics/enzo/wdm/1024_hydro_50Mpc_wdm_m3.5kev/raw/'
 output_dir = data_dir + f'cosmo_sims/ics/wdm/1024_50Mpc_wdm_m3.5kev/'
 create_directory( output_dir )
-output_dir += 'ics_{nBoxes}_z100/'
+output_dir += f'ics_{nBoxes}_z100/'
 create_directory( output_dir )
 print(f'Input Dir: {input_dir}' )
 print(f'Output Dir: {output_dir}' )
