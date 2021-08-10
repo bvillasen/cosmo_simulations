@@ -30,8 +30,8 @@ Lbox = 50000.0    #kpc
 nPoints = 1024
 nBoxes  = 128
 
-input_dir = data_dir + f'cosmo_sims/ics/enzo/wdm/1024_hydro_50Mpc_wdm_m3.5kev/raw/'
-output_dir = data_dir + f'cosmo_sims/ics/wdm/1024_50Mpc_wdm_m3.5kev/'
+input_dir = data_dir + f'cosmo_sims/ics/enzo/wdm/1024_hydro_50Mpc_wdm_m4.0kev/raw/'
+output_dir = data_dir + f'cosmo_sims/ics/wdm/1024_50Mpc_wdm_m4.0kev/'
 create_directory( output_dir )
 output_dir += f'ics_{nBoxes}_z100/'
 create_directory( output_dir )
