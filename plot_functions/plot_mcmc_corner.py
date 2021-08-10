@@ -12,7 +12,7 @@ from stats_functions import get_HPI_2D
 
 
 
-def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2D=30,  lower_mask_factor=50, multiple=False, system='Shamrock', show_label=True, HL_vals=None  ):
+def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2D=30, ticks=None, lower_mask_factor=50, multiple=False, system='Shamrock', show_label=True, HL_vals=None  ):
   
   
 
@@ -68,7 +68,9 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
     color_map_list = [ color_map_0, color_map_1, color_map_2, color_map_3, color_map_4 ]
     text_color = 'white'
 
-  fig, ax_l = plt.subplots(nrows=n_param, ncols=n_param, figsize=(fig_size*n_param,fig_size*n_param),  sharex='col' )
+  sharex = 'col'
+  if ticks is not None: sharex = 'none'
+  fig, ax_l = plt.subplots(nrows=n_param, ncols=n_param, figsize=(fig_size*n_param,fig_size*n_param),  sharex=sharex )
   fig.subplots_adjust( wspace=space, hspace=space )
 
   for j in range( n_param ):
@@ -104,6 +106,7 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
       if plot_x_lables:
         x_label = labels[samples[i]['name']]  
         ax.set_xlabel( x_label, fontsize=label_size, color=text_color )
+        
 
       if i == j: plot_type = '1D'
       if i < j:  plot_type = '2D'
@@ -140,9 +143,19 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
             # print( f_interp(hl_val), f_interp(bin_centers_interp).max())
             # ax.axvline( x=hl_val, ymin=0, ymax=f_interp(hl_val)[0], ls='--', lw=hl_line_width, color=hl_color, alpha=hl_alpha )
             ax.plot( [hl_val, hl_val], [-1*f_interp(hl_val)[0], f_interp(hl_val)[0]], ls='--', lw=hl_line_width, color=hl_color, alpha=hl_alpha )
+        
+          def identity( x ):
+            return x
+          secax = ax.secondary_xaxis('top', functions=(identity, identity))    
+          secax.tick_params(axis='x', which='major', direction='in', labelsize=tick_label_size, length=tick_length, width=tick_width, color=text_color, labelcolor=text_color )
+          x_label = labels[samples[j]['name']]  
+          secax.set_xlabel( x_label, fontsize=label_size, color=text_color, labelpad=15 )
+          if ticks is not None: secax.set_ticks(ticks[j])
+            
             
           max = f_interp(bin_centers_interp).max()
           ax.set_ylim( -max/20, max*1.1 )
+        
         if plot_type == '2D':
           trace_y = samples[j]['trace']
           trace_x = samples[i]['trace']
@@ -165,6 +178,7 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
             # ax.axvline( x=hl_val_y, ls='--', lw=hl_line_width, color=hl_color, alpha=hl_alpha )
             # ax.axhline( y=hl_val_x, ls='--', lw=hl_line_width, color=hl_color, alpha=hl_alpha )
             ax.scatter( (hl_val_y), (hl_val_x) ,c='white')
+          
         
         if add_data_label and show_label:
           leg = ax.legend( loc=1, frameon=False, fontsize=font_size, prop=prop )
@@ -187,7 +201,38 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
     labelx = -0.2
     # if j == 1: labelx = -0
     ax_l[j, 0].yaxis.set_label_coords(labelx, 0.5)
+    
+  if ticks is not None:  
+    for j in range( n_param ):
+      for i in range( n_param ):
+        ax = ax_l[j][i]
+        ax.set_xticks(ticks[i])
+        # ax.set_xticklabels(ticks[i])
+        ax.set_yticks(ticks[j])
+        # ax.set_yticklabels(ticks[j])
 
+  text_x = 0.56
+  text_y = 0.855
+  text = 'Parameters 95% Confidence Interval:'  
+  plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=22 )
+    
+    
+  text_lines = [ r'$\beta_{\mathrm{H}}\,\,=0.78^{+0.01}_{-0.01}$' ,  r'$\beta_{\mathrm{He}}=0.44^{+0.06}_{-0.07}$' ]
+  text_x = 0.56
+  text_y = 0.82
+  offset_y = 0.04
+  for text in text_lines:
+    plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=25 )
+    text_y -= offset_y
+  
+  text_lines = [ r'$\Delta z_{\mathrm{H}}\,\,=0.05^{+0.03}_{-0.03}$', r'$\Delta z_{\mathrm{He}}=0.27^{+0.06}_{-0.06}$', ]
+  text_x = text_x + .15
+  text_y = 0.82
+  offset_y = 0.04
+  for text in text_lines:
+    plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=25 )
+    text_y -= offset_y
+  
   
   figure_name = output_dir + 'corner.png'
   fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )

@@ -30,6 +30,25 @@ def Combine_List_Pair( a, b ):
       output.append( add_in )
   return output
 
+def Get_Parameters_Combination( param_vals ):
+  n_param = len( param_vals )
+  indices_list = []
+  for i in range(n_param):
+    param_id = n_param - 1 - i
+    n_vals =  len(param_vals[param_id]) 
+    indices_list.append( [ x for x in range(n_vals)] )
+  param_indx_grid = indices_list[0]
+  for i in range( n_param-1 ):
+    param_indx_grid = Combine_List_Pair( indices_list[i+1], param_indx_grid )
+  param_combinations = []
+  for param_indices in param_indx_grid:
+    p_vals = [ ]
+    for p_id, p_indx in enumerate(param_indices):
+      p_vals.append( param_vals[p_id][p_indx] )
+    param_combinations.append( p_vals )
+  return param_combinations
+  
+  
 def print_progress( i, n, time_start ):
   import time
   time_now = time.time()

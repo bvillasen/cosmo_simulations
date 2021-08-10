@@ -40,6 +40,7 @@ for data_id, n_file in enumerate( files ):
   fit_all = {}
   fit_all[0] = { 'xmin':-1, 'xmax':0, 'order':1 }
   fit_all[1] = { 'xmin':0,  'xmax':1, 'order':1 }
+  fit_all[2] = { 'xmin':-1, 'xmax':1, 'order':1 }
 
   for index in fit_all.keys():
     fit = fit_all[index]
@@ -82,7 +83,7 @@ fig = plt.figure( figsize=(8*ncols,5.5*nrows))
 n_grid_y, n_grid_x = 2, 15
 split_x = 7
 gs = plt.GridSpec(n_grid_y, n_grid_x)
-gs.update(hspace=0.06, wspace=0.6, )
+gs.update(hspace=0.06, wspace=0.8, )
 ax0 = plt.subplot(gs[0,0:split_x])
 ax1 = plt.subplot(gs[0,split_x+1:])
 ax2 = plt.subplot(gs[1,0:split_x])
@@ -100,7 +101,7 @@ for index_j in range(2):
   z = data['z']
   pd_data = data['phase_diagram']
   fit_all = data['fit']
-  fit = fit_all[1]
+  fit = fit_all[2]
 
 
 
@@ -116,7 +117,7 @@ for index_j in range(2):
   cax = divider.append_axes('right', size='5%', pad=0.05)
   cbar = plt.colorbar(im, cax = cax, ticks=[-8, -4])
 
-  cbar.set_label( r'$\log_{10}  \,\, P\,(\Delta, T\,) $', labelpad=-12, fontsize=label_size )
+  cbar.set_label( r'$\log_{10}  \,\, f\,(\Delta, T\,) $', labelpad=0, fontsize=label_size, rotation=270 )
   cbar.ax.tick_params(labelsize=tick_label_size_major, size=tick_size_major, color=text_color, width=tick_width_major, length=tick_size_major, labelcolor=text_color, direction='in' )
 
   text  = fit['label'] 
@@ -158,7 +159,7 @@ for index_j in range(2):
   ax.plot( x, line -1 , color=color_band )
   ax.fill_between( x, line_h -1, line_l -1, color=color_band, alpha=0.5 )
   ax.set_xlim( -1, 1 )
-  ax.set_ylim( -0.2, 0.6 )
+  ax.set_ylim( -0.2, 0.4 )
 
   ax.set_ylabel(r'$\Delta T / T $', fontsize=label_size , color=text_color , labelpad=-3)
   ax.set_xlabel(r'$\log_{10} \, \Delta$ ', fontsize=label_size , color=text_color )

@@ -11,9 +11,9 @@ from tools import *
 from colors import *
 
 
-base_dir = '/home/bruno/Desktop/ssd_0/data/cosmo_sims/sim_grid/1024_P19m_np4_nsim400/'
+base_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/'
 input_dir = base_dir + 'interpolated_observables/'
-output_dir = base_dir + 'figures/interpolated_ps/'
+output_dir = data_dir + 'cosmo_sims/figures/nature/'
 create_directory( output_dir )
 
 in_file_name = input_dir + 'interpolated_observables.pkl'
@@ -30,7 +30,7 @@ vary_params = [ 'scale_He', 'scale_H', 'deltaZ_He', 'deltaZ_H' ]
 
 
 # for z in z_vals:
-z_to_plot =  [ 3.0, 3.6, 4.2 ] 
+z_to_plot =  [ 3.0, 4.0 ] 
 
 
 ps_plot = {}
@@ -72,6 +72,8 @@ import matplotlib
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
 matplotlib.rcParams['mathtext.rm'] = 'serif'
 
+plot_order = [1, 3, 0, 2 ]
+
 nrows, ncols = len(z_to_plot), 4
 prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=legend_font_size)
 fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(fig_width*ncols,6*nrows))
@@ -88,8 +90,8 @@ for indx_i in range(nrows):
     id_z = indx_i
     ps_redshift = ps_plot[id_z]
     
-    
-    ps_param = ps_redshift[indx_j]
+    plot_id = plot_order[indx_j]
+    ps_param = ps_redshift[plot_id]
     param_name = ps_param['param_name']
     for i in range(n_to_plot):
       ps_d = ps_param[i]
@@ -121,12 +123,12 @@ for indx_i in range(nrows):
     ax.tick_params(axis='both', which='major', labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in', color=text_color, labelcolor=text_color )
     ax.tick_params(axis='both', which='minor', labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in', color=text_color, labelcolor=text_color)
 
-    if indx_j == 0: ax.set_ylabel( r' $\Delta_F^2(k)$', fontsize=label_size, color= text_color )
+    if indx_j == 0: ax.set_ylabel( r'$\pi^{-1} \,k \,P\,(k)$', fontsize=label_size, color= text_color )
     if indx_i == nrows-1: ax.set_xlabel( r'$ k   \,\,\,  [\mathrm{s}\,\mathrm{km}^{-1}] $',  fontsize=label_size, color= text_color )
 
     x_min, x_max = 2e-3, 1e-1
     if indx_i == 0: y_min, y_max = 1e-2, 1.01e-1
-    if indx_i == 1: y_min, y_max = 2e-2, 2.01e-1
+    if indx_i == 1: y_min, y_max = 3e-2, 3.01e-1
     if indx_i == 2: y_min, y_max = 3e-2, 4.01e-1
     ax.set_xlim( x_min, x_max )
     ax.set_ylim( y_min, y_max )

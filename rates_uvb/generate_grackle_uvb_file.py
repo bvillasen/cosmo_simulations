@@ -92,7 +92,7 @@ def Load_Grackle_File( grackle_file_name ):
   return data_out
   
   
-def Shift_UVB_Rates( delta_z, rates, param_name, interp_log=False, kind='linear' ):
+def Shift_UVB_Rates( delta_z, rates, param_name, interp_log=False, kind='linear', extrapolate='constant' ):
   keys_He = { 'Chemistry':['k25'], 'Photoheating':['piHeII']}
   keys_H  = { 'Chemistry':['k24', 'k26'], 'Photoheating':['piHI', 'piHeI']}
   if param_name == 'shift_H': keys = keys_H
@@ -110,20 +110,31 @@ def Shift_UVB_Rates( delta_z, rates, param_name, interp_log=False, kind='linear'
       z_max = z_0.max()
       if interp_log: rate_0 = np.log10( rate_0 )
       rate_new = np.interp( z_0, z_new, rate_0 )
+      if extrapolate == 'spline':
+        rate_log = np.log10(rate_0)
+        z_max = z_new.min()
+        if z_max > z_0.min():
+          indices_extrp = z_0 <= z_max
+          z_extrap = z_0[indices_extrp]
+          interp_func = interp1d( z_new, rate_log, fill_value='extrapolate' )
+          rate_extrap = interp_func(z_extrap)
+          rate_new[indices_extrp] = 10**rate_extrap
+      if interp_log: rate_new = 10**rate_new
+      rates[root_key][key] = rate_new
+      
+      
+  
       # indx_l = np.where( z_0 == z_min )[0]
       # indx_r = np.where( z_0 == z_max )[0]
       # rate_l = rate_0[indx_l]
       # rate_r = rate_0[indx_r]
       # if kind == 'linear':
-      # interp_func = interp1d( z_new, rate_0, fill_value='extrapolate' )
       # interp_func = interp1d( z_0, rate_0, bounds_error=False, fill_value=(rate_l, rate_r), kind=kind )
       # z_hr = np.linspace( z_min, z_max, 1000 )
       # rate_hr = interp_func( z_hr )
       # z_new_hr = z_hr + delta_z
       # rate_new = np.interp( z_0, z_new_hr, rate_hr )  
       # rate_new = interp_func( z_0 )
-      if interp_log: rate_new = 10**rate_new
-      rates[root_key][key] = rate_new
 
 
   
@@ -200,7 +211,7 @@ def Modify_UVB_Rates( parameter_values, rates ):
   return rates_modified
   
 
-def Modify_Rates_From_Grackle_File(  parameter_values, max_delta_z = 0.1, rates_data=None, input_file_name=None ):
+def Modify_Rates_From_Grackle_File(  parameter_values, max_delta_z = 0.1, rates_data=None, input_file_name=None, extrapolate='constant' ):
   if not rates_data:
     grackle_data = Load_Grackle_File( input_file_name )
     rates = grackle_data.copy()  
@@ -232,8 +243,8 @@ def Modify_Rates_From_Grackle_File(  parameter_values, max_delta_z = 0.1, rates_
     if p_name == 'scale_He_ion':  rates_data['UVBRates']['Chemistry']['k25'] *= p_val
     if p_name == 'scale_He_heat': rates_data['UVBRates']['Photoheating']['piHeII'] *= p_val
  
-    if p_name  == 'deltaZ_H': Shift_UVB_Rates( p_val, rates_data['UVBRates'], 'shift_H' )
-    if p_name  == 'deltaZ_He': Shift_UVB_Rates( p_val, rates_data['UVBRates'], 'shift_He' )
+    if p_name  == 'deltaZ_H': Shift_UVB_Rates( p_val, rates_data['UVBRates'], 'shift_H', extrapolate=extrapolate )
+    if p_name  == 'deltaZ_He': Shift_UVB_Rates( p_val, rates_data['UVBRates'], 'shift_He', extrapolate=extrapolate )
 
   rates_data['UVBRates']['info'] = info
   return rates_data

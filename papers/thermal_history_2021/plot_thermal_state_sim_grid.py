@@ -14,7 +14,7 @@ from plot_thermal_history import Plot_T0_gamma_evolution
  
 root_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/'
 reduced_dir = root_dir + 'reduced_files/'
-output_dir = root_dir + 'figures/'
+output_dir = data_dir + 'cosmo_sims/figures/nature/'
 create_directory( output_dir ) 
 
 sim_dirs = [ f for f in os.listdir(root_dir) if f[0]=='S']
@@ -43,4 +43,4 @@ for data_id, sim_dir in enumerate(sim_dirs):
   data_all[data_id] = { 'z':z_vals, 'T0':T0_vals, 'gamma':gamma_vals  }
 
 
-Plot_T0_gamma_evolution(output_dir, data_sets=data_all, fig_name='thermal_evolution_grid.png', interpolate_lines=True  )
+Plot_T0_gamma_evolution(output_dir, data_sets=data_all, fig_name='T0_evolution_grid.png', interpolate_lines=True, plot_gamma=False  )

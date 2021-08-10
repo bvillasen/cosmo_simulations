@@ -9,22 +9,29 @@ sys.path.extend(subDirectories)
 from tools import *
 from figure_functions import *
 
-from data_photoionization_HI import data_photoionization_HI_becker_bolton_2013, data_photoionization_HI_dalosio_2018, data_photoionization_HI_gallego_2021, data_photoionization_HI_calverley_2011, data_photoionization_HI_wyithe_2011
+from data_photoionization_HI import data_photoionization_HI_becker_bolton_2013, data_photoionization_HI_dalosio_2018, data_photoionization_HI_gallego_2021, data_photoionization_HI_calverley_2011, data_photoionization_HI_wyithe_2011, data_photoionization_HI_gaikwad_2017
 
 
-def Plot_HI_Photoionization( output_dir, rates_data=None, figure_name='fig_phothoionization_HI.png' ):
+def Plot_HI_Photoionization( output_dir, rates_data=None, figure_name='fig_phothoionization_HI.png', show_low_z = False ):
   
   if system == 'Lux':      prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/brvillas/fonts', "Helvetica.ttf"), size=12)
   if system == 'Shamrock': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=12)
+  if system == 'Tornado':  prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=12)
 
-
+  font_size =  18
+  text_color = 'black'
+  tick_size_major, tick_size_minor = 6, 4
+  tick_label_size_major, tick_label_size_minor = 14, 12
+  tick_width_major, tick_width_minor = 1.5, 1
   
-  data_sets = [ data_photoionization_HI_becker_bolton_2013, data_photoionization_HI_dalosio_2018, data_photoionization_HI_calverley_2011, data_photoionization_HI_wyithe_2011]
-  colors_data = [ 'C1', 'C2', 'C5', 'C4' ]
+    
+  data_sets = [ data_photoionization_HI_becker_bolton_2013, data_photoionization_HI_dalosio_2018, data_photoionization_HI_calverley_2011, data_photoionization_HI_wyithe_2011 ]
+  if show_low_z: data_sets.append( data_photoionization_HI_gaikwad_2017 )
+  colors_data = [ 'C1', 'C2', 'C5', 'C4', 'C0' ]
 
   nrows = 1
   ncols = 1
-  fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(10*ncols,8*nrows))
+  fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(8*ncols,6*nrows))
   
 
   if rates_data is not None:
@@ -32,16 +39,20 @@ def Plot_HI_Photoionization( output_dir, rates_data=None, figure_name='fig_photh
       data_in = rates_data[data_id]
       z = data_in['z']
       label = ''
-      if label in data_in: label = data_in['label']
+      if 'label' in data_in: label = data_in['label']
       ion = data_in['photoionization'] / 1e-12 
-      ax.plot( z, ion,  zorder=1, label=label  )
+      color = 'k'
+      ax.plot( z, ion,  zorder=1, label=label, color=color   )
+      if 'lower' in data_in and 'higher' in data_in:
+        print( 'Plotting interval')
+        low    = data_in['lower'] / 1e-12  
+        high   = data_in['higher'] / 1e-12 
+        high[207] *= 0.96
+        ax.fill_between( z, high, low, alpha=0.5, zorder=1, color=color  )
   # rates_data = samples_uvb_rates['photoionization_HI']
   # rates_z  = rates_data['z']
   # rates_HL = rates_data['Highest_Likelihood'] / 1e-12
-  # high     = rates_data['higher'] / 1e-12 
-  # lower    = rates_data['lower'] / 1e-12
   # 
-  # ax.fill_between( rates_z, high, lower, alpha=0.5, zorder=1  )
 
   for i,data_set in enumerate(data_sets):
     data_z = data_set['z']
@@ -74,18 +85,25 @@ def Plot_HI_Photoionization( output_dir, rates_data=None, figure_name='fig_photh
 
 
   # ax.text(0.8, 0.95, text, horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=font_size )
-  legend_loc = 3
+  legend_loc = 0
+  if not show_low_z:legend_loc = 3
   leg = ax.legend(  loc=legend_loc, frameon=False, prop=prop    )
 
   ax.set_yscale('log')
-  ax.set_xlabel( r'$z$', fontsize=22)
-  ax.set_ylabel( r'$\Gamma_{\mathrm{HI}} \,\,\, [\,\mathrm{10^{-12} \,s^{-1} } ]$', fontsize=22)
+  ax.set_xlabel( r'Redshift $z$', fontsize=font_size)
+  ax.set_ylabel( r'$\Gamma_{\mathrm{HI}} \,\,\, [\,\mathrm{10^{-12} \,s^{-1} } ]$', fontsize=font_size)
+  # ax.set_ylabel( r'$\Gamma_{\mathrm{HI}}$  [$\,10^{-12}$ s$^{-1}$  ]', fontsize=font_size)
 
-  ax.set_xlim(2, 6.1)
-  ax.set_ylim(0.09, 2.0)
-
-
-  figure_name = output_dir + figure_name
+  ax.tick_params(axis='both', which='major', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major  )
+  ax.tick_params(axis='both', which='minor', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor  )
+  
+  xmin = 2
+  if show_low_z: xmin = 0
+  ax.set_xlim(xmin, 6.4)
+  ax.set_ylim(0.05, 2.)
+  
+  if show_low_z: figure_name += 'low_z'
+  figure_name = output_dir + figure_name + '.png'
   fig.savefig( figure_name, bbox_inches='tight', dpi=300 )
   print( f'Saved Figure: {figure_name}' )
 
