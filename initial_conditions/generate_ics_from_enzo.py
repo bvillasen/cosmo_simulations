@@ -22,7 +22,7 @@ if n_args == 1:
   
 type = args[1]
 if type == 'hydro': hydro = True
-if type == 'paericles': particles = True
+if type == 'particles': particles = True
 
 
 # Box Size
@@ -37,12 +37,6 @@ output_dir += f'ics_{nBoxes}_z100/'
 create_directory( output_dir )
 print(f'Input Dir: {input_dir}' )
 print(f'Output Dir: {output_dir}' )
-
-# hydro = False
-# particles = True
-
-# hydro = True
-# particles = False
 
 
 nSnap = 0
