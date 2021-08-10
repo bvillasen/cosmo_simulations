@@ -13,6 +13,18 @@ from tools import *
 from ics_particles import generate_ics_particles
 from ics_grid import expand_data_grid_to_cholla
 
+hydro, particles = False, False
+args = sys.argv
+n_args = len(args)
+if n_args == 1:
+  print( 'Missing type: hydro or particles')
+  exit(-1)
+  
+type = args[1]
+if type == 'hydro': hydro = True
+if type == 'paericles': particles = True
+
+
 # Box Size
 Lbox = 50000.0    #kpc
 nPoints = 1024
@@ -29,8 +41,8 @@ print(f'Output Dir: {output_dir}' )
 # hydro = False
 # particles = True
 
-hydro = True
-particles = False
+# hydro = True
+# particles = False
 
 
 nSnap = 0
