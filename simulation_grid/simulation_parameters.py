@@ -31,7 +31,7 @@ if system == 'Shamrock':
 if system == 'Summit':
   root_dir   = f'/gpfs/alpine/ast169/scratch/bvilasen/cosmo_sims/sim_grid/{grid_name}/'
   ics_dir    = f'/gpfs/alpine/ast169/scratch/bvilasen/cosmo_sims/ics/'
-  cholla_dir = f'/gpfs/alpine/ast169/scratch/bvilasen/cosmo_sims/cholla_executables/   
+  cholla_dir = f'/gpfs/alpine/ast169/scratch/bvilasen/cosmo_sims/cholla_executables/'  
 
 
 if system == 'Tornado':
