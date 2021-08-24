@@ -28,10 +28,10 @@ if type == 'particles': particles = True
 # Box Size
 Lbox = 50000.0    #kpc
 nPoints = 1024
-nBoxes  = 128
+nBoxes  = 32
 
-input_dir = data_dir + f'cosmo_sims/ics/enzo/wdm/1024_hydro_50Mpc_wdm_m4.0kev/raw/'
-output_dir = data_dir + f'cosmo_sims/ics/wdm/1024_50Mpc_wdm_m4.0kev/'
+input_dir = data_dir + f'cosmo_sims/ics/enzo/1024_hydro/raw/'
+output_dir = data_dir + f'cosmo_sims/ics/1024_50Mpc/'
 create_directory( output_dir )
 output_dir += f'ics_{nBoxes}_z100/'
 create_directory( output_dir )
@@ -96,6 +96,7 @@ if nBoxes == 1: proc_grid  = [ 1, 1, 1 ]
 if nBoxes == 2: proc_grid  = [ 2, 1, 1 ]
 if nBoxes == 8: proc_grid  = [ 2, 2, 2 ]
 if nBoxes == 16: proc_grid = [ 4, 2, 2 ]
+if nBoxes == 32: proc_grid = [ 4, 4, 2 ]
 if nBoxes == 64: proc_grid = [ 4, 4, 4 ]
 if nBoxes == 128: proc_grid = [ 8, 4, 4 ]
 
