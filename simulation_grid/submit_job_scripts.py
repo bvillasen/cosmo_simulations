@@ -32,13 +32,13 @@ module load xl cuda fftw hdf5
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/ccs/home/bvilasen/code/grackle/lib
 
-export CHOLLA_HOME=/gpfs/alpine/ast169/scratch/bvilasen/cosmo_sims
+export CHOLLA_HOME=/gpfs/alpine/ast169/scratch/bvilasen/cosmo_sims/cholla_executables/
 export WORK_DIR={sim_directory}
 cd {sim_directory}
 
 date
 export OMP_NUM_THREADS=7
-jsrun --smpiargs="-gpu" -n{n_mpi_tasks} -a1 -c7 -g1 --bind packed:7 $CHOLLA_HOME/cholla.paris.summit $WORK_DIR/param.txt > $WORK_DIR/simulation_output.log |sort
+jsrun --smpiargs="-gpu" -n{n_mpi_tasks} -a1 -c7 -g1 --bind packed:7 $CHOLLA_HOME/cholla.full_output $WORK_DIR/param.txt > $WORK_DIR/simulation_output.log |sort
 """
   if save_file:  
     if sim_directory[-1] != '/': sim_directory += '/'
