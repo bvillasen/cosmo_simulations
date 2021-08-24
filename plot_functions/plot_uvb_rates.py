@@ -8,6 +8,7 @@ subDirectories = [x[0] for x in os.walk(cosmo_dir)]
 sys.path.extend(subDirectories)
 from tools import *
 from figure_functions import *
+from colors import *
 
 from data_photoionization_HI import data_photoionization_HI_becker_bolton_2013, data_photoionization_HI_dalosio_2018, data_photoionization_HI_gallego_2021, data_photoionization_HI_calverley_2011, data_photoionization_HI_wyithe_2011, data_photoionization_HI_gaikwad_2017
 
@@ -27,7 +28,7 @@ def Plot_HI_Photoionization( output_dir, rates_data=None, figure_name='fig_photh
     
   data_sets = [ data_photoionization_HI_becker_bolton_2013, data_photoionization_HI_dalosio_2018, data_photoionization_HI_calverley_2011, data_photoionization_HI_wyithe_2011 ]
   if show_low_z: data_sets.append( data_photoionization_HI_gaikwad_2017 )
-  colors_data = [ 'C1', 'C2', 'C5', 'C4', 'C0' ]
+  colors_data = [ 'C1', 'C2','C6', 'C9', 'C0' ]
 
   nrows = 1
   ncols = 1
@@ -79,7 +80,7 @@ def Plot_HI_Photoionization( output_dir, rates_data=None, figure_name='fig_photh
   data_z = data_set['z'][indices]
   data_mean = data_set['mean'][indices]
   data_high  = data_set['mean'][indices]
-  data_low  = data_set['low'][indices] * 1.2
+  data_low  = data_set['low'][indices] * 2.0
   yerr = [  data_mean-data_low, data_high-data_mean ]
   ax.errorbar( data_z, data_mean, yerr=yerr, fmt='o', uplims=True, c=color_gallego, zorder=2, )
 
@@ -91,7 +92,7 @@ def Plot_HI_Photoionization( output_dir, rates_data=None, figure_name='fig_photh
 
   ax.set_yscale('log')
   ax.set_xlabel( r'Redshift $z$', fontsize=font_size)
-  ax.set_ylabel( r'$\Gamma_{\mathrm{HI}} \,\,\, [\,\mathrm{10^{-12} \,s^{-1} } ]$', fontsize=font_size)
+  ax.set_ylabel( r'$\Gamma_{\mathrm{HI}}$  [$\mathregular{10^{-12}}$  s$^{\mathregular{-1}}$]', fontsize=font_size)
   # ax.set_ylabel( r'$\Gamma_{\mathrm{HI}}$  [$\,10^{-12}$ s$^{-1}$  ]', fontsize=font_size)
 
   ax.tick_params(axis='both', which='major', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major  )
@@ -137,13 +138,16 @@ def Plot_UVB_Rates( output_dir, rates_data=None, ids_to_plot=None, plot_label=No
   for j, root_key in enumerate(root_keys):
     if rates_data is not None:
       for id in rates_data.keys():
-        rates = rates_data[id]['UVBRates']
+        data = rates_data[id]
+        rates = data['UVBRates']
         for i,key in enumerate(second_keys[root_key]):
           ax = ax_l[j][i]
           z = rates['z'][...]
           rate = rates[root_key][key][...]
           label = plot_label
-          ax.plot( z, rate, label = label )
+          line_style = 'solid'
+          if 'line_style' in data:  line_style = data['line_style']
+          ax.plot( z, rate, label = label, ls=line_style )
           ylabel = ylabels[key]
           ax.set_ylabel( ylabel, fontsize=font_size  )
           if plot_label: ax.legend( frameon = False, fontsize=font_size )

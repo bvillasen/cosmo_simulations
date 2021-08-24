@@ -17,6 +17,7 @@ if system == 'Tornado':  data_dir = '/home/bruno/Desktop/ssd_0/data/'
 if system == 'Shamrock': data_dir = '/raid/bruno/data/'
 if system == 'Lux':      data_dir = '/data/groups/comp-astro/bruno/'
 if system == 'Summit':   data_dir = '/gpfs/alpine/csc434/scratch/bvilasen/'
+if system == 'Eagle':    data_dir = '/home/bruno/Desktop/data/'
 
 
 def Combine_List_Pair( a, b ):

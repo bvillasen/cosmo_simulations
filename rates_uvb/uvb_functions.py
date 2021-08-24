@@ -2,6 +2,11 @@ import os, sys
 import numpy as np
 import h5py as h5
 from scipy.interpolate import interp1d
+root_dir = os.path.dirname(os.getcwd()) + '/'
+subDirectories = [x[0] for x in os.walk(root_dir)]
+sys.path.extend(subDirectories)
+from constants_cosmo import eV_to_ergs
+
 
 def sigmoid( x, alpha=1, x0=0 ):
   sig = 1 / ( 1 + np.exp( -alpha * (x + x0) ))
@@ -211,12 +216,16 @@ def Modify_UVB_Rates( parameter_values, rates ):
   return rates_modified
   
 
-def Modify_Rates_From_Grackle_File(  parameter_values, max_delta_z = 0.1, rates_data=None, input_file_name=None, extrapolate='constant' ):
+def Modify_Rates_From_Grackle_File(  parameter_values, max_delta_z = 0.1, rates_data=None, input_file_name=None, extrapolate='constant', extend_rates_z=True ):
   if not rates_data:
     grackle_data = Load_Grackle_File( input_file_name )
-    rates = grackle_data.copy()  
-    rates_data = Extend_Rates_Redshift( max_delta_z, rates )
-  
+    rates = Copy_Grakle_UVB_Rates(grackle_data)  
+    if extend_rates_z:
+      print( f'Extending Rates Redshift  max_delta_z:{max_delta_z}' )
+      rates_data = Extend_Rates_Redshift( max_delta_z, rates )
+    else: rates_data = rates
+    
+    
   info = 'Rates for '
   for p_name in parameter_values.keys():
     p_val = parameter_values[p_name]
@@ -228,24 +237,42 @@ def Modify_Rates_From_Grackle_File(  parameter_values, max_delta_z = 0.1, rates_
       rates_data['UVBRates']['Photoheating']['piHI'] *= p_val
       rates_data['UVBRates']['Photoheating']['piHeI'] *= p_val
   
-    if p_name == 'scale_He':
+    elif p_name == 'scale_He':
       rates_data['UVBRates']['Chemistry']['k25'] *= p_val
       rates_data['UVBRates']['Photoheating']['piHeII'] *= p_val
 
-    if p_name == 'scale_H_ion':
+    elif p_name == 'scale_H_ion':
       rates_data['UVBRates']['Chemistry']['k24'] *= p_val
       rates_data['UVBRates']['Chemistry']['k26'] *= p_val
     
-    if p_name == 'scale_H_heat':
+    elif p_name == 'scale_H_heat':
       rates_data['UVBRates']['Photoheating']['piHI'] *= p_val
       rates_data['UVBRates']['Photoheating']['piHeI'] *= p_val
   
-    if p_name == 'scale_He_ion':  rates_data['UVBRates']['Chemistry']['k25'] *= p_val
-    if p_name == 'scale_He_heat': rates_data['UVBRates']['Photoheating']['piHeII'] *= p_val
+    elif p_name == 'scale_He_ion':  rates_data['UVBRates']['Chemistry']['k25'] *= p_val
+    elif p_name == 'scale_He_heat': rates_data['UVBRates']['Photoheating']['piHeII'] *= p_val
  
-    if p_name  == 'deltaZ_H': Shift_UVB_Rates( p_val, rates_data['UVBRates'], 'shift_H', extrapolate=extrapolate )
-    if p_name  == 'deltaZ_He': Shift_UVB_Rates( p_val, rates_data['UVBRates'], 'shift_He', extrapolate=extrapolate )
-
+    elif p_name == 'deltaZ_H':  Shift_UVB_Rates( p_val, rates_data['UVBRates'], 'shift_H', extrapolate=extrapolate )
+    elif p_name == 'deltaZ_He': Shift_UVB_Rates( p_val, rates_data['UVBRates'], 'shift_He', extrapolate=extrapolate )
+    
+    elif p_name == 'scale_H_Eheat':
+      if 'scale_H_ion' in parameter_values: scale_H_ion = parameter_values['scale_H_ion']
+      else:
+        scale_H_ion = 1 
+        print('WARNING: Using scale_H_ion = 1')
+      scale_H_heat = scale_H_ion * p_val
+      rates_data['UVBRates']['Photoheating']['piHI']  *= scale_H_heat
+      rates_data['UVBRates']['Photoheating']['piHeI'] *= scale_H_heat
+    
+    elif p_name == 'scale_He_Eheat':
+      if 'scale_He_ion' in parameter_values: scale_He_ion = parameter_values['scale_He_ion']
+      else:
+        scale_He_ion = 1 
+        print('WARNING: Using scale_H_ion = 1')
+      scale_He_heat = scale_He_ion * p_val
+      rates_data['UVBRates']['Photoheating']['piHeII'] *= scale_He_heat
+        
+    else: print(f'ERROR: parameter name {p_name} not recognized' )
   rates_data['UVBRates']['info'] = info
   return rates_data
 
@@ -273,12 +300,35 @@ def Write_Rates_Grackle_File( out_file_name, rates ):
       
   
       
-def Generate_Modified_Rates_File( out_file_name, parameter_values, max_delta_z=0.1, input_file_name=None, input_UVB_rates=None ):      
-  rates = Modify_Rates_From_Grackle_File( parameter_values, max_delta_z=max_delta_z, input_file_name=input_file_name, rates_data=input_UVB_rates )
+def Generate_Modified_Rates_File( out_file_name, parameter_values, max_delta_z=0.1, input_file_name=None, input_UVB_rates=None, extend_rates_z=True ):      
+  rates = Modify_Rates_From_Grackle_File( parameter_values, max_delta_z=max_delta_z, input_file_name=input_file_name, rates_data=input_UVB_rates, extend_rates_z=extend_rates_z )
   Write_Rates_Grackle_File( out_file_name, rates )
       
 
-      
+
+def Load_Grackle_UVB_File( file_name ):
+  file = h5.File( file_name, 'r' )
+
+  rates = file['UVBRates']
+  info = rates['Info'][...]
+  z = rates['z'][...]
+
+  rates_out = {}
+  rates_out['z'] = z
+
+  rates_out['ionization'] = {}
+  chemistry = rates['Chemistry']
+  rates_out['ionization']['HI']   = chemistry['k24'][...]
+  rates_out['ionization']['HeI']  = chemistry['k26'][...]
+  rates_out['ionization']['HeII'] = chemistry['k25'][...]
+
+  rates_out['heating'] = {}
+  heating = rates['Photoheating'] 
+  rates_out['heating']['HI']   = heating['piHI'][...] * eV_to_ergs
+  rates_out['heating']['HeI']  = heating['piHeI'][...] * eV_to_ergs
+  rates_out['heating']['HeII'] = heating['piHeII'][...] * eV_to_ergs
+  return rates_out
+
 
 
 

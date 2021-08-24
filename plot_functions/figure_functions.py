@@ -7,7 +7,7 @@ sys.path.extend(subDirectories)
 from tools import *
 
 import matplotlib
-matplotlib.font_manager.findSystemFonts(fontpaths=['/home/bruno/Downloads'], fontext='ttf')
+matplotlib.font_manager.findSystemFonts(fontpaths=['/home/bruno/fonts/Helvetica'], fontext='ttf')
 matplotlib.rcParams['font.sans-serif'] = "Helvetica"
 matplotlib.rcParams['font.family'] = "sans-serif"
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
@@ -18,3 +18,6 @@ if system == 'Shamrock': prop = matplotlib.font_manager.FontProperties( fname=os
 
 
 figure_width = 8
+
+# Font Sizes
+fontsize_label = 16

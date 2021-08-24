@@ -211,26 +211,28 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
         ax.set_yticks(ticks[j])
         # ax.set_yticklabels(ticks[j])
 
-  text_x = 0.56
+
+  font_add = 8
+  text_x = 0.46
   text_y = 0.855
-  text = 'Parameters 95% Confidence Interval:'  
-  plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=22 )
+  text = '95% Confidence Interval:'  
+  plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=22+font_add )
     
     
-  text_lines = [ r'$\beta_{\mathrm{H}}\,\,=0.78^{+0.01}_{-0.01}$' ,  r'$\beta_{\mathrm{He}}=0.44^{+0.06}_{-0.07}$' ]
-  text_x = 0.56
+  text_lines = [ r'$\beta_{\mathrm{H}}\,\,=\mathregular{0.78}^{+\mathregular{0.01}}_{-\mathregular{0.01}}$' ,  r'$\beta_{\mathrm{He}}=\mathregular{0.44}^{+\mathregular{0.06}}_{-\mathregular{0.07}}$' ]
+  # text_x = 0.56
   text_y = 0.82
   offset_y = 0.04
   for text in text_lines:
-    plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=25 )
+    plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=25+font_add )
     text_y -= offset_y
   
-  text_lines = [ r'$\Delta z_{\mathrm{H}}\,\,=0.05^{+0.03}_{-0.03}$', r'$\Delta z_{\mathrm{He}}=0.27^{+0.06}_{-0.06}$', ]
-  text_x = text_x + .15
+  text_lines = [ r'$\Delta z_{\mathrm{H}}\,\,=\mathregular{0.05}^{+\mathregular{0.03}}_{-\mathregular{0.03}}$', r'$\Delta z_{\mathrm{He}}=\mathregular{0.27}^{+\mathregular{0.06}}_{-\mathregular{0.06}}$', ]
+  text_x = text_x + .2
   text_y = 0.82
   offset_y = 0.04
   for text in text_lines:
-    plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=25 )
+    plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=25+font_add )
     text_y -= offset_y
   
   

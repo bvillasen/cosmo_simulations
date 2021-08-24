@@ -12,8 +12,10 @@ print( f'System: {system}')
 
 n_points = 1024
 
+# grid_name = '{n_points}_P19m_np4_nsim_400'
 # grid_name = f'{n_points}_np5_nsim16'
-grid_name = f'{n_points}_np2_nsim16'
+# grid_name = f'{n_points}_np2_nsim16'
+grid_name = f'{n_points}_np4_nsim81'
 
 
 if system == 'Lux':
@@ -86,6 +88,9 @@ if system == 'Shamrock': sim_params['indir'] = ics_dir + f'1024_50Mpc/ics_128_z1
 if system == 'Lux':    sim_params['scale_outputs_file'] = cholla_dir + 'scale_output_files/outputs_single_output_z2.txt'
 if system == 'Summit': sim_params['scale_outputs_file'] = cholla_dir + 'scale_output_files/outputs_ps_comparison_n6.txt'
 sim_params['analysis_scale_outputs_file'] = cholla_dir + 'scale_output_files/outputs_cosmo_analysis_56.txt'
+
+if system == 'Tornado':
+  sim_params['indir'] = ics_dir + f'512_50Mpc/ics_8_z20/'
 
 
 job_params = {}

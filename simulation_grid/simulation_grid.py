@@ -8,7 +8,7 @@ from tools import *
 #Append analysis directories to path
 extend_path( root_dir )
 from submit_job_scripts import Create_Submit_Job_Script_Lux, Create_Submit_Job_Script_Summit
-from generate_grackle_uvb_file import Generate_Modified_Rates_File
+from uvb_functions import Generate_Modified_Rates_File
 from load_data import load_analysis_data
 from phase_diagram_functions import fit_thermal_parameters_mcmc, get_density_temperature_values_to_fit
 from simulation_parameters import system
@@ -212,13 +212,13 @@ class Simulation_Grid:
     return param_values
 
 ###############################################################################################
-  def Create_UVB_Rates_Files( self, max_delta_z=0.1, input_file_name=None, input_UVB_rates=None, constant_parameters=None ):
+  def Create_UVB_Rates_Files( self, max_delta_z=0.1, input_file_name=None, input_UVB_rates=None, constant_parameters=None, extend_rates_z=True ):
     print("Creating UVB Rates Files:")
     for sim_id in self.Grid.keys():
-      self.Create_UVB_Rates_File( sim_id, max_delta_z=max_delta_z, input_file_name=input_file_name, input_UVB_rates=input_UVB_rates, constant_parameters=constant_parameters )
+      self.Create_UVB_Rates_File( sim_id, max_delta_z=max_delta_z, input_file_name=input_file_name, input_UVB_rates=input_UVB_rates, constant_parameters=constant_parameters, extend_rates_z=extend_rates_z )
       
 ###############################################################################################
-  def Create_UVB_Rates_File( self, sim_id, max_delta_z=0.1, input_UVB_rates=None, input_file_name=None, constant_parameters=None ):
+  def Create_UVB_Rates_File( self, sim_id, max_delta_z=0.1, input_UVB_rates=None, input_file_name=None, constant_parameters=None, extend_rates_z=True ):
     simulation = self.Grid[sim_id]
     param_values =  self.Get_Simulation_Parameter_Values( sim_id )
     sim_dir = self.Get_Simulation_Directory( sim_id )
@@ -226,7 +226,7 @@ class Simulation_Grid:
     if constant_parameters is not None:
       for p_name in constant_parameters:
         param_values[p_name] = constant_parameters[p_name]
-    Generate_Modified_Rates_File(  out_file_name, param_values, max_delta_z=max_delta_z, input_file_name=input_file_name, input_UVB_rates=input_UVB_rates  )
+    Generate_Modified_Rates_File(  out_file_name, param_values, max_delta_z=max_delta_z, input_file_name=input_file_name, input_UVB_rates=input_UVB_rates, extend_rates_z=extend_rates_z  )
 
 ###############################################################################################    
   def Submit_Grid_Jobs( self, n_submit=None, partition=None ):

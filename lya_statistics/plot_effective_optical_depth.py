@@ -18,6 +18,7 @@ from stats_functions import compute_distribution, get_highest_probability_interv
 from plot_optical_depth import Plot_tau_HI
 
 
+
 # input_dir_0 = data_dir + 'cosmo_sims/rescaled_P19/1024_50Mpc/analysis_files/'
 input_dir = data_dir + 'cosmo_sims/rescaled_P19/modified_gamma/'
 output_dir = data_dir + 'cosmo_sims/rescaled_P19/modified_gamma/figures/'
@@ -25,9 +26,13 @@ create_directory( output_dir )
 n_sims = 7
 input_dirs = [ input_dir + f'sim_{i}/analysis_files/' for i in range(n_sims) if i!=4]
 
+
+
+alpha_vals = [ 2, 2.5, 3, 3.5, 4, 4.5  ]
+
 data_tau = {}
 for data_id, input_dir in enumerate(input_dirs):
-  if data_id > 0: continue
+  # if data_id == 1: continue
   z_vals, F_vals = [], []
   for n_file in range(10,56):
     file_name = input_dir + f'{n_file}_analysis.h5'
@@ -39,11 +44,10 @@ for data_id, input_dir in enumerate(input_dirs):
   z_vals = np.array( z_vals )
   F_vals = np.array( F_vals )
   tau_vals = -np.log( F_vals )
-  data_tau[data_id] = { 'z':z_vals, 'tau_vals':tau_vals  }
+  if data_id == 0: label = 'Best-Fit V21 '
+  else: label = r'$\alpha={0:.1f}$'.format( alpha_vals[data_id-1])
+  data_tau[data_id] = { 'z':z_vals, 'tau_vals':tau_vals, 'label':label  }
 
-# data_tau[0]['label'] = 'Modified P19'
-# data_tau[1]['label'] = 'Modified from Equilibrium to match HI '
 
-
-Plot_tau_HI(output_dir, samples_tau_HI=data_tau, labels='', black_background = False, figure_name='fig_HI_tau_modified_gamma.png'  )
+Plot_tau_HI(output_dir, samples_tau_HI=data_tau, labels='', black_background = False, figure_name='fig_HI_tau_modified_gamma_new.png'  )
 

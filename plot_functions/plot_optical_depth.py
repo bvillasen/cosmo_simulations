@@ -59,21 +59,31 @@ def Plot_tau_HI( output_dir,  samples_tau_HI=None, labels='', black_background=F
       else: label = ''
       ax.plot( z, tau,  zorder=1, label=label )
   
-  data_set = data_optical_depth_Bosman_2020
-  data_name = data_set['name']
-  data_z = data_set['z']
-  data_tau = data_set['tau'] 
-  data_tau_sigma = data_set['tau_sigma'] 
-  color = colors_data[0]
-  ax.errorbar( data_z, data_tau, yerr=data_tau_sigma, fmt='o', color=color, label=data_name, zorder=2 )
-  
-  data_set = data_optical_depth_Bosman_2021
+  # data_set = data_optical_depth_Bosman_2020
+  # data_name = data_set['name']
+  # data_z = data_set['z']
+  # data_tau = data_set['tau'] 
+  # data_tau_sigma = data_set['tau_sigma'] 
+  # color = colors_data[0]
+  # ax.errorbar( data_z, data_tau, yerr=data_tau_sigma, fmt='o', color=color, label=data_name, zorder=2 )
+  # 
+  # data_set = data_optical_depth_Bosman_2021
+  # data_name = data_set['name']
+  # data_z = data_set['z']
+  # data_tau = data_set['tau'] 
+  # data_tau_sigma = data_set['tau_sigma'] 
+  # color = colors_data[1]
+  # ax.errorbar( data_z, data_tau, yerr=data_tau_sigma, fmt='o', color=color, label=data_name, zorder=2 )
+  # 
+  # 
+  data_set = data_optical_depth_Bosman_2018
   data_name = data_set['name']
   data_z = data_set['z']
   data_tau = data_set['tau'] 
   data_tau_sigma = data_set['tau_sigma'] 
   color = colors_data[1]
   ax.errorbar( data_z, data_tau, yerr=data_tau_sigma, fmt='o', color=color, label=data_name, zorder=2 )
+  
   
   data_set = data_optical_depth_Becker_2013
   data_name = data_set['name']
@@ -84,6 +94,15 @@ def Plot_tau_HI( output_dir,  samples_tau_HI=None, labels='', black_background=F
   tau_error = [ data_tau - tau_m , tau_p - data_tau  ]
   color = colors_data[2]
   ax.errorbar( data_z, data_tau, yerr=tau_error, fmt='o', color=color, label=data_name, zorder=2 )
+  
+  data_set = data_optical_depth_Boera_2019
+  data_name = data_set['name']
+  data_z = data_set['z']
+  data_tau = data_set['tau'] 
+  data_tau_sigma = data_set['tau_sigma'] 
+  color = 'k'
+  ax.errorbar( data_z, data_tau, yerr=data_tau_sigma, fmt='o', color=color, label=data_name, zorder=2 )
+
   
   data_set = data_optical_depth_Yang_2020
   data_name = data_set['name']

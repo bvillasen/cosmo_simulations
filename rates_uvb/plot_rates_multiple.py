@@ -4,7 +4,7 @@ root_dir = os.path.dirname(os.getcwd()) + '/'
 subDirectories = [x[0] for x in os.walk(root_dir)]
 sys.path.extend(subDirectories)
 from tools import *
-from generate_grackle_uvb_file import Load_Grackle_File, Modify_Rates_From_Grackle_File, Extend_Rates_Redshift, Copy_Grakle_UVB_Rates
+from uvb_functions import Load_Grackle_File, Modify_Rates_From_Grackle_File, Extend_Rates_Redshift, Copy_Grakle_UVB_Rates
 from plot_uvb_rates import Plot_UVB_Rates
 
 

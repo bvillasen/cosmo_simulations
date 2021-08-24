@@ -6,6 +6,51 @@ sys.path.append( root_dir + 'tools')
 from tools import *
 # from phase_diagram_functions import fit_thermal_parameters_mcmc, get_density_temperature_values_to_fit
 
+def Get_Grid_Params( root_dir, base_key='S'):
+  sim_dirs = [ root_dir + dir for dir in os.listdir(root_dir) if dir[0] == base_key ]
+  sim_dirs.sort()
+
+  grid_sim_params = {} 
+  for sim_id, sim_dir in enumerate( sim_dirs ):
+    sim_param_file = sim_dir + '/uvb_params.txt'
+    file = open( sim_param_file )
+    lines = file.readlines()
+    sim_params = {}
+    for line in lines:
+      line = line[:-2]
+      param_name, param_val = line.split('=')
+      param_val = float( param_val )
+      sim_params[param_name] = param_val
+    grid_sim_params[sim_id] = sim_params
+  return grid_sim_params, sim_dirs
+
+
+
+def Select_Simulations( params, grid_params=None, tolerance=5e-3, SG=None ):
+  vals_to_find = { key:params[key] for key in params if params[key] != None }
+  selected_sims = []
+
+  if SG is not None:
+    if not sim_ids: sim_ids = self.sim_ids
+    for sim_id in sim_ids: 
+      sim_data = self.Grid[sim_id]
+      sim_parameters = sim_data['parameters']
+      sim_vals = { key:sim_parameters[key] for key in vals_to_find }
+      same_vals = True
+      for key in sim_vals:
+        if np.abs( sim_vals[key] - vals_to_find[key] ) > tolerance: same_vals = False
+      if same_vals: selected_sims.append( sim_id )
+  
+  if grid_params is not None:
+    for sim_id in grid_params:
+      sim_parameters = grid_params[sim_id]
+      sim_vals = { key:sim_parameters[key] for key in vals_to_find }
+      same_vals = True
+      for key in sim_vals:
+        if np.abs( sim_vals[key] - vals_to_find[key] ) > tolerance: same_vals = False
+      if same_vals: selected_sims.append( sim_id )
+  
+  return selected_sims
 
 def Fit_Grid_Phase_Diagram_MPI( self, n_mpi=30, n_nodes=1 ):
   print("Fitting Phase Diagram:")

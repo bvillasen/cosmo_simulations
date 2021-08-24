@@ -11,7 +11,7 @@ sys.path.extend(subDirectories)
 from tools import *
 from load_data import load_analysis_data
 from phase_diagram_functions import fit_thermal_parameters_mcmc, get_density_temperature_values_to_fit, get_phase_diagram_from_data
-from turbo_cmap import *
+# from turbo_cmap import *
 from figure_functions import *
 from interpolation_functions import smooth_line
 
@@ -55,7 +55,8 @@ for data_id, n_file in enumerate( files ):
     for i,coeff in enumerate( fit_res ):
       y_vals +=  coeff * x_vals**i
     fit['xvals'], fit['yvals'] = x_vals, y_vals
-    label = r'$T_0 \,= \, {0:.2f} \times 10^4$'.format( 10**fit_res[0]/ 10**4 ) + r' $\mathrm{K}$' + '\n' + r' $\,\gamma \, = \,{0:.2f} $'.format(  fit_res[1]+1) 
+    # label = r'$T_0 \,= \, {0:.2f} \times 10^4$'.format( 10**fit_res[0]/ 10**4 ) + r' $\mathrm{K}$' + '\n' + r' $\,\gamma \, = \,{0:.2f} $'.format(  fit_res[1]+1) 
+    label = r'$T_0 \,= \,$' + f'{10**fit_res[0]/ 10**4:.2f}' + r'$\times \mathregular{10^4}$ K' + '\n' + r' $\,\gamma \, = \,$' + f'{fit_res[1]+1:.2f}' 
     fit['label'] = label
       
   data_all[data_id] = { 'z':z, 'phase_diagram':phase_diagram, 'values_to_fit':values_to_fit, 'fit':fit_all }
@@ -68,7 +69,7 @@ fig_dpi = 300
 alpha = 0.6
 label_size = 16
 
-figure_text_size = 16
+figure_text_size = 18
 legend_font_size = 16
 tick_label_size_major = 12
 tick_label_size_minor = 12
@@ -79,11 +80,11 @@ tick_width_minor = 1
 border_width = 1
 
 nrows, ncols = 2, 2
-fig = plt.figure( figsize=(8*ncols,5.5*nrows))
+fig = plt.figure( figsize=(8*ncols,7*nrows))
 n_grid_y, n_grid_x = 2, 15
 split_x = 7
 gs = plt.GridSpec(n_grid_y, n_grid_x)
-gs.update(hspace=0.06, wspace=0.8, )
+gs.update(hspace=0.13, wspace=0.8, )
 ax0 = plt.subplot(gs[0,0:split_x])
 ax1 = plt.subplot(gs[0,split_x+1:])
 ax2 = plt.subplot(gs[1,0:split_x])
@@ -93,8 +94,20 @@ ax_l = [ [ax0, ax1], [ax2, ax3] ]
 color_line = 'black'
 
 
-for index_j in range(2):
+matplotlib.font_manager.findSystemFonts(fontpaths=['/home/bruno/Helvetica'], fontext='ttf')
+matplotlib.rcParams['font.sans-serif'] = "Helvetica"
+matplotlib.rcParams['font.family'] = "sans-serif"
 
+prop_bold = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica_bold.ttf"), size=20)
+fig_labels_0 = [ 'a','b' ]
+fig_labels_1 = [ 'c','d' ]
+
+
+
+for index_j in range(2):
+  
+  if index_j == 0: fig_labels = fig_labels_0
+  if index_j == 1: fig_labels = fig_labels_1
   ax = ax_l[ index_j][0]
   data_id = index_j
   data = data_all[data_id]
@@ -117,26 +130,31 @@ for index_j in range(2):
   cax = divider.append_axes('right', size='5%', pad=0.05)
   cbar = plt.colorbar(im, cax = cax, ticks=[-8, -4])
 
-  cbar.set_label( r'$\log_{10}  \,\, f\,(\Delta, T\,) $', labelpad=0, fontsize=label_size, rotation=270 )
+  cbar.set_label( r'$\log_{10}  \,\, f\,(\rho_{\,\mathrm{gas}}/\bar{\rho}\,, T\,) $', labelpad=7, fontsize=label_size, rotation=270 )
   cbar.ax.tick_params(labelsize=tick_label_size_major, size=tick_size_major, color=text_color, width=tick_width_major, length=tick_size_major, labelcolor=text_color, direction='in' )
 
   text  = fit['label'] 
-  ax.text(0.65, 0.1, text, horizontalalignment='left',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color)
+  ax.text(0.59, 0.08, text, horizontalalignment='left',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color)
 
 
-  text  = r'$z = {0:.1f}$'.format( z ) 
+  text  = r'$z =${0:.1f}'.format( z ) 
   ax.text(0.05, 0.95, text, horizontalalignment='left',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color)
 
 
-  ax.set_ylabel(r'$\log_{10} \, T \,\,\,[\,\mathrm{K}\,]$', fontsize=label_size , color=text_color)
+  ax.set_ylabel(r'$\log_{10} \, T$  [K]', fontsize=label_size , color=text_color)
   # ax.set_xlabel(r'$\log_{10} \, \Delta$ ', fontsize=label_size , color=text_color, labelpad=-5 )
-  ax.set_xlabel(r'$\log_{10} \, \Delta$ ', fontsize=label_size , color=text_color, )
+  # ax.set_xlabel(r'$\log_{10} \, \Delta$ ', fontsize=label_size , color=text_color, )
+  ax.set_xlabel(r'$\log_{10} \,( \,\rho_{\mathrm{gas}}/\bar{\rho} \,)$ ', fontsize=label_size , color=text_color )
   ax.set_xticks( [ -2, 0, 2, 4  ])
   ax.tick_params(axis='both', which='major', labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in')
   ax.tick_params(axis='both', which='minor', labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in')
   [sp.set_linewidth(border_width) for sp in ax.spines.values()]
   ax.set_xlim( -3, 5 )
   ax.set_ylim( 2.2, 8.3 )
+
+  fig_label_pos_x = 0.09
+  fig_label_pos_y = 0.76 - index_j * 0.405 + 0.1
+  fig.text( fig_label_pos_x, fig_label_pos_y,  fig_labels[0],  fontproperties=prop_bold )
 
   ax = ax_l[ index_j][1]
   values_to_fit = data['values_to_fit']
@@ -162,10 +180,15 @@ for index_j in range(2):
   ax.set_ylim( -0.2, 0.4 )
 
   ax.set_ylabel(r'$\Delta T / T $', fontsize=label_size , color=text_color , labelpad=-3)
-  ax.set_xlabel(r'$\log_{10} \, \Delta$ ', fontsize=label_size , color=text_color )
+  ax.set_xlabel(r'$\log_{10} \,( \,\rho_{\mathrm{gas}}/\bar{\rho} \,)$ ', fontsize=label_size , color=text_color )
   ax.set_xticks( [ -1.0, -0.5,  0., 0.5, 1.0  ])
 
-  text  = r'$z = {0:.1f}$'.format( z ) 
+  fig_label_pos_x = 0.09 + 0.42
+  fig_label_pos_y = 0.76 - index_j * 0.405 + 0.1
+  fig.text( fig_label_pos_x, fig_label_pos_y,  fig_labels[1],  fontproperties=prop_bold )
+
+
+  text  = r'$z =${0:.1f}'.format( z ) 
   ax.text(0.05, 0.95, text, horizontalalignment='left',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color)
 
 
@@ -173,7 +196,7 @@ for index_j in range(2):
  
 
 
-file_name = output_dir + f'phase_diagram.png'
+file_name = output_dir + f'phase_diagram_new.png'
 fig.savefig( file_name,  pad_inches=0.1, bbox_inches='tight', dpi=fig_dpi, facecolor=fig.get_facecolor() )
 print('Saved Image: ', file_name )
 

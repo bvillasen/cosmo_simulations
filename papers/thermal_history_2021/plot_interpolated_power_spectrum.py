@@ -72,6 +72,10 @@ import matplotlib
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
 matplotlib.rcParams['mathtext.rm'] = 'serif'
 
+matplotlib.font_manager.findSystemFonts(fontpaths=['/home/bruno/Helvetica'], fontext='ttf')
+matplotlib.rcParams['font.sans-serif'] = "Helvetica"
+matplotlib.rcParams['font.family'] = "sans-serif"
+
 plot_order = [1, 3, 0, 2 ]
 
 nrows, ncols = len(z_to_plot), 4
@@ -102,7 +106,7 @@ for indx_i in range(nrows):
       p_val = ps_d['p_val']
       label_param = labels[param_name]
       color = colors[i]
-      label = r'${0} \, = \, {1:.1f}$'.format(label_param, p_val)
+      label = r'${0}  = ${1:.1f}'.format(label_param, p_val)
       ax.plot( k_vals, ps, linewidth=1.5, label=label, color=colors[i] )
 
 
@@ -112,7 +116,7 @@ for indx_i in range(nrows):
       plt.setp(text, color = text_color)
       
     z = z_to_plot[indx_i]
-    ax.text(0.87, 0.95, r'$z={0:.1f}$'.format(z), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
+    ax.text(0.87, 0.95, r'$z=${0:.1f}'.format(z), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
 
     ax.set_xscale('log')
     ax.set_yscale('log')
@@ -123,8 +127,9 @@ for indx_i in range(nrows):
     ax.tick_params(axis='both', which='major', labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in', color=text_color, labelcolor=text_color )
     ax.tick_params(axis='both', which='minor', labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in', color=text_color, labelcolor=text_color)
 
-    if indx_j == 0: ax.set_ylabel( r'$\pi^{-1} \,k \,P\,(k)$', fontsize=label_size, color= text_color )
-    if indx_i == nrows-1: ax.set_xlabel( r'$ k   \,\,\,  [\mathrm{s}\,\mathrm{km}^{-1}] $',  fontsize=label_size, color= text_color )
+    if indx_j == 0: ax.set_ylabel( r'$\pi^{\mathregular{-1}} \,k \,P\,(k)$', fontsize=label_size, color= text_color )
+    # if indx_i == nrows-1: ax.set_xlabel( r'$ k   \,\,\,  [\mathrm{s}\,\mathrm{km}^{-1}] $',  fontsize=label_size, color= text_color )
+    ax.set_xlabel( r'$k$  [s km$^{\mathrm{\mathregular{-1}}}$]', fontsize=label_size )
 
     x_min, x_max = 2e-3, 1e-1
     if indx_i == 0: y_min, y_max = 1e-2, 1.01e-1

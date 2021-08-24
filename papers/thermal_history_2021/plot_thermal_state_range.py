@@ -208,7 +208,7 @@ for data_id in data_sets:
 
 ax.tick_params(axis='both', which='major', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major  )
 ax.tick_params(axis='both', which='minor', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor  )
-ax.set_ylabel( r'$T_0$  [$10^4$ K]', fontsize=font_size, color=text_color  )
+ax.set_ylabel( r'$T_0$  [$\mathregular{10^4}$ K]', fontsize=font_size, color=text_color  )
 ax.set_xlabel( r'Redshift  $z$', fontsize=font_size, color=text_color )
 # ax.set_xlabel( r'$z$', fontsize=font_size, color=text_color )
 ax.set_xlim( xmin, xmax )

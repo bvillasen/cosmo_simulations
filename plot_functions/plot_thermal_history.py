@@ -56,7 +56,7 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, time_axis=None, system=
     text_color = 'white'
     
   ymin, ymax = 0.6, 1.8
-  xmin, xmax = 1.95, 7.0
+  xmin, xmax = 1.95, 9.0
   nrows = 1
   if plot_gamma: ncols=2
   else: ncols = 1
@@ -90,14 +90,16 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, time_axis=None, system=
       z = data_set['z']
       T0 = data_set['T0'] / 1e4
       z0 = z.copy()
-      color = colors[data_id]
+      # color = colors[data_id]
       if interpolate_lines:
         z_interp = np.linspace( z[0], z[-1], n_samples_interp ) 
         T0 = interp_line_cubic( z, z_interp, T0 )
         z = z_interp
-      if data_id == 0: label = 'Simulation'
+      # if data_id == 0: label = 'Simulation'
+      if 'label' in data_set: label = data_set['label']
       else: label = ''
-      ax.plot( z, T0, c=color, zorder=1, label=label, alpha=alpha, lw=1 )
+      if 'line_color' in data_set: color = data_set['line_color']  
+      ax.plot( z, T0,  zorder=1, label=label, alpha=alpha, lw=1, color=color )
       if plot_interval:
         high = data_set['high'] / 1e4
         low  = data_set['low'] / 1e4
@@ -105,20 +107,20 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, time_axis=None, system=
           high = interp_line_cubic( z0, z_interp, high )
           low  = interp_line_cubic( z0, z_interp, low )
         ax.fill_between( z, high, low, alpha=alpha, zorder=1 )  
-
-  data_set = data_thermal_history_Gaikwad_2020a
-  data_z = data_set['z']
-  data_mean = data_set['T0'] 
-  data_error = 0.4 * ( data_set['T0_sigma_plus'] + data_set['T0_sigma_minus'] )
-  name = data_set['name']   
-  ax.errorbar( data_z, data_mean/1e4, yerr=data_error/1e4, label=name, fmt='o', color= color_data_1, zorder=2)
-
-  data_set = data_thermal_history_Gaikwad_2020b
-  data_z = data_set['z']
-  data_mean = data_set['T0'] 
-  data_error = 0.5 * ( data_set['T0_sigma_plus'] + data_set['T0_sigma_minus'] )
-  name = data_set['name']   
-  ax.errorbar( data_z, data_mean/1e4, yerr=data_error/1e4, label=name, fmt='o', color= color_data_0, zorder=2)
+  # 
+  # data_set = data_thermal_history_Gaikwad_2020a
+  # data_z = data_set['z']
+  # data_mean = data_set['T0'] 
+  # data_error = 0.4 * ( data_set['T0_sigma_plus'] + data_set['T0_sigma_minus'] )
+  # name = data_set['name']   
+  # ax.errorbar( data_z, data_mean/1e4, yerr=data_error/1e4, label=name, fmt='o', color= color_data_1, zorder=2)
+  # 
+  # data_set = data_thermal_history_Gaikwad_2020b
+  # data_z = data_set['z']
+  # data_mean = data_set['T0'] 
+  # data_error = 0.5 * ( data_set['T0_sigma_plus'] + data_set['T0_sigma_minus'] )
+  # name = data_set['name']   
+  # ax.errorbar( data_z, data_mean/1e4, yerr=data_error/1e4, label=name, fmt='o', color= color_data_0, zorder=2)
   
 
   ax.tick_params(axis='both', which='major', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major  )
@@ -128,7 +130,7 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, time_axis=None, system=
   # ax.set_xlabel( r'$z$', fontsize=font_size, color=text_color )
   ax.set_xlim( xmin, xmax )
   ax.set_ylim( ymin, ymax)
-  leg = ax.legend(loc=4, frameon=False, fontsize=22, prop=prop)
+  leg = ax.legend(loc=1, frameon=False, fontsize=22, prop=prop)
   for text in leg.get_texts():
     plt.setp(text, color = text_color)
   if black_background: 
@@ -215,13 +217,13 @@ def Plot_T0_evolution( output_dir, data_sets=None, time_axis=None, system='Shamr
   ymin, ymax = 0.6, 1.8
   xmin, xmax = 1.95, 9  
   
-  ymin, ymax = 0.7, 1.7
-  xmin, xmax = 1.95, 7 
+  # ymin, ymax = 0.7, 1.7
+  # xmin, xmax = 1.95, 7 
   
   nrows, ncols = 1, 1
   # plt.rcParams['xtick.top'] = True
-  fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(8*ncols,6*nrows))
-  # fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(10*ncols,6*nrows))
+  # fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(8*ncols,6*nrows))
+  fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(10*ncols,6*nrows))
   
   if data_sets:
     for data_id in data_sets:
@@ -321,13 +323,16 @@ def Plot_T0_evolution( output_dir, data_sets=None, time_axis=None, system='Shamr
 
   ax.tick_params(axis='both', which='major', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major  )
   ax.tick_params(axis='both', which='minor', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor  )
-  # ax.set_ylabel( r'$T_0   \,\,\,\, [10^4 \,\,\,\mathrm{K}\,]$', fontsize=font_size, color=text_color  )
-  ax.set_ylabel( r'$T_0 \,\,\,[10^4 \,\,\mathrm{K}]$        ', fontsize=font_size, color=text_color  )
+  ax.set_ylabel( r'$T_0$        ', fontsize=font_size, color=text_color  )
+  # ax.set_ylabel( r'$T_0 \,\,\,[10^4 \,\,\mathrm{K}]$        ', fontsize=font_size, color=text_color  )
   ax.set_xlabel( r'Redshift  $z$', fontsize=font_size, color=text_color )
   # ax.set_xlabel( r'$z$', fontsize=font_size, color=text_color )
   ax.set_xlim( xmin, xmax )
   ax.set_ylim( ymin, ymax)
-  leg = ax.legend(loc=1, frameon=False, fontsize=22, prop=prop)
+
+  prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=12)
+
+  leg = ax.legend(loc=3, frameon=False, fontsize=26, prop=prop)
   for text in leg.get_texts():
     plt.setp(text, color = text_color)
 
@@ -374,16 +379,16 @@ def Plot_T0_evolution( output_dir, data_sets=None, time_axis=None, system='Shamr
     font_size_text = 10
     text_y = 0.95
     
-    text = 'Heating from the ionization \nof Hydrogen by radiation \nfrom early galaxies.'
+    text = 'Heating from the ionization \nof Hydrogen by radiation \nfrom early galaxies'
     ax.text(0.8, text_y, text, horizontalalignment='center',  verticalalignment='top', transform=ax.transAxes, fontsize=font_size_text, color='black') 
 
-    text = 'Cooling from \ncosmic expansion.'
+    text = 'Cooling from \ncosmic expansion'
     ax.text(0.495, text_y, text, horizontalalignment='center',  verticalalignment='top', transform=ax.transAxes, fontsize=font_size_text, color='black') 
 
-    text = 'Reheating from the\nionization of Helium\nby radiation from\nactive galactic nuclei.'
+    text = 'Reheating from the\nionization of Helium\nby radiation from\nactive galactic nuclei'
     ax.text(0.26, text_y, text, horizontalalignment='center',  verticalalignment='top', transform=ax.transAxes, fontsize=font_size_text, color='black') 
 
-    text = 'Cooling from\ncosmic expansion.'
+    text = 'Cooling from\ncosmic expansion'
     ax.text(0.076, text_y, text, horizontalalignment='center',  verticalalignment='top', transform=ax.transAxes, fontsize=font_size_text, color='black') 
 
     

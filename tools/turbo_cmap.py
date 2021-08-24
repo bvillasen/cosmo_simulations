@@ -292,8 +292,18 @@ def RGBToPyCmap(rgbdata):
 
 
 mpl_data = RGBToPyCmap(turbo_colormap_data)
-plt.register_cmap(name='turbo', data=mpl_data, lut=turbo_colormap_data.shape[0])
+plt.register_cmap(name='turbo', data=mpl_data, lut=tuqrbo_colormap_data.shape[0])
 
 mpl_data_r = RGBToPyCmap(turbo_colormap_data[::-1,:])
 plt.register_cmap(name='turbo_r', data=mpl_data_r, lut=turbo_colormap_data.shape[0])
 
+# from matplotlib.colors import LinearSegmentedColormap
+# cmap = LinearSegmentedColormap.from_list('turbo', turbo_colormap_data, N=256)
+# plt.register_cmap(cmap=cmap)  # Register colormap.
+# mpl_data = RGBToPyCmap(turbo_colormap_data)
+# plt.register_cmap(name='turbo', data=mpl_data, lut=tuqrbo_colormap_data.shape[0])
+# 
+# mpl_data_r = RGBToPyCmap(turbo_colormap_data[::-1,:])
+# plt.register_cmap(name='turbo_r', data=mpl_data_r, lut=turbo_colormap_data.shape[0])
+# 
+# 

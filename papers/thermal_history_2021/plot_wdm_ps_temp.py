@@ -13,6 +13,7 @@ sys.path.extend(subDirectories)
 from colors import *
 from tools import *
 from load_tabulated_data import load_power_spectrum_table, load_data_irsic, load_tabulated_data_boera, load_tabulated_data_viel, load_data_boss
+from interpolation_functions import interp_line_cubic
 
 input_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/fit_mcmc/fit_results_P(k)+tau_HeII_Boss_Irsic_Boera/'
 
@@ -23,34 +24,45 @@ sim_z_vals = np.array([ ps_sim_data[id]['z'] for id in ps_sim_data ])
 file_name = input_dir + f'observable_samples/samples_fields.pkl'
 fields_sim_data = Load_Pickle_Directory( file_name )
 
-wdm_dir = data_dir + 'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m3.0kev/'
 
-# wdm_data = {}
-# z_vals, T0_vals = [], []
-# ps_data_all = {}
-# for n_file in range(56):
-#   file_name = wdm_dir + f'analysis_files/{n_file}_analysis.h5'
-#   file = h5.File( file_name, 'r' )
-#   z = file.attrs['current_z'][0]
-#   k_vals  = file['lya_statistics']['power_spectrum']['k_vals'][...]
-#   ps_mean = file['lya_statistics']['power_spectrum']['p(k)'][...]
-#   indices = ps_mean > 0
-#   ps_mean = ps_mean[indices]
-#   k_vals  = k_vals[indices]
-#   file.close()
-#   file_name = wdm_dir + f'analysis_files/fit_mcmc_delta_0_1.0/fit_{n_file}.pkl'
-#   data_fit = Load_Pickle_Directory( file_name )
-#   T0 = 10**data_fit['T0']['mean']
-#   z_vals.append( z )
-#   T0_vals.append( T0 )
-#   ps_data = { 'z':z, 'k_vals':k_vals, 'ps_mean':ps_mean }
-#   ps_data_all[n_file] = ps_data
-# z_vals = np.array( z_vals )
-# T0_vals = np.array( T0_vals )
-# wdm_data = { 'z':z_vals, 'T0':T0_vals, 'power_spectrum':ps_data_all }
-# Write_Pickle_Directory( wdm_data, wdm_dir + 'sim_properties.pkl' )
-  
-wdm_data = Load_Pickle_Directory( wdm_dir + 'sim_properties.pkl' )
+indir_0 = data_dir + 'cosmo_sims/rescaled_P19/1024_50Mpc/'
+indir_1 = data_dir + 'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m4.0kev/'
+indir_2 = data_dir + 'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m3.5kev/'
+indir_3 = data_dir + 'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m3.0kev/'
+
+input_dirs = [ indir_0, indir_1, indir_2, indir_3 ]
+out_dir = data_dir + 'cosmo_sims/rescaled_P19/wdm/'
+# 
+# data_all = {}
+# for sim_id, input_dir in enumerate(input_dirs):
+#   sim_data = {}
+#   z_vals, T0_vals = [], []
+#   ps_data_all = {}
+#   for n_file in range(56):
+#     file_name = input_dir + f'analysis_files/{n_file}_analysis.h5'
+#     file = h5.File( file_name, 'r' )
+#     z = file.attrs['current_z'][0]
+#     k_vals  = file['lya_statistics']['power_spectrum']['k_vals'][...]
+#     ps_mean = file['lya_statistics']['power_spectrum']['p(k)'][...]
+#     indices = ps_mean > 0
+#     ps_mean = ps_mean[indices]
+#     k_vals  = k_vals[indices]
+#     file.close()
+#     file_name = input_dir + f'analysis_files/fit_mcmc_delta_0_1.0/fit_{n_file}.pkl'
+#     data_fit = Load_Pickle_Directory( file_name )
+#     T0 = 10**data_fit['T0']['mean']
+#     z_vals.append( z )
+#     T0_vals.append( T0 )
+#     ps_data = { 'z':z, 'k_vals':k_vals, 'ps_mean':ps_mean }
+#     ps_data_all[n_file] = ps_data
+#   z_vals = np.array( z_vals )
+#   T0_vals = np.array( T0_vals )
+#   sim_data = { 'z':z_vals, 'T0':T0_vals, 'power_spectrum':ps_data_all }
+#   data_all[sim_id] = sim_data
+# Write_Pickle_Directory( data_all, out_dir + 'sim_properties.pkl' )
+
+in_dir = data_dir + 'cosmo_sims/rescaled_P19/wdm/'
+data_all = Load_Pickle_Directory( in_dir + 'sim_properties.pkl' )
 
 
 
@@ -96,12 +108,28 @@ color_data_tau = light_orange
 added_label_sim = False
 added_label = [ False, False, False ]
 
+z = 5
+
+sim_id = 0
+wdm_data = data_all[sim_id]
+z_wdm = wdm_data['z']
+diff = np.abs( z_wdm - z )
+indx = np.where( diff == diff.min() )[0][0]
+ps_0 = wdm_data['power_spectrum'][indx]['ps_mean']
+
+sim_id = 3
+wdm_data = data_all[sim_id]
+z_wdm = wdm_data['z']
+diff = np.abs( z_wdm - z )
+indx = np.where( diff == diff.min() )[0][0]
+ps_1 = wdm_data['power_spectrum'][indx]['ps_mean']
+
+diff = ( ps_1 - ps_0 ) / ps_0
 
 
 
 z_vals = [ 2.4, 3.2, 4.2, 5.0]
-text_pos_y_list = [ 0.36, 0.53, 0.73, 0.8]
-text_pos_y_list = [ 0.335, 0.49, 0.68, 0.84]
+text_pos_y_list = np.array([ 0.345, 0.49, 0.695, 0.865])  
 
 
 label_size = 12
@@ -125,60 +153,75 @@ if system == 'Tornado':
   prop_bold = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica_bold.ttf"), size=legend_font_size)
 
 
+colors = [ 'k', light_orange, sky_blue,  ocean_green ]
+
+labels =  [ 'CDM', r'WDM $m\,=\,$3.0 keV', r'WDM $m\,=\,$3.5 keV', r'WDM $m\,=\,$4.0 keV' ]
+
 font_dict = prop
 
 fig_label_pos_y = 0.85
 
 
 fig = plt.figure(0)
-fig.set_size_inches(10,6)
+fig.set_size_inches(10,5)
 fig.clf()
 # 
 
-n_grid_y, n_grid_x = 6, 5
+n_grid_y, n_grid_x = 10, 4
 split_x = 2
 gs = plt.GridSpec(n_grid_y, n_grid_x)
 gs.update(hspace=0.06, wspace=0.6, )
 ax0 = plt.subplot(gs[0:n_grid_y-1, 0:n_grid_x-split_x])
-ax1 = plt.subplot(gs[1:n_grid_y-2, n_grid_x-split_x:])
+ax1 = plt.subplot(gs[0:n_grid_y-1, n_grid_x-split_x:])
 
 ax = ax0
+
+added_label_wdm = False
+
+n_sims = 4
+
+sims_to_plot = [ 0, 3, 1 ]
 
 for z_id, z in enumerate(z_vals):
 
   factor = 1
-  diff = np.abs( sim_z_vals - z )
-  indx = np.where( diff == diff.min() )[0][0]
-  data_sim = ps_sim_data[indx]
-  k_vals = data_sim['k_vals']
   if z == 5: factor = 1.1
-  ps_mean = data_sim['mean']   * factor
-  ps_high = data_sim['higher'] * factor
-  ps_low = data_sim['lower'] * factor  
-  if added_label_sim: label = ''
-  else:
-    label = 'This Work'
-    added_label_sim = True 
-  sim_color = 'k'
-  ax.plot( k_vals, ps_mean, zorder=1, label=label, color=sim_color  )
-  ax.fill_between( k_vals, ps_high, ps_low, alpha=0.4, color=sim_color, zorder=1)
+  # diff = np.abs( sim_z_vals - z )
+  # indx = np.where( diff == diff.min() )[0][0]
+  # data_sim = ps_sim_data[indx]
+  # k_vals = data_sim['k_vals']
+  # ps_mean = data_sim['mean']   * factor
+  # ps_high = data_sim['higher'] * factor
+  # ps_low = data_sim['lower'] * factor  
+  # if added_label_sim: label = ''
+  # else:
+  #   label = 'CDM (This Work)'
+  #   added_label_sim = True 
+  # sim_color = 'k'
+  # ax.plot( k_vals, ps_mean, zorder=1, label=label, color=sim_color  )
+  # ax.fill_between( k_vals, ps_high, ps_low, alpha=0.4, color=sim_color, zorder=1)
 
 
   text_pos_y = text_pos_y_list[z_id]
   text_pos_x = 0.08
   ax.text(text_pos_x, text_pos_y, r'$z=${0:.1f}'.format(z), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=13 ) 
 
-  z_wdm = wdm_data['z']
-  diff = np.abs( z_wdm - z )
-  indx = np.where( diff == diff.min() )[0][0]
-  ps_data_wdm = wdm_data['power_spectrum'][indx]
-  ps = ps_data_wdm['ps_mean']
-  k_vals = ps_data_wdm['k_vals']
-  # if z == 5: factor = 1.s1
-  delta = ps * k_vals / np.pi * factor 
-  label = ''
-  ax.plot( k_vals, delta, zorder=2, label=label, )
-
+  sim_id = 0
+  for sim_id in sims_to_plot:
+    wdm_data = data_all[sim_id]
+    z_wdm = wdm_data['z']
+    diff = np.abs( z_wdm - z )
+    indx = np.where( diff == diff.min() )[0][0]
+    ps_data_wdm = wdm_data['power_spectrum'][indx]
+    ps = ps_data_wdm['ps_mean']
+    k_vals = ps_data_wdm['k_vals']
+    # if z == 5: factor = 1.s1
+    delta = ps * k_vals / np.pi * factor 
+    if not added_label_wdm:label = labels[sim_id]
+    else: label = ''
+    if sim_id == 0:ax.plot( k_vals, delta,  zorder=1, label=label, color=colors[sim_id] )
+    else: ax.plot( k_vals, delta, '--', lw=1.2, zorder=2, label=label, color=colors[sim_id] )
+  added_label_wdm = True
 
 
   # for data_id, data_set in enumerate(data_sets):
@@ -209,12 +252,16 @@ ax.set_yscale('log')
 ax.set_xscale('log')
 # ax.set_xlabel( r'$\mathrm{Wave \,\,number} \,\,\,\,k \,\,[ \mathrm{s\,\, km^{-1}} ]$', fontsize=label_size )
 # ax.set_xlabel( r'Wavenumber  $k \,\,[ \mathrm{s\,\, km^{-1}} ]$', fontsize=label_size )
-ax.set_xlabel( r'Wavenumber  $k$  [s / km]', fontsize=label_size )
+# ax.set_xlabel( r'Wavenumber  $k$  [s / km]', fontsize=label_size )
+
+
+
+ax.set_xlabel( r'$k$  [s km$^{\mathregular{-1}}$]', fontsize=label_size )
 
 # prop_label = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=label_size)
 # fig.text( 0.39, 0.18,  r'[s / km]',  fontsize=label_size,  fontproperties=prop_label  )
 
-ax.set_ylabel( r'$\pi^{-1} \,k \,P\,(k)$', fontsize=label_size )
+ax.set_ylabel( r'$\pi^{\mathregular{-1}} \,k \,P\,(k)$', fontsize=label_size )
 ax.tick_params(axis='both', which='major', labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in' )
 ax.tick_params(axis='both', which='minor', labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in')
 
@@ -222,50 +269,47 @@ ax.tick_params(axis='both', which='minor', labelsize=tick_label_size_minor, size
 [sp.set_linewidth(border_width) for sp in ax.spines.values()]
 
 ax = ax1
+n_samples_interp = 1000
 # 
-# z_vals = fields_sim_data['tau_HeII']['z']
-# tau = fields_sim_data['tau_HeII']['Highest_Likelihood']
-# tau_h = fields_sim_data['tau_HeII']['higher'] 
-# tau_l = fields_sim_data['tau_HeII']['lower'] 
+# z_vals = fields_sim_data['T0']['z']
+# T0 = fields_sim_data['T0']['Highest_Likelihood'] /1e4
+# T0_h = fields_sim_data['T0']['higher'] /1e4
+# T0_l = fields_sim_data['T0']['lower'] /1e4
+# T0_h[12] *= 1.005
+# T0_l[12] *= 0.995
+# T0_h[14] *= 0.995
+# T0_l[14] *= 1.005
+# T0_l[13] *= 1.002
+# z_interp = np.linspace( z_vals[0], z_vals[-1], n_samples_interp ) 
+# T0 = interp_line_cubic( z_vals, z_interp, T0 )
+# T0_h = interp_line_cubic( z_vals, z_interp, T0_h )
+# T0_l = interp_line_cubic( z_vals, z_interp, T0_l )
 # 
-# ax.plot( z_vals, tau, color=sim_color, zorder=1, label='This Work' )
-# ax.fill_between( z_vals, tau_h, tau_l, color=sim_color, alpha=0.5, zorder=1 )  
-# 
-# 
-# data_set = data_tau_HeII_Worserc_2019
-# data_name = data_set['name']
-# data_z = data_set['z']
-# data_tau = data_set['tau'] 
-# data_tau_sigma = data_set['tau_sigma'] 
-# tau_p = data_set['tau_sigma_p']
-# tau_m = data_set['tau_sigma_m']
-# tau_error = [ data_tau - tau_m , tau_p - data_tau  ]
-# ax.errorbar( data_z, data_tau, yerr=tau_error, fmt='o', color=color_data_tau, label=data_name, zorder=2 )
-# 
-# lower_lims = [  [3.16, 5.2] ]
-# x_lenght = 0.025/4
-# for lower_lim in lower_lims:
-#   lim_x, lim_y = lower_lim
-#   ax.plot( [lim_x-x_lenght, lim_x+x_lenght], [lim_y, lim_y], color=color_data_tau,  zorder=2  )
-#   dx, dy = 0, 1
-#   ax.arrow( lim_x, lim_y, dx, dy,  color=color_data_tau, head_width=0.01, head_length=0.08,  zorder=2   )
-# 
-# 
-# ax.legend( loc=2, frameon=False, prop=prop)
-# ax.set_xlim(2.09, 3.19 )
-# ax.set_ylim(0.5, 7 )
-# # ax.set_ylabel( r'$\mathrm{HeII} \,\, \tau_{\mathrm{eff}}$', fontsize=label_size )
-# # ax.set_xlabel( r'$\mathrm{Redshift}$', fontsize=label_size )
-# # ax.set_ylabel( r'$\mathrm{HeII \,\,Effective \,\, Optical \,\, Depth } $', fontsize=label_size )
-# ax.set_xlabel( r'Redshift  $z$', fontsize=label_size )
-# ax.set_ylabel( 'HeII effective optical depth', fontsize=label_size )
-# fig.text( 0.6, fig_label_pos_y,  'b', fontsize=fig_label_size,  fontproperties=prop_bold )
-# 
-# ax.tick_params(axis='both', which='major', labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in' )
-# ax.tick_params(axis='both', which='minor', labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in')
-# ax.set_xticks([ 2.2, 2.4, 2.6, 2.8, 3.0])
-# 
-# [sp.set_linewidth(border_width) for sp in ax.spines.values()]
+# ax.plot( z_interp, T0, color=sim_color, zorder=1, label='CDM (This Work)' )
+# ax.fill_between( z_interp, T0_h, T0_l, color=sim_color, alpha=0.5, zorder=1 )  
+
+
+for sim_id in sims_to_plot:
+  wdm_data = data_all[sim_id]
+  z_vals = wdm_data['z']
+  T0 = wdm_data['T0'] /1e4
+  z_interp = np.linspace( z_vals[0], z_vals[-1], n_samples_interp ) 
+  T0 = interp_line_cubic( z_vals, z_interp, T0 )
+  if sim_id == 0: ax.plot( z_interp, T0, color=colors[sim_id], zorder=1, label=labels[sim_id] )
+  else: ax.plot( z_interp, T0, '--', lw=1.2, color=colors[sim_id], zorder=1, label=labels[sim_id] )
+
+ax.legend( loc=1, frameon=False, prop=prop)
+ax.set_xlim(1.95, 9 )
+ax.set_ylim(0.6, 1.7)
+ax.set_xlabel( r'Redshift  $z$', fontsize=label_size )
+ax.set_ylabel( r'$T_0$  [$\mathregular{10^4}$ K]', fontsize=label_size,  )
+fig.text( 0.5, fig_label_pos_y,  'b', fontsize=fig_label_size,  fontproperties=prop_bold )
+
+ax.tick_params(axis='both', which='major', labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in' )
+ax.tick_params(axis='both', which='minor', labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in')
+
+
+[sp.set_linewidth(border_width) for sp in ax.spines.values()]
 
 file_name = output_dir + 'wdm_ps_T0.png'
 fig.savefig( file_name,  bbox_inches='tight', dpi=300)

@@ -27,7 +27,8 @@ matplotlib.rcParams['mathtext.rm'] = 'serif'
 
 
 
-def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_colors=None, sim_data_sets=None, black_background=False, high_z_only=False, plot_ps_normalized=False, ps_data_dir= root_dir + 'lya_statistics/data/', show_middle=False, ps_samples=None, data_labels=None  ):
+def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_colors=None, sim_data_sets=None, black_background=False, high_z_only=False, plot_ps_normalized=False, ps_data_dir= root_dir + 'lya_statistics/data/', show_middle=False, 
+                              ps_samples=None, data_labels=None, linewidth=1, line_color=None, line_alpha=1, c_boera=None, fig_name=None ):
   
   if system == 'Lux' or system == 'Summit': matplotlib.use('Agg')
   import matplotlib.pyplot as plt
@@ -87,7 +88,7 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
   z_large_middle = [   3.0, 3.2, 3.4, 3.6, 3.8, 4.0,   ]
   z_vals_large_reduced  = [ 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0,  ]
   z_vals_small_reduced = [ 4.2, 4.6, 5.0 ]
-  z_vals_all = [ 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 5.0   ]
+  z_vals_all = [ 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 5.0, 5.4   ]
   
   
   
@@ -133,7 +134,7 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
   
   
   if scales == 'large': plot_boss = True
-  if scales == 'all': plot_boss, plot_boera, plot_irsic = True, True, True
+  if scales == 'all': plot_boss, plot_boera, plot_irsic, plot_viel = True, True, True, True
   if scales == 'middle': plot_boss, plot_irsic = True, True,
   if scales == 'small_highz': plot_boss, plot_boera = True, True,
   if scales == 'small': plot_boera, plot_viel = True, True,
@@ -167,7 +168,9 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
   
   c_boss = dark_blue
   c_irsic = purple
-  c_boera = dark_green
+  if c_boera is None: c_boera = dark_green
+  
+  c_viel = 'C1'
   
   
   text_color  = 'black'
@@ -217,7 +220,11 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
         if current_z == 4.6: delta *= 1.1
         if current_z == 5.0: delta *= 1.1
         # color_line = line_colors[sim_id]
-        ax.plot( k, delta, linewidth=3, label=label, zorder=1,  )
+        if line_color is not None: line_color = line_color
+        else: line_color = 'C0' 
+        if 'line_color' in data_sim: line_color = data_sim['line_color']
+        ax.plot( k, delta,  label=label, linewidth=linewidth,  zorder=1, color=line_color, alpha=line_alpha )
+        # ax.plot( k, delta,  label=label, linewidth=linewidth,  zorder=1,  alpha=line_alpha )
 
     if ps_samples is not None:
       for sim_id in ps_samples:
@@ -276,7 +283,7 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
     text_pos_x = 0.85
     if scales == 'all': text_pos_x = 0.82
     if scales == 'large_reduced': text_pos_x = 0.15
-    ax.text(text_pos_x, 0.95, r'$z={0:.1f}$'.format(current_z), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
+    ax.text(text_pos_x, 0.95, r'$z=${0:.1f}'.format(current_z), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
 
     
     if plot_boss:
@@ -347,7 +354,7 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
       # Add Viel data
       z_diff = np.abs( data_z_v - current_z )
       diff_min = z_diff.min()
-      if diff_min < 1e-1:
+      if diff_min < 1e-1 and current_z == 5.4:
         data_index = np.where( z_diff == diff_min )[0][0]
         data_z_local = data_z_v[data_index]
         data_k = data_viel[data_index]['k_vals']
@@ -433,8 +440,9 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
       if indx_i == 1: y_min, y_max = 2.5e-2, 4e-1
       
     if scales == 'small_reduced':
-      x_min, x_max = 4e-3, 2e-1
-      if indx_i == 0: y_min, y_max = 4e-2, 7e-1
+      # x_min, x_max = 4e-3, 2e-1
+      x_min, x_max = 2e-3, 1.5e-1
+      if indx_i == 0: y_min, y_max = 2.5e-2, 8e-1
 
     if scales == 'small':
       x_min, x_max = 4e-3, 3e-1
@@ -451,13 +459,13 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
         
     if scales == 'large_small':
       x_min, x_max = 2e-3, 1.5e-1
-      y_min, y_max = 2e-2, 9e-1
+      y_min, y_max = 1e-2, 9e-1
   
     if scales == 'all':
       x_min, x_max = 2e-3, 1.5e-1
       if indx_i == 0: y_min, y_max = 8e-3, 1.1e-1
       if indx_i == 1: y_min, y_max = 2.5e-2, 3.5e-1
-      if indx_i == 2: y_min, y_max = 2.5e-2, 8e-1
+      if indx_i == 2: y_min, y_max = 2.5e-2, 2e-0
 
       
     if high_z_only: y_min, y_max = 5e-2, 3
@@ -482,7 +490,10 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
 
 
     # if indx_i != nrows-1 and not show_middle:ax.set_xticklabels([])
-    if indx_i != nrows-1 :ax.set_xticklabels([])
+    # if indx_i != nrows-1 :ax.set_xticklabels([])
+    if indx_i == 0 :ax.set_xticklabels([])
+    if indx_i == 1 and indx_j != 4  :ax.set_xticklabels([])
+    
     if indx_j > 0:
       ax.set_yticklabels([])
       ax.tick_params(axis='y', which='minor', labelsize=0 )
@@ -490,18 +501,20 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
 
 
     if indx_j == 0: ax.set_ylabel( r' $\Delta_F^2(k)$', fontsize=label_size, color= text_color )
-    if indx_j == 0: ax.set_ylabel( r'$\pi^{-1} \,k \,P\,(k)$', fontsize=label_size, color= text_color )
-    if indx_i == nrows-1: ax.set_xlabel( r'$ k   \,\,\,  [\mathrm{s}\,\mathrm{km}^{-1}] $',  fontsize=label_size, color= text_color )
+    if indx_j == 0: ax.set_ylabel( r'$\pi^{\mathregular{-1}} \,k \,P\,(k)$', fontsize=label_size, color= text_color )
+    # if indx_i == nrows-1: ax.set_xlabel( r'$ k   \,\,\,  [\mathrm{s}\,\mathrm{km}^{-1}] $',  fontsize=label_size, color= text_color )
+    # if indx_i == nrows-1 or ( indx_i==1 and indx_j==4): ax.set_xlabel( r'$k$  [s km$^{\mathrm{\mathregular{-1}}}$]', fontsize=label_size )
+    if indx_i == nrows-1 : ax.set_xlabel( r'$k$  [s km$^{\mathrm{\mathregular{-1}}}$]', fontsize=label_size )
 
     if black_background: 
       fig.patch.set_facecolor('black') 
       ax.set_facecolor('k')
       [ spine.set_edgecolor(text_color) for spine in list(ax.spines.values()) ]
 
-  if scales == 'all':
-    ax = ax_l[2][4]
-    print( 'Turning axis off')
-    ax.set_axis_off()
+  # if scales == 'all':
+  #   ax = ax_l[2][4]
+  #   print( 'Turning axis off')
+  #   ax.set_axis_off()
       
   if scales == 'middle':
     for i in range( nrows ):
@@ -513,12 +526,13 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
 
           
         
-
+  
   fileName = output_dir + f'flux_ps_grid_{scales}'
   if plot_ps_normalized: fileName += f'_{name}'
   if high_z_only: fileName += '_highZ'
   fileName += '.png'
   # fileName += '.pdf'
+  if fig_name is not None: fileName = output_dir + fig_name
   fig.savefig( fileName,  pad_inches=0.1, bbox_inches='tight', dpi=fig_dpi, facecolor=fig.get_facecolor())
   print('Saved Image: ', fileName)
 

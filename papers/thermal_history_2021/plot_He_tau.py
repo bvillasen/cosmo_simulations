@@ -96,14 +96,14 @@ ax.set_xlim(2.09, 3.19 )
 ax.set_ylim(0.5, 7 )
 
 ax.set_xlabel( r'Redshift  $z$', fontsize=label_size )
-ax.set_ylabel( r'HeII $\tau_{eff}$', fontsize=label_size )
+ax.set_ylabel( r'HeII $\tau_{\mathrm{eff}}$', fontsize=label_size )
 
 ax.tick_params(axis='both', which='major', labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in' )
 ax.tick_params(axis='both', which='minor', labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in')
 # ax.set_xticks([ 2.2, 2.4, 2.6, 2.8, 3.0])
 
 
-figure_name = output_dir + 'tau_He.png'
+figure_name = output_dir + 'tau_He_new.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
 
