@@ -31,7 +31,7 @@ if system == 'Shamrock':
 if system == 'Summit':
   root_dir   = f'/gpfs/alpine/ast169/scratch/bvilasen/cosmo_sims/sim_grid/{grid_name}/'
   ics_dir    = f'/gpfs/alpine/ast169/scratch/bvilasen/cosmo_sims/ics/'
-  cholla_dir = '/ccs/home/bvilasen/cholla/'    
+  cholla_dir = f'/gpfs/alpine/ast169/scratch/bvilasen/cosmo_sims/cholla_executables/   
 
 
 if system == 'Tornado':
@@ -119,8 +119,10 @@ if system == 'Summit':
     job_params['n_mpi'] = 128
     job_params['n_nodes'] = 22
 
+
 job_params['output'] = 'output'
-job_params['command'] = cholla_dir + 'cholla'
+if system == 'Lux':    job_params['command'] = cholla_dir + 'cholla'
+if system == 'Summit': job_params['command'] = cholla_dir + 'cholla.full_output'
 job_params['command_params'] = 'param.txt'
 
 
