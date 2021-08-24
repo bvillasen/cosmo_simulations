@@ -8,12 +8,12 @@ subDirectories = [x[0] for x in os.walk(cosmo_dir)]
 sys.path.extend(subDirectories)
 from tools import *
 from figure_functions import *
-from colors import *
 
 from data_photoionization_HI import data_photoionization_HI_becker_bolton_2013, data_photoionization_HI_dalosio_2018, data_photoionization_HI_gallego_2021, data_photoionization_HI_calverley_2011, data_photoionization_HI_wyithe_2011, data_photoionization_HI_gaikwad_2017
 
 
 def Plot_HI_Photoionization( output_dir, rates_data=None, figure_name='fig_phothoionization_HI.png', show_low_z = False ):
+  from colors import *
   
   if system == 'Lux':      prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/brvillas/fonts', "Helvetica.ttf"), size=12)
   if system == 'Shamrock': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=12)
