@@ -216,7 +216,8 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
         data = data_sim[index]
         k = data['k_vals']
         ps = data['ps_mean']
-        delta = ps * k / np.pi 
+        # delta = ps * k / np.pi 
+        delta = ps
         if current_z == 4.6: delta *= 1.1
         if current_z == 5.0: delta *= 1.1
         # color_line = line_colors[sim_id]
@@ -231,6 +232,8 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
         data_sim = ps_samples[sim_id]
         if data_labels is not None: label = data_labels[sim_id]
         else: label = ''
+        if 'label' in data_sim: label = data_sim['label']
+        
         sim_z_vals = data_sim['z_vals']
         diff = np.abs( sim_z_vals - current_z )
         diff_min = diff.min()
@@ -245,9 +248,10 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
           high *= 1.1
           low *= 1.1
         # if current_z == 5.0:   delta *= 1.1
-        color_line = 'black'
-        ax.plot( k, delta, linewidth=1.5, label=label, zorder=1, color=color_line  )        
-        ax.fill_between( k, high, low, color=color_line, alpha=0.4 )
+        if 'line_color' in data_sim: line_color = data_sim['line_color']
+        else: line_color = 'C0' 
+        ax.plot( k, delta, linewidth=1.5, label=label, zorder=1, color=line_color  )        
+        ax.fill_between( k, high, low, color=line_color, alpha=0.4 )
 
     if sim_data_sets:
       for sim_data in sim_data_sets:

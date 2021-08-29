@@ -99,28 +99,34 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, time_axis=None, system=
       if 'label' in data_set: label = data_set['label']
       else: label = ''
       if 'line_color' in data_set: color = data_set['line_color']  
-      ax.plot( z, T0,  zorder=1, label=label, alpha=alpha, lw=1, color=color )
+      ax.plot( z, T0,  zorder=1, label=label, alpha=alpha, lw=1.5, color=color )
       if plot_interval:
         high = data_set['high'] / 1e4
         low  = data_set['low'] / 1e4
         if interpolate_lines:
+          if data_id == 0:
+            high[12] *= 1.005
+            low[12] *= 0.995
+            high[14] *= 0.995
+            low[14] *= 1.005
+            low[13] *= 1.002
           high = interp_line_cubic( z0, z_interp, high )
           low  = interp_line_cubic( z0, z_interp, low )
-        ax.fill_between( z, high, low, alpha=alpha, zorder=1 )  
-  # 
-  # data_set = data_thermal_history_Gaikwad_2020a
-  # data_z = data_set['z']
-  # data_mean = data_set['T0'] 
-  # data_error = 0.4 * ( data_set['T0_sigma_plus'] + data_set['T0_sigma_minus'] )
-  # name = data_set['name']   
-  # ax.errorbar( data_z, data_mean/1e4, yerr=data_error/1e4, label=name, fmt='o', color= color_data_1, zorder=2)
-  # 
-  # data_set = data_thermal_history_Gaikwad_2020b
-  # data_z = data_set['z']
-  # data_mean = data_set['T0'] 
-  # data_error = 0.5 * ( data_set['T0_sigma_plus'] + data_set['T0_sigma_minus'] )
-  # name = data_set['name']   
-  # ax.errorbar( data_z, data_mean/1e4, yerr=data_error/1e4, label=name, fmt='o', color= color_data_0, zorder=2)
+        ax.fill_between( z, high, low, alpha=alpha, zorder=1, color=color )  
+  
+  data_set = data_thermal_history_Gaikwad_2020a
+  data_z = data_set['z']
+  data_mean = data_set['T0'] 
+  data_error = 0.4 * ( data_set['T0_sigma_plus'] + data_set['T0_sigma_minus'] )
+  name = data_set['name']   
+  ax.errorbar( data_z, data_mean/1e4, yerr=data_error/1e4, label=name, fmt='o', color= color_data_1, zorder=2)
+  
+  data_set = data_thermal_history_Gaikwad_2020b
+  data_z = data_set['z']
+  data_mean = data_set['T0'] 
+  data_error = 0.5 * ( data_set['T0_sigma_plus'] + data_set['T0_sigma_minus'] )
+  name = data_set['name']   
+  ax.errorbar( data_z, data_mean/1e4, yerr=data_error/1e4, label=name, fmt='o', color= color_data_0, zorder=2)
   
 
   ax.tick_params(axis='both', which='major', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major  )
@@ -200,7 +206,7 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, time_axis=None, system=
     
   figure_name = output_dir + f'{fig_name}'
   if black_background: figure_name += '_black'
-  figure_name += '.png'
+  # figure_name += '.png'
   fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
   print( f'Saved Figure: {figure_name}' )
   

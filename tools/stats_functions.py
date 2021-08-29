@@ -14,7 +14,7 @@ def get_HPI_2D( hist_2D, frac_final ):
     frac_enclosed = sum_enclosed / sum_total
   return level, indices_enclosed
 
-def compute_distribution( values, n_bins=None, log=False, edges=None ):
+def compute_distribution( values, n_bins=None, log=False, edges=None, normalize_to_bin_width=False, normalize_to_interval=False ):
   if log: values = np.log10( values )
   val_min, val_max = values.min(), values.max()
   if not edges: edges = np.linspace( val_min, val_max, n_bins+1 )
@@ -29,6 +29,12 @@ def compute_distribution( values, n_bins=None, log=False, edges=None ):
   if centers[0] > centers[-1]:
     centers = centers[::-1]
     distribution = distribution[::-1]
+  if normalize_to_bin_width:
+    bin_width = centers[1] - centers[0]
+    distribution /= bin_width
+  if normalize_to_interval:
+    interval = centers[-1] - centers[0]
+    distribution /= interval
   return distribution, centers
 
 

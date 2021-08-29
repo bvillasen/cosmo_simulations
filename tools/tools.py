@@ -17,7 +17,7 @@ if system == 'Tornado':  data_dir = '/home/bruno/Desktop/ssd_0/data/'
 if system == 'Shamrock': data_dir = '/raid/bruno/data/'
 if system == 'Lux':      data_dir = '/data/groups/comp-astro/bruno/'
 if system == 'Summit':   data_dir = '/gpfs/alpine/csc434/scratch/bvilasen/'
-if system == 'Eagle':    data_dir = '/home/bruno/Desktop/data/'
+if system == 'xps':      data_dir = '/home/bruno/Desktop/data/'
 
 
 def Combine_List_Pair( a, b ):
@@ -74,9 +74,9 @@ def check_if_file_exists( file_name ):
   return os.path.isfile( file_name )
   
 
-def Load_Pickle_Directory( input_name ):
+def Load_Pickle_Directory( input_name, print_out=True ):
   import pickle
-  print( f'Loading File: {input_name}')
+  if print_out: print( f'Loading File: {input_name}')
   dir = pickle.load( open( input_name, 'rb' ) )
   return dir
   

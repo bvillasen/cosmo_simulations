@@ -13,6 +13,7 @@ from load_data import load_analysis_data
 from phase_diagram_functions import fit_thermal_parameters_mcmc, get_density_temperature_values_to_fit
 from simulation_parameters import system
 from simulation_grid_functions import *
+from simulation_grid_data_functions import *
 
 
 def Combine_List_Pair( a, b ):
@@ -60,11 +61,6 @@ class Simulation_Grid:
     print( f" Paramters: {self.parameter_names}")
     print( f" n_simulations: {self.n_simulations}")
     print( f" Root Dir: {self.root_dir}")
-    
-    create_directory( self.root_dir )
-    
-    self.base_directories = [ self.snapshots_dir, self.simulations_dir, self.analysis_dir, self.skewers_dir ] 
-    for directory in self.base_directories: create_directory( directory )
     
     param_keys = []
     indices_list = []
@@ -127,9 +123,17 @@ class Simulation_Grid:
   Delete_grid_core_files = Delete_grid_core_files
   Fit_Simulation_Phase_Diagram_MPI = Fit_Simulation_Phase_Diagram_MPI
   Fit_Grid_Phase_Diagram_MPI = Fit_Grid_Phase_Diagram_MPI
-
+  Load_Grid_Analysis_Data = Load_Analysis_Data
+  Load_Simulation_Analysis_Data = Load_Sim_Analysis_Data
+  Get_Power_Spectrum_Range = Get_PS_Range
+  Load_Simulation_Power_Spectum_Data = Load_Power_Spectum_Data
 ###############################################################################################    
   def Create_Grid_Directory_Structure( self ):
+    print( f" Root Dir: {self.root_dir}")
+    create_directory( self.root_dir )
+    self.base_directories = [ self.snapshots_dir, self.simulations_dir, self.analysis_dir, self.skewers_dir ] 
+    for directory in self.base_directories: create_directory( directory )
+    
     n_sims = self.n_simulations
     for base_directory in self.base_directories:
       for sim_id in range( n_sims ):
@@ -146,7 +150,16 @@ class Simulation_Grid:
     name = simulation['key']
     sim_dir = simulations_dir + name + '/'
     return sim_dir    
-    
+
+###############################################################################################    
+  def Get_Analysis_Directory( self, sim_id ):
+    simulations_dir = self.analysis_dir
+    if simulations_dir[-1] != '/': simulations_dir += '/'
+    simulation = self.Grid[sim_id]
+    name = simulation['key']
+    sim_dir = simulations_dir + name + '/'
+    return sim_dir    
+        
 ###############################################################################################    
   def Create_All_Parameter_Files( self, save_file=True, ics_type='cdm' ):
     print("Creating Parameter Files:")

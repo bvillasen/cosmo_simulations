@@ -12,7 +12,7 @@ from stats_functions import get_HPI_2D
 
 
 
-def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2D=30, ticks=None, lower_mask_factor=50, multiple=False, system='Shamrock', show_label=True, HL_vals=None  ):
+def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2D=30, ticks=None, lower_mask_factor=50, multiple=False, system='Shamrock', show_label=True, HL_vals=None, show_best_fit=False  ):
   
   
 
@@ -211,30 +211,30 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
         ax.set_yticks(ticks[j])
         # ax.set_yticklabels(ticks[j])
 
-
-  font_add = 8
-  text_x = 0.46
-  text_y = 0.855
-  text = '95% Confidence Interval:'  
-  plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=22+font_add )
+  if show_best_fit:
+    font_add = 8
+    text_x = 0.46
+    text_y = 0.855
+    text = '95% Confidence Interval:'  
+    plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=22+font_add )
+      
+      
+    text_lines = [ r'$\beta_{\mathrm{H}}\,\,=\mathregular{0.78}^{+\mathregular{0.01}}_{-\mathregular{0.01}}$' ,  r'$\beta_{\mathrm{He}}=\mathregular{0.44}^{+\mathregular{0.06}}_{-\mathregular{0.07}}$' ]
+    # text_x = 0.56
+    text_y = 0.82
+    offset_y = 0.04
+    for text in text_lines:
+      plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=25+font_add )
+      text_y -= offset_y
     
+    text_lines = [ r'$\Delta z_{\mathrm{H}}\,\,=\mathregular{0.05}^{+\mathregular{0.03}}_{-\mathregular{0.03}}$', r'$\Delta z_{\mathrm{He}}=\mathregular{0.27}^{+\mathregular{0.06}}_{-\mathregular{0.06}}$', ]
+    text_x = text_x + .2
+    text_y = 0.82
+    offset_y = 0.04
+    for text in text_lines:
+      plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=25+font_add )
+      text_y -= offset_y
     
-  text_lines = [ r'$\beta_{\mathrm{H}}\,\,=\mathregular{0.78}^{+\mathregular{0.01}}_{-\mathregular{0.01}}$' ,  r'$\beta_{\mathrm{He}}=\mathregular{0.44}^{+\mathregular{0.06}}_{-\mathregular{0.07}}$' ]
-  # text_x = 0.56
-  text_y = 0.82
-  offset_y = 0.04
-  for text in text_lines:
-    plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=25+font_add )
-    text_y -= offset_y
-  
-  text_lines = [ r'$\Delta z_{\mathrm{H}}\,\,=\mathregular{0.05}^{+\mathregular{0.03}}_{-\mathregular{0.03}}$', r'$\Delta z_{\mathrm{He}}=\mathregular{0.27}^{+\mathregular{0.06}}_{-\mathregular{0.06}}$', ]
-  text_x = text_x + .2
-  text_y = 0.82
-  offset_y = 0.04
-  for text in text_lines:
-    plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=25+font_add )
-    text_y -= offset_y
-  
   
   figure_name = output_dir + 'corner.png'
   fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )

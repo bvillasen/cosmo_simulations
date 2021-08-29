@@ -12,7 +12,7 @@ print( f'System: {system}')
 
 n_points = 1024
 
-# grid_name = '{n_points}_P19m_np4_nsim_400'
+# grid_name = f'{n_points}_P19m_np4_nsim400'
 # grid_name = f'{n_points}_np5_nsim16'
 # grid_name = f'{n_points}_np2_nsim16'
 grid_name = f'{n_points}_np4_nsim81'

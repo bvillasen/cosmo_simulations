@@ -4,7 +4,8 @@ import numpy as np
 root_dir = os.path.dirname(os.getcwd()) + '/'
 sys.path.append( root_dir + 'tools')
 from tools import *
-# from phase_diagram_functions import fit_thermal_parameters_mcmc, get_density_temperature_values_to_fit
+
+
 
 def Get_Grid_Params( root_dir, base_key='S'):
   sim_dirs = [ root_dir + dir for dir in os.listdir(root_dir) if dir[0] == base_key ]
@@ -23,7 +24,6 @@ def Get_Grid_Params( root_dir, base_key='S'):
       sim_params[param_name] = param_val
     grid_sim_params[sim_id] = sim_params
   return grid_sim_params, sim_dirs
-
 
 
 def Select_Simulations( params, grid_params=None, tolerance=5e-3, SG=None ):
