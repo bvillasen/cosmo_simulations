@@ -23,18 +23,25 @@ rates_P19m = Modify_Rates_From_Grackle_File( parameter_values, rates_data=input_
 
 rates_data = {} 
 # rates_data[0] = rates_P19
-rates_data[1] = rates_P19m
+# rates_data[1] = rates_P19m
 
-sim_dirs = [ file for file in os.listdir(base_dir) if file[0]=='S' ]
-sim_dirs.sort()
+# sim_dirs = [ file for file in os.listdir(base_dir) if file[0]=='S' ]
+# sim_dirs.sort()
+# for sim_id, sim_dir in enumerate( sim_dirs ):
+#   input_dir = base_dir + sim_dir 
+#   file_name = f'{input_dir}/UVB_rates.h5'
+#   rates = Load_Grackle_File( file_name )
+#   rates_data[sim_id+2] = rates
+# 
 
-for sim_id, sim_dir in enumerate( sim_dirs ):
-  input_dir = base_dir + sim_dir 
-  file_name = f'{input_dir}/UVB_rates.h5'
+
+input_dir = data_dir + 'rescaled_HeII_heating/uvb_rates/'
+output_dir = input_dir 
+for sim_id in range(5):
+  file_name = f'{input_dir}/UVB_rates_{sim_id}.h5'
   rates = Load_Grackle_File( file_name )
-  rates_data[sim_id+2] = rates
+  rates_data[sim_id] = rates
   
-
-Plot_UVB_Rates( output_dir, rates_data=rates_data, figure_name='UVB_rates_all_original.png' )
+Plot_UVB_Rates( output_dir, rates_data=rates_data, figure_name='UVB_rates_all.png' )
 
 

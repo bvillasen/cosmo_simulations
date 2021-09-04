@@ -1,5 +1,29 @@
 import numpy as np
 
+
+
+def load_data_gaikwad( data_filename ):
+  table = np.loadtxt( data_filename )
+  z_vals_all =  np.round(table[:,0], decimals=1 )
+  z_vals = np.array(list(set(list(z_vals_all))))
+  z_vals.sort()
+  data_out = {}
+  data_out['z_vals'] = z_vals
+  for i,z in enumerate(z_vals):
+    indices = np.where(z_vals_all==z)[0]
+    data_z =  table[indices]
+    k_vals = data_z[:,1]
+    delta_power = data_z[:,2]
+    delta_power_error = data_z[:,3] 
+    data_out[i] = {}
+    data_out[i]['z'] = z
+    data_out[i]['k_vals'] = k_vals
+    data_out[i]['delta_power'] = delta_power 
+    data_out[i]['delta_power_error'] = delta_power_error 
+    data_out[i]['power_spectrum'] = delta_power * np.pi / k_vals 
+    data_out[i]['sigma_power_spectrum'] = delta_power_error * np.pi / k_vals 
+  return data_out
+
 def load_data_irsic( data_filename ):
   table = np.loadtxt( data_filename )
   z_vals_all =  np.round(table[:,0], decimals=1 )
@@ -73,7 +97,7 @@ def load_tabulated_data_boera( dir_data_boera ):
     data_out[data_index]['delta_power_error'] = delta_power_error
   return data_out
 
-def load_power_spectrum_table( data_filename ):
+def load_power_spectrum_table( data_filename, kmax=100 ):
   table = np.loadtxt( data_filename )
   z_vals_all =  np.round(table[:,0], decimals=1 )
   z_vals = np.array(list(set(list(z_vals_all))))
@@ -84,8 +108,10 @@ def load_power_spectrum_table( data_filename ):
     indices = np.where(z_vals_all==z)[0]
     data_z =  table[indices]
     k_vals = data_z[:,1]
-    delta_power = data_z[:,2]
-    delta_power_error = data_z[:,3]
+    indices = k_vals <= kmax
+    k_vals = k_vals[indices]
+    delta_power = data_z[:,2][indices]
+    delta_power_error = data_z[:,3][indices]
     power_spectrum       = delta_power       / k_vals * np.pi
     sigma_power_spectrum = delta_power_error / k_vals * np.pi
     data_out[i] = {}

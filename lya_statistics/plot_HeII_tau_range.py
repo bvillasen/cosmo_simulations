@@ -18,8 +18,8 @@ from colors import *
 root_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/fit_mcmc/fit_results_P(k)+tau_HeII_Boss_Irsic_Boera/'
 input_dir_0 = root_dir + 'observable_samples/'
 
-# root_dir = data_dir + 'cosmo_sims/sim_grid/1024_np4_nsim81/fit_mcmc/fit_results_P(k)+tau_HeII_Boss_Irsic_Boera/'
-root_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/fit_mcmc/fit_results_P(k)+_Boera/'
+root_dir = data_dir + 'cosmo_sims/sim_grid/1024_np4_nsim81/fit_mcmc/fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_Walther/'
+# root_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/fit_mcmc/fit_results_P(k)+_Boera/'
 input_dir_1 = root_dir + 'observable_samples/'
 
 output_dir = data_dir + 'cosmo_sims/sim_grid/figures/'
@@ -44,7 +44,7 @@ data_all[0]['line_color'] = 'black'
 data_all[1]['line_color'] = 'C1'
 
 data_all[0]['label'] = 'Original Best-Fit'
-data_all[1]['label'] = r'Fit to Boera $P(k)$'
+data_all[1]['label'] = r'Fit including Walther $P\,(k)$'
 
 
 
@@ -131,7 +131,7 @@ ax.tick_params(axis='both', which='minor', labelsize=tick_label_size_minor, size
 # ax.set_xticks([ 2.2, 2.4, 2.6, 2.8, 3.0])
 
 
-figure_name = output_dir + 'tau_He.png'
+figure_name = output_dir + 'tau_He_separate_heat_ion.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
 

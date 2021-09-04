@@ -25,38 +25,74 @@ data_filename = dir_irsic + 'data_table.py'
 data_irsic = load_data_irsic( data_filename )
 data_irsic['label'] = 'Irsic et al. (2017)' 
 
+data_filename = ps_data_dir + 'data_power_spectrum_walther_2019/data_table.txt'
+data_walther = load_power_spectrum_table( data_filename, kmax=0.1)
+data_walther['label'] = 'Walther et al. (2018)' 
+
+
 data_sets = [ data_boss, data_irsic, data_boera ]
+data_sets = [ data_boss, data_irsic, data_boera, data_walther ]
+
+# output_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/early_reionization/'
+output_dir = data_dir + 'cosmo_sims/sim_grid/1024_np4_nsim81/fit_mcmc/fit_results_P(k)+_Boss_Irsic_Boera_Walther/figures/'
+create_directory( output_dir ) 
 
 root_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/fit_mcmc/fit_results_P(k)+tau_HeII_Boss_Irsic_Boera/'
 input_dir_0 = root_dir + 'observable_samples/'
-
-root_dir = data_dir + 'cosmo_sims/sim_grid/1024_np4_nsim81/fit_mcmc/fit_results_P(k)+tau_HeII_Boss_Irsic_Boera/'
-input_dir_1 = root_dir + 'observable_samples/'
-
-output_dir = data_dir + 'cosmo_sims/sim_grid/figures/'
-create_directory( output_dir ) 
-
 file_name = input_dir_0 + 'samples_power_spectrum.pkl'
 data_ps_0 = Load_Pickle_Directory( file_name )
 data_ps_0['label'] = 'Original Best-Fit'
 
-file_name = input_dir_1 + 'samples_power_spectrum.pkl'
-data_ps_1 = Load_Pickle_Directory( file_name )
-data_ps_1['label'] = 'New Best-Fit'
+# root_dir = data_dir + 'cosmo_sims/sim_grid/1024_np4_nsim81/fit_mcmc/fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_Walther/'
+# input_dir_1 = root_dir + 'observable_samples/'
+# file_name = input_dir_1 + 'samples_power_spectrum.pkl'
+# data_ps_1 = Load_Pickle_Directory( file_name )
+# data_ps_1['label'] = 'New Best-Fit'
 
-
-
-
+# input_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/early_reionization/'
+# file_name = input_dir + 'ps_stats_intervals.pkl'
+# ps_stats = Load_Pickle_Directory( file_name )
+# 
 data_sets_sim = {}
 data_sets_sim[0] = data_ps_0
-data_sets_sim[1] = data_ps_1
+# for z_id in ps_stats:
+#   data_sets_sim[z_id+1] = ps_stats[z_id]
+#   data_sets_sim[z_id+1]['label'] = np.mean(ps_stats[z_id]['z_interval'])
 
-colors_sim = [ 'k', 'C1' ] 
+
+
+base_dir = data_dir + 'cosmo_sims/sim_grid/1024_np4_nsim81/fit_mcmc/fit_results_P(k)+_Boss_Irsic_Boera_Walther/'
+
+
+data_ps = {}
+z_ids = range( 14 )
+for z_id in z_ids:
+  input_dir = base_dir + f'redshift_{z_id}/'
+  file_name = input_dir + 'observable_samples/samples_power_spectrum.pkl'
+  data = Load_Pickle_Directory( file_name )
+  data_snap = data[z_id]
+  z = data_snap['z']
+  k_vals = data_snap['k_vals']
+  ps_mean = data_snap['Highest_Likelihood']
+  ps_h = data_snap['higher']
+  ps_l = data_snap['lower']
+  data_ps[z_id] = {'z':z, 'k_vals':k_vals, 'mean':ps_mean, 'higher':ps_h, 'lower':ps_l }
+data_ps['z_vals'] = np.array([ data_ps[i]['z'] for i in data_ps ])
+data_ps['label'] = 'Fit to redshift '
+
+data_sets_sim[1] = data_ps
+
+
+
+
+# colors_sim = [ 'k', 'C0', 'C1', 'C2', 'C3', 'C4', ] 
+colors_sim = [ 'k', 'C1', 'C1', 'C2', 'C3', 'C4', ] 
 
 c_boss = dark_blue
 c_irsic = purple
 c_boera = dark_green
-colors_data = [ c_boss, c_irsic, c_boera ]
+c_walther = 'C3'
+colors_data = [ c_boss, c_irsic, c_boera, c_walther ]
 
 import matplotlib
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
@@ -91,50 +127,52 @@ for i in range(nrows):
   for j in range(ncols):
     fig_id = i*ncols + j
     ax = ax_l[i][j]
-    
+
 
     snap_id = fig_id
     counter = 0
-    for sim_id in [0,1]:
+    for sim_id in data_sets_sim:
       data_ps_all = data_sets_sim[sim_id]  
       data_ps_sim = data_ps_all[snap_id]
-      
+
       z = data_ps_sim['z']
       factor = 1.0
-      if z == 4.6 or z == 5.0: factor = 1.1 
+      if z == 4.6 or z == 5.0 and sim_id==0: factor = 1.1 
       k_model  = data_ps_sim['k_vals']
-      ps_model = data_ps_sim['Highest_Likelihood'] * factor
+      if counter > 0: ps_model = data_ps_sim['mean'] * factor  
+      else: ps_model = data_ps_sim['Highest_Likelihood'] * factor
       kmin, kmax = k_model.min(), k_model.max()
       ps_model_h = data_ps_sim['higher'] * factor
       ps_model_l = data_ps_sim['lower'] * factor
       diff_model_h = ( ps_model_h - ps_model ) / ps_model
       diff_model_l = ( ps_model_l - ps_model ) / ps_model 
-      
+
       label = data_ps_all['label']
       if i > 0 : label = ''
       color_sim = colors_sim[sim_id]
       if  counter == 0: ax.axhline( 0, color=color_sim, label=label )
       if  counter == 0: ax.fill_between( k_model, diff_model_h, diff_model_l, color=color_sim, alpha=0.6 )
-      
+
       ax.text(0.07, 0.9, r'$z=${0:.1f}'.format(z), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size ) 
-      
+
       if counter > 0:
-        ps_0 = data_sets_sim[0][snap_id]['Highest_Likelihood'] 
+        if z == 4.6 or z == 5.0: factor = 1.1 
+        ps_0 = data_sets_sim[0][snap_id]['Highest_Likelihood']  * factor
         k_model = data_sets_sim[sim_id][snap_id]['k_vals'] 
-        ps   = data_sets_sim[sim_id][snap_id]['Highest_Likelihood'] 
+        # ps   = data_sets_sim[sim_id][snap_id]['Highest_Likelihood'] 
+        ps   = data_sets_sim[sim_id][snap_id]['mean'] 
         ps_h = data_sets_sim[sim_id][snap_id]['higher'] 
         ps_l = data_sets_sim[sim_id][snap_id]['lower'] 
-      
+
         diff = ( ps - ps_0 ) / ps_0
         diff_h = ( ps_h - ps_0 ) / ps_0
         diff_l = ( ps_l - ps_0 ) / ps_0
-        print( k_model.shape, diff.shape)
         label = data_sets_sim[sim_id]['label']
         if i > 0: label = ''
         ax.plot( k_model, diff, color=colors_sim[sim_id], label=label )
         ax.fill_between( k_model, diff_h, diff_l, color=colors_sim[sim_id], alpha=0.6 )
-        
-      
+
+
       n_chi, chi2 = 0, 0
       for data_id, data_set in enumerate(data_sets):
         factor = 1.0
@@ -162,13 +200,13 @@ for i in range(nrows):
         yerr = ps_sigma / ps_model_interp
         chi2 += np.sum( ( ps_model_interp - ps_data )**2 / ps_sigma**2 )
         n_chi += len( ps_data )
-        
-        if counter == 0: ax.errorbar( k_data, diff_data, yerr=yerr, fmt='o', c=colors_data[data_id], label=label, zorder=2 )
-        
 
-      
+        if counter == 0: ax.errorbar( k_data, diff_data, yerr=yerr, fmt='o', c=colors_data[data_id], label=label, zorder=2 )
+
+
+
       chi2_reduced = chi2 / n_chi
-      ax.text(0.24, 0.90-counter*0.13, r'$\chi_\nu^2=${0:.2f}'.format(chi2_reduced), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=color_sim ) 
+      ax.text(0.225+counter*0.2, 0.90, r'$\chi_\nu^2=${0:.2f}'.format(chi2_reduced), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=color_sim ) 
       counter += 1
 
 
@@ -177,10 +215,10 @@ for i in range(nrows):
     ax.set_xlim( xmin, xmax )
     ax.set_ylim( ymin, ymax )
     ax.set_xscale('log')
-    
+
     legend_loc = 4
     leg = ax.legend(  loc=legend_loc, frameon=False, prop=prop    )
-    
+
     [sp.set_linewidth(border_width) for sp in ax.spines.values()]
     ax.tick_params(axis='both', which='major', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in' )
     ax.tick_params(axis='both', which='minor', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in')

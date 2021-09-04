@@ -20,13 +20,17 @@ matplotlib.rcParams['mathtext.rm'] = 'serif'
 
 
 colors_data = [ green, purple, dark_blue, cyan ]
+colors_data = [ green, purple, orange, cyan ]
+
+
 colors_lines = [ 'C0', 'C1' ]
 
  
-def Plot_tau_HI( output_dir,  samples_tau_HI=None, labels='', black_background=False, figure_name='fig_tau_HI.png' ):
+def Plot_tau_HI( output_dir,  points_tau=None, samples_tau_HI=None, labels='', black_background=False, figure_name='fig_tau_HI.png', plot_interval=False ):
 
   if system == 'Lux':      prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/brvillas/fonts', "Helvetica.ttf"), size=12)
   if system == 'Shamrock': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=12)
+  if system == 'Tornado': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=12)
 
   nrows = 1
   ncols = 1
@@ -53,12 +57,27 @@ def Plot_tau_HI( output_dir,  samples_tau_HI=None, labels='', black_background=F
     for data_id in samples_tau_HI:
       samples = samples_tau_HI[data_id]
       z = samples['z']
-      tau = samples['tau_vals']
-      # color_line = colors_lines[data_id]
+      tau = samples['tau']
+      color_line = colors_lines[data_id]
       if 'label' in samples: label = samples['label']
       else: label = ''
-      ax.plot( z, tau,  zorder=1, label=label )
-  
+      ax.plot( z, tau, color=color_line, zorder=1, label=label )
+      if plot_interval:
+        high = samples['high']
+        low  = samples['low']
+        ax.fill_between( z, high, low, color=color_line, alpha=0.6 )
+        
+  if points_tau is not None:
+    for data_id in points_tau:
+      points = points_tau[data_id]
+      z = points['z']
+      mean = points['mean'] 
+      high = points['higher'] 
+      low = points['lower'] 
+      yerr = [ mean-low, high-mean ]
+      label = ''
+      if 'label' in points: label = points['label']
+      ax.errorbar( z, mean, yerr=yerr, fmt='o', label=label, zorder=3, alpha=0.6 )
   # data_set = data_optical_depth_Bosman_2020
   # data_name = data_set['name']
   # data_z = data_set['z']
@@ -100,7 +119,7 @@ def Plot_tau_HI( output_dir,  samples_tau_HI=None, labels='', black_background=F
   data_z = data_set['z']
   data_tau = data_set['tau'] 
   data_tau_sigma = data_set['tau_sigma'] 
-  color = 'k'
+  color = colors_data[0]
   ax.errorbar( data_z, data_tau, yerr=data_tau_sigma, fmt='o', color=color, label=data_name, zorder=2 )
 
   

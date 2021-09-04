@@ -63,18 +63,32 @@ def Get_Data_Grid( fields, SG, sim_ids=None ):
   return data_grid
 
 ####################################################################################################################
+
+def Get_Data_Grid_thermal( fields, SG, sim_ids=None ):
+  if not sim_ids: sim_ids = SG.sim_ids
+  data_grid = {}
+  for sim_id in sim_ids:
+    data_grid[sim_id] = {}
+    data_grid[sim_id]['z'] = SG.Grid[sim_id]['analysis']['thermal']['z']
+    for field in fields:
+      data_grid[sim_id][field] = {}
+      data_grid[sim_id][field]['mean'] = SG.Grid[sim_id]['analysis']['thermal'][field]
+  return data_grid
+####################################################################################################################
   
 def Get_Data_Grid_Composite( fields_list,  SG, z_vals=None, load_normalized_ps=False, sim_ids=None, load_uvb_rates=False ):
   # fields_list = fields.split('+')
   data_grid_all = {}
   for field in fields_list:
     if field == 'T0':    data_grid_all[field] = Get_Data_Grid( [field], SG, sim_ids=sim_ids ) 
-    if field == 'gamma': data_grid_all[field] = Get_Data_Grid( [field], SG, sim_ids=sim_ids ) 
-    if field == 'tau':   data_grid_all[field] = Get_Data_Grid( [field], SG, sim_ids=sim_ids ) 
-    if field == 'P(k)':  data_grid_all[field] = Get_Data_Grid_Power_spectrum( z_vals, SG, normalized_ps=load_normalized_ps, sim_ids=sim_ids )
-    if field == 'tau_HeII':  data_grid_all[field] = Get_Data_Grid( [field], SG, sim_ids=sim_ids ) 
-    if field == 'z_ion_H':  data_grid_all[field] = Get_Data_Grid_Global( [field], SG, sim_ids=sim_ids ) 
-    
+    elif field == 'gamma': data_grid_all[field] = Get_Data_Grid( [field], SG, sim_ids=sim_ids ) 
+    elif field == 'tau':   data_grid_all[field] = Get_Data_Grid( [field], SG, sim_ids=sim_ids ) 
+    elif field == 'P(k)':  data_grid_all[field] = Get_Data_Grid_Power_spectrum( z_vals, SG, normalized_ps=load_normalized_ps, sim_ids=sim_ids )
+    elif field == 'tau_HeII':  data_grid_all[field] = Get_Data_Grid( [field], SG, sim_ids=sim_ids ) 
+    elif field == 'z_ion_H':  data_grid_all[field] = Get_Data_Grid_Global( [field], SG, sim_ids=sim_ids ) 
+    elif field == 'HI_frac':  data_grid_all[field] = Get_Data_Grid_thermal( [field], SG, sim_ids=sim_ids )
+    elif field == 'n_e':  data_grid_all[field] = Get_Data_Grid_thermal( [field], SG, sim_ids=sim_ids ) 
+    else: print( f'Field not recognized: {field}' )
   data_grid = {}
   if not sim_ids: sim_ids = SG.sim_ids
   
@@ -224,6 +238,18 @@ def Load_Sim_Analysis_Data( self, sim_id, load_pd_fit=True, mcmc_fit_dir=None, l
     file_name = thermal_dir + 'global_properties.pkl'
     global_properties = Load_Pickle_Directory( file_name, print_out=False )
     sim_data['global_properties'] = global_properties
+    solution = h5.File( thermal_dir + 'solution.h5', 'r'  )
+    n_stride = 100
+    z = solution['z'][...][::n_stride]
+    # print( solution.keys())
+    nH = solution['n_H'][...][::n_stride]
+    nHI = solution['n_HI'][...][::n_stride]
+    HI_frac = nHI / nH 
+    HI_frac[HI_frac > 1.0] = 1.0
+    HI_frac[HI_frac < 1e-10] = 1e-10 
+    ne = solution['n_e'][...][::n_stride]
+    thermal = { 'z':z, 'HI_frac':HI_frac,  'n_e':ne }
+    sim_data['thermal'] = thermal
   self.Grid[sim_id]['analysis'] = sim_data
 
 

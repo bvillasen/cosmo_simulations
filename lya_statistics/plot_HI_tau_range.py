@@ -7,13 +7,13 @@ import matplotlib as mpl
 import pylab
 import pickle
 from matplotlib.legend_handler import HandlerTuple
-import os, sys
+import matplotlib.pyplot as plt
 root_dir = os.path.dirname(os.getcwd()) + '/'
 subDirectories = [x[0] for x in os.walk(root_dir)]
 sys.path.extend(subDirectories)
 from tools import * 
-from plot_thermal_history import Plot_T0_gamma_evolution
- 
+from colors import *
+from plot_optical_depth import Plot_tau_HI
 
 root_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/fit_mcmc/fit_results_P(k)+tau_HeII_Boss_Irsic_Boera/'
 input_dir_0 = root_dir + 'observable_samples/'
@@ -27,7 +27,7 @@ create_directory( output_dir )
 
 input_dirs = [ input_dir_0, input_dir_1 ]
 
-field_name = 'T0'
+field_name = 'tau'
 
 data_all = {}
 for data_id, input_dir in enumerate(input_dirs):
@@ -35,10 +35,10 @@ for data_id, input_dir in enumerate(input_dirs):
   data = Load_Pickle_Directory( file_name )
   data_field = data[field_name]
   z = data_field['z']
-  T0 = data_field['mean']
-  T0_h = data_field['higher']
-  T0_l = data_field['lower']
-  data_all[data_id] = { 'z':z, 'T0':T0, 'high':T0_h, 'low':T0_l }
+  field = data_field['mean']
+  field_h = data_field['higher']
+  field_l = data_field['lower']
+  data_all[data_id] = { 'z':z, 'tau':field, 'high':field_h, 'low':field_l }
 
 data_all[0]['line_color'] = 'black'
 data_all[1]['line_color'] = 'C1'
@@ -46,4 +46,6 @@ data_all[1]['line_color'] = 'C1'
 data_all[0]['label'] = 'Original Best-Fit'
 data_all[1]['label'] = r'Fit including Walther $P\,(k)$'
 
-Plot_T0_gamma_evolution(output_dir, data_sets=data_all, fig_name='fig_T0_separate_heat_ion.png', interpolate_lines=True, plot_gamma=False, plot_interval=True  )
+
+Plot_tau_HI( output_dir,  samples_tau_HI=data_all, labels='', black_background=False, figure_name='fig_tau_HI_separate_heat_ion.png', plot_interval=True )
+

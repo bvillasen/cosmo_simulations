@@ -48,14 +48,14 @@ colors_lines = [ 'C0', 'C1' ]
 colors_lines = [ 'k']
 
 
-def Plot_T0_gamma_evolution( output_dir, data_sets=None, time_axis=None, system='Shamrock', label='', fig_name='fig_T0_evolution', black_background=False, interpolate_lines=False, n_samples_interp=10000, plot_interval=False, plot_gamma=True  ):
+def Plot_T0_gamma_evolution( output_dir, data_sets=None, time_axis=None, points_T0=None, system='Shamrock', label='', fig_name='fig_T0_evolution', black_background=False, interpolate_lines=False, n_samples_interp=10000, plot_interval=False, plot_gamma=True  ):
   
   text_color  = 'black'
   
   if black_background:
     text_color = 'white'
     
-  ymin, ymax = 0.6, 1.8
+  ymin, ymax = 0.6, 2
   xmin, xmax = 1.95, 9.0
   nrows = 1
   if plot_gamma: ncols=2
@@ -101,6 +101,7 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, time_axis=None, system=
       if 'line_color' in data_set: color = data_set['line_color']  
       ax.plot( z, T0,  zorder=1, label=label, alpha=alpha, lw=1.5, color=color )
       if plot_interval:
+        print( data_id )
         high = data_set['high'] / 1e4
         low  = data_set['low'] / 1e4
         if interpolate_lines:
@@ -114,6 +115,18 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, time_axis=None, system=
           low  = interp_line_cubic( z0, z_interp, low )
         ax.fill_between( z, high, low, alpha=alpha, zorder=1, color=color )  
   
+  if points_T0 is not None:
+    for data_id in points_T0:
+      points = points_T0[data_id]
+      z = points['z']
+      mean = points['mean'] / 1e4
+      high = points['higher'] / 1e4
+      low = points['lower'] / 1e4
+      yerr = [ mean-low, high-mean ]
+      label = ''
+      if 'label' in points: label = points['label']
+      ax.errorbar( z, mean, yerr=yerr, fmt='o', label=label, zorder=3, alpha=0.6 )
+      
   data_set = data_thermal_history_Gaikwad_2020a
   data_z = data_set['z']
   data_mean = data_set['T0'] 
