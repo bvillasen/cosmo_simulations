@@ -161,14 +161,14 @@ class Simulation_Grid:
     return sim_dir    
         
 ###############################################################################################    
-  def Create_All_Parameter_Files( self, save_file=True, ics_type='cdm' ):
+  def Create_All_Parameter_Files( self, save_file=True, ics_type='cdm', wdm_mass=None ):
     print("Creating Parameter Files:")
     for sim_id in self.Grid.keys():
-      self.Create_Simulation_Parameter_File( sim_id, save_file=save_file, ics_type=ics_type )
+      self.Create_Simulation_Parameter_File( sim_id, save_file=save_file, ics_type=ics_type, wdm_mass=wdm_mass )
       self.Write_Grid_Parameters( sim_id )
 
 ###############################################################################################    
-  def Create_Simulation_Parameter_File( self, sim_id, save_file=True, ics_type='cdm' ):
+  def Create_Simulation_Parameter_File( self, sim_id, save_file=True, ics_type='cdm', wdm_mass=None  ):
     sim_dir = self.Get_Simulation_Directory( sim_id )
     sim_params = self.simulation_parameters.copy()
     sim_params['UVB_rates_file'] = sim_dir + 'UVB_rates.h5'
@@ -184,7 +184,7 @@ class Simulation_Grid:
     if ics_type == 'cdm': input_dir = sim_params['indir']
     if ics_type == 'wdm':
       from simulation_parameters import Get_ICs_dir_wdm
-      wdm_mass = simulation['parameters']['wdm_mass']
+      if wdm_mass is None:  wdm_mass = simulation['parameters']['wdm_mass']
       input_dir = Get_ICs_dir_wdm( wdm_mass, sim_params )
       n_points = sim_params['nx']
       if n_points == 1024: input_dir = input_dir + f'/ics_128_z16/'
