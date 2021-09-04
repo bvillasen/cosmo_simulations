@@ -16,4 +16,4 @@ param_UVB_Rates[1]['values'] = [ 0.3, 1.2 ]
 param_UVB_Rates[2] = {}
 param_UVB_Rates[2]['key'] = 'C'
 param_UVB_Rates[2]['name'] = 'scale_He_Eheat'
-param_UVB_Rates[2]['values'] = [ 0.2, 1.3 ]
+param_UVB_Rates[2]['values'] = [ 0.2, 1.7 ]
