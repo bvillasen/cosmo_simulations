@@ -6,8 +6,23 @@ import numpy as np
 import pickle
 
 
+def Load_Skewers_File( n_file, input_dir, axis_list=[ 'x', 'y', 'z' ], fields_to_load=[ 'HI_density', 'HeII_density', 'temperature', 'los_velocity' ] ):
+  file_name = input_dir + f'{n_file}_skewers.h5'
+  file = h5.File( file_name, 'r' )
+  data_out = { key:file.attrs[key][0] for key in file.attrs }
+  for field in fields_to_load:
+    skewers = []
+    for axis in axis_list:
+      skewers_axis = file[f'skewers_{axis}'][field][...]
+      skewers.append( skewers_axis )
+    skewers = np.concatenate( skewers )
+    data_out[field] = skewers
+  data_out[f'vel_Hubble'] = file['skewers_x']['vel_Hubble'][...]
+  file.close()
+  return data_out
 
-def Load_Skewers_File( n_file, input_dir, chem_type = 'HI', axis_list = [ 'x', 'y', 'z' ] ):
+
+def Load_Skewers_File_old( n_file, input_dir, chem_type = 'HI', axis_list = [ 'x', 'y', 'z' ] ):
   file_name = input_dir + f'{n_file}_skewers.h5'
   file = h5.File( file_name, 'r' )
   data_out = { key:file.attrs[key][0] for key in file.attrs }

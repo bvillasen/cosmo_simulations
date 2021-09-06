@@ -12,7 +12,7 @@ from simulation_parameters import *
 from simulation_grid_data_functions import Get_Data_Grid_Composite
 from mcmc_sampling_functions import Get_Highest_Likelihood_Params, Sample_Fields_from_Trace, Sample_Power_Spectrum_from_Trace
 
-use_mpi = False
+use_mpi = True
 if use_mpi:
   from mpi4py import MPI
   comm = MPI.COMM_WORLD
@@ -27,7 +27,6 @@ z_vals_all = [ 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4,  4.6,
 data_name = 'fit_results_P(k)+_Boss_Irsic_Boera_Walther'
 # data_name = 'fit_results_P(k)+_Boera'
 
-rank = 11
 
 mcmc_dir = root_dir + 'fit_mcmc/'
 input_dir = mcmc_dir + f'{data_name}/redshift_{rank}/' 
@@ -79,14 +78,14 @@ n_samples = 400000
 
 # Obtain distribution of the power spectrum
 file_name = output_dir + 'samples_power_spectrum.pkl'
-samples_ps = Sample_Power_Spectrum_from_Trace( param_samples, data_grid_power_spectrum, SG, hpi_sum=hpi_sum, n_samples=n_samples, params_HL=params_HL, output_trace=True )
+samples_ps = Sample_Power_Spectrum_from_Trace( param_samples, data_grid_power_spectrum, SG, hpi_sum=hpi_sum, n_samples=n_samples, params_HL=params_HL, output_trace=False )
 Write_Pickle_Directory( samples_ps, file_name )
 
 # Obtain distribution of the other fields
 file_name = output_dir + 'samples_fields.pkl' 
 field_list = ['T0', 'gamma', 'tau', 'tau_HeII']
 if load_global_properties: fields_list.append( 'z_ion_H' )
-samples_fields = Sample_Fields_from_Trace( field_list, param_samples, data_grid, SG, hpi_sum=hpi_sum, n_samples=n_samples, params_HL=params_HL, output_trace=True)
+samples_fields = Sample_Fields_from_Trace( field_list, param_samples, data_grid, SG, hpi_sum=hpi_sum, n_samples=n_samples, params_HL=params_HL, output_trace=False )
 Write_Pickle_Directory( samples_fields, file_name )
 
 

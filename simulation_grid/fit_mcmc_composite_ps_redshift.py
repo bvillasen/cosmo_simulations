@@ -12,10 +12,10 @@ from simulation_grid import Simulation_Grid
 from simulation_parameters import *
 from mcmc_data_functions import Get_Comparable_Composite, Get_Comparable_Composite_from_Grid, Write_MCMC_Results
 from plot_mcmc_functions import Plot_Comparable_Data, Plot_MCMC_Stats
-from mcmc_sampling_functions import mcmc_model_4D
+from mcmc_sampling_functions import mcmc_model_4D, mcmc_model_3D
 from plot_mcmc_corner import Plot_Corner
 
-use_mpi = False
+use_mpi = True
 if use_mpi:
   from mpi4py import MPI
   comm = MPI.COMM_WORLD
@@ -59,7 +59,7 @@ sim_ids = SG.sim_ids
 z_vals = [ 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 5.0 ] 
 
 # z_indx = 0 
-z_indx = 11
+z_indx = rank
 output_dir = base_dir + f'redshift_{z_indx}/'
 create_directory( output_dir )
 
@@ -81,7 +81,8 @@ samples_file = output_dir + 'samples_mcmc.pkl'
 nIter = 500000 
 nBurn = nIter / 5
 nThin = 1
-model, params_mcmc = mcmc_model_4D( comparable_data, comparable_grid, fields_to_fit, 'mean', SG )
+# model, params_mcmc = mcmc_model_4D( comparable_data, comparable_grid, fields_to_fit, 'mean', SG )
+model, params_mcmc = mcmc_model_3D( comparable_data, comparable_grid, fields_to_fit, 'mean', SG )
 MDL = pymc.MCMC( model )  
 MDL.sample( iter=nIter, burn=nBurn, thin=nThin )
 stats = MDL.stats()

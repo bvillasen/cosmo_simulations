@@ -5,7 +5,7 @@ root_dir = os.path.dirname(os.getcwd()) + '/'
 subDirectories = [x[0] for x in os.walk(root_dir)]
 sys.path.extend(subDirectories)
 from tools import *
-from interpolation_functions import Interpolate_4D
+from interpolation_functions import Interpolate_4D, Interpolate_3D
 from stats_functions import compute_distribution, get_highest_probability_interval
 
 ############################################################################################################
@@ -189,6 +189,33 @@ def mcmc_model_4D( comparable_data, comparable_grid, field, sub_field, SG):
   return locals(), params_mcmc
    
 
+############################################################################################################
+
+
+def mcmc_model_3D( comparable_data, comparable_grid, field, sub_field, SG):
+  print( '\nRunning MCMC Sampler')
+  parameters = SG.parameters
+  param_ids = parameters.keys()
+  params_mcmc = {}
+  for param_id in param_ids:
+    param_name = parameters[param_id]['name']
+    param_vals = parameters[param_id]['values']
+    print(f' Fitting: {param_name}  {param_vals}')
+    param_min = min(param_vals)
+    param_max = max(param_vals)
+    param_mid = ( param_max + param_min ) / 2.
+    param_mcmc = pymc.Uniform(param_name, param_min, param_max, value=param_mid )
+    params_mcmc[param_id] = {}
+    params_mcmc[param_id]['sampler'] = param_mcmc
+    params_mcmc[param_id]['name'] = param_name
+  @pymc.deterministic( plot=False )
+  def mcmc_model_3D( comparable_grid=comparable_grid, SG=SG, p0=params_mcmc[0]['sampler'], p1=params_mcmc[1]['sampler'], p2=params_mcmc[2]['sampler']   ):
+    mean_interp = Interpolate_3D( p0, p1, p2, comparable_grid, field, sub_field, SG ) 
+    return mean_interp
+  densObsrv = pymc.Normal(field, mu=mcmc_model_3D, tau=1./(comparable_data[field]['sigma']**2), value=comparable_data[field]['mean'], observed=True)
+  return locals(), params_mcmc
+   
+  
 ############################################################################################################
 
 def Get_Highest_Likelihood_Params( param_samples, n_bins=100 ):

@@ -77,10 +77,10 @@ font_size = 12
 figure_text_size = 14
 text_color = 'black'
 
-black_background = False
+black_background = True
 if black_background:
   text_color = 'white'
-  color_line = blues[4]
+  border_color = 'white'
   
 matplotlib.font_manager.findSystemFonts(fontpaths=['/home/bruno/Helvetica'], fontext='ttf')
 matplotlib.rcParams['font.sans-serif'] = "Helvetica"
@@ -90,6 +90,7 @@ matplotlib.rcParams['mathtext.rm'] = 'serif'
 if system == 'Lux':      prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/brvillas/fonts', "Helvetica.ttf"), size=12)
 if system == 'Shamrock': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=12)
 if system == 'Tornado': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=12)
+if system == 'Eagle': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=12)
 
 
 data_type = 'hydro' 
@@ -151,17 +152,22 @@ for fig_id, ax in enumerate(grid):
   if black_background: 
     fig.patch.set_facecolor('black') 
     ax.set_facecolor('k')
-    [ spine.set_edgecolor('black') for spine in list(ax.spines.values()) ]
+    [ spine.set_edgecolor(border_color) for spine in list(ax.spines.values()) ]
 
 
 # Colorbar
-cbar = ax.cax.colorbar(im)
+cbar_ticks = [ 1, 2, 3, 4]
+cbar_label = r'$\log_{10}  \, \rho_{\mathrm{gas}}  \,\,\, [  h^2 \mathrm{M_\odot } \mathrm{kpc}^{-3} ] $' 
+cbar = ax.cax.colorbar(im, ticks=cbar_ticks  )
 ax.cax.toggle_label(True)
-cbar.ax.tick_params(labelsize=12, size=4, width=1.5, length=3, direction='in' )
-cbar.set_ticks( [ 1, 2, 3, 4] )
-cbar.set_label( r'$\log_{10}  \, \rho_{\mathrm{gas}}  \,\,\, [  h^2 \mathrm{M_\odot } \mathrm{kpc}^{-3} ] $', fontsize=14 )
+cbar.ax.tick_params(labelsize=12, size=4, width=1.5, length=3, direction='in', labelcolor=text_color, color=text_color )
+# cbar.set_ticks( [ 1, 2, 3, 4] )
+cbar.set_label( cbar_label, fontsize=14, color=text_color, labelpad=0 )
+[ spine.set_edgecolor(border_color) for spine in list(cbar.ax.spines.values()) ]
+
 
 figure_name = output_dir + f'fig_gas_density_wdm.png'
+if black_background: figure_name = output_dir + f'fig_gas_density_wdm_black.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
 

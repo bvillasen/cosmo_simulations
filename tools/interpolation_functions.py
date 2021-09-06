@@ -118,6 +118,45 @@ def Interpolate_4D( p0, p1, p2, p3, data_to_interpolate, field, sub_field, SG, c
 
 
 
+def Interpolate_3D( p0, p1, p2, data_to_interpolate, field, sub_field, SG, clip_params=False, parameter_grid=None, param_id=None, sim_coords_before=None ):
+  param_values = np.array([ p0, p1, p2 ])
+  n_param = len(param_values)
+  if param_id == None: param_id = n_param - 1
+  if sim_coords_before == None:  sim_coords_before = [ -1 for param_id in range(n_param)] 
+  if parameter_grid == None: parameter_grid = Get_Parameter_Grid( param_values, SG.parameters, clip_params=clip_params )
+  
+  sim_coords_l = sim_coords_before.copy()
+  sim_coords_r = sim_coords_before.copy()
+  
+  v_id_l = parameter_grid[param_id]['v_id_l']
+  v_id_r = parameter_grid[param_id]['v_id_r']
+  p_val_l = parameter_grid[param_id]['v_l']
+  p_val_r = parameter_grid[param_id]['v_r']
+  sim_coords_l[param_id] = v_id_l
+  sim_coords_r[param_id] = v_id_r
+  p_val = param_values[param_id]
+  
+  if clip_params:
+    if p_val < p_val_l: p_val = p_val_l
+    if p_val > p_val_r: p_val = p_val_r
+  else:      
+    if p_val < p_val_l or p_val > p_val_r:
+      print( ' ERROR: Parameter outside left and right values')
+      exit()
+  if p_val_l == p_val_r: delta = 0.5
+  else: delta = ( p_val - p_val_l ) / ( p_val_r - p_val_l )  
+  if param_id == 0:
+    value_l = Get_Value_From_Simulation( sim_coords_l, data_to_interpolate, field, sub_field, SG )
+    value_r = Get_Value_From_Simulation( sim_coords_r, data_to_interpolate, field, sub_field, SG )
+    value_interp = delta*value_r + (1-delta)*value_l 
+    return value_interp
+  
+  value_l = Interpolate_3D( p0, p1, p2, data_to_interpolate, field, sub_field, SG, parameter_grid=parameter_grid, param_id=param_id-1, sim_coords_before=sim_coords_l, clip_params=clip_params )
+  value_r = Interpolate_3D( p0, p1, p2, data_to_interpolate, field, sub_field, SG, parameter_grid=parameter_grid, param_id=param_id-1, sim_coords_before=sim_coords_r, clip_params=clip_params )
+  value_interp = delta*value_r + (1-delta)*value_l
+  return value_interp
+
+
 
 def interp_line_cubic( x, x_interp, y ):
   func = interp.interp1d( x, y, kind='cubic' )

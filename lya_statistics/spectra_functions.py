@@ -2,6 +2,9 @@ import sys, os
 import numpy as np
 from scipy.special import erf
 import constants_cgs as cgs
+root_dir = os.path.dirname(os.getcwd()) + '/'
+sys.path.append( root_dir + 'tools')
+from tools import print_line_flush
 
 def get_Doppler_parameter( T, chem_type='HI' ):
   if chem_type == 'HI':   M = cgs.M_p
@@ -125,3 +128,32 @@ def compute_optical_depth( cosmology, box, skewer, space='redshift', method='err
   data_out['tau'] = tau
     
   return data_out
+  
+
+
+def Compute_Skewers_Transmitted_Flux( skewers_data, cosmology, box ):
+  # Compute the Transmitted Flux along all the skewers
+  n_skewers = skewers_data['HI_density'].shape[0]
+  print( '\nComputing Flux along Skewers')
+  skewers_Flux = []
+  for skewer_id in range(n_skewers):
+
+    text = ' Skewer {0}/{1}    {2:.0f} %'.format(skewer_id+1, n_skewers,  float(skewer_id+1)/n_skewers*100)
+    print_line_flush( text )
+
+    skewer_data = {}  
+    skewer_data['HI_density']  = skewers_data['HI_density'][skewer_id]
+    skewer_data['temperature'] = skewers_data['temperature'][skewer_id]
+    skewer_data['velocity']    = skewers_data['los_velocity'][skewer_id]
+
+    tau_los_data = compute_optical_depth( cosmology, box, skewer_data  )
+    los_vel_hubble = tau_los_data['vel_Hubble']
+    los_tau = tau_los_data['tau']
+    los_F = np.exp( -los_tau )
+    skewers_Flux.append( los_F )
+  skewers_Flux = np.array( skewers_Flux )
+  Flux_mean = skewers_Flux.mean()
+  vel_Hubble = los_vel_hubble
+  data_out = { 'vel_Hubble':vel_Hubble, 'Flux_mean':Flux_mean, 'skewers_Flux':skewers_Flux }
+  return data_out
+
