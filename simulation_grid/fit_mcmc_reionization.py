@@ -21,7 +21,7 @@ ps_data_dir = base_dir + '/lya_statistics/data/'
 # Fields to Fit using the mcmc
 # fields_to_fit = 'P(k)+tau_HeII'
 # data_ps_sets = [ 'Boss', 'Irsic', 'Boera', 'Walther' ]
-fields_to_fit = 'P(k)+'
+fields_to_fit = 'P(k)+z_ion_H'
 data_ps_sets = [ 'Boera' ]
 
 fit_name = ''
@@ -39,19 +39,22 @@ create_directory( mcmc_dir )
 create_directory( output_dir )
 
 SG = Simulation_Grid( parameters=Grid_Parameters, sim_params=sim_params, job_params=job_params, dir=root_dir )
-SG.Load_Grid_Analysis_Data(  load_pd_fit=True, mcmc_fit_dir='fit_mcmc_delta_0_1.0', load_thermal=False )
+SG.Load_Grid_Analysis_Data(  load_pd_fit=True, mcmc_fit_dir='fit_mcmc_delta_0_1.0', load_thermal=True )
 
 # kmax = 0.1
 kmax = 0.2
 ps_range = SG.Get_Power_Spectrum_Range( kmax=kmax )
 sim_ids = SG.sim_ids
 
+
+z_reion_data = { 'z':5.6, 'sigma':0.05 }
+
 # z_min = 2.2
 # z_max = 5.0 
 z_min = 4.2
 z_max = 5.0 
 ps_parameters = { 'range':ps_range, 'data_dir':ps_data_dir, 'data_sets':data_ps_sets  }
-comparable_data = Get_Comparable_Composite( fields_to_fit, z_min, z_max, ps_parameters=ps_parameters, log_ps=False  )
+comparable_data = Get_Comparable_Composite( fields_to_fit, z_min, z_max, ps_parameters=ps_parameters, log_ps=False, z_reion=z_reion_data  )
 comparable_grid = Get_Comparable_Composite_from_Grid( fields_to_fit, comparable_data, SG, log_ps=False )
 Plot_Comparable_Data( fields_to_fit, comparable_data, comparable_grid, output_dir, log_ps=False  )
 

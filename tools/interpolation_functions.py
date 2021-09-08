@@ -118,7 +118,7 @@ def Interpolate_4D( p0, p1, p2, p3, data_to_interpolate, field, sub_field, SG, c
 
 
 
-def Interpolate_3D( p0, p1, p2, data_to_interpolate, field, sub_field, SG, clip_params=False, parameter_grid=None, param_id=None, sim_coords_before=None ):
+def Interpolate_3D( p0, p1, p2, data_to_interpolate, field, sub_field, SG, clip_params=False, parameter_grid=None, param_id=None, sim_coords_before=None,  interp_log=False ):
   param_values = np.array([ p0, p1, p2 ])
   n_param = len(param_values)
   if param_id == None: param_id = n_param - 1

@@ -10,6 +10,7 @@ elif grid_name == '1024_np2_nsim16':        from parameters_np2_nsim16 import pa
 elif grid_name == '1024_np4_nsim81':        from parameters_np4_nsim81 import param_UVB_Rates as Grid_Parameters
 elif grid_name == '1024_mwdm2p0_nsim8':     from parameters_mwdm2p0_nsim8 import param_UVB_Rates as Grid_Parameters
 elif grid_name == '1024_mwdm2p0_nsim64':    from parameters_mwdm2p0_nsim64 import param_UVB_Rates as Grid_Parameters
+elif grid_name == '1024_mwdm3p0_nsim64':    from parameters_mwdm2p0_nsim64 import param_UVB_Rates as Grid_Parameters
 else:
   print( f'Unknokwn grid name: {grid_name}' )
   exit(-1)

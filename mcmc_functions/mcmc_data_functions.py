@@ -95,6 +95,18 @@ def Get_Comparable_tau_from_Grid( comparable_data, SG ):
 def Get_Comparable_tau_HeII_from_Grid( comparable_data, SG ):
   return Get_Comparable_Field_from_Grid( 'tau_HeII', comparable_data, SG )
 
+def Get_Comparable_Global_from_Grid( field, SG ):
+  sim_ids = SG.sim_ids
+  comparable_grid = {}
+  for sim_id in sim_ids:
+    comparable_grid[sim_id] = {}
+    sim_analysis = SG.Grid[sim_id]['analysis']
+    global_prop = sim_analysis['global_properties']
+    mean = np.array([ global_prop[field] ])
+    comparable_grid[sim_id]['mean'] = mean
+  return comparable_grid
+
+
 def Get_Comparable_Field_from_Grid( field, comparable_data, SG, interpolate=True ):
   print( f' Loading Comparabe from Grid: {field}')
   z_data = comparable_data['z']
@@ -140,7 +152,7 @@ def Get_Comparable_Composite_from_Grid( fields, comparable_data, SG, log_ps=Fals
     if field == 'tau':  comparable_grid_all[field] = Get_Comparable_tau_from_Grid( comparable_data[field], SG )
     if field == 'P(k)': comparable_grid_all[field] = Get_Comparable_Power_Spectrum_from_Grid( comparable_data[field]['separate'], SG, log_ps=log_ps, normalized_ps=load_normalized_ps )
     if field == 'tau_HeII':  comparable_grid_all[field] = Get_Comparable_tau_HeII_from_Grid( comparable_data[field], SG )
-    
+    if field == 'z_ion_H': comparable_grid_all[field] = Get_Comparable_Global_from_Grid( field, SG )
   comparable_grid = {}
   for sim_id in sim_ids:
     comparable_grid[sim_id] = {}
@@ -266,12 +278,14 @@ def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_rang
   data_walther = load_power_spectrum_table( data_filename )
 
   dir_data_boera = ps_data_dir + 'data_power_spectrum_boera_2019/'
-  data_boera = load_tabulated_data_boera( dir_data_boera )
+  data_boera = load_tabulated_data_boera( dir_data_boera, corrected=False )
+  data_boera_c = load_tabulated_data_boera( dir_data_boera, corrected=True )
+  
 
   data_dir_viel = ps_data_dir + 'data_power_spectrum_viel_2013/'
   data_viel = load_tabulated_data_viel( data_dir_viel)
 
-  data_dir = { 'Boss':data_boss, 'Walther':data_walther, 'Boera':data_boera, 'Viel':data_viel, 'Irsic':data_irsic }
+  data_dir = { 'Boss':data_boss, 'Walther':data_walther, 'Boera':data_boera, 'Viel':data_viel, 'Irsic':data_irsic, 'BoeraC':data_boera_c }
 
   data_kvals, data_ps, data_ps_sigma, data_indices, data_z  = [], [], [], [], []
   log_data_ps, log_data_ps_sigma = [], []
@@ -334,7 +348,7 @@ def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_rang
 
 ##################################################################################################################################
 
-def Get_Comparable_Composite( fields, z_min, z_max, ps_parameters=None, tau_parameters=None, log_ps=False,   ):
+def Get_Comparable_Composite( fields, z_min, z_max, ps_parameters=None, tau_parameters=None, log_ps=False, z_reion=None  ):
   
   rescaled_walther = False
   rescale_walter_file = None
@@ -370,6 +384,12 @@ def Get_Comparable_Composite( fields, z_min, z_max, ps_parameters=None, tau_para
       append_comparable = True
     if field == 'tau_HeII': 
       comparable_field = Get_Comparable_Tau_HeII( rescale_tau_HeII_sigma=1.0 )
+      append_comparable = True
+    if field == 'z_ion_H':
+      mean  = np.array([z_reion['z']])
+      sigma = np.array([z_reion['sigma']])
+      comparable_field = { 'mean':mean, 'sigma':sigma }
+      # print( f'Comaparable z_ion_H: {comparable_field}' )
       append_comparable = True
     if append_comparable:
       comparable_all[field] = comparable_field

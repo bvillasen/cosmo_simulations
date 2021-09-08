@@ -69,6 +69,8 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
   dir_data_boera = ps_data_dir + 'data_power_spectrum_boera_2019/'
   data_boera = load_tabulated_data_boera( dir_data_boera )
   data_z_b = data_boera['z_vals']
+  data_boera_c = load_tabulated_data_boera( dir_data_boera, corrected=True )
+  data_z_bc = data_boera_c['z_vals']
 
   data_dir_viel = ps_data_dir + 'data_power_spectrum_viel_2013/'
   data_viel = load_tabulated_data_viel( data_dir_viel)
@@ -138,12 +140,12 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
   
   plot_gaikwad = False
   plot_boss, plot_walther, plot_boera, plot_viel, plot_irsic = False, False, False, False, False
-  
+  plot_boera_c  = False
   
   if scales == 'large': plot_boss = True
   if scales == 'all': plot_boss, plot_boera, plot_irsic, plot_viel = True, True, True, True
   if scales == 'middle': plot_boss, plot_irsic = True, True,
-  if scales == 'small_highz': plot_boss, plot_boera = True, True,
+  if scales == 'small_highz': plot_boss, plot_boera = False, True,
   if scales == 'small': plot_boera, plot_viel = True, True,
   if scales == 'large_middle': plot_boss, plot_irsic = True, True
   if scales == 'large_reduced': plot_boss = True
@@ -262,12 +264,12 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
         data = data_sim[index]
         k = data['k_vals']
         delta = data['Highest_Likelihood']
-        high = data['higher'] * 1.01
-        low  = data['lower'] * 0.99
-        if current_z == 4.6 or current_z == 5.0: 
-          delta *= 1.1
-          high *= 1.1
-          low *= 1.1
+        high = data['higher'] 
+        low  = data['lower'] 
+        # if current_z == 4.6 or current_z == 5.0: 
+        #   delta *= 1.1
+        #   high *= 1.1
+        #   low *= 1.1
         # if current_z == 5.0:   delta *= 1.1
         if 'line_color' in data_sim: line_color = data_sim['line_color']
         else: line_color = 'C0' 
@@ -371,9 +373,26 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
         data_delta_power = data_boera[data_index]['delta_power']
         data_delta_power_error = data_boera[data_index]['delta_power_error']
         label_boera ='Boera et al. (2019)'
-        if current_z == 4.2: factor = 0.97
+        # if current_z == 4.2: factor = 0.97
         data_delta_power *= factor
         d_boera = ax.errorbar( data_k, data_delta_power, yerr=data_delta_power_error, fmt='o', c=c_boera, label=label_boera, zorder=2 )
+
+    # if plot_boera_c:
+    #   # Add Boera data
+    #   z_diff = np.abs( data_z_bc - current_z )
+    #   diff_min = z_diff.min()
+    #   factor = 1.0
+    #   if diff_min < 1e-1:
+    #     data_index = np.where( z_diff == diff_min )[0][0]
+    #     data_z_local = data_z_bc[data_index]
+    #     data_k = data_boera_c[data_index]['k_vals']
+    #     data_delta_power = data_boera_c[data_index]['delta_power']
+    #     data_delta_power_error = data_boera_c[data_index]['delta_power_error']
+    #     label_boera ='Boera et al. (2019)'
+    #     # if current_z == 4.2: factor = 0.97
+    #     data_delta_power *= factor
+    #     d_boera = ax.errorbar( data_k, data_delta_power, yerr=data_delta_power_error, fmt='o', c=c_boera, label=label_boera, zorder=2 )
+
 
     if plot_viel:
       # Add Viel data
@@ -457,7 +476,7 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
       if indx_i == 2: y_min, y_max = 5e-2, 3
 
     if scales == 'small_highz':
-      x_min, x_max = 2e-3, 3e-1
+      x_min, x_max = 4e-3, 1.7e-1
       if indx_i == 0: y_min, y_max = 5e-3, 1e0
       
     if scales == 'large_middle':
@@ -528,7 +547,7 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
 
     # if indx_i != nrows-1 and not show_middle:ax.set_xticklabels([])
     # if indx_i != nrows-1 :ax.set_xticklabels([])
-    if indx_i == 0 :ax.set_xticklabels([])
+    if scales != 'small_highz' and indx_i == 0 :ax.set_xticklabels([])
     if indx_i == 1 and indx_j != 4  :ax.set_xticklabels([])
     
     if indx_j > 0:

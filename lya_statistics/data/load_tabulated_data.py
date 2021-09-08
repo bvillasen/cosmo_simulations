@@ -75,7 +75,7 @@ def load_data_boss( data_filename ):
     data_out[i]['sigma_power_spectrum'] = power_error  
   return data_out
   
-def load_tabulated_data_boera( dir_data_boera ):
+def load_tabulated_data_boera( dir_data_boera, corrected=False ):
   z_vals = np.array([ 4.2, 4.6, 5.0 ])
 
   data_out = {}
@@ -85,8 +85,8 @@ def load_tabulated_data_boera( dir_data_boera ):
     file_name = dir_data_boera + 'data_table_{0}.txt'.format( data_index )
     data  = np.loadtxt( file_name )
     k_vals = 10**data[:,0]
-    # power_vals = data[:,2]
     power_vals = data[:,1]
+    if corrected: power_vals = data[:,2]
     power_error = data[:,3]
     delta_power = k_vals * power_vals / np.pi
     delta_power_error = k_vals * power_error / np.pi

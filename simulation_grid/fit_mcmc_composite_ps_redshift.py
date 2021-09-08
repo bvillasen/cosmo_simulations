@@ -29,11 +29,11 @@ else:
 ps_data_dir = base_dir + '/lya_statistics/data/'
 
 # Fields to Fit using the mcmc
-fields_to_fit = 'P(k)+'
-# data_ps_sets = [ 'Boss', 'Irsic', 'Boera' ]
-data_ps_sets = [ 'Boss', 'Irsic', 'Boera', 'Walther' ]
 # fields_to_fit = 'P(k)+'
-# data_ps_sets = [ 'Boera' ]
+# data_ps_sets = [ 'Boss', 'Irsic', 'Boera' ]
+# data_ps_sets = [ 'Boss', 'Irsic', 'Boera', 'Walther' ]
+fields_to_fit = 'P(k)+'
+data_ps_sets = [ 'Boera' ]
 
 fit_name = ''
 data_label  = ''
@@ -46,17 +46,20 @@ print(f'Data Label: {data_label}')
 
 mcmc_dir = root_dir + 'fit_mcmc/'
 base_dir = mcmc_dir + f'fit_results_{fields_to_fit}_{fit_name}/'
+base_dir += 'fit_redshift/' 
 create_directory( mcmc_dir )
 create_directory( base_dir )
 
 SG = Simulation_Grid( parameters=Grid_Parameters, sim_params=sim_params, job_params=job_params, dir=root_dir )
 SG.Load_Grid_Analysis_Data(  load_pd_fit=True, mcmc_fit_dir='fit_mcmc_delta_0_1.0', load_thermal=False )
 
-kmax = 0.1
+# kmax = 0.1
+kmax = 0.2
 ps_range = SG.Get_Power_Spectrum_Range( kmax=kmax )
 sim_ids = SG.sim_ids
 
-z_vals = [ 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 5.0 ] 
+# z_vals = [ 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 5.0 ] 
+z_vals = [  4.2, 4.6, 5.0 ] 
 
 # z_indx = 0 
 z_indx = rank
@@ -81,8 +84,8 @@ samples_file = output_dir + 'samples_mcmc.pkl'
 nIter = 500000 
 nBurn = nIter / 5
 nThin = 1
-# model, params_mcmc = mcmc_model_4D( comparable_data, comparable_grid, fields_to_fit, 'mean', SG )
-model, params_mcmc = mcmc_model_3D( comparable_data, comparable_grid, fields_to_fit, 'mean', SG )
+model, params_mcmc = mcmc_model_4D( comparable_data, comparable_grid, fields_to_fit, 'mean', SG )
+# model, params_mcmc = mcmc_model_3D( comparable_data, comparable_grid, fields_to_fit, 'mean', SG )
 MDL = pymc.MCMC( model )  
 MDL.sample( iter=nIter, burn=nBurn, thin=nThin )
 stats = MDL.stats()

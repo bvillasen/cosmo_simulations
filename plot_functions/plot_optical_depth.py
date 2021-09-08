@@ -21,6 +21,7 @@ matplotlib.rcParams['mathtext.rm'] = 'serif'
 
 colors_data = [ green, purple, dark_blue, cyan ]
 colors_data = [ green, purple, orange, cyan ]
+colors_data = [ green, 'C3', orange, cyan ]
 
 
 colors_lines = [ 'C0', 'C1' ]
@@ -59,6 +60,7 @@ def Plot_tau_HI( output_dir,  points_tau=None, samples_tau_HI=None, labels='', b
       z = samples['z']
       tau = samples['tau']
       color_line = colors_lines[data_id]
+      if 'line_color' in samples: color_line = samples['line_color']
       if 'label' in samples: label = samples['label']
       else: label = ''
       ax.plot( z, tau, color=color_line, zorder=1, label=label )
@@ -77,7 +79,9 @@ def Plot_tau_HI( output_dir,  points_tau=None, samples_tau_HI=None, labels='', b
       yerr = [ mean-low, high-mean ]
       label = ''
       if 'label' in points: label = points['label']
-      ax.errorbar( z, mean, yerr=yerr, fmt='o', label=label, zorder=3, alpha=0.6 )
+      if 'color' in points: color = points['color']
+      else: color = 'C0'
+      ax.errorbar( z, mean, yerr=yerr, fmt='o', label=label, zorder=3, alpha=0.6, color=color )
   # data_set = data_optical_depth_Bosman_2020
   # data_name = data_set['name']
   # data_z = data_set['z']

@@ -55,7 +55,7 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, time_axis=None, points_
   if black_background:
     text_color = 'white'
     
-  ymin, ymax = 0.6, 2
+  ymin, ymax = 0.0, 2
   xmin, xmax = 1.95, 9.0
   nrows = 1
   if plot_gamma: ncols=2
@@ -125,7 +125,9 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, time_axis=None, points_
       yerr = [ mean-low, high-mean ]
       label = ''
       if 'label' in points: label = points['label']
-      ax.errorbar( z, mean, yerr=yerr, fmt='o', label=label, zorder=3, alpha=0.6 )
+      if 'color' in points: color = points['color']
+      else: color = 'C0'
+      ax.errorbar( z, mean, yerr=yerr, fmt='o', label=label, zorder=3, alpha=0.6, color=color )
       
   data_set = data_thermal_history_Gaikwad_2020a
   data_z = data_set['z']

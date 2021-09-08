@@ -15,7 +15,7 @@ from uvb_functions import Load_Grackle_File
 SG = Simulation_Grid( parameters=Grid_Parameters, sim_params=sim_params, job_params=job_params, dir=root_dir )
 SG.Create_Grid_Directory_Structure()
 # SG.Create_All_Parameter_Files( ics_type='cdm' )
-SG.Create_All_Parameter_Files( ics_type='wdm', wdm_mass=2.0 )
+SG.Create_All_Parameter_Files( ics_type='wdm', wdm_mass=3.0 )
 # 
 # grackle_UVB_file_name =  base_dir + 'rates_uvb/data/CloudyData_UVB_Puchwein2019_cloudy.h5' 
 # constant_UVB_parameters = { 'scale_He_ion':0.44, 'scale_H_ion':0.78, 'deltaZ_He':0.27, 'deltaZ_H':0.05 } 

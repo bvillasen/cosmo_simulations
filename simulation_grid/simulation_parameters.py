@@ -17,7 +17,8 @@ n_points = 1024
 # grid_name = f'{n_points}_np2_nsim16'
 # grid_name = f'{n_points}_np4_nsim81'
 # grid_name = f'{n_points}_mwdm2p0_nsim8'
-grid_name = f'{n_points}_mwdm2p0_nsim64'
+# grid_name = f'{n_points}_mwdm2p0_nsim64'
+grid_name = f'{n_points}_mwdm3p0_nsim64'
 
 
 if system == 'Lux':
@@ -88,7 +89,8 @@ if system == 'Summit':
     sim_params['nfile'] = 1
 if system == 'Shamrock': sim_params['indir'] = ics_dir + f'1024_50Mpc/ics_128_z16/'
 if system == 'Lux':    sim_params['scale_outputs_file'] = cholla_dir + 'scale_output_files/outputs_single_output_z2.txt'
-if system == 'Summit': sim_params['scale_outputs_file'] = cholla_dir + 'scale_output_files/outputs_ps_comparison_n6.txt'
+# if system == 'Summit': sim_params['scale_outputs_file'] = cholla_dir + 'scale_output_files/outputs_ps_comparison_n6.txt'
+if system == 'Summit': sim_params['scale_outputs_file'] = cholla_dir + 'scale_output_files/outputs_z_5_4.txt'
 sim_params['analysis_scale_outputs_file'] = cholla_dir + 'scale_output_files/outputs_cosmo_analysis_56.txt'
 
 if system == 'Tornado':
@@ -116,7 +118,8 @@ if system == 'Lux':
     
 
 if system == 'Summit':
-  job_params['time'] = '2:00'
+  # job_params['time'] = '2:00'
+  job_params['time'] = '1:00'
   if n_points == 1024:
     job_params['n_mpi'] = 128
     job_params['n_nodes'] = 22
