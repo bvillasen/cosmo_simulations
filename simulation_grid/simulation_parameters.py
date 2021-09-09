@@ -85,13 +85,15 @@ if system == 'Lux':
 if system == 'Summit':
   # if n_points == 1024: sim_params['indir'] = ics_dir + f'1024_50Mpc/ics_128_z16/'
   if n_points == 1024: 
-    sim_params['indir'] = ics_dir + f'1024_50Mpc/ics_128_z16/'
+    # sim_params['indir'] = ics_dir + f'1024_50Mpc/ics_128_z16/'
     sim_params['indir'] = ics_dir + f'1024_50Mpc/ics_128_z100/'
     sim_params['nfile'] = 0
 if system == 'Shamrock': sim_params['indir'] = ics_dir + f'1024_50Mpc/ics_128_z16/'
 if system == 'Lux':    sim_params['scale_outputs_file'] = cholla_dir + 'scale_output_files/outputs_single_output_z2.txt'
 # if system == 'Summit': sim_params['scale_outputs_file'] = cholla_dir + 'scale_output_files/outputs_ps_comparison_n6.txt'
-if system == 'Summit': sim_params['scale_outputs_file'] = cholla_dir + 'scale_output_files/outputs_z_5_4.txt'
+if system == 'Summit': 
+  # sim_params['scale_outputs_file'] = cholla_dir + 'scale_output_files/outputs_single_output_z1.txt'
+  sim_params['scale_outputs_file'] = cholla_dir + 'scale_output_files/outputs_z_5_4.txt'
 sim_params['analysis_scale_outputs_file'] = cholla_dir + 'scale_output_files/outputs_cosmo_analysis_56.txt'
 
 if system == 'Tornado':
