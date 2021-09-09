@@ -187,8 +187,8 @@ class Simulation_Grid:
       if wdm_mass is None:  wdm_mass = simulation['parameters']['wdm_mass']
       input_dir = Get_ICs_dir_wdm( wdm_mass, sim_params )
       n_points = sim_params['nx']
-      # if n_points == 1024: input_dir = input_dir + f'/ics_128_z16/'
-      if n_points == 1024: input_dir = input_dir + f'/ics_128_z100/'
+      if n_points == 1024: input_dir = input_dir + f'/ics_128_z16/'
+      # if n_points == 1024: input_dir = input_dir + f'/ics_128_z100/'
     sim_params['indir'] = input_dir
         
     if save_file:
