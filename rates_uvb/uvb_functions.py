@@ -268,7 +268,7 @@ def Modify_Rates_From_Grackle_File(  parameter_values, max_delta_z = 0.1, rates_
       if 'scale_He_ion' in parameter_values: scale_He_ion = parameter_values['scale_He_ion']
       else:
         scale_He_ion = 1 
-        print('WARNING: Using scale_H_ion = 1')
+        print('WARNING: Using scale_He_ion = 1')
       scale_He_heat = scale_He_ion * p_val
       rates_data['UVBRates']['Photoheating']['piHeII'] *= scale_He_heat
         
