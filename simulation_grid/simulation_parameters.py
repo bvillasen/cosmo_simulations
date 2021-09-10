@@ -87,8 +87,8 @@ if system == 'Lux':
 if system == 'Summit':
   # if n_points == 1024: sim_params['indir'] = ics_dir + f'1024_50Mpc/ics_128_z16/'
   if n_points == 1024: 
-    # sim_params['indir'] = ics_dir + f'1024_50Mpc/ics_128_z16/'
-    sim_params['indir'] = ics_dir + f'1024_50Mpc/ics_128_z100/'
+    # sim_params['indir'] = ics_dir + f'1024_50Mpc/ics_128_z100/'
+    sim_params['indir'] = ics_dir + f'1024_50Mpc/ics_128_z16/'
     sim_params['nfile'] = 1
 if system == 'Shamrock': sim_params['indir'] = ics_dir + f'1024_50Mpc/ics_128_z16/'
 if system == 'Lux':    sim_params['scale_outputs_file'] = cholla_dir + 'scale_output_files/outputs_single_output_z2.txt'
