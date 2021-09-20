@@ -127,13 +127,13 @@ def Plot_tau_HI( output_dir,  points_tau=None, samples_tau_HI=None, labels='', b
   ax.errorbar( data_z, data_tau, yerr=data_tau_sigma, fmt='o', color=color, label=data_name, zorder=2 )
 
   
-  data_set = data_optical_depth_Yang_2020
-  data_name = data_set['name']
-  data_z = data_set['z']
-  data_tau = data_set['tau'] 
-  data_tau_sigma = data_set['tau_sigma'] 
-  color = colors_data[3]
-  ax.errorbar( data_z, data_tau, yerr=data_tau_sigma, fmt='o', color=color, label=data_name, zorder=2 )
+  # data_set = data_optical_depth_Yang_2020
+  # data_name = data_set['name']
+  # data_z = data_set['z']
+  # data_tau = data_set['tau'] 
+  # data_tau_sigma = data_set['tau_sigma'] 
+  # color = colors_data[3]
+  # ax.errorbar( data_z, data_tau, yerr=data_tau_sigma, fmt='o', color=color, label=data_name, zorder=2 )
 
   ax.tick_params(axis='both', which='major', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major  )
   ax.tick_params(axis='both', which='minor', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor  )

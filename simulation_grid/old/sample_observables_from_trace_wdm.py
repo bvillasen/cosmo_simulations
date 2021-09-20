@@ -10,7 +10,7 @@ from load_grid_parameters import Grid_Parameters
 from simulation_grid import Simulation_Grid
 from simulation_parameters import *
 from simulation_grid_data_functions import Get_Data_Grid_Composite
-from mcmc_sampling_functions import Get_Highest_Likelihood_Params, Get_1D_Likelihood_max, Get_Params_mean,Sample_Fields_from_Trace, Sample_Power_Spectrum_from_Trace
+from mcmc_sampling_functions import Get_Highest_Likelihood_Params, Sample_Fields_from_Trace, Sample_Power_Spectrum_from_Trace
 
 
 use_mpi = True
@@ -25,12 +25,11 @@ else:
 
 z_indx = rank
 
-independent_redshift = True
 
-# data_name = 'fit_results_P(k)+_BoeraC'
-data_name = 'fit_results_P(k)+_Boera'
-# data_name = 'fit_results_P(k)+_Viel'
-if independent_redshift: data_name += f'/fit_redshift/redshift_{z_indx}'
+# data_name = 'fit_results_P(k)+_Boera'
+data_name = f'fit_results_P(k)+_Boera/fit_redshift/redshift_{z_indx}'
+
+
 mcmc_dir = root_dir + 'fit_mcmc/'
 input_dir = mcmc_dir + f'{data_name}/' 
 output_dir = input_dir + 'observable_samples/'
@@ -49,11 +48,10 @@ kmax = 0.2
 ps_range = SG.Get_Power_Spectrum_Range( kmax=kmax )
 sim_ids = SG.sim_ids
 
-# z_vals = [ 4.2, 4.6, 5.0, 5.4   ]
-z_vals = [ 4.2, 4.6, 5.0  ]
+z_vals = [ 4.2, 4.6, 5.0   ]
 fields_to_sample = ['P(k)', 'T0', 'gamma', 'tau', 'tau_HeII', ]
 if load_global_properties: fields_to_sample.append( 'z_ion_H' )
-data_grid, data_grid_power_spectrum = Get_Data_Grid_Composite(  fields_to_sample, SG, z_vals=z_vals, z_fields_min=4.0, sim_ids=sim_ids, load_uvb_rates=False )
+data_grid, data_grid_power_spectrum = Get_Data_Grid_Composite(  fields_to_sample, SG, z_vals=z_vals, sim_ids=sim_ids, load_uvb_rates=False )
 
 
 stats_file = input_dir + 'fit_mcmc.pkl'
@@ -75,10 +73,6 @@ Write_Pickle_Directory( param_samples, output_dir + 'samples_mcmc.pkl' )
 
 # Get the Highest_Likelihood parameter values 
 params_HL = Get_Highest_Likelihood_Params( param_samples, n_bins=100 )
-params_max = Get_1D_Likelihood_max( param_samples, n_bins_1D=100 )
-params_mean = Get_Params_mean( param_samples )
-params_HL = { 'Highest_Likelihood':params_HL, 'max':params_max, 'mean':params_mean }
-
 
 hpi_sum = 0.95
 n_samples = 400000 
@@ -90,8 +84,7 @@ Write_Pickle_Directory( samples_ps, file_name )
 
 # Obtain distribution of the other fields
 file_name = output_dir + 'samples_fields.pkl' 
-# field_list = ['T0', 'gamma', 'tau', 'tau_HeII']
-field_list = [ 'T0', 'tau' ]
+field_list = ['T0', 'gamma', 'tau', 'tau_HeII']
 if load_global_properties: fields_list.append( 'z_ion_H' )
 samples_fields = Sample_Fields_from_Trace( field_list, param_samples, data_grid, SG, hpi_sum=hpi_sum, n_samples=n_samples, params_HL=params_HL, output_trace=True)
 Write_Pickle_Directory( samples_fields, file_name )

@@ -73,9 +73,11 @@ def Sample_Fields_from_Trace( fields_list, param_samples, data_grid, SG, hpi_sum
     samples_stats['lower']  = lower
     samples_stats['higher'] = higher
     if params_HL is not None:
-      if n_param == 3: interp_HL = Interpolate_3D(  params_HL[0], params_HL[1], params_HL[2], data_grid, field, 'mean', SG, clip_params=True, interp_log=sample_log ) 
-      if n_param == 4: interp_HL = Interpolate_4D(  params_HL[0], params_HL[1], params_HL[2], params_HL[3], data_grid, field, 'mean', SG, clip_params=True, interp_log=sample_log ) 
-      samples_stats['Highest_Likelihood'] = interp_HL
+      for key in params_HL:
+        p_vals = params_HL[key]
+        if n_param == 3: interp_HL = Interpolate_3D(  p_vals[0], p_vals[1], p_vals[2], data_grid, field, 'mean', SG, clip_params=True, interp_log=sample_log ) 
+        if n_param == 4: interp_HL = Interpolate_4D(  p_vals[0], p_vals[1], p_vals[2], p_vals[3], data_grid, field, 'mean', SG, clip_params=True, interp_log=sample_log ) 
+        samples_stats[key] = interp_HL
     
     if sample_log:
       for key in samples_stats:
@@ -133,35 +135,30 @@ def Sample_Power_Spectrum_from_Trace( param_samples, data_grid, SG, hpi_sum=0.7,
     ps_samples[id_z]['higher'] = ps_higher
     if output_trace: ps_samples[id_z]['trace'] = trace
     if params_HL is not None:
-      if n_param == 3: ps_HL = Interpolate_3D(  params_HL[0], params_HL[1], params_HL[2], ps_data, 'P(k)', 'mean', SG, clip_params=True ) 
-      if n_param == 4: ps_HL = Interpolate_4D(  params_HL[0], params_HL[1], params_HL[2], params_HL[3], ps_data, 'P(k)', 'mean', SG, clip_params=True ) 
-      ps_samples[id_z]['Highest_Likelihood'] = ps_HL
+      for key in params_HL:
+        p_vals = params_HL[key]
+        if n_param == 3: ps_HL = Interpolate_3D(  p_vals[0], p_vals[1], p_vals[2], ps_data, 'P(k)', 'mean', SG, clip_params=True ) 
+        if n_param == 4: ps_HL = Interpolate_4D(  p_vals[0], p_vals[1], p_vals[2], p_vals[3], ps_data, 'P(k)', 'mean', SG, clip_params=True ) 
+        ps_samples[id_z][key] = ps_HL
   print( '\n' )
   return ps_samples
   
 
+
+
 ############################################################################################################
 
-def Get_Highest_Likelihood_Params( param_samples, n_bins=100 ):
-  param_ids = param_samples.keys()
-  n_param = len(param_ids )
-  param_samples_array = np.array([ param_samples[i]['trace'] for i in range(n_param) ] ).T
+def get_mcmc_model( comparable_data, comparable_grid, fields_to_fit, sub_field, SG  ):
+  params = SG.parameters
+  n_param = len( params )
+  print( f'Geting MCMC model for {n_param} parameters ')
+  model, param_mcmc = None, None
+  if n_param == 4:
+    model, params_mcmc =  mcmc_model_4D( comparable_data, comparable_grid, fields_to_fit, 'mean', SG )
+  if n_param == 3:
+    model, params_mcmc =  mcmc_model_4D( comparable_data, comparable_grid, fields_to_fit, 'mean', SG )
+  return model, params_mcmc  
 
-  hist_4D, bin_edges = np.histogramdd( param_samples_array, bins=n_bins )
-  bin_centers = [ (edges[1:] + edges[:-1])/2 for edges in bin_edges ]
-  hist_max = hist_4D.max()
-  max_id = np.where( hist_4D == hist_max  )
-  p_vals = np.array([ bin_centers[i][max_id[i]] for i in range(n_param) ])
-  print( f"Highest_Likelihood: {hist_max} {p_vals}")
-  while( len(p_vals.flatten()) > n_param ):
-    n_bins = np.int( n_bins * 0.9 )
-    hist_4D, bin_edges = np.histogramdd( param_samples_array, bins=n_bins )
-    bin_centers = [ (edges[1:] + edges[:-1])/2 for edges in bin_edges ]
-    hist_max = hist_4D.max()
-    max_id = np.where( hist_4D == hist_max  )
-    p_vals = np.array([ bin_centers[i][max_id[i]] for i in range(n_param) ])
-    print( f"Highest_Likelihood: {hist_max} {p_vals}")
-  return p_vals 
 
 ############################################################################################################
 
@@ -237,5 +234,31 @@ def Get_Highest_Likelihood_Params( param_samples, n_bins=100 ):
     max_id = np.where( hist_4D == hist_max  )
     p_vals = np.array([ bin_centers[i][max_id[i]] for i in range(n_param) ])
     # print( f"Highest_Likelihood: {hist_max} {p_vals}")
+  p_vals = p_vals.flatten()
   return p_vals 
 
+############################################################################################################
+
+
+def Get_Params_mean( param_samples ):
+  mean_vals = []
+  for p_id in param_samples:
+    trace = param_samples[p_id]['trace']
+    mean_vals.append( trace.mean() )
+  mean_vals = np.array( mean_vals ) 
+  return mean_vals
+  
+############################################################################################################
+
+
+def Get_1D_Likelihood_max( param_samples, n_bins_1D=100 ):
+  max_vals = []
+  for p_id in param_samples:
+    trace = param_samples[p_id]['trace']
+    hist, bin_edges = np.histogram( trace, bins=n_bins_1D ) 
+    bin_centers = ( bin_edges[:-1] + bin_edges[1:] ) / 2.
+    max_id = np.where( hist == hist.max() )[0][0]
+    max_val = bin_centers[max_id]
+    max_vals.append( max_val )
+  max_vals = np.array( max_vals ) 
+  return max_vals

@@ -51,15 +51,22 @@ def Get_Data_Grid_Global( fields, SG, sim_ids=None ):
 
 ####################################################################################################################
   
-def Get_Data_Grid( fields, SG, sim_ids=None ):
+def Get_Data_Grid( fields, SG, sim_ids=None, z_fields_min=None ):
   if not sim_ids: sim_ids = SG.sim_ids
   data_grid = {}
   for sim_id in sim_ids:
     data_grid[sim_id] = {}
-    data_grid[sim_id]['z'] = SG.Grid[sim_id]['analysis']['z']
+    z = SG.Grid[sim_id]['analysis']['z']
+    if z_fields_min is not None:
+      z_indices = z >= z_fields_min
+      z = z[z_indices]
+    data_grid[sim_id]['z'] = z
     for field in fields:
       data_grid[sim_id][field] = {}
-      data_grid[sim_id][field]['mean'] = SG.Grid[sim_id]['analysis'][field]
+      field_mean = SG.Grid[sim_id]['analysis'][field]
+      if z_fields_min is not None:
+        field_mean = field_mean[z_indices]
+      data_grid[sim_id][field]['mean'] = field_mean
   return data_grid
 
 ####################################################################################################################
@@ -76,15 +83,15 @@ def Get_Data_Grid_thermal( fields, SG, sim_ids=None ):
   return data_grid
 ####################################################################################################################
   
-def Get_Data_Grid_Composite( fields_list,  SG, z_vals=None, load_normalized_ps=False, sim_ids=None, load_uvb_rates=False ):
+def Get_Data_Grid_Composite( fields_list,  SG, z_vals=None, load_normalized_ps=False, sim_ids=None, load_uvb_rates=False, z_fields_min=None ):
   # fields_list = fields.split('+')
   data_grid_all = {}
   for field in fields_list:
-    if field == 'T0':    data_grid_all[field] = Get_Data_Grid( [field], SG, sim_ids=sim_ids ) 
-    elif field == 'gamma': data_grid_all[field] = Get_Data_Grid( [field], SG, sim_ids=sim_ids ) 
-    elif field == 'tau':   data_grid_all[field] = Get_Data_Grid( [field], SG, sim_ids=sim_ids ) 
+    if field == 'T0':    data_grid_all[field] = Get_Data_Grid( [field], SG, sim_ids=sim_ids, z_fields_min=z_fields_min ) 
+    elif field == 'gamma': data_grid_all[field] = Get_Data_Grid( [field], SG, sim_ids=sim_ids, z_fields_min=z_fields_min ) 
+    elif field == 'tau':   data_grid_all[field] = Get_Data_Grid( [field], SG, sim_ids=sim_ids, z_fields_min=z_fields_min ) 
     elif field == 'P(k)':  data_grid_all[field] = Get_Data_Grid_Power_spectrum( z_vals, SG, normalized_ps=load_normalized_ps, sim_ids=sim_ids )
-    elif field == 'tau_HeII':  data_grid_all[field] = Get_Data_Grid( [field], SG, sim_ids=sim_ids ) 
+    elif field == 'tau_HeII':  data_grid_all[field] = Get_Data_Grid( [field], SG, sim_ids=sim_ids, z_fields_min=z_fields_min ) 
     elif field == 'z_ion_H':  data_grid_all[field] = Get_Data_Grid_Global( [field], SG, sim_ids=sim_ids ) 
     elif field == 'HI_frac':  data_grid_all[field] = Get_Data_Grid_thermal( [field], SG, sim_ids=sim_ids )
     elif field == 'n_e':  data_grid_all[field] = Get_Data_Grid_thermal( [field], SG, sim_ids=sim_ids ) 

@@ -143,6 +143,13 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, time_axis=None, points_
   name = data_set['name']   
   ax.errorbar( data_z, data_mean/1e4, yerr=data_error/1e4, label=name, fmt='o', color= color_data_0, zorder=2)
   
+  data_set = data_thermal_history_Boera_2019
+  data_z = data_set['z']
+  data_mean = data_set['T0'] 
+  data_error = np.array([ data_set['T0_sigma_minus'], data_set['T0_sigma_plus'] ])
+  name = data_set['name']   
+  ax.errorbar( data_z, data_mean/1e4, yerr=data_error/1e4, label=name, fmt='o', color= color_data_2, zorder=2)
+
 
   ax.tick_params(axis='both', which='major', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major  )
   ax.tick_params(axis='both', which='minor', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor  )

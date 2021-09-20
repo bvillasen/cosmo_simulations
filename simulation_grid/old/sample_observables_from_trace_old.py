@@ -12,23 +12,8 @@ from simulation_parameters import *
 from simulation_grid_data_functions import Get_Data_Grid_Composite
 from mcmc_sampling_functions import Get_Highest_Likelihood_Params, Sample_Fields_from_Trace, Sample_Power_Spectrum_from_Trace
 
-
-use_mpi = True
-if use_mpi:
-  from mpi4py import MPI
-  comm = MPI.COMM_WORLD
-  rank = comm.Get_rank()
-  n_procs = comm.Get_size()
-else:
-  rank = 0
-  n_procs = 1
-
-z_indx = rank
-
-
-data_name = 'fit_results_P(k)+_Boera'
-# data_name = f'fit_results_P(k)+_BoeraC/fit_redshift/redshift_{z_indx}'
-
+# data_name = 'fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_Walther'
+data_name = 'fit_results_P(k)+_BoeraC'
 
 mcmc_dir = root_dir + 'fit_mcmc/'
 input_dir = mcmc_dir + f'{data_name}/' 
@@ -48,7 +33,8 @@ kmax = 0.2
 ps_range = SG.Get_Power_Spectrum_Range( kmax=kmax )
 sim_ids = SG.sim_ids
 
-z_vals = [ 4.2, 4.6, 5.0   ]
+# z_vals = [ 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4,  4.6, 5.0   ]
+z_vals = [  4.2, 4.6, 5.0   ]
 fields_to_sample = ['P(k)', 'T0', 'gamma', 'tau', 'tau_HeII', ]
 if load_global_properties: fields_to_sample.append( 'z_ion_H' )
 data_grid, data_grid_power_spectrum = Get_Data_Grid_Composite(  fields_to_sample, SG, z_vals=z_vals, sim_ids=sim_ids, load_uvb_rates=False )

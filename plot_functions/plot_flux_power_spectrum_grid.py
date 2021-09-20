@@ -28,7 +28,7 @@ matplotlib.rcParams['mathtext.rm'] = 'serif'
 
 
 def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_colors=None, sim_data_sets=None, black_background=False, high_z_only=False, plot_ps_normalized=False, ps_data_dir= root_dir + 'lya_statistics/data/', show_middle=False, 
-                              ps_samples=None, data_labels=None, linewidth=1, line_color=None, line_alpha=1, c_boera=None, fig_name=None, plot_interval=False ):
+                              ps_samples=None, data_labels=None, linewidth=1, line_color=None, line_alpha=1, c_boera=None, fig_name=None, plot_interval=False, plot_boeraC=False, HL_key='Highest_Likelihood' ):
   
   if system == 'Lux' or system == 'Summit': matplotlib.use('Agg')
   import matplotlib.pyplot as plt
@@ -93,6 +93,7 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
   z_vals_middle_scale = [   3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4  ]
   z_vals_small_scale_walther  = [ 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4,  ]
   z_vals_small_highz  = [ 4.2, 4.6, 5.0,  ]
+  z_vals_small_highz_extended  = [ 4.2, 4.6, 5.0, 5.4  ]
   z_high = [ 5.0, 5.4 ]
   z_large_middle = [   3.0, 3.2, 3.4, 3.6, 3.8, 4.0,   ]
   z_vals_large_reduced  = [ 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0,  ]
@@ -106,6 +107,7 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
   elif scales == 'middle': z_vals = z_vals_middle_scale
   elif scales == 'small_walther': z_vals = z_vals_small_scale_walther
   elif scales == 'small_highz': z_vals = z_vals_small_highz
+  elif scales == 'small_highz_extended': z_vals = z_vals_small_highz_extended
   elif scales == 'all': z_vals = z_vals_all
   elif scales == 'large_middle': z_vals = z_large_middle
   elif scales == 'large_reduced': z_vals = z_vals_large_reduced
@@ -133,6 +135,7 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
     flags = np.zeros( (nrows, ncols ))
   
   if scales == 'small_highz':   nrows, ncols = 1, 3
+  if scales == 'small_highz_extended':   nrows, ncols = 1, 4
   
   if scales == 'large_reduced': nrows, ncols = 2, 4
   if scales == 'small_reduced': nrows, ncols = 1, 3
@@ -140,12 +143,12 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
   
   plot_gaikwad = False
   plot_boss, plot_walther, plot_boera, plot_viel, plot_irsic = False, False, False, False, False
-  plot_boera_c  = False
   
   if scales == 'large': plot_boss = True
   if scales == 'all': plot_boss, plot_boera, plot_irsic, plot_viel = True, True, True, True
   if scales == 'middle': plot_boss, plot_irsic = True, True,
   if scales == 'small_highz': plot_boss, plot_boera = False, True,
+  if scales == 'small_highz_extended': plot_viel, plot_boera = True, True
   if scales == 'small': plot_boera, plot_viel = True, True,
   if scales == 'large_middle': plot_boss, plot_irsic = True, True
   if scales == 'large_reduced': plot_boss = True
@@ -154,6 +157,12 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
     plot_boera = True
     fig_height *= 1.4
   if show_middle: plot_irsic = True
+  
+  if plot_boeraC and plot_boera:
+    print( 'WRNING: Plotting Corrected Boera P(k)')
+    # plot_boera = False
+  
+  
   
   # plot_gaikwad = True
   plot_walther  = True
@@ -181,8 +190,10 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
   c_boss = dark_blue
   c_irsic = purple
   if c_boera is None: c_boera = dark_green
+  c_boera_c = 'C4'
   
   c_viel = 'C1'
+  c_viel = 'C9'
   
   c_gaikwad = 'C1'
   c_walther = 'C3'
@@ -263,7 +274,7 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
         index = np.where( diff == diff_min )[0][0]
         data = data_sim[index]
         k = data['k_vals']
-        delta = data['Highest_Likelihood']
+        delta = data[HL_key]
         high = data['higher'] 
         low  = data['lower'] 
         # if current_z == 4.6 or current_z == 5.0: 
@@ -377,28 +388,29 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
         data_delta_power *= factor
         d_boera = ax.errorbar( data_k, data_delta_power, yerr=data_delta_power_error, fmt='o', c=c_boera, label=label_boera, zorder=2 )
 
-    # if plot_boera_c:
-    #   # Add Boera data
-    #   z_diff = np.abs( data_z_bc - current_z )
-    #   diff_min = z_diff.min()
-    #   factor = 1.0
-    #   if diff_min < 1e-1:
-    #     data_index = np.where( z_diff == diff_min )[0][0]
-    #     data_z_local = data_z_bc[data_index]
-    #     data_k = data_boera_c[data_index]['k_vals']
-    #     data_delta_power = data_boera_c[data_index]['delta_power']
-    #     data_delta_power_error = data_boera_c[data_index]['delta_power_error']
-    #     label_boera ='Boera et al. (2019)'
-    #     # if current_z == 4.2: factor = 0.97
-    #     data_delta_power *= factor
-    #     d_boera = ax.errorbar( data_k, data_delta_power, yerr=data_delta_power_error, fmt='o', c=c_boera, label=label_boera, zorder=2 )
+    if plot_boeraC:
+      # Add Boera data
+      z_diff = np.abs( data_z_bc - current_z )
+      diff_min = z_diff.min()
+      factor = 1.0
+      if diff_min < 1e-1:
+        data_index = np.where( z_diff == diff_min )[0][0]
+        data_z_local = data_z_bc[data_index]
+        data_k = data_boera_c[data_index]['k_vals']
+        data_delta_power = data_boera_c[data_index]['delta_power']
+        data_delta_power_error = data_boera_c[data_index]['delta_power_error']
+        label_boera ='Boera et al. (2019) Corrected'
+        # if current_z == 4.2: factor = 0.97
+        data_delta_power *= factor
+        d_boera = ax.errorbar( data_k, data_delta_power, yerr=data_delta_power_error, fmt='o', c=c_boera_c, label=label_boera, zorder=2 )
 
 
     if plot_viel:
       # Add Viel data
       z_diff = np.abs( data_z_v - current_z )
       diff_min = z_diff.min()
-      if diff_min < 1e-1 and current_z == 5.4:
+      # if diff_min < 1e-1 and current_z == 5.4:
+      if diff_min < 1e-1 :
         data_index = np.where( z_diff == diff_min )[0][0]
         data_z_local = data_z_v[data_index]
         data_k = data_viel[data_index]['k_vals']
@@ -476,8 +488,12 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
       if indx_i == 2: y_min, y_max = 5e-2, 3
 
     if scales == 'small_highz':
-      x_min, x_max = 4e-3, 1.7e-1
+      x_min, x_max = 4e-3, 2.1e-1
       if indx_i == 0: y_min, y_max = 5e-3, 1e0
+      
+    if scales == 'small_highz_extended':
+      x_min, x_max = 3e-3, 1.7e-1
+      if indx_i == 0: y_min, y_max = 3e-2, 3e0
       
     if scales == 'large_middle':
       x_min, x_max =  2e-3, 7e-2
@@ -547,7 +563,7 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
 
     # if indx_i != nrows-1 and not show_middle:ax.set_xticklabels([])
     # if indx_i != nrows-1 :ax.set_xticklabels([])
-    if scales != 'small_highz' and indx_i == 0 :ax.set_xticklabels([])
+    if nrows > 1 and indx_i == 0 :ax.set_xticklabels([])
     if indx_i == 1 and indx_j != 4  :ax.set_xticklabels([])
     
     if indx_j > 0:

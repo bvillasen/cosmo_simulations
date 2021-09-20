@@ -20,7 +20,7 @@ dir_data_boera = ps_data_dir + 'data_power_spectrum_boera_2019/'
 data_boera = load_tabulated_data_boera( dir_data_boera )
 data_boera['label'] = 'Boera et al. (2019)'
 data_boera_c = load_tabulated_data_boera( dir_data_boera, corrected=True )
-data_boera_c['label'] = 'Boera et al. (2019)'
+data_boera_c['label'] = 'Boera et al. (2019) Corrected'
 
 dir_irsic = ps_data_dir + 'data_power_spectrum_irsic_2017/'
 data_filename = dir_irsic + 'data_table.py'
@@ -31,33 +31,52 @@ data_filename = ps_data_dir + 'data_power_spectrum_walther_2019/data_table.txt'
 data_walther = load_power_spectrum_table( data_filename, kmax=0.1)
 data_walther['label'] = 'Walther et al. (2018)' 
 
+data_dir_viel = ps_data_dir + 'data_power_spectrum_viel_2013/'
+data_viel = load_tabulated_data_viel( data_dir_viel)
+data_viel['label'] = 'Viel et al. (2013)'
+ 
 
-data_sets = [ data_boera ]
+# data_sets = [ data_boera ]
+data_sets = [  data_boera_c ]
+# data_sets = [  data_viel ]
 
-# output_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/early_reionization/'
+root_dir = data_dir + 'cosmo_sims/sim_grid/1024_np4_nsim81/fit_mcmc/fit_results_P(k)+_BoeraC/'
+# root_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim192/fit_mcmc/fit_results_P(k)+_BoeraC/'
+# root_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim192/fit_mcmc/fit_results_P(k)+_Boera/'
+# root_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim192/fit_mcmc/fit_results_P(k)+_Viel/'
 
-root_dir = data_dir + 'cosmo_sims/sim_grid/1024_np4_nsim81/fit_mcmc/fit_results_P(k)+_Boera/'
-# root_dir = data_dir + 'cosmo_sims/sim_grid/1024_mwdm2p0_nsim64/fit_mcmc/fit_results_P(k)+_Boera/'
+
+
+# label = 'CDM' 
+# label = 'WDM $m$=2 keV' 
+# label = 'WDM $m$=3 keV' 
+# label = 'WDM $m$=4 keV' 
+# label = '$z_{99.9}$=5.4' 
+label = '' 
+
 input_dir = root_dir + 'observable_samples/'
 file_name = input_dir + 'samples_power_spectrum.pkl'
 data_ps_0 = Load_Pickle_Directory( file_name )
-data_ps_0['label'] = 'CDM Joint Fit'
+data_ps_0['label'] = r'{0} Joint Fit'.format(label)
 
 output_dir = root_dir + 'figures/'
 create_directory( output_dir ) 
 data_sets_sim = {}
 data_sets_sim[0] = data_ps_0
-# for z_id in ps_stats:
-#   data_sets_sim[z_id+1] = ps_stats[z_id]
-#   data_sets_sim[z_id+1]['label'] = np.mean(ps_stats[z_id]['z_interval'])
-
 
 
 base_dir = root_dir + 'fit_redshift/'
-
-
 data_ps = {}
-z_ids = range( 3 )
+
+n_redshift = 3
+
+# HL_key = 'Highest_Likelihood'
+HL_key = 'mean'
+# HL_key = 'max'
+
+print( f'HL key: {HL_key}')
+
+z_ids = range( n_redshift )
 for z_id in z_ids:
   input_dir = base_dir + f'redshift_{z_id}/'
   file_name = input_dir + 'observable_samples/samples_power_spectrum.pkl'
@@ -65,26 +84,25 @@ for z_id in z_ids:
   data_snap = data[z_id]
   z = data_snap['z']
   k_vals = data_snap['k_vals']
-  ps_mean = data_snap['Highest_Likelihood']
+  ps_mean = data_snap[HL_key]
   ps_h = data_snap['higher']
   ps_l = data_snap['lower']
   data_ps[z_id] = {'z':z, 'k_vals':k_vals, 'mean':ps_mean, 'higher':ps_h, 'lower':ps_l }
 data_ps['z_vals'] = np.array([ data_ps[i]['z'] for i in data_ps ])
-data_ps['label'] = 'CDM Individual Fit'
-
+data_ps['label'] = r'{0} Individual Fit'.format(label)
 data_sets_sim[1] = data_ps
 
 
 
-
 # colors_sim = [ 'k', 'C0', 'C1', 'C2', 'C3', 'C4', ] 
-colors_sim = [  'C0', 'C4', 'C2', 'C3', 'C4', ] 
+colors_sim = [  'C0', 'C1', 'C2', 'C3', 'C4', ] 
 
 c_boss = dark_blue
 c_irsic = purple
 c_boera = dark_blue
+c_boera_c = 'C4'
 c_walther = 'C3'
-colors_data = [ c_boera,  ]
+colors_data = [ c_boera_c,]
 
 import matplotlib
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
@@ -110,7 +128,7 @@ tick_width_minor = 1
 border_width = 1
 
 fig_width, fig_height = 8, 3
-ncols, nrows = 1, 3
+ncols, nrows = 1, n_redshift
 hspace = 0.05
 fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(2*fig_width,fig_height*nrows))
 plt.subplots_adjust( hspace = hspace, wspace=0.1)
@@ -130,7 +148,7 @@ for i in range(nrows):
     factor = 1.0
     k_model  = data_ps_sim['k_vals']
     if counter > 0: ps_model = data_ps_sim['mean'] * factor  
-    else: ps_model = data_ps_sim['Highest_Likelihood'] * factor
+    else: ps_model = data_ps_sim[HL_key] * factor
     kmin, kmax = k_model.min(), k_model.max()
     ps_model_h = data_ps_sim['higher'] * factor
     ps_model_l = data_ps_sim['lower'] * factor
@@ -165,7 +183,7 @@ for i in range(nrows):
 
     n_chi, chi2 = 0, 0
     for data_id, data_set in enumerate(data_sets):
-      kmax = 1.7e-1
+      kmax = 2.0e-1
       factor = 1.0
       z_data = data_set['z_vals']
       label = data_set['label']
@@ -199,8 +217,10 @@ for i in range(nrows):
     counter += 1
 
 
-  xmin, xmax = 4e-3, 1.7e-1
-  ymin, ymax = -0.5, 0.5
+  xmin, xmax = 4e-3, 2.1e-1
+  diff_range = 0.5
+  if i == 3: diff_range = 1.5
+  ymin, ymax = -diff_range, diff_range
   ax.set_xlim( xmin, xmax )
   ax.set_ylim( ymin, ymax )
   ax.set_xscale('log')

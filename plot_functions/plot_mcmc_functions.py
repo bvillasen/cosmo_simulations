@@ -8,11 +8,11 @@ subDirectories = [x[0] for x in os.walk(root_dir)]
 sys.path.extend(subDirectories)
 from tools import * 
 
-def Plot_MCMC_Stats( stats, MDL, params_mcmc,  stats_file, output_dir, plot_corner=True ):
+def Plot_MCMC_Stats( stats, MDL, params_mcmc,  stats_file, output_dir, plot_corner=True, plot_model=True,  ):
   cwd = os.getcwd()
   os.chdir( output_dir )
   
-  pymc.Matplot.plot(MDL)  
+  if plot_model: pymc.Matplot.plot(MDL)  
 
   labels, samples = [], []
   for p_id in params_mcmc.keys():
