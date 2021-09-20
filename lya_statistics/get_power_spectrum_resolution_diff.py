@@ -12,8 +12,6 @@ from colors import *
 
 
 base_dir = data_dir + 'cosmo_sims/rescaled_P19/'
-output_dir = data_dir + 'cosmo_sims/figures/paper_thermal_history/'
-create_directory( output_dir )
 
 files_to_load = [ 25, 35, 45, 55 ][::-1]
 files_to_load = range(15, 56 )[::-1]
