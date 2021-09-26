@@ -79,7 +79,8 @@ for z_id, n_file in enumerate(files_to_load):
   ps_diff_fraction = ( ps_mean  ) / ps_reference 
   print( f'\nz: {z}' )
   print( f'Diff k_vals: {k_diff.sum()}' )
-  print( f'Diff ps: {ps_diff}' )
+  print( f'Diff ps delta:      {ps_diff_delta}' )
+  print( f'Diff ps fractional: {ps_diff_fraction}' )
   ps_diff_data[z_id] = { 'z':z, 'k_vals':k_vals, 'delta':ps_diff_delta, 'delta_fraction':ps_diff_fraction  }
      
 ps_diff_data['z_vals'] = np.array([ ps_diff_data[i]['z'] for i in ps_diff_data])     
