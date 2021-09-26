@@ -35,7 +35,7 @@ for sim_id, sim_name in enumerate(sim_names):
   for z_id, n_file in enumerate( files_to_load ):
     file_name = input_dir + f'{n_file}_analysis.h5'
     print( f'Loading File: {file_name}' )
-    file = h5.File( file_name )
+    file = h5.File( file_name, 'r' )
     Lbox = file.attrs['Lbox']
     current_z = file.attrs['current_z'][0]
     ps_mean = file['lya_statistics']['power_spectrum']['p(k)'][...]
@@ -75,15 +75,16 @@ for z_id, n_file in enumerate(files_to_load):
   k_vals_reference = k_vals_0[:n_kvals]
   ps_reference = ps_mean_0[:n_kvals]
   k_diff = np.abs(  k_vals - k_vals_reference )
-  ps_diff = ( ps_mean  ) / ps_reference 
+  ps_diff_delta = ps_mean - ps_reference
+  ps_diff_fraction = ( ps_mean  ) / ps_reference 
   print( f'\nz: {z}' )
   print( f'Diff k_vals: {k_diff.sum()}' )
   print( f'Diff ps: {ps_diff}' )
-  ps_diff_data[z_id] = { 'z':z, 'k_vals':k_vals, 'delta_factor':ps_diff  }
+  ps_diff_data[z_id] = { 'z':z, 'k_vals':k_vals, 'delta':ps_diff_delta 'delta_fraction':ps_diff_fraction  }
      
 ps_diff_data['z_vals'] = np.array([ ps_diff_data[i]['z'] for i in ps_diff_data])     
      
-file_name = base_dir + 'FPS_resolution_correction_1024_50Mpc.pkl'
+file_name = base_dir + 'FPS_resolution_correction_1024_50Mpc_delta.pkl'
 Write_Pickle_Directory( ps_diff_data, file_name )
 
 
