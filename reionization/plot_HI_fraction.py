@@ -15,12 +15,12 @@ from tools import *
 from colors import *
 from stats_functions import compute_distribution, get_highest_probability_interval
 
-root_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/fit_mcmc/fit_results_P(k)+tau_HeII_Boss_Irsic_Boera/'
+root_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/fit_mcmc/fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_systematic/'
 input_dir = root_dir + 'observable_samples/'
 output_dir = input_dir
 
 
-file_name = input_dir + 'samples_thermal_few.pkl'
+file_name = input_dir + 'samples_thermal.pkl'
 data = Load_Pickle_Directory( file_name )
 
 
@@ -97,7 +97,8 @@ ax.set_xlabel( r'$z$', fontsize=label_size )
 ax.set_ylabel( r'HII Fraction', fontsize=label_size )
 ax.tick_params(axis='both', which='major', labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in' )
 ax.tick_params(axis='both', which='minor', labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in')
-
+ax.set_xlim(2, 8)
+ax.set_ylim(0.1, 2)
 
 ax = ax_l[1]
 ax.plot( z, ne,  color='C0', zorder=1,   )
@@ -107,8 +108,8 @@ ax.set_xlabel( r'$z$', fontsize=label_size )
 ax.set_ylabel( r'$n_{\mathrm{e}} \,\,\, [\mathrm{cm}^{-3}]$', fontsize=label_size )
 ax.tick_params(axis='both', which='major', labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in' )
 ax.tick_params(axis='both', which='minor', labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in')
-
-ax.set_ylim(1e-7, 1e-3)
+ax.set_xlim(2, 8)
+ax.set_ylim(3e-6, 2e-4)
 
 figure_name = output_dir + 'HI_frac_ne.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )

@@ -110,6 +110,10 @@ def Sample_Power_Spectrum_from_Trace( param_samples, data_grid, SG, hpi_sum=0.7,
       p_vals = param_samples_array[i]
       if n_param == 3: ps_interp = Interpolate_3D(  p_vals[0], p_vals[1], p_vals[2], ps_data, 'P(k)', 'mean', SG, clip_params=True ) 
       if n_param == 4: ps_interp = Interpolate_4D(  p_vals[0], p_vals[1], p_vals[2], p_vals[3], ps_data, 'P(k)', 'mean', SG, clip_params=True ) 
+      if ( ps_interp < 0 ).sum() > 0: 
+        print(f'Negative Power Spectrum for parameters: {p_vals}')
+        print( ps_interp )
+        exit(-1)  
       samples.append( ps_interp )
     samples = np.array( samples ).T
     ps_mean = np.array([ ps_vals.mean() for ps_vals in samples ])

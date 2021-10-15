@@ -127,8 +127,7 @@ def Shift_UVB_Rates( delta_z, rates, param_name, interp_log=False, kind='linear'
       if interp_log: rate_new = 10**rate_new
       rates[root_key][key] = rate_new
       
-      
-  
+
       # indx_l = np.where( z_0 == z_min )[0]
       # indx_r = np.where( z_0 == z_max )[0]
       # rate_l = rate_0[indx_l]
@@ -194,9 +193,9 @@ def Extend_Rates_Redshift( max_delta_z, grackle_data ):
   return data_out
 
 
-def Modify_UVB_Rates( parameter_values, rates ):
+def Modify_UVB_Rates( parameter_values, rates, extrapolate='constant' ):
   input_rates = rates.copy()
-  rates_modified = Modify_Rates_From_Grackle_File( parameter_values, rates_data=input_rates, input_file_name=None )
+  rates_modified = Modify_Rates_From_Grackle_File( parameter_values, rates_data=input_rates, input_file_name=None, extrapolate=extrapolate )
   uvb_rates = rates_modified['UVBRates']
   z = uvb_rates['z']
   heat_HI   = uvb_rates['Photoheating']['piHI']

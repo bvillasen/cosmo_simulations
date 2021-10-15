@@ -167,12 +167,41 @@ def Get_Comparable_Composite_from_Grid( fields, comparable_data, SG, log_ps=Fals
 
 ##################################################################################################################################
 
-def Get_Comparable_Tau_HeII( rescale_tau_HeII_sigma = 1.0 ):
+def Get_Comparable_Tau_HeII( rescale_tau_HeII_sigma = 1.0, systematic_uncertainties=None ):
+  
+  print( 'Loading HeII_tau Data')
+
+  systematic = None
+  if systematic_uncertainties is not None:
+    systematic = {}
+    for apply_uncertanty in systematic_uncertainties:
+      if apply_uncertanty in [ 'all',  ]:
+        for uncertanty_name in systematic_uncertainties[apply_uncertanty]:
+          uncertanty_group = systematic_uncertainties[apply_uncertanty][uncertanty_name]
+          for uncertanty_type in uncertanty_group:
+            uncertanty = uncertanty_group[uncertanty_type]
+            print( f' Applying systematic uncertanty: {uncertanty_name}: {uncertanty_type} ')
+            if uncertanty_type == 'fractional':
+              systematic[uncertanty_type] = uncertanty 
+            
+            
   comparable_z, comparable_tau, comparable_sigma = [], [], []
   data_set = data_tau_HeII_Worserc_2019
   z   = data_set['z']
   tau = data_set['tau']
   sigma = data_set['tau_sigma'] 
+  if systematic is not None:
+    sigma_total_squared = sigma**2
+    for systematic_type in systematic:
+      if systematic_type == 'fractional':
+        fraction = systematic['fractional']
+        sigma_systematic = tau * fraction
+        sigma_total_squared += sigma_systematic**2
+        
+    sigma_total = np.sqrt( sigma_total_squared )
+    # print( (sigma_total - sigma) / sigma )    
+    sigma = sigma_total 
+    
   if rescale_tau_HeII_sigma != 1.0:
     print( f' Rescaling tau HeII sigma by {rescale_tau_HeII_sigma} ')
     sigma *= rescale_tau_HeII_sigma 
@@ -264,7 +293,7 @@ def Get_Comparable_T0_Gaikwad():
 
 ##################################################################################################################################
 
-def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_range, log_ps=False ):
+def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_range, log_ps=False, systematic_uncertainties=None ):
   print( f'Loading P(k) Data:' )
   dir_boss = ps_data_dir + 'data_power_spectrum_boss/'
   data_filename = dir_boss + 'data_table.py'
@@ -291,6 +320,29 @@ def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_rang
   log_data_ps, log_data_ps_sigma = [], []
   sim_z, sim_kmin, sim_kmax = ps_range['z'], ps_range['k_min'], ps_range['k_max']
 
+  systematic = None
+  if systematic_uncertainties is not None:
+    systematic = {}
+    for apply_uncertanty in systematic_uncertainties:
+      if apply_uncertanty in [ 'all', 'P(k)' ]:
+        for uncertanty_name in systematic_uncertainties[apply_uncertanty]:
+          uncertanty_group = systematic_uncertainties[apply_uncertanty][uncertanty_name]
+          if uncertanty_name == 'resolution':
+            resolution_file_name = uncertanty_group['file_name']
+            resolution_correction = Load_Pickle_Directory( resolution_file_name )
+            uncertanty_type = uncertanty_group['type']
+            print( f' Applying systematic uncertanty: {uncertanty_name}: {uncertanty_type} ')
+            systematic['resolution'] = {'correction':resolution_correction, 'type':uncertanty_type }
+          else:  
+            for uncertanty_type in uncertanty_group:
+              uncertanty = uncertanty_group[uncertanty_type]
+              print( f' Applying systematic uncertanty: {uncertanty_name}: {uncertanty_type} ')
+              if uncertanty_type == 'fractional':
+                systematic[uncertanty_type] = uncertanty 
+              
+      
+    
+
   ps_data = {}
   data_id = 0
   for data_index, data_name in enumerate(data_sets):
@@ -312,31 +364,72 @@ def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_rang
         k_vals = k_vals[k_indices]
         delta_ps = data['delta_power'][k_indices]
         delta_ps_sigma = data['delta_power_error'][k_indices]
-        log_delta_ps = np.log( delta_ps )
-        log_delta_ps_sigma = 1/delta_ps * delta_ps_sigma
+        # log_delta_ps = np.log( delta_ps )
+        # log_delta_ps_sigma = 1/delta_ps * delta_ps_sigma
+        
         # if data_name == 'Walther' and rescaled_walther:
         #   rescale_z = rescale_walter_alphas[index]['z']
         #   rescale_alpha = rescale_walter_alphas[index]['alpha']
         #   print( f'  Rescaling z={rescale_z:.1f}    alpha={rescale_alpha:.3f} ')
         #   delta_ps *= rescale_alpha
+        
+        if systematic is not None:
+          sigma_total_squared = delta_ps_sigma**2
+          for systematic_type in systematic:
+            if systematic_type == 'fractional':
+              fraction = systematic['fractional']
+              # fraction /= 2
+              sigma_systematic = delta_ps * fraction
+              sigma_total_squared += sigma_systematic**2
+            if systematic_type == 'resolution':
+              correction_type = systematic['resolution']['type']
+              correction_all = systematic['resolution']['correction']
+              z_vals = correction_all['z_vals']
+              z_diff = np.abs( z_vals - z )
+              if z_diff.min( ) > 5e-2:
+                print( f'Large z difference when applying resolution sigma: {z_diff.min()} ')
+              z_indx = np.where( z_diff == z_diff.min() )[0]
+              if len( z_indx ) > 1 : 
+                print( 'WARNING: Multiple z_indices')
+                exit(-1)
+              correction = correction_all[z_indx[0]]
+              # print( correction.keys())
+              correction_k = correction['k_vals']
+              correction_delta = np.abs(correction['delta']) * correction_k / np.pi
+              correction_fractional = correction['delta_fraction']
+              if correction_type == 'delta':
+                sigma_correction = np.interp( k_vals, correction_k, correction_delta )
+                # print( sigma_correction / delta_ps_sigma )
+              else: 
+                print('Type of correction not implemented')
+                exit(-1) 
+              sigma_total_squared += sigma_correction**2
+              
+              
+          sigma_total = np.sqrt( sigma_total_squared )
+          # print( (sigma_total - delta_ps_sigma) / delta_ps_sigma )    
+          delta_ps_sigma = sigma_total 
+  
         ps_data[data_id] = {'z':z, 'k_vals':k_vals, 'delta_ps':delta_ps, 'delta_ps_sigma':delta_ps_sigma }
         data_z.append( z )
         data_kvals.append( k_vals )
         data_ps.append( delta_ps )
         data_ps_sigma.append( delta_ps_sigma )
-        log_data_ps.append( log_delta_ps )
-        log_data_ps_sigma.append( log_delta_ps_sigma )
+        # log_data_ps.append( log_delta_ps )
+        # log_data_ps_sigma.append( log_delta_ps_sigma )
         data_id += 1
   k_vals_all         = np.concatenate( data_kvals )
   delta_ps_all       = np.concatenate( data_ps )
   delta_ps_sigma_all = np.concatenate( data_ps_sigma )
-  log_delta_ps_all       = np.concatenate( log_data_ps )
-  log_delta_ps_sigma_all = np.concatenate( log_data_ps_sigma )
+  # log_delta_ps_all       = np.concatenate( log_data_ps )
+  # log_delta_ps_sigma_all = np.concatenate( log_data_ps_sigma )
   ps_data_out = {'P(k)':{}, 'separate':ps_data }
   ps_data_out['P(k)']['k_vals'] = k_vals_all
   if log_ps:
-    ps_data_out['P(k)']['mean']   = log_delta_ps_all
-    ps_data_out['P(k)']['sigma']  = log_delta_ps_sigma_all
+    print( 'Log P(k) not supported, need to imp[lement uncertanty')
+    exit(-1)
+    # ps_data_out['P(k)']['mean']   = log_delta_ps_all
+    # ps_data_out['P(k)']['sigma']  = log_delta_ps_sigma_all
   else:
     ps_data_out['P(k)']['mean']   = delta_ps_all
     ps_data_out['P(k)']['sigma']  = delta_ps_sigma_all
@@ -348,7 +441,7 @@ def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_rang
 
 ##################################################################################################################################
 
-def Get_Comparable_Composite( fields, z_min, z_max, ps_parameters=None, tau_parameters=None, log_ps=False, z_reion=None  ):
+def Get_Comparable_Composite( fields, z_min, z_max, ps_parameters=None, tau_parameters=None, log_ps=False, z_reion=None, factor_sigma_tauHeII=1.0, systematic_uncertainties=None  ):
   
   rescaled_walther = False
   rescale_walter_file = None
@@ -369,7 +462,7 @@ def Get_Comparable_Composite( fields, z_min, z_max, ps_parameters=None, tau_para
   for field in fields_list:
     append_comparable = False
     if field == 'P(k)':
-      comparable_ps = Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_ps_sets, ps_range, log_ps=log_ps  )
+      comparable_ps = Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_ps_sets, ps_range, log_ps=log_ps, systematic_uncertainties=systematic_uncertainties  )
       comparable_ps_all = comparable_ps['P(k)']
       comparable_ps_separate = comparable_ps['separate']
       comparable_all['P(k)'] = { 'all':comparable_ps_all, 'separate':comparable_ps_separate }
@@ -383,7 +476,7 @@ def Get_Comparable_Composite( fields, z_min, z_max, ps_parameters=None, tau_para
       comparable_field = Get_Comparable_Tau( z_min, z_max, factor_sigma_tau_becker=factor_sigma_tau_becker, factor_sigma_tau_keating=factor_sigma_tau_keating )
       append_comparable = True
     if field == 'tau_HeII': 
-      comparable_field = Get_Comparable_Tau_HeII( rescale_tau_HeII_sigma=1.0 )
+      comparable_field = Get_Comparable_Tau_HeII( rescale_tau_HeII_sigma=factor_sigma_tauHeII,  systematic_uncertainties=systematic_uncertainties)
       append_comparable = True
     if field == 'z_ion_H':
       mean  = np.array([z_reion['z']])

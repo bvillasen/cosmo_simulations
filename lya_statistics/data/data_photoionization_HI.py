@@ -15,7 +15,7 @@ data_photoionization_HI_becker_bolton_2013 = {
 'mean': data_becker_bolton[:,1],
 'high': data_becker_bolton[:,2],
 'low': data_becker_bolton[:,3],
-'name':'Becker & Bolton 2013'
+'name':'Becker & Bolton (2013)'
 }
 
 # data_dalosio = np.array( [
@@ -48,7 +48,7 @@ data_photoionization_HI_dalosio_2018 = {
 'mean': data_dalosio[:,1],
 'high': data_dalosio[:,1] + data_dalosio[:,2],
 'low': data_dalosio[:,1] - data_dalosio[:,3],
-'name':"D'Aloisio et al. 2018"
+'name':"D'Aloisio et al. (2018)"
 }
 
 data_gallego = np.array([
@@ -62,7 +62,7 @@ data_photoionization_HI_gallego_2021 = {
 'mean': data_gallego[:,1],
 'high': data_gallego[:,1] + data_gallego[:,2],
 'low':  data_gallego[:,1] - data_gallego[:,2],
-'name':"Gallego et al. 2021"
+'name':"Gallego et al. (2021)"
 }
 
 # data_calverley = np.array([ 
@@ -85,7 +85,7 @@ data_photoionization_HI_calverley_2011 = {
 'mean': 10**data_calverley[:,1] *1e12,
 'high': 10**(data_calverley[:,1] + data_calverley[:,2]) *1e12 ,
 'low': 10**(data_calverley[:,1] - data_calverley[:,2]) *1e12,
-'name':"Calverley et al. 2011"
+'name':"Calverley et al. (2011)"
 } 
 
 
@@ -99,7 +99,7 @@ data_photoionization_HI_wyithe_2011 = {
 'mean': data_wyithe[:,1],
 'high': data_wyithe[:,2],
 'low': data_wyithe[:,3],
-'name':"Wyithe et al. 2011"
+'name':"Wyithe et al. (2011)"
 } 
 
 # data_gaikwad = np.array([
@@ -126,5 +126,5 @@ data_photoionization_HI_gaikwad_2017 = {
 'mean': data_gaikwad[:,1],
 'high': data_gaikwad[:,1] + data_gaikwad[:,2],
 'low': data_gaikwad[:,1] - data_gaikwad[:,2],
-'name':"Gaikwad et al. 2017"
+'name':"Gaikwad et al. (2017)"
 }

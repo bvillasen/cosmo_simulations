@@ -12,14 +12,14 @@ root_dir = os.path.dirname(os.path.dirname(os.getcwd())) + '/'
 subDirectories = [x[0] for x in os.walk(root_dir)]
 sys.path.extend(subDirectories)
 from tools import * 
-from plot_thermal_history import Plot_T0_evolution
+from plot_thermal_history import Plot_T0_gamma_evolution
 
 grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/'
 mcmc_dir = grid_dir + 'fit_mcmc/'
 
-data_boss_irsic_boera = 'fit_results_P(k)+tau_HeII_Boss_Irsic_Boera'
+data_boss_irsic_boera = 'fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_systematic'
 
-output_dir = data_dir + 'cosmo_sims/figures/nature/'
+output_dir = data_dir + 'cosmo_sims/figures/paper_thermal_history/'
 create_directory( output_dir )
 
 
@@ -31,11 +31,19 @@ input_dir = mcmc_dir + f'{data_name}/observable_samples/'
 file_name = input_dir + 'samples_fields.pkl'
 samples_fields = Load_Pickle_Directory( file_name )
 samples_T0 = samples_fields['T0']
+samples_gamma = samples_fields['gamma']
 
 data_T0 = { 'z': samples_T0['z'], 'T0':samples_T0['Highest_Likelihood'], 'high':samples_T0['higher'], 'low':samples_T0['lower'] }
+data_gamma = { 'z': samples_gamma['z'], 'gamma':samples_gamma['Highest_Likelihood'], 'high':samples_gamma['higher'], 'low':samples_gamma['lower'] }
+
 
 data_to_plot = { 0: data_T0 }
-data_to_plot[0]['label'] = 'This Work'
-data_to_plot[0]['color'] = 'k'
+data_to_plot[0]['label'] = 'This Work (Best-Fit)'
+data_to_plot[0]['line_color'] = 'k'
 
-Plot_T0_evolution( output_dir, data_sets=data_to_plot, system='Shamrock', label='', fig_name='fig_T0_evolution.png', black_background=False, plot_interval=True, interpolate_lines=True  )
+data_to_plot_gamma = { 0: data_gamma }
+data_to_plot_gamma[0]['label'] = 'This Work (Best-Fit)'
+data_to_plot_gamma[0]['line_color'] = 'k'
+
+Plot_T0_gamma_evolution( output_dir, data_sets=data_to_plot, system='Shamrock', label='', fig_name='fig_T0_evolution.png', black_background=False, plot_interval=True, interpolate_lines=True,   )
+Plot_T0_gamma_evolution( output_dir, data_sets=data_to_plot, data_sets_gamma=data_to_plot_gamma, system='Shamrock', label='', fig_name='fig_T0_gamma_evolution.png', black_background=False, plot_interval=True, interpolate_lines=True )

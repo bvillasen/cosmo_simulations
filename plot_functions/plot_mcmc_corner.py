@@ -12,7 +12,9 @@ from stats_functions import get_HPI_2D
 
 
 
-def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2D=30, ticks=None, lower_mask_factor=50, multiple=False, system='Shamrock', show_label=True, HL_vals=None, show_best_fit=False  ):
+def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2D=30, 
+    ticks=None, lower_mask_factor=50, multiple=False, system='Shamrock', show_label=True, 
+    HL_vals=None, show_best_fit=False, limits=None, param_values=None  ):
   
   
 
@@ -139,10 +141,11 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
           # ax.plot( bin_centers, hist,   color=line_color, linewidth=hist_1D_line_width  ), 
           # ax.step( bin_centers, hist, where='mid',  color=line_color, linewidth=hist_1D_line_width  )
           if HL_vals is not None:
+            print(HL_vals)
             hl_val = HL_vals[j]
             # print( f_interp(hl_val), f_interp(bin_centers_interp).max())
             # ax.axvline( x=hl_val, ymin=0, ymax=f_interp(hl_val)[0], ls='--', lw=hl_line_width, color=hl_color, alpha=hl_alpha )
-            ax.plot( [hl_val, hl_val], [-1*f_interp(hl_val)[0], f_interp(hl_val)[0]], ls='--', lw=hl_line_width, color=hl_color, alpha=hl_alpha )
+            ax.plot( [hl_val, hl_val], [-1*f_interp(hl_val), f_interp(hl_val)], ls='--', lw=hl_line_width, color=hl_color, alpha=hl_alpha )
         
           def identity( x ):
             return x
@@ -211,26 +214,70 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
         ax.set_yticks(ticks[j])
         # ax.set_yticklabels(ticks[j])
 
-  if show_best_fit:
-    font_add = 8
+  if limits is not None:  
+    for j in range( n_param ):
+      for i in range( n_param ):
+        ax = ax_l[j][i]
+        x_lims = limits[i]
+        y_lims = limits[j] 
+        ax.set_xlim( x_lims[0], x_lims[1] )
+        if j > i: ax.set_ylim( y_lims[0], y_lims[1] )
+        
+        
+  if param_values is not None:
+    font_add = 4
     text_x = 0.46
     text_y = 0.855
     text = '95% Confidence Interval:'  
     plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=22+font_add )
-      
-      
-    text_lines = [ r'$\beta_{\mathrm{H}}\,\,=\mathregular{0.78}^{+\mathregular{0.01}}_{-\mathregular{0.01}}$' ,  r'$\beta_{\mathrm{He}}=\mathregular{0.44}^{+\mathregular{0.06}}_{-\mathregular{0.07}}$' ]
+    
+    p_name = 'scale_H'
+    p_vals = param_values[p_name]
+    val = p_vals['value']
+    delta_h = p_vals['delta_h']
+    delta_l = p_vals['delta_l']  
+    label = labels[p_name][1:-1]
+    text_0 =  f'{label}' + ' \,\,= \mathregular{ ' + f'{val:.2f}' + '}^{+\mathregular{' + f'{delta_h:.2f}' + '}}_{-\mathregular{' +f'{delta_l:.2f}' + '}}'
+    
+    p_name = 'scale_He'
+    p_vals = param_values[p_name]
+    val = p_vals['value']
+    delta_h = p_vals['delta_h']
+    delta_l = p_vals['delta_l']  
+    label = labels[p_name][1:-1]
+    text_1 =  f'{label}' + ' = \mathregular{ ' + f'{val:.2f}' + '}^{+\mathregular{' + f'{delta_h:.2f}' + '}}_{-\mathregular{' +f'{delta_l:.2f}' + '}}'
+    
+    # text_1 = r'$\beta_{\mathrm{He}}=\mathregular{0.44}^{+\mathregular{0.06}}_{-\mathregular{0.07}}$'
+    text_lines = [ r'${0}$'.format(text_0) , r'${0}$'.format(text_1) ]
     # text_x = 0.56
     text_y = 0.82
-    offset_y = 0.04
+    offset_y = 0.05
     for text in text_lines:
       plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=25+font_add )
       text_y -= offset_y
     
-    text_lines = [ r'$\Delta z_{\mathrm{H}}\,\,=\mathregular{0.05}^{+\mathregular{0.03}}_{-\mathregular{0.03}}$', r'$\Delta z_{\mathrm{He}}=\mathregular{0.27}^{+\mathregular{0.06}}_{-\mathregular{0.06}}$', ]
+    p_name = 'deltaZ_H'
+    p_vals = param_values[p_name]
+    val = p_vals['value']
+    delta_h = p_vals['delta_h']
+    delta_l = p_vals['delta_l']  
+    label = labels[p_name][1:-1]
+    text_0 =  f'{label}' + ' \,\,= \mathregular{ ' + f'{val:.2f}' + '}^{+\mathregular{' + f'{delta_h:.2f}' + '}}_{-\mathregular{' +f'{delta_l:.2f}' + '}}'
+    
+    p_name = 'deltaZ_He'
+    p_vals = param_values[p_name]
+    val = p_vals['value']
+    delta_h = p_vals['delta_h']
+    delta_l = p_vals['delta_l']  
+    label = labels[p_name][1:-1]
+    text_1 =  f'{label}' + ' = \mathregular{ ' + f'{val:.2f}' + '}^{+\mathregular{' + f'{delta_h:.2f}' + '}}_{-\mathregular{' +f'{delta_l:.2f}' + '}}'
+    
+    # text_lines = [ r'$\Delta z_{\mathrm{H}}\,\,=\mathregular{0.05}^{+\mathregular{0.03}}_{-\mathregular{0.03}}$', r'$\Delta z_{\mathrm{He}}=\mathregular{0.27}^{+\mathregular{0.06}}_{-\mathregular{0.06}}$', ]
+    text_lines = [ r'${0}$'.format(text_0) , r'${0}$'.format(text_1) ]
+    
     text_x = text_x + .2
     text_y = 0.82
-    offset_y = 0.04
+    # offset_y = 0.04
     for text in text_lines:
       plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=25+font_add )
       text_y -= offset_y

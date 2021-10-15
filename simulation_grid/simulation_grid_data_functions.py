@@ -155,7 +155,7 @@ def Get_PS_Range( self, sim_id=0, kmin=None, kmax=None ):
 
 ####################################################################################################################
     
-def Load_Power_Spectum_Data( self, sim_id, indices ):
+def Load_Power_Spectum_Data( self, sim_id, indices, FPS_correction=None ):
   input_dir = self.Get_Analysis_Directory( sim_id )
   indices.sort()
   sim_data = {}
@@ -164,12 +164,39 @@ def Load_Power_Spectum_Data( self, sim_id, indices ):
   data_kvals = []
   data_kmin, data_kmax = [], [] 
   
+  if FPS_correction is not None:
+    correction_z_vals = FPS_correction['z_vals'] 
+  
   for n_file in indices:
     n_file = int(n_file)
     data = load_analysis_data( n_file, input_dir, phase_diagram=False, lya_statistics=True, load_skewer=False, load_fit=False )
     z = data['cosmology']['current_z']
     k_vals  = data['lya_statistics']['power_spectrum']['k_vals']
     ps_mean = data['lya_statistics']['power_spectrum']['ps_mean']
+    if FPS_correction is not None:
+      z_diff = np.abs( correction_z_vals - z )
+      if z_diff.min() < 5e-2:  
+        z_indx = np.where( z_diff == z_diff.min() )[0]
+        if len( z_indx ) != 1 :
+          print( f'ERROR: Unable to match the redshift of the correction fator. {z} -> {correction_z_vals[z_indx]}  ')
+          exit(-1)
+        z_indx = z_indx[0]
+        correction = FPS_correction[z_indx]
+        correction_k_vals = correction['k_vals']
+        correction_ps_factor = correction['delta_factor']
+        indices = correction_ps_factor > 1
+        new =  correction_ps_factor[indices] - 1
+        correction_ps_factor[indices] = 1 + new * 4
+        k_diff = np.abs( k_vals - correction_k_vals )
+        # print( f'{z} {correction_ps_factor}')
+        if k_diff.sum() > 1e-6:
+           print(f'ERROR: Large k difference for FPS correction: {k_diff.sum()}.')
+           exit(-1)
+        ps_mean = ps_mean / correction_ps_factor
+        if ( ps_mean < 0 ).sum() > 0:
+          print( f'Negative Power Spectrum: {ps_mean}')
+          exit()
+    
     z_vals.append(z)
     data_kvals.append( k_vals )
     data_ps_mean.append( ps_mean )
@@ -262,7 +289,7 @@ def Load_Sim_Analysis_Data( self, sim_id, load_pd_fit=True, mcmc_fit_dir=None, l
 
 ####################################################################################################################
 
-def Load_Analysis_Data( self, sim_ids=None, load_pd_fit=True, mcmc_fit_dir=None, load_thermal=False  ):
+def Load_Analysis_Data( self, sim_ids=None, load_pd_fit=True, mcmc_fit_dir=None, load_thermal=False, FPS_correction=None  ):
   if sim_ids == None:  
     sim_ids = self.Grid.keys()
     indx_0 = list( sim_ids )[0]
@@ -279,7 +306,9 @@ def Load_Analysis_Data( self, sim_ids=None, load_pd_fit=True, mcmc_fit_dir=None,
       if n not in self.Grid[sim_id]['analysis']['ps_available_indices']: available = False
     if available: available_indices.append( n )
   
+  if FPS_correction is not None:
+    print( '\nWARNING: Applying correction factor to FPS. ')
   for sim_id in sim_ids:
-    self.Load_Simulation_Power_Spectum_Data( sim_id, available_indices )
+    self.Load_Simulation_Power_Spectum_Data( sim_id, available_indices, FPS_correction=FPS_correction )
   print('\n')
 

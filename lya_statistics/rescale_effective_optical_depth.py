@@ -7,81 +7,56 @@ root_dir = os.path.dirname(os.getcwd()) + '/'
 subDirectories = [x[0] for x in os.walk(root_dir)]
 sys.path.extend(subDirectories)
 from tools import *
-from load_data import Load_Skewers_File, load_analysis_data
-from calculus_functions import *
-from stats_functions import compute_distribution
-from data_optical_depth import data_optical_depth_Bosman_2021
-
-
-def Rescale_Optical_Depth_To_F_Mean_Diff( alpha, F_mean, tau_los  ):
-  # print(alpha)
-  tau_los_rescaled = tau_los * alpha
-  F_los_rescaled = np.exp( - tau_los_rescaled )
-  F_mean_rescaled = F_los_rescaled.mean()
-  diff = F_mean_rescaled - F_mean
-  return diff
-
-def Rescale_Optical_Depth_To_F_Mean( tau_los, F_mean ):
-  from scipy import optimize
-  tau_eff = -np.log( F_mean )
-  guess = tau_eff / tau_los.mean()
-  alpha = optimize.newton(Rescale_Optical_Depth_To_F_Mean_Diff, guess, args=(F_mean, tau_los ) ) 
-  tau_los_rescaled = alpha * tau_los
-  F_los_rescaled = np.exp( - tau_los_rescaled )
-  F_mean_rescaled = F_los_rescaled.mean()
-  diff = np.abs( F_mean_rescaled - F_mean ) / F_mean
-  if diff > 1e-6: print( 'WARNING: Rescaled F_mean mismatch: {F_mean_rescaled}   {f_mean}')
-  return  tau_los_rescaled, alpha
-
+from spectra_functions import Rescale_Optical_Depth_To_F_Mean
+from flux_power_spectrum import Compute_Flux_Power_Spectrum
 
 data_dir = '/raid/bruno/data/'
-input_dir  = data_dir + f'cosmo_sims/rescaled_P19/1024_50Mpc_high_z/'
-output_dir = data_dir + f'cosmo_sims/rescaled_P19/1024_50Mpc_high_z/neutral_fraction/'
+input_dir  = data_dir + f'cosmo_sims/rescaled_P19/2048_50Mpc/skewers/transmitted_flux_new/'
+output_dir = data_dir + f'cosmo_sims/rescaled_P19/2048_50Mpc/skewers/rescaled_power_spectrum_new/'
 create_directory( output_dir )
 
 flux_min = 1e-100
-data_sims = {}
-for n_file in range(17):
-  data = load_analysis_data( n_file, input_dir+'analysis_files/', phase_diagram=False, lya_statistics=True )
-  skewers_data = Load_Skewers_File( n_file, input_dir+'skewers_files/', chem_type = 'HI', axis_list = [ 'x', 'y', 'z' ] )
-  current_z = skewers_data['current_z']
-  vel_Hubble = skewers_data['vel_Hubble']
-  dv = vel_Hubble[1] - vel_Hubble[0] 
-  skewers_flux = skewers_data['skewers_flux_HI']
-  skewers_flux[skewers_flux < flux_min] = flux_min
-  data_sims[n_file] = { 'z':current_z, 'skewers_flux':skewers_flux }
-  
-z_sims = np.array([ data_sims[i]['z'] for i in data_sims ])
+
+files = [ 90, 106, 130, 169 ] 
+
+for n_file in files:
+  file_name = input_dir + f'lya_flux_{n_file:03}.h5'
+  print( f'Loading File: {file_name}' )
+  file = h5.File( file_name, 'r' )
+  current_z = file.attrs['current_z']
+  print( f'current_z: {current_z}')
+  Flux_mean = file.attrs['Flux_mean']
+  vel_Hubble = file['vel_Hubble'][...]
+  skewers_Flux = file['skewers_Flux'][...]
+  file.close()
+  skewers_Flux[skewers_Flux < flux_min] = flux_min
+  data_Flux = { 'vel_Hubble':vel_Hubble, 'skewers_Flux':skewers_Flux }
+  data_ps_original = Compute_Flux_Power_Spectrum( data_Flux )
 
 
+  data_out = {}
+  data_out['z'] = current_z
+  data_out['original'] = { 'k_vals': data_ps_original['k_vals'], 'ps_mean':data_ps_original['mean']}
 
-data = data_optical_depth_Bosman_2021
-data_z = data['z']
-data_tau = data['tau']
-data_tau_sigma = data['tau_sigma']
-data_tau_p = data_tau + data_tau_sigma 
-data_tau_l = data_tau - data_tau_sigma 
-data_F_mean = np.exp( -data_tau_l )
-
-z_vals, alpha_vals = [], []
-for z, F_mean  in zip(data_z, data_F_mean):
-  # print( z, F_mean)
-  diff = np.abs( z_sims - z )
-  id = np.where( diff == diff.min() )[0][0]
-  data_sim = data_sims[id]
-  z_sim = data_sim['z']
-  if np.abs( z_sim - z ) > 0.01: print( 'ERROR: Redshift mismatch')
-  skewers_flux = data_sim['skewers_flux']
-  skewers_tau = -np.log(skewers_flux)
-  skewers_tau_rescaled, alpha = Rescale_Optical_Depth_To_F_Mean( skewers_tau, F_mean )
-  print(z, alpha)
-  z_vals.append( z )
-  alpha_vals.append( alpha )
-
-data_out = np.array([ z_vals, alpha_vals ]).T
-file_name = output_dir + 'rescale_tau_to_Bosman_2021_lower.txt'
-np.savetxt( file_name, data_out )
-print( f'Saved File: {file_name}' )  
-
-
-
+  ps_rescaled = {}
+  alpha_vals = [ -0.3, -0.2, -0.1, 0.0, 0.1, 0.2, 0.3 ]
+  for data_id, alpha in enumerate(alpha_vals):
+    print( f'\nalpha: {alpha}' )
+    skewers_flux = skewers_Flux.copy()
+    flux_mean = skewers_flux.mean()
+    skewers_tau = -np.log(skewers_flux)
+    tau_eff = -np.log( flux_mean ) 
+    rescaled_tau_eff = ( 1 + alpha ) * tau_eff
+    rescaled_F_mean = np.exp( - rescaled_tau_eff )
+    skewers_tau_rescaled, rescale_factor = Rescale_Optical_Depth_To_F_Mean( skewers_tau, rescaled_F_mean )
+    skewers_flux_rescaled = np.exp( -skewers_tau_rescaled )
+    data_Flux_rescaled = { 'vel_Hubble':vel_Hubble, 'skewers_Flux':skewers_flux_rescaled }
+    data_ps_rescaled = Compute_Flux_Power_Spectrum( data_Flux_rescaled )
+    k_vals = data_ps_rescaled['k_vals']
+    ps_mean = data_ps_rescaled['mean']
+    ps_rescaled[data_id] = { 'alpha':alpha, 'rescale_factor':rescale_factor, 'k_vals':k_vals, 'ps_mean':ps_mean  }
+    
+  data_out['rescaled'] = ps_rescaled  
+  file_name = output_dir + f'rescaled_ps_{n_file}.pkl'
+  Write_Pickle_Directory( data_out, file_name )
+    

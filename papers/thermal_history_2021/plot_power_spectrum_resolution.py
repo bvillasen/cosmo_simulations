@@ -15,7 +15,7 @@ base_dir = data_dir + 'cosmo_sims/rescaled_P19/'
 output_dir = data_dir + 'cosmo_sims/figures/paper_thermal_history/'
 create_directory( output_dir )
 
-file_name = base_dir + 'FPS_resolution_correction_1024_50Mpc.pkl'
+file_name = root_dir + 'lya_statistics/data/FPS_resolution_correction_1024_50Mpc.pkl'
 ps_diff_data = Load_Pickle_Directory(  file_name )
 ps_diff_z_vals = ps_diff_data['z_vals']
 
@@ -69,7 +69,7 @@ for sim_id, sim_name in enumerate(sim_names):
       if k_diff.sum() > 1e-6:
         print( 'ERROR: Large k_vals difference')
         exit(-1)
-      ps_mean = ps_mean / diff_ps_factor
+      # ps_mean = ps_mean / diff_ps_factor
       
     ps_mean = ps_mean[:-1]
     k_vals = k_vals[:-1]
@@ -185,6 +185,7 @@ for i in range( n_rows ):
       ls = linestyles[sim_id]
       lw = linewidths[sim_id]
       ax2.plot( k_vals, ps_diff,  c=color, zorder=zorder, ls=ls, lw=lw  )  
+      print ( f'z={z}, diff:{ps_diff}')
     
       
     

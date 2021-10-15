@@ -124,7 +124,8 @@ def Compute_analytical_TauEff_Becker( z ):
   return tau
 
 
-data_bosman = np.array([[5.0, 0.135, 0.012 ],
+data_bosman = np.array([
+[5.0, 0.135, 0.012 ],
 [5.2, 0.114, 0.006 ],
 [5.4, 0.084, 0.005 ],
 [5.6, 0.050, 0.005 ],
@@ -161,17 +162,21 @@ sigma_tau = 1/F_mean*sigma_F_mean
 data_optical_depth_Bosman_2021 = {'name':'Bosman et al. (from SAZERAC)', 'z':z, 'tau':tau, 'tau_sigma':sigma_tau  }
 
 
+# data_yang = np.array([
+# [ 5.355, 2.885, 2.947, 2.801 ],
+# [ 5.506, 3.682, 3.755, 3.611 ],
+# [ 5.665, 4.217, 4.271, 4.157 ], 
+# [ 5.823, 5.091, 5.166, 5.022 ],
+# [ 5.994, 6.316, 6.484, 6.137 ] ]).T
 data_yang = np.array([
-[ 5.355, 2.885, 2.947, 2.801 ],
-[ 5.506, 3.682, 3.755, 3.611 ],
-[ 5.665, 4.217, 4.271, 4.157 ], 
-[ 5.823, 5.091, 5.166, 5.022 ],
-[ 5.994, 6.316, 6.484, 6.137 ] ]).T
+[ 5.36, 2.84, 0.07 ],
+[ 5.51, 3.64, 0.06 ],
+[ 5.67, 4.17, 0.05 ], 
+[ 5.83, 5.05, 0.06 ],
+[ 6.00, 6.27, 0.16 ] ]).T
 z = data_yang[0]
 tau = data_yang[1]
-tau_p = data_yang[2]
-tau_m = data_yang[3]
-sigma_tau = 0.5 * ( tau_p - tau_m )
+sigma_tau = data_yang[2]
 data_optical_depth_Yang_2020 = {'name':'Yang et al. (2020)', 'z':z, 'tau':tau, 'tau_sigma':sigma_tau  }
 
 
@@ -186,3 +191,41 @@ data_optical_depth_Gaikward_2020 = np.array([
     [ 3.4,  0.5927, 0.0247],
     [ 3.6,  0.5320, 0.0280],
     [ 3.8,  0.4695, 0.0278] ])
+    
+data_eiliers_2018 = np.array( [
+[ 4.0	 ,  0.4046	, 0.0151	, 0.9049	, 0.0372	],
+[ 4.25 ,	0.3595	, 0.0112	, 1.0230	, 0.0311	],
+[ 4.5	 ,  0.2927	, 0.0190	, 1.2286	, 0.0651	],
+[ 4.75 ,	0.1944	, 0.0150	, 1.6381	, 0.0770	],
+[ 5.0	 ,  0.1247	, 0.0132	, 2.0818	, 0.1060	],
+[ 5.25 ,	0.0795	, 0.0078	, 2.5321	, 0.0984	],
+[ 5.5	 ,  0.0531	, 0.0058	, 2.9357	, 0.1090	],
+[ 5.75 ,	0.0182	, 0.0045	, 4.0057	, 0.2469	],
+[ 6.0	 ,  0.0052	, 0.0043	, 4.7595	, 0	],
+[ 6.25 ,	-0.0025	, 0.0007	, 6.5843	, 0	] ]).T
+z = data_eiliers_2018[0][:-2]
+F_mean = data_eiliers_2018[1][:-2]
+sigma_F_mean = data_eiliers_2018[2][:-2]    
+tau =  data_eiliers_2018[3][:-2]
+sigma_tau = data_eiliers_2018[4][:-2]
+z_lower = data_eiliers_2018[0][-2:]
+tau_lower = data_eiliers_2018[3][-2:]
+data_optical_depth_Eilers_2018 = {'name':'Eilers et al. (2018)', 'z':z, 'tau':tau, 'tau_sigma':sigma_tau  }
+data_optical_depth_Eilers_2018['lower_limits'] = { 'z':z_lower, 'tau':tau_lower }
+
+
+data_Fan = np.array([
+[ 4.90, 5.15, 2.1, 0.3, 0  ], 
+[ 5.15, 5.35, 2.5, 0.5, 0  ], 
+[ 5.35, 5.55, 2.6, 0.6, 0  ],
+[ 5.55, 5.75, 3.2, 0.8, 0  ],
+[ 5.75, 5.95, 4.0, 0.8, -1  ],
+[ 5.95, 6.25, 7.1, 2.1, -1  ]]).T
+z = 0.5 * ( data_Fan[0] + data_Fan[1] )
+tau = data_Fan[2]
+sigma_tau = data_Fan[3]
+type = data_Fan[4]
+indices_data = np.where( type == 0 )
+indices_lower = np.where( type == -1 )
+data_optical_depth_Fan_2006 = {'name': 'Fan et al (2016)', 'z':z[indices_data], 'tau':tau[indices_data], 'tau_sigma':sigma_tau[indices_data] } 
+data_optical_depth_Fan_2006['lower_limits'] = { 'z':z[indices_lower], 'tau':tau[indices_lower], 'tau_sigma':sigma_tau[indices_lower] }

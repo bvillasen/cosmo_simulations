@@ -13,7 +13,7 @@ from colors import *
 
 base_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/'
 input_dir = base_dir + 'interpolated_observables/'
-output_dir = data_dir + 'cosmo_sims/figures/nature/'
+output_dir = data_dir + 'cosmo_sims/figures/paper_thermal_history/'
 create_directory( output_dir )
 
 in_file_name = input_dir + 'interpolated_observables.pkl'

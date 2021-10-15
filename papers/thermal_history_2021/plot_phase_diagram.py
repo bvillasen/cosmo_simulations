@@ -18,7 +18,7 @@ from interpolation_functions import smooth_line
 # sim_name = '1024_50Mpc'
 sim_name = '2048_100Mpc'
 input_dir = data_dir + f'cosmo_sims/rescaled_P19/{sim_name}/analysis_files/'
-output_dir = data_dir + f'cosmo_sims/figures/nature/'
+output_dir = data_dir + f'cosmo_sims/figures/paper_thermal_history/'
 create_directory( output_dir )
 
 data_all = {}
@@ -152,9 +152,9 @@ for index_j in range(2):
   ax.set_xlim( -3, 5 )
   ax.set_ylim( 2.2, 8.3 )
 
-  fig_label_pos_x = 0.09
-  fig_label_pos_y = 0.76 - index_j * 0.405 + 0.1
-  fig.text( fig_label_pos_x, fig_label_pos_y,  fig_labels[0],  fontproperties=prop_bold )
+  # fig_label_pos_x = 0.09
+  # fig_label_pos_y = 0.76 - index_j * 0.405 + 0.1
+  # fig.text( fig_label_pos_x, fig_label_pos_y,  fig_labels[0],  fontproperties=prop_bold )
 
   ax = ax_l[ index_j][1]
   values_to_fit = data['values_to_fit']
@@ -183,9 +183,9 @@ for index_j in range(2):
   ax.set_xlabel(r'$\log_{10} \,( \,\rho_{\mathrm{gas}}/\bar{\rho} \,)$ ', fontsize=label_size , color=text_color )
   ax.set_xticks( [ -1.0, -0.5,  0., 0.5, 1.0  ])
 
-  fig_label_pos_x = 0.09 + 0.42
-  fig_label_pos_y = 0.76 - index_j * 0.405 + 0.1
-  fig.text( fig_label_pos_x, fig_label_pos_y,  fig_labels[1],  fontproperties=prop_bold )
+  # fig_label_pos_x = 0.09 + 0.42
+  # fig_label_pos_y = 0.76 - index_j * 0.405 + 0.1
+  # fig.text( fig_label_pos_x, fig_label_pos_y,  fig_labels[1],  fontproperties=prop_bold )
 
 
   text  = r'$z =${0:.1f}'.format( z ) 

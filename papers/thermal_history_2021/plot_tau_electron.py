@@ -1,0 +1,96 @@
+import sys, os
+import numpy as np
+import h5py as h5
+import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
+import matplotlib as mpl
+import matplotlib
+import palettable
+import pylab
+root_dir = os.path.dirname(os.path.dirname(os.getcwd())) + '/'
+subDirectories = [x[0] for x in os.walk(root_dir)]
+sys.path.extend(subDirectories)
+from tools import *
+from constants_cosmo import Mpc
+from figure_functions import *
+from colors import *
+
+input_dir = data_dir + 'tau_electron/'
+output_dir = data_dir + 'cosmo_sims/figures/paper_thermal_history/'
+create_directory( output_dir )
+
+
+z_integral = np.linspace( 0, 14, 100 )
+
+file_name = input_dir + 'tau_HL.pkl'
+tau_HL = Load_Pickle_Directory( file_name )
+
+file_name = input_dir + 'tau_range.pkl'
+tau_range = Load_Pickle_Directory( file_name )
+
+
+file_name = input_dir + 'tau_modified_Gamma_sigmoid.pkl'
+tau_sigmoid = Load_Pickle_Directory( file_name )
+
+nrows = 1
+ncols = 1
+
+tick_size_major, tick_size_minor = 6, 4
+tick_label_size_major, tick_label_size_minor = 14, 12
+tick_width_major, tick_width_minor = 1.5, 1
+
+font_size = 18
+label_size = 16
+border_width = 1.5
+
+text_color = 'black'
+
+color = 'k'
+
+fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(8*ncols,6*nrows))
+
+tau = tau_HL['HL']
+tau_h = tau_range['max']
+tau_l = tau_range['min']
+ax.plot( z_integral, tau, lw=3, c=color, label='This Work (Best-Fit)', zorder=3 )
+ax.fill_between( z_integral, tau_h, tau_l, color=color, alpha=0.6, zorder=3 )
+
+tau = tau_sigmoid['HL']
+ax.plot( z_integral, tau, ls='--', lw=2, c='C0', label= r'Modified to Match HI $\tau_{\mathrm{eff}}$', zorder=3 )
+
+tau_planck = 0.0561 
+sigma_tau = 0.0071
+tau_planck_h = tau_planck + sigma_tau
+tau_planck_l = tau_planck - sigma_tau
+
+alpha = 0.4
+
+ax.plot( [0, 14], [tau_planck, tau_planck], lw=2, c=light_orange, label='Planck Collaboration (2020)', zorder=2 )
+ax.fill_between( [0, 14], [tau_planck_h, tau_planck_h], [tau_planck_l, tau_planck_l], color=light_orange, alpha=alpha, zorder=2 )
+
+tau = 0.0627
+tau_h = tau + 0.0050
+tau_l = tau - 0.0065
+c = 'C3'
+ax.plot( [0, 14], [tau, tau], lw=2, c=c, label='de Belsunce et al. (2021)', zorder=1 )
+ax.fill_between( [0, 14], [tau_h, tau_h], [tau_l, tau_l], color=c, alpha=alpha, zorder=1 )
+
+
+leg = ax.legend(loc=4, frameon=False, fontsize=22, prop=prop)
+
+# ax.set_ylabel( r'$\tau_{\mathrm{CMB}}$', fontsize=font_size, color=text_color  )
+ax.set_ylabel( r'$\tau_{\mathrm{e}}$', fontsize=font_size, color=text_color  )
+ax.set_xlabel( r'Redshift  $z$', fontsize=font_size, color=text_color )
+
+ax.tick_params(axis='both', which='major', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major  )
+ax.tick_params(axis='both', which='minor', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor  )
+
+[sp.set_linewidth(border_width) for sp in ax.spines.values()]
+
+ax.set_xlim(4, 14 )
+ax.set_ylim(0.02, 0.072 )
+
+
+figure_name = output_dir + 'tau_electron.png'
+fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
+print( f'Saved Figure: {figure_name}' )

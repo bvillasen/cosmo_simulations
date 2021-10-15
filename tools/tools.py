@@ -114,17 +114,17 @@ def print_line_flush( terminalString ):
   sys.stdout.flush() 
 
 
-def create_directory( dir, print_out=True ):
+def create_directory( dir, print_out=True, print_status=False ):
   if print_out: print(("Creating Directory: {0}".format(dir) ))
   indx = dir[:-1].rfind('/' )
   inDir = dir[:indx]
   dirName = dir[indx:].replace('/','')
   dir_list = next(os.walk(inDir))[1]
   if dirName in dir_list: 
-    if print_out: print( " Directory exists")
+    if print_status: print( " Directory exists")
   else:
     os.mkdir( dir )
-    if print_out: print( " Directory created")
+    if print_status: print( " Directory created")
 
 
 def get_files_names( inDir, fileKey='',  type=None ):

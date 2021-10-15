@@ -8,7 +8,7 @@ subDirectories = [x[0] for x in os.walk(cosmo_dir)]
 sys.path.extend(subDirectories)
 from tools import *
 from figure_functions import *
-# from colors import *
+from colors import *
 
 from data_photoionization_HI import data_photoionization_HI_becker_bolton_2013, data_photoionization_HI_dalosio_2018, data_photoionization_HI_gallego_2021, data_photoionization_HI_calverley_2011, data_photoionization_HI_wyithe_2011, data_photoionization_HI_gaikwad_2017
 
@@ -19,16 +19,17 @@ def Plot_HI_Photoionization( output_dir, rates_data=None, figure_name='fig_photh
   if system == 'Shamrock': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=12)
   if system == 'Tornado':  prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=12)
 
-  font_size =  18
+  font_size =  16
   text_color = 'black'
   tick_size_major, tick_size_minor = 6, 4
   tick_label_size_major, tick_label_size_minor = 14, 12
   tick_width_major, tick_width_minor = 1.5, 1
   
+  border_width = 1.5
     
   data_sets = [ data_photoionization_HI_becker_bolton_2013, data_photoionization_HI_dalosio_2018, data_photoionization_HI_calverley_2011, data_photoionization_HI_wyithe_2011 ]
   if show_low_z: data_sets.append( data_photoionization_HI_gaikwad_2017 )
-  colors_data = [ 'C1', 'C2','C6', 'C9', 'C0' ]
+  colors_data = [ 'C1', 'C2','C6', 'C9', light_orange ]
 
   nrows = 1
   ncols = 1
@@ -43,7 +44,11 @@ def Plot_HI_Photoionization( output_dir, rates_data=None, figure_name='fig_photh
       if 'label' in data_in: label = data_in['label']
       ion = data_in['photoionization'] / 1e-12 
       color = 'k'
-      ax.plot( z, ion,  zorder=1, label=label, color=color   )
+      if 'line_color' in data_in: color = data_in['line_color']
+      ls = '-'
+      if 'ls' in data_in: ls = data_in['ls']
+      if 'lw' in data_in: lw = data_in['lw']
+      ax.plot( z, ion,  zorder=1, label=label, color=color, ls=ls, lw=lw   )
       if 'lower' in data_in and 'higher' in data_in:
         print( 'Plotting interval')
         low    = data_in['lower'] / 1e-12  
@@ -91,7 +96,7 @@ def Plot_HI_Photoionization( output_dir, rates_data=None, figure_name='fig_photh
   leg = ax.legend(  loc=legend_loc, frameon=False, prop=prop    )
 
   ax.set_yscale('log')
-  ax.set_xlabel( r'Redshift $z$', fontsize=font_size)
+  ax.set_xlabel( r'Redshift  $z$', fontsize=font_size)
   ax.set_ylabel( r'$\Gamma_{\mathrm{HI}}$  [$\mathregular{10^{-12}}$  s$^{\mathregular{-1}}$]', fontsize=font_size)
   # ax.set_ylabel( r'$\Gamma_{\mathrm{HI}}$  [$\,10^{-12}$ s$^{-1}$  ]', fontsize=font_size)
 
@@ -103,7 +108,9 @@ def Plot_HI_Photoionization( output_dir, rates_data=None, figure_name='fig_photh
   ax.set_xlim(xmin, 6.4)
   ax.set_ylim(0.05, 2.)
   
-  if show_low_z: figure_name += 'low_z'
+  [sp.set_linewidth(border_width) for sp in ax.spines.values()]
+  
+  # if show_low_z: figure_name += 'low_z'
   figure_name = output_dir + figure_name + '.png'
   fig.savefig( figure_name, bbox_inches='tight', dpi=300 )
   print( f'Saved Figure: {figure_name}' )

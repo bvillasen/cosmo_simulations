@@ -7,7 +7,7 @@ def load_skewers_single_axis(  n_skewers, skewer_axis,  nSnap, input_dir, set_ra
   inFileName = input_dir + f'skewers_{skewer_axis}_{nSnap}.h5'
   inFile = h5.File( inFileName, 'r' )
   n_total = inFile.attrs['n']
-  if print_out: print( f'Availbale squewers: {n_total}')
+  # if print_out: print( f'Availbale squewers: {n_total}')
   current_z = inFile.attrs['current_z']
   
   if print_out: print(f"Loading {n_skewers} skewers {skewer_axis} axis from {n_total} available")
@@ -18,13 +18,17 @@ def load_skewers_single_axis(  n_skewers, skewer_axis,  nSnap, input_dir, set_ra
     if n_skewers != len(skewer_ids):
       print("ERROR: List of skewer ids sont match n_skewres"      )
       exit(-1)
-  else:  
+  elif ids_to_load == 'random':  
     if set_random_seed:   
       if print_out: print( 'WANING: Fixed random seed to load skewers')
       np.random.seed(12345)
     # skewer_ids = np.random.randint(0, n_total, n_skewers)
     skewer_ids = np.random.randint(0, n_total, n_skewers).astype(np.float)
-
+  elif ids_to_load == 'all':
+    skewer_ids = np.arange( n_total )
+  else:
+    print('ERROR: Not supported ids to load ')
+    return None 
 
 
   skewers_dens, skewers_temp, skewers_HI, skewers_vel, skewers_HeII = [], [], [], [], []
@@ -94,7 +98,7 @@ def load_skewers_multiple_axis( axis_list, n_skewers_list, nSnap, input_dir, set
   data_skewers['n_skewers'] = n_skewers
   data_skewers['density'] = dens_all
   data_skewers['HI_density'] = HI_all
-  data_skewers['velocity'] = vel_all
+  data_skewers['los_velocity'] = vel_all
   data_skewers['temperature'] = temp_all
   if load_HeII: data_skewers['HeII_density'] = HeII_all  
   return data_skewers

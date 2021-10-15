@@ -59,13 +59,14 @@ def get_skewer_flux_power_spectrum( vel_Hubble, delta_F, d_log_k=None, n_bins=No
 
 def Compute_Flux_Power_Spectrum( data_Flux ):
   skewers_Flux = data_Flux['skewers_Flux']
-  Flux_mean = data_Flux['Flux_mean']
+  # Flux_mean = data_Flux['Flux_mean']
+  Flux_mean = skewers_Flux.mean()
   vel_Hubble = data_Flux['vel_Hubble']
   n_skewers = skewers_Flux.shape[0]
 
   # Compute the Power Spectrum from the Flux
   d_log_k = 0.1
-  print( '\nComputing Flux Power Spectrum')
+  print( 'Computing Flux Power Spectrum')
   skewers_power_spectrum = []
   for skewer_id in range(n_skewers):
     flux = skewers_Flux[skewer_id]

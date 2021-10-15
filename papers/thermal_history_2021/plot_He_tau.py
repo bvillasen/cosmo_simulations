@@ -16,12 +16,11 @@ from data_optical_depth_HeII import data_tau_HeII_Worserc_2019
 
 
 
-input_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/fit_mcmc/fit_results_P(k)+tau_HeII_Boss_Irsic_Boera/'
+input_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/fit_mcmc/fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_systematic/'
 
 
 file_name = input_dir + f'observable_samples/samples_fields.pkl'
 fields_sim_data = Load_Pickle_Directory( file_name )
-
 
 import matplotlib
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
@@ -33,7 +32,7 @@ matplotlib.rcParams['font.family'] = "sans-serif"
 
 
 
-output_dir = data_dir + f'cosmo_sims/figures/nature/'
+output_dir = data_dir + f'cosmo_sims/figures/paper_thermal_history/'
 create_directory( output_dir )
 
 
@@ -70,6 +69,12 @@ tau_l = fields_sim_data['tau_HeII']['lower']
 ax.plot( z_vals, tau, color=sim_color, zorder=1, label='This Work' )
 ax.fill_between( z_vals, tau_h, tau_l, color=sim_color, alpha=0.5, zorder=1 )  
 
+# z_vals = fields_sim_data_NC['tau_HeII']['z']
+# tau = fields_sim_data_NC['tau_HeII']['Highest_Likelihood']
+# tau_h = fields_sim_data_NC['tau_HeII']['higher'] 
+# tau_l = fields_sim_data_NC['tau_HeII']['lower'] 
+# ax.plot( z_vals, tau, color='C1', zorder=1, label='Original' )
+# ax.fill_between( z_vals, tau_h, tau_l, color='C1', alpha=0.5, zorder=1 )  
 
 data_set = data_tau_HeII_Worserc_2019
 data_name = data_set['name']

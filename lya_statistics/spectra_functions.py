@@ -1,10 +1,10 @@
-import sys, os
+import sys, os, time
 import numpy as np
 from scipy.special import erf
 import constants_cgs as cgs
 root_dir = os.path.dirname(os.getcwd()) + '/'
 sys.path.append( root_dir + 'tools')
-from tools import print_line_flush
+from tools import print_line_flush, print_progress
 
 def get_Doppler_parameter( T, chem_type='HI' ):
   if chem_type == 'HI':   M = cgs.M_p
@@ -136,10 +136,11 @@ def Compute_Skewers_Transmitted_Flux( skewers_data, cosmology, box ):
   n_skewers = skewers_data['HI_density'].shape[0]
   print( '\nComputing Flux along Skewers')
   skewers_Flux = []
+  start = time.time()
   for skewer_id in range(n_skewers):
 
-    text = ' Skewer {0}/{1}    {2:.0f} %'.format(skewer_id+1, n_skewers,  float(skewer_id+1)/n_skewers*100)
-    print_line_flush( text )
+    # text = ' Skewer {0}/{1}    {2:.0f} %'.format(skewer_id+1, n_skewers,  float(skewer_id+1)/n_skewers*100)
+    # print_line_flush( text )
 
     skewer_data = {}  
     skewer_data['HI_density']  = skewers_data['HI_density'][skewer_id]
@@ -151,9 +152,36 @@ def Compute_Skewers_Transmitted_Flux( skewers_data, cosmology, box ):
     los_tau = tau_los_data['tau']
     los_F = np.exp( -los_tau )
     skewers_Flux.append( los_F )
+    
+    print_progress( skewer_id+1, n_skewers, start )
+  
+  print('')
   skewers_Flux = np.array( skewers_Flux )
   Flux_mean = skewers_Flux.mean()
   vel_Hubble = los_vel_hubble
   data_out = { 'vel_Hubble':vel_Hubble, 'Flux_mean':Flux_mean, 'skewers_Flux':skewers_Flux }
   return data_out
 
+
+def Rescale_Optical_Depth_To_F_Mean_Diff( alpha, F_mean, tau_los  ):
+  # print(alpha)
+  tau_los_rescaled = tau_los * alpha
+  F_los_rescaled = np.exp( - tau_los_rescaled )
+  F_mean_rescaled = F_los_rescaled.mean()
+  diff = F_mean_rescaled - F_mean
+  return diff
+
+def Rescale_Optical_Depth_To_F_Mean( tau_los, F_mean ):
+  from scipy import optimize
+  tau_eff = -np.log( F_mean )
+  flux_los = np.exp( -tau_los )
+  mean_flux = flux_los.mean()
+  tau_0 = -np.log( mean_flux)
+  guess = tau_eff / tau_0
+  alpha = optimize.newton(Rescale_Optical_Depth_To_F_Mean_Diff, guess, args=(F_mean, tau_los ) ) 
+  tau_los_rescaled = alpha * tau_los
+  F_los_rescaled = np.exp( - tau_los_rescaled )
+  F_mean_rescaled = F_los_rescaled.mean()
+  diff = np.abs( F_mean_rescaled - F_mean ) / F_mean
+  if diff > 1e-6: print( 'WARNING: Rescaled F_mean mismatch: {F_mean_rescaled}   {f_mean}')
+  return  tau_los_rescaled, alpha
