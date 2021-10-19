@@ -29,9 +29,9 @@ create_directory( output_dir )
 
 data_sets = [ data_HI_fraction_Fan_2006, data_HI_fraction_Greig_2017, data_HI_fraction_Hoag_2019, 
               data_HI_fraction_Mason_2018, data_HI_fraction_Mason_2019, data_HI_fraction_McGreer_2011,
-              data_HI_fraction_McGreer_2015, data_HI_fraction_Greig_2019]
+              data_HI_fraction_McGreer_2015, data_HI_fraction_Greig_2019, data_HI_fraction_Yang_2020, data_HI_fraction_Wang_2020]
               
-data_colors = [ light_orange, purple, dark_blue, green, cyan, 'C1', 'C3', 'C5' ]
+data_colors = [ light_orange, purple, dark_blue, green, cyan, 'C1', 'C3', 'C5', 'C6', 'C7' ]
 
 
 file_name = input_dir + 'best_fit_ionization.txt'
@@ -131,6 +131,7 @@ c = 'k'
 alpha = 0.5
 lw = 3
 ax0.plot( z, xHI, lw=lw, c=c, zorder=1, label='This Work (Best-Fit)' )
+ax1.plot( z, xHI, lw=lw, c=c, zorder=1, label='This Work (Best-Fit)' )
 ax0.fill_between( z, xHI_h, xHI_l, color=c, alpha=alpha, zorder=1 )
 # ax0.fill_between( z, xHI_min, xHI_max, color=c, alpha=alpha, zorder=1 )
 
@@ -140,8 +141,10 @@ ax1.fill_between( z, xHI_h, xHI_l, color=c, alpha=alpha, zorder=1 )
 
 lw = 2
 ax0.plot( z_s, xHI_s, lw=lw, c='C0', ls='--', zorder=1, label= r'Modified to Match HI $\tau_{\mathrm{eff}}$' )
+ax1.plot( z_s, xHI_s, lw=lw, c='C0', ls='--', zorder=1, label= r'Modified to Match HI $\tau_{\mathrm{eff}}$' )
 ax1.plot( z_s, xHI_s, lw=lw, c='C0', ls='--', zorder=1 )
 
+delta_z = 0.03
 for data_id, data_set in enumerate( data_sets ):
   z = data_set['z']
   xHI = data_set['xHI']
@@ -150,11 +153,14 @@ for data_id, data_set in enumerate( data_sets ):
   color = data_colors[data_id]
   yerr = [ sigma_l, sigma_h ]
   label = data_set['label']
+  if data_id in [8, 9]: z +=delta_z
   if data_id in [4,]:
     ax0.errorbar( z, xHI, yerr=yerr, fmt='o',  lolims=True, label=label, zorder=2, color=color )
+    ax1.errorbar( z, xHI, yerr=yerr, fmt='o',  lolims=True, label=label, zorder=2, color=color )
     continue
   if data_id in [5,6]:
     ax0.errorbar( z, xHI, yerr=yerr, fmt='o',  uplims=True, label=label, zorder=2, color=color )
+    ax1.errorbar( z, xHI, yerr=yerr, fmt='o',  uplims=True, label=label, zorder=2, color=color )
     continue
   offset = 0
   if data_id == 0:offset = -1
@@ -177,7 +183,7 @@ xmin, xmax = 4.9, 12
 ax0.set_ylim( y_div, 1)
 ax0.set_xlim( xmin, xmax)
 
-ax1.set_ylim( 1e-5, 1e-3)
+ax1.set_ylim( 1e-5, y_div)
 ax1.set_xlim( xmin, xmax)
 ax1.set_yscale('log')
 
@@ -199,7 +205,8 @@ ax1.tick_params(axis='both', which='minor', direction='in', color=text_color, la
 ax0.yaxis.set_label_coords(-0.07,0.3)
 
 
-leg = ax0.legend(loc=4, frameon=False, fontsize=22, prop=prop)
+leg = ax1.legend(loc=4, frameon=False, fontsize=22, prop=prop, ncol=2 )
+# leg = ax0.legend(loc=4, frameon=False, fontsize=22, prop=prop, ncol=1 )
 
 
 figure_name = output_dir + 'HI_fraction.png'

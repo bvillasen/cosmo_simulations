@@ -12,7 +12,7 @@ print( f'System: {system}')
 
 n_points = 1024
 
-grid_name = f'{n_points}_P19m_np4_nsim400'
+# grid_name = f'{n_points}_P19m_np4_nsim400'
 # grid_name = f'{n_points}_np5_nsim16'
 # grid_name = f'{n_points}_np2_nsim16'
 # grid_name = f'{n_points}_np4_nsim81'
@@ -24,7 +24,8 @@ grid_name = f'{n_points}_P19m_np4_nsim400'
 # grid_name = f'{n_points}_mwdm6p0_nsim64'
 # grid_name = f'{n_points}_deltaZn0p6_nsim27'
 # grid_name = f'{n_points}_zreion5p4_nsim27'
-# grid_name = f'{n_points}_wdmgrid_nsim192'
+# grid_name = f'{n_points}_wdmgrid_nsim192''
+grid_name = f'{n_points}_wdmgrid_nsim320'
 
 
 if system == 'Lux':

@@ -15,7 +15,9 @@ wdm_mass = 2.0
 if wdm_mass == 2.0: src_grid_dir = sim_grid_dir + '1024_mwdm2p0_nsim64/' 
 if wdm_mass == 3.0: src_grid_dir = sim_grid_dir + '1024_mwdm3p0_nsim64/' 
 if wdm_mass == 4.0: src_grid_dir = sim_grid_dir + '1024_mwdm4p0_nsim64/' 
-dst_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim192/'
+if wdm_mass == 5.0: src_grid_dir = sim_grid_dir + '1024_mwdm5p0_nsim64/' 
+if wdm_mass == 6.0: src_grid_dir = sim_grid_dir + '1024_mwdm6p0_nsim64/' 
+dst_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim320/'
 
 constant_params = { 'wdm_mass': wdm_mass }
 src_params = Get_Grid_Parameter_Values( src_grid_dir, constant_params=constant_params )
