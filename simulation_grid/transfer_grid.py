@@ -10,7 +10,7 @@ from transfer_grid_functions import *
 
 sim_grid_dir = data_dir + 'cosmo_sims/sim_grid/'
  
-wdm_mass = 2.0 
+wdm_mass = 3.0 
  
 if wdm_mass == 2.0: src_grid_dir = sim_grid_dir + '1024_mwdm2p0_nsim64/' 
 if wdm_mass == 3.0: src_grid_dir = sim_grid_dir + '1024_mwdm3p0_nsim64/' 
