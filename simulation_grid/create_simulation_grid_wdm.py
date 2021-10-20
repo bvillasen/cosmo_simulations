@@ -12,20 +12,23 @@ from plot_uvb_rates import Plot_UVB_Rates
 from uvb_functions import Load_Grackle_File
 
 
-SG = Simulation_Grid( parameters=Grid_Parameters, sim_params=sim_params, job_params=job_params, dir=root_dir )
+grid_header = 'Base UVB Rates are the V21 rates (modified P19)'
+constant_UVB_parameters = { 'scale_He_Eheat':0.8 } 
+SG = Simulation_Grid( parameters=Grid_Parameters, sim_params=sim_params, constant_params=constant_UVB_parameters, 
+                      job_params=job_params, dir=root_dir, grid_header=grid_header )
 SG.Create_Grid_Directory_Structure()
 
 # Select the type of initial conditions: 'cdm' or 'wdm'
 # SG.Create_All_Parameter_Files( ics_type='cdm' )
-SG.Create_All_Parameter_Files( ics_type='wdm', wdm_mass=None )
+SG.Create_All_Parameter_Files( ics_type='wdm', wdm_mass=None, verbose=False )
 
 # Create the files for the UVB rates
 # grackle_UVB_file_name =  base_dir + 'rates_uvb/data/CloudyData_UVB_Puchwein2019_cloudy.h5' 
 # constant_UVB_parameters = { 'scale_He_ion':0.44, 'scale_H_ion':0.78, 'deltaZ_He':0.27, 'deltaZ_H':0.05 } 
 # SG.Create_UVB_Rates_Files( input_file_name=grackle_UVB_file_name, constant_parameters=constant_UVB_parameters )
-
+# 
 grackle_UVB_file_name =  base_dir + 'rates_uvb/data/UVB_rates_P19m.h5' 
-SG.Create_UVB_Rates_Files( input_file_name=grackle_UVB_file_name, extend_rates_z=False  )
+SG.Create_UVB_Rates_Files( input_file_name=grackle_UVB_file_name, extend_rates_z=False,  constant_parameters=constant_UVB_parameters, verbose=False  )
 
 
 figures_dir = root_dir + 'figures/'

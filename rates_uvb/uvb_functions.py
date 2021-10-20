@@ -78,8 +78,8 @@ def Reaplace_Gamma_Parttial( z, gamma, change_z, change_gamma ):
   gamma_new[indx_last] = np.sqrt( gamma_new[indx_last-1]*gamma_new[indx_last+1])
   return gamma_new
 
-def Load_Grackle_File( grackle_file_name ):
-  print( f'Loadig File: {grackle_file_name}')
+def Load_Grackle_File( grackle_file_name, print_out=True ):
+  if print_out: print( f'Loadig File: {grackle_file_name}')
   grackle_file = h5.File( grackle_file_name, 'r' )
 
   data_out = {}
@@ -215,9 +215,11 @@ def Modify_UVB_Rates( parameter_values, rates, extrapolate='constant' ):
   return rates_modified
   
 
-def Modify_Rates_From_Grackle_File(  parameter_values, max_delta_z = 0.1, rates_data=None, input_file_name=None, extrapolate='constant', extend_rates_z=True ):
+def Modify_Rates_From_Grackle_File(  parameter_values, max_delta_z = 0.1, rates_data=None, input_file_name=None, extrapolate='constant', extend_rates_z=True, print_out=True ):
+  skip_parameters = [ 'wdm_mass' ]
+  
   if not rates_data:
-    grackle_data = Load_Grackle_File( input_file_name )
+    grackle_data = Load_Grackle_File( input_file_name, print_out=print_out )
     rates = Copy_Grakle_UVB_Rates(grackle_data)  
     if extend_rates_z:
       print( f'Extending Rates Redshift  max_delta_z:{max_delta_z}' )
@@ -227,6 +229,7 @@ def Modify_Rates_From_Grackle_File(  parameter_values, max_delta_z = 0.1, rates_
     
   info = 'Rates for '
   for p_name in parameter_values.keys():
+    if p_name in skip_parameters: continue
     p_val = parameter_values[p_name]
     info += f' {p_name}:{p_val}' 
   
@@ -276,10 +279,10 @@ def Modify_Rates_From_Grackle_File(  parameter_values, max_delta_z = 0.1, rates_
   return rates_data
 
 
-def Write_Rates_Grackle_File( out_file_name, rates ):
+def Write_Rates_Grackle_File( out_file_name, rates, print_out=True ):
   root_key = 'UVBRates'
   info = rates[root_key]['info']
-  print( f'  Writing {info}' )
+  if print_out: print( f'  Writing {info}' )
   
   len_info = len(info)
   type_info = f'|S{len_info}'
@@ -295,13 +298,13 @@ def Write_Rates_Grackle_File( out_file_name, rates ):
     for key in group_data.keys():
       data_group.create_dataset( key, data=group_data[key] )
   out_file.close()
-  print( f' Saved File: {out_file_name}')
+  if print_out: print( f' Saved File: {out_file_name}')
       
   
       
-def Generate_Modified_Rates_File( out_file_name, parameter_values, max_delta_z=0.1, input_file_name=None, input_UVB_rates=None, extend_rates_z=True ):      
-  rates = Modify_Rates_From_Grackle_File( parameter_values, max_delta_z=max_delta_z, input_file_name=input_file_name, rates_data=input_UVB_rates, extend_rates_z=extend_rates_z )
-  Write_Rates_Grackle_File( out_file_name, rates )
+def Generate_Modified_Rates_File( out_file_name, parameter_values, max_delta_z=0.1, input_file_name=None, input_UVB_rates=None, extend_rates_z=True, print_out=True ):      
+  rates = Modify_Rates_From_Grackle_File( parameter_values, max_delta_z=max_delta_z, input_file_name=input_file_name, rates_data=input_UVB_rates, extend_rates_z=extend_rates_z, print_out=print_out )
+  Write_Rates_Grackle_File( out_file_name, rates, print_out=print_out )
       
 
 

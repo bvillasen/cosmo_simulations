@@ -293,7 +293,7 @@ def Get_Comparable_T0_Gaikwad():
 
 ##################################################################################################################################
 
-def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_range, log_ps=False, systematic_uncertainties=None ):
+def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_range, log_ps=False, systematic_uncertainties=None, print_systematic=False ):
   print( f'Loading P(k) Data:' )
   dir_boss = ps_data_dir + 'data_power_spectrum_boss/'
   data_filename = dir_boss + 'data_table.py'
@@ -378,9 +378,9 @@ def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_rang
           for systematic_type in systematic:
             if systematic_type == 'fractional':
               fraction = systematic['fractional']
-              # fraction /= 2
               sigma_systematic = delta_ps * fraction
               sigma_total_squared += sigma_systematic**2
+              if print_systematic: print( f'{systematic_type} Fraction:{fraction}  :  {sigma_systematic/ delta_ps_sigma}' )
             if systematic_type == 'resolution':
               correction_type = systematic['resolution']['type']
               correction_all = systematic['resolution']['correction']
@@ -399,7 +399,7 @@ def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_rang
               correction_fractional = correction['delta_fraction']
               if correction_type == 'delta':
                 sigma_correction = np.interp( k_vals, correction_k, correction_delta )
-                # print( sigma_correction / delta_ps_sigma )
+                if print_systematic: print( f'{systematic_type}: {sigma_correction / delta_ps_sigma}' )
               else: 
                 print('Type of correction not implemented')
                 exit(-1) 

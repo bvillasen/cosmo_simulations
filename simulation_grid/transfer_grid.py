@@ -12,27 +12,32 @@ sim_grid_dir = data_dir + 'cosmo_sims/sim_grid/'
  
 wdm_mass = 6.0 
  
-if wdm_mass == 2.0: src_grid_dir = sim_grid_dir + '1024_mwdm2p0_nsim64/' 
-if wdm_mass == 3.0: src_grid_dir = sim_grid_dir + '1024_mwdm3p0_nsim64/' 
-if wdm_mass == 4.0: src_grid_dir = sim_grid_dir + '1024_mwdm4p0_nsim64/' 
-if wdm_mass == 5.0: src_grid_dir = sim_grid_dir + '1024_mwdm5p0_nsim64/' 
-if wdm_mass == 6.0: src_grid_dir = sim_grid_dir + '1024_mwdm6p0_nsim64/' 
-dst_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim320/'
+# if wdm_mass == 2.0: src_grid_dir = sim_grid_dir + '1024_mwdm2p0_nsim64/' 
+# if wdm_mass == 3.0: src_grid_dir = sim_grid_dir + '1024_mwdm3p0_nsim64/' 
+# if wdm_mass == 4.0: src_grid_dir = sim_grid_dir + '1024_mwdm4p0_nsim64/' 
+# if wdm_mass == 5.0: src_grid_dir = sim_grid_dir + '1024_mwdm5p0_nsim64/' 
+# if wdm_mass == 6.0: src_grid_dir = sim_grid_dir + '1024_mwdm6p0_nsim64/' 
+# dst_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim320/'
+# constant_params = { 'wdm_mass': wdm_mass }
 
-constant_params = { 'wdm_mass': wdm_mass }
+src_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim320/'
+dst_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim100/'
+constant_params = None
+
 src_params = Get_Grid_Parameter_Values( src_grid_dir, constant_params=constant_params )
 dst_params = Get_Grid_Parameter_Values( dst_grid_dir )
 Link_Simulation_dirctories( src_params, dst_params )
-
 
 dst_ids_to_transfer = [ id for id in dst_params if dst_params[id]['src']  is not None ]
 n_to_transfer = len( dst_ids_to_transfer )
 print( f'N to transfer: {n_to_transfer} ' )
 
-files_to_copy = [ 'analysis_files', 'simulation_files' ] 
- 
-n_trasfered = 0
+directories_to_copy = [ 'analysis_files', 'simulation_files' ] 
+sim_files_to_copy = [ 'run_output.log' ]
+
+n_transferred = 0
 for dst_id in dst_ids_to_transfer:
+  # if n_transferred > 0: continue
   dst_data = dst_params[dst_id]
   dst_root_dir = dst_data['root_dir']
   dst_name = dst_data['name']
@@ -40,7 +45,7 @@ for dst_id in dst_ids_to_transfer:
   src_root_dir = dst_data['src']['root_dir']
   src_name = dst_data['src']['name']
   print( f'\nCopying {src_name} -> {dst_name}' )
-  if 'analysis_files' in  files_to_copy:
+  if 'analysis_files' in  directories_to_copy:
     src_dir = src_root_dir + f'analysis_files/{src_name}/'
     dst_dir = dst_root_dir + f'analysis_files/{dst_name}/'
     print( f' src dir: {src_dir}' )
@@ -50,11 +55,14 @@ for dst_id in dst_ids_to_transfer:
       os.rmdir( dst_dir )
       dst_result = copytree( src_dir, dst_dir )
     dir_comparison = dircmp( src_dir, dst_dir )
-    comparison_result = dir_comparison.report()
-    # diff_files = comparison_result.diff_files
-  
-  if 'simulation_files' in files_to_copy:
+    # comparison_result = dir_comparison.report()
+    diff_files = dir_comparison.diff_files
+    if len( diff_files ) > 0: 
+      print( 'ERROR: Found diff_files > 0')
+
+  if 'simulation_files' in directories_to_copy:
     src_dir = src_root_dir + f'simulation_files/{src_name}/'
+    if os.path.isdir( src_dir + 'original' ): src_dir = src_dir + 'original/' 
     dst_dir = dst_root_dir + f'simulation_files/{dst_name}/original/'
     print( f' src dir: {src_dir}' )
     print( f' dst dir: {dst_dir}' )
@@ -64,12 +72,20 @@ for dst_id in dst_ids_to_transfer:
       os.rmdir( dst_dir )
       dst_result = copytree( src_dir, dst_dir )
     dir_comparison = dircmp( src_dir, dst_dir )
-    comparison_result = dir_comparison.report()
+    # comparison_result = dir_comparison.report()
+    diff_files = dir_comparison.diff_files
+    if len( diff_files ) > 0: 
+      print( 'ERROR: Found diff_files > 0')
+    if len( sim_files_to_copy  ) > 0:
+      for file_name in sim_files_to_copy:
+        src_file = dst_root_dir + f'simulation_files/{dst_name}/original/' + file_name
+        dst_file = dst_root_dir + f'simulation_files/{dst_name}/' + file_name
+        copyfile( src_file, dst_file )
     
-  n_trasfered += 1
-  
-print( f'\nSuccessfully transfered {n_trasfered} simulations')
-    
+  n_transferred += 1
+
+print( f'\nSuccessfully transfered {n_transferred} simulations')
+
     
 
 

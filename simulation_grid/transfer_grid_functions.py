@@ -58,6 +58,7 @@ def Get_Grid_Parameter_Values( grid_dir, constant_params=None, base_dir='simulat
     lines = file.readlines()
     params = {}
     for line in lines:
+      if line[0] == '#': continue
       param_name, param_val = line.split('=') 
       params[param_name] = float( param_val )
     if constant_params is not None:

@@ -39,8 +39,10 @@ class Simulation_Grid:
   job_parameters = None
   simulation_parameters = None
   sim_ids = None
+  constant_parameters = None 
+  header = None
   
-  def __init__( self, job_params=None, sim_params=None, parameters=None, dir=None ):
+  def __init__( self, job_params=None, sim_params=None, parameters=None, dir=None, constant_params=None, grid_header=None ):
     print("Initializing Simulation Grid:")
     root_dir = dir
     n_param = len(parameters.keys())
@@ -57,8 +59,11 @@ class Simulation_Grid:
     self.skewers_dir    = dir + 'skewers_files/'
     self.job_parameters = job_params
     self.simulation_parameters = sim_params
+    self.constant_parameters = constant_params
+    self.header = grid_header 
     print( f" n_paramters: {self.n_paramters}")
     print( f" Paramters: {self.parameter_names}")
+    if self.constant_parameters is not None: print( f" Constant Parameters: {self.constant_parameters}" )
     print( f" n_simulations: {self.n_simulations}")
     print( f" Root Dir: {self.root_dir}")
     
@@ -161,14 +166,15 @@ class Simulation_Grid:
     return sim_dir    
         
 ###############################################################################################    
-  def Create_All_Parameter_Files( self, save_file=True, ics_type='cdm', wdm_mass=None ):
-    print("Creating Parameter Files:")
+  def Create_All_Parameter_Files( self, save_file=True, ics_type='cdm', wdm_mass=None, verbose=False ):
+    print("Creating Parameter Files")
     for sim_id in self.Grid.keys():
-      self.Create_Simulation_Parameter_File( sim_id, save_file=save_file, ics_type=ics_type, wdm_mass=wdm_mass )
-      self.Write_Grid_Parameters( sim_id )
-
+      self.Create_Simulation_Parameter_File( sim_id, save_file=save_file, ics_type=ics_type, wdm_mass=wdm_mass, verbose=verbose )
+      self.Write_Grid_Parameters( sim_id, verbose=verbose )
+    print("Parameter Files Created Successfully ")
+    
 ###############################################################################################    
-  def Create_Simulation_Parameter_File( self, sim_id, save_file=True, ics_type='cdm', wdm_mass=None  ):
+  def Create_Simulation_Parameter_File( self, sim_id, save_file=True, ics_type='cdm', wdm_mass=None, verbose=False  ):
     sim_dir = self.Get_Simulation_Directory( sim_id )
     sim_params = self.simulation_parameters.copy()
     sim_params['UVB_rates_file'] = sim_dir + 'UVB_rates.h5'
@@ -198,19 +204,27 @@ class Simulation_Grid:
         string = f'{key}={sim_params[key]} \n'
         file.write( string )
       file.close()
-      print( f' Saved File: {file_name}' )
+      if verbose: print( f' Saved File: {file_name}' )
       
 ###############################################################################################
-  def Write_Grid_Parameters( self, sim_id ):
+  def Write_Grid_Parameters( self, sim_id, verbose=False ):
       sim_dir = self.Get_Simulation_Directory( sim_id )
       sim_params = self.Grid[sim_id]['parameters']
       file_name = sim_dir + 'grid_params.txt'
       file = open( file_name, 'w' )
+      if self.header is not None:
+        h = f'# {self.header}\n'
+        file.write( h )
       for key in sim_params.keys():
         string = f'{key}={sim_params[key]} \n'
         file.write( string )
+      if self.constant_parameters:
+        file.write( '# Constant parameters:\n' )
+        for key in self.constant_parameters.keys():
+          string = f'{key}={self.constant_parameters[key]} \n'
+          file.write( string )  
       file.close()
-      print( f' Saved File: {file_name}' )
+      if verbose:print( f' Saved File: {file_name}' )
 
 ###############################################################################################
   def Get_Simulation_Parameter_Values( self, sim_id ):
@@ -226,13 +240,15 @@ class Simulation_Grid:
     return param_values
 
 ###############################################################################################
-  def Create_UVB_Rates_Files( self, max_delta_z=0.1, input_file_name=None, input_UVB_rates=None, constant_parameters=None, extend_rates_z=True ):
-    print("Creating UVB Rates Files:")
+  def Create_UVB_Rates_Files( self, max_delta_z=0.1, input_file_name=None, input_UVB_rates=None, constant_parameters=None, extend_rates_z=True, verbose=False ):
+    print("Creating UVB Rates Files")
     for sim_id in self.Grid.keys():
-      self.Create_UVB_Rates_File( sim_id, max_delta_z=max_delta_z, input_file_name=input_file_name, input_UVB_rates=input_UVB_rates, constant_parameters=constant_parameters, extend_rates_z=extend_rates_z )
+      # if sim_id > 0: continue
+      self.Create_UVB_Rates_File( sim_id, max_delta_z=max_delta_z, input_file_name=input_file_name, input_UVB_rates=input_UVB_rates, constant_parameters=constant_parameters, extend_rates_z=extend_rates_z, verbose=verbose )
+    print("UVB Rates Files Created Successfully")
       
 ###############################################################################################
-  def Create_UVB_Rates_File( self, sim_id, max_delta_z=0.1, input_UVB_rates=None, input_file_name=None, constant_parameters=None, extend_rates_z=True ):
+  def Create_UVB_Rates_File( self, sim_id, max_delta_z=0.1, input_UVB_rates=None, input_file_name=None, constant_parameters=None, extend_rates_z=True, verbose=False ):
     simulation = self.Grid[sim_id]
     param_values =  self.Get_Simulation_Parameter_Values( sim_id )
     sim_dir = self.Get_Simulation_Directory( sim_id )
@@ -240,7 +256,7 @@ class Simulation_Grid:
     if constant_parameters is not None:
       for p_name in constant_parameters:
         param_values[p_name] = constant_parameters[p_name]
-    Generate_Modified_Rates_File(  out_file_name, param_values, max_delta_z=max_delta_z, input_file_name=input_file_name, input_UVB_rates=input_UVB_rates, extend_rates_z=extend_rates_z  )
+    Generate_Modified_Rates_File(  out_file_name, param_values, max_delta_z=max_delta_z, input_file_name=input_file_name, input_UVB_rates=input_UVB_rates, extend_rates_z=extend_rates_z, print_out=verbose  )
 
 ###############################################################################################    
   def Submit_Grid_Jobs( self, n_submit=None, partition=None ):
