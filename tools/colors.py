@@ -1,6 +1,6 @@
 from tools import system
 import pylab
-if system != 'Summit': import palettable
+# if system != 'Summit': import palettable
 
 # Colors
 bright_green = pylab.cm.viridis(.7)
