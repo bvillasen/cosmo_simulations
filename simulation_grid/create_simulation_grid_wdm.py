@@ -20,7 +20,10 @@ SG.Create_Grid_Directory_Structure()
 
 # Select the type of initial conditions: 'cdm' or 'wdm'
 # SG.Create_All_Parameter_Files( ics_type='cdm' )
-SG.Create_All_Parameter_Files( ics_type='wdm', wdm_mass=None, verbose=False )
+
+# wdm_mass = None
+wdm_mass = 1.0
+SG.Create_All_Parameter_Files( ics_type='wdm', wdm_mass=wdm_mass, verbose=False )
 
 # Create the files for the UVB rates
 # grackle_UVB_file_name =  base_dir + 'rates_uvb/data/CloudyData_UVB_Puchwein2019_cloudy.h5' 
@@ -37,7 +40,6 @@ create_directory( figures_dir )
 # Plot the generated UVB Rates
 rates_data = SG.Load_Grid_UVB_Rates()
 Plot_UVB_Rates( figures_dir, SG=SG )
-
 
 base_dir = root_dir + 'simulation_files/'
 sim_dirs = [ base_dir + file for file in os.listdir(base_dir) if file[0]=='S' ]
