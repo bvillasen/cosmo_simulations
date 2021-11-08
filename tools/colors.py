@@ -39,3 +39,7 @@ gray = palettable.cmocean.sequential.Gray_20_r
 
 light_orange = yellows[3]
 dark_green = haline[3]
+
+# sky_blue = blues[4]
+yellow = yellows[2]
+light_green = greens[5]

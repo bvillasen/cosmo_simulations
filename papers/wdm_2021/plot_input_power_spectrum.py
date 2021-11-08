@@ -3,14 +3,13 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 #Extend path to inclide local modules
-root_dir = os.path.dirname(os.getcwd())
+root_dir = os.path.dirname(os.path.dirname(os.getcwd()))
 sub_directories = [x[0] for x in os.walk(root_dir)]
 sys.path.extend(sub_directories)
 from tools import *
 from colors import *
 
 
-data_dir = '/raid/bruno/data/'
 input_dir_base = data_dir + 'cosmo_sims/ics/enzo/wdm/256_hydro_50Mpc_'
 output_dir = data_dir + 'cosmo_sims/ics/enzo/wdm/figures/'
 create_directory( output_dir )

@@ -70,4 +70,4 @@ ticks = {0:[0.3, 0.40, 0.5,  0.6], 1:[0.74, 0.76,  0.78, 0.8], 2:[ .15, 0.25, 0.
 # ticks = None
 
 limits = {0:( 0.26, 0.69 ), 1:( 0.73, 0.8 ), 2:( 0.1, 0.5 ), 3:( -0.05, 0.21 )}
-Plot_Corner( samples_all['param'], data_labels, corner_labels, output_dir, n_bins_1D=40, n_bins_2D=40, lower_mask_factor=500, multiple=True, show_label=True, HL_vals=params_HL, ticks=ticks, limits=limits, param_values=param_values )
+Plot_Corner( samples_all['param'], data_labels, corner_labels, output_dir, n_bins_1D=40, n_bins_2D=40, lower_mask_factor=500, multiple=True, show_label=True, HL_vals=params_HL, ticks=ticks, limits=limits, param_values=param_values, black_background=True )

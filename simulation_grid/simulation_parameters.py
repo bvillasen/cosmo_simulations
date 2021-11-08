@@ -21,12 +21,12 @@ n_points = 1024
 # grid_name = f'{n_points}_mwdm3p0_nsim64'
 # grid_name = f'{n_points}_mwdm4p0_nsim64'
 # grid_name = f'{n_points}_mwdm5p0_nsim64'
-# grid_name = f'{n_points}_mwdm6p0_nsim64'
 # grid_name = f'{n_points}_deltaZn0p6_nsim27'
 # grid_name = f'{n_points}_zreion5p4_nsim27'
 # grid_name = f'{n_points}_wdmgrid_nsim192'
 # grid_name = f'{n_points}_wdmgrid_nsim320'
-grid_name = f'{n_points}_wdmgrid_nsim100'
+# grid_name = f'{n_points}_wdmgrid_nsim100'
+grid_name = f'{n_points}_mwdm1p0_nsim20'
 
 
 if system == 'Lux':

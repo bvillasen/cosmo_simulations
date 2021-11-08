@@ -31,8 +31,10 @@ matplotlib.rcParams['font.sans-serif'] = "Helvetica"
 matplotlib.rcParams['font.family'] = "sans-serif"
 
 
+black_background = True
 
 output_dir = data_dir + f'cosmo_sims/figures/paper_thermal_history/'
+if black_background: output_dir += 'black_background/' 
 create_directory( output_dir )
 
 
@@ -96,7 +98,7 @@ for lower_lim in lower_lims:
   ax.arrow( lim_x, lim_y, dx, dy,  color=color_data_tau, head_width=0.01, head_length=0.08,  zorder=2   )
   
 
-ax.legend( loc=2, frameon=False, prop=prop)
+ax.legend( loc=2, frameon=False, fontsize=legend_font_size)
 ax.set_xlim(2.09, 3.19 )
 ax.set_ylim(0.5, 7 )
 

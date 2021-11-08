@@ -42,7 +42,7 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
 
   label_size = 18
   figure_text_size = 18
-  legend_font_size = 16
+  legend_font_size = 12
   tick_label_size_major = 15
   tick_label_size_minor = 13
   tick_size_major = 5
@@ -218,9 +218,9 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
     
   if black_background:
     text_color = 'white'
-    c_boss = 'C1'
-    c_irsic = 'C9'
-    c_boera = yellows[0]
+    c_boss = blues[5]
+    c_irsic = light_orange
+    # c_boera = yellows[0]
     blue = blues[4]
     color_line = blue
 
@@ -424,7 +424,9 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
         data_delta_power = data_walther[data_index]['delta_power']
         data_delta_power_error = data_walther[data_index]['delta_power_error']
         label_walther ='Walther et al. (2018)' 
-        d_walther = ax.errorbar( data_k, data_delta_power, yerr=data_delta_power_error, fmt='o', c=c_walther, label=label_walther, zorder=2, mfc='w')
+        mfc = 'w'
+        if black_background: mfc = 'k'
+        d_walther = ax.errorbar( data_k, data_delta_power, yerr=data_delta_power_error, fmt='o', c=c_walther,   label=label_walther, zorder=2, mfc=mfc)
 
 
     if plot_viel:
@@ -480,7 +482,7 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
       
     if add_legend:
       # leg = ax.legend( loc=legend_loc, frameon=False, fontsize=12)
-      leg = ax.legend(  loc=legend_loc, frameon=False, prop=prop    )
+      leg = ax.legend(  loc=legend_loc, frameon=False, fontsize=legend_font_size    )
       
       for text in leg.get_texts():
           plt.setp(text, color = text_color)
@@ -606,8 +608,8 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
     if indx_j == 0: ax.set_ylabel( r' $\Delta_F^2(k)$', fontsize=label_size, color= text_color )
     if indx_j == 0: ax.set_ylabel( r'$\pi^{\mathregular{-1}} \,k \,P\,(k)$', fontsize=label_size, color= text_color )
     # if indx_i == nrows-1: ax.set_xlabel( r'$ k   \,\,\,  [\mathrm{s}\,\mathrm{km}^{-1}] $',  fontsize=label_size, color= text_color )
-    if indx_i == nrows-1 : ax.set_xlabel( r'$k$  [s km$^{\mathrm{\mathregular{-1}}}$]', fontsize=label_size )
-    if scales == 'all' and indx_i == nrows-2 and indx_j==4: ax.set_xlabel( r'$k$  [s km$^{\mathrm{\mathregular{-1}}}$]', fontsize=label_size )
+    if indx_i == nrows-1 : ax.set_xlabel( r'$k$  [s km$^{\mathrm{\mathregular{-1}}}$]', fontsize=label_size, color=text_color )
+    if scales == 'all' and indx_i == nrows-2 and indx_j==4: ax.set_xlabel( r'$k$  [s km$^{\mathrm{\mathregular{-1}}}$]', fontsize=label_size, color=text_color )
 
     if black_background: 
       fig.patch.set_facecolor('black') 

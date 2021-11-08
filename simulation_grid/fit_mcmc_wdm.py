@@ -30,7 +30,8 @@ ps_data_dir = base_dir + '/lya_statistics/data/'
 
 # Fields to Fit using the mcmc
 fields_to_fit = 'P(k)+'
-data_ps_sets = [ 'Boera' ]
+# data_ps_sets = [ 'Boera' ]
+data_ps_sets = [ 'BoeraC' ]
 
 independent_redshift = True
 
@@ -43,7 +44,8 @@ fit_name = fit_name[:-1]
 data_label = data_label[:-3]
 print(f'Data Label: {data_label}')
 
-extra_label = 'sigmaResCosmo_'
+# extra_label = 'sigmaResCosmo_'
+extra_label = ''
 if extra_label is not None: fit_name += f'_{extra_label}'
 
 mcmc_dir = root_dir + 'fit_mcmc/'

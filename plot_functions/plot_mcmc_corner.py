@@ -14,7 +14,7 @@ from stats_functions import get_HPI_2D
 
 def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2D=30, 
     ticks=None, lower_mask_factor=50, multiple=False, system='Shamrock', show_label=True, 
-    HL_vals=None, show_best_fit=False, limits=None, param_values=None  ):
+    HL_vals=None, show_best_fit=False, limits=None, param_values=None, black_background=False  ):
   
   
 
@@ -63,12 +63,17 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
   hl_line_width = 2.5 
   hl_alpha = 0.8
   
-  black_background = False
+  marker_color = 'white'
+  
+  # black_background = False
   if black_background:
     color_map_0 = palettable.cmocean.sequential.Ice_20
     # color_map_0 = palettable.matplotlib.Inferno_20
     color_map_list = [ color_map_0, color_map_1, color_map_2, color_map_3, color_map_4 ]
     text_color = 'white'
+    tick_label_size = 18
+    label_size = 32
+    marker_color = 'black'
 
   sharex = 'col'
   if ticks is not None: sharex = 'none'
@@ -180,7 +185,7 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
             hl_val_y = HL_vals[i]
             # ax.axvline( x=hl_val_y, ls='--', lw=hl_line_width, color=hl_color, alpha=hl_alpha )
             # ax.axhline( y=hl_val_x, ls='--', lw=hl_line_width, color=hl_color, alpha=hl_alpha )
-            ax.scatter( (hl_val_y), (hl_val_x) ,c='white')
+            ax.scatter( (hl_val_y), (hl_val_x) ,c=marker_color)
           
         
         if add_data_label and show_label:
@@ -225,11 +230,12 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
         
         
   if param_values is not None:
+    offset_y_add = 0.02
     font_add = 4
     text_x = 0.46
-    text_y = 0.855
+    text_y = 0.855 + offset_y_add
     text = '95% Confidence Interval:'  
-    plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=22+font_add )
+    plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=22+font_add, color=text_color )
     
     p_name = 'scale_H'
     p_vals = param_values[p_name]
@@ -250,10 +256,10 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
     # text_1 = r'$\beta_{\mathrm{He}}=\mathregular{0.44}^{+\mathregular{0.06}}_{-\mathregular{0.07}}$'
     text_lines = [ r'${0}$'.format(text_0) , r'${0}$'.format(text_1) ]
     # text_x = 0.56
-    text_y = 0.82
+    text_y = 0.82 + offset_y_add
     offset_y = 0.05
     for text in text_lines:
-      plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=25+font_add )
+      plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=25+font_add, color=text_color )
       text_y -= offset_y
     
     p_name = 'deltaZ_H'
@@ -276,12 +282,14 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
     text_lines = [ r'${0}$'.format(text_0) , r'${0}$'.format(text_1) ]
     
     text_x = text_x + .2
-    text_y = 0.82
+    text_y = 0.82 + offset_y_add
     # offset_y = 0.04
     for text in text_lines:
-      plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=25+font_add )
+      plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=25+font_add, color=text_color )
       text_y -= offset_y
-    
+  
+  if black_background:
+    output_dir += 'black_background/'  
   
   figure_name = output_dir + 'corner.png'
   fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )

@@ -31,7 +31,7 @@ data_HI_fraction_McGreer_2015 = { 'z':np.array([5.6, 5.9]), 'xHI':np.array([.04,
 
 data_HI_fraction_Schroeder_2013 = { 'z':np.array([6.1]), 'xHI':np.array([.1]), 'sigma_h':np.array([.1]), 'sigma_l':np.array([.0]), 'label':'Schroeder et al. (2013)'  }
 
-data_HI_fraction_Yang_2020 = { 'z':np.array([7.5]), 'xHI':np.array([0.39]), 'sigma_h':np.array([.22]), 'sigma_l':np.array([.13]), 'label':'Yang et al. (2020)' } #Damping modeling of the quasar
+data_HI_fraction_Yang_2020 = { 'z':np.array([7.5]), 'xHI':np.array([0.39]), 'sigma_h':np.array([.22]), 'sigma_l':np.array([.13]), 'label':'Yang et al. (2020b)' } #Damping modeling of the quasar
 
 data_HI_fraction_Wang_2020 = { 'z':np.array([7.0]), 'xHI':np.array([0.70]), 'sigma_h':np.array([.20]), 'sigma_l':np.array([.23]), 'label':'Wang et al. (2020)' } #Damping modeling of the quasar
 

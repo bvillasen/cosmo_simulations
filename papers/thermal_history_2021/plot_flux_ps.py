@@ -8,9 +8,13 @@ sys.path.extend(subDirectories)
 from tools import *
 from mcmc_sampling_functions import Get_Highest_Likelihood_Params
 from plot_flux_power_spectrum_grid import Plot_Power_Spectrum_Grid
+from colors import *
+
+black_background = True
 
 ps_data_dir =  base_dir + 'lya_statistics/data/'
 output_dir = data_dir + f'cosmo_sims/figures/paper_thermal_history/'
+if black_background: output_dir += 'black_background/'
 create_directory( output_dir )
 root_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/'
 mcmc_dir = root_dir + 'fit_mcmc/'
@@ -103,12 +107,14 @@ for z_id in range(n_snapshots):
   # 
   # 
 
+color = 'k'
+if black_background: color = purples[1]
 
-ps_samples[0]['line_color'] = 'k'
+ps_samples[0]['line_color'] = color
 # ps_samples[1]['line_color'] = 'C1'
 
 data_labels = [ 'This Work', 'Original' ]
 # Plot_Power_Spectrum_Grid( output_dir, ps_samples=ps_samples, data_labels=data_labels, scales='large', ps_data_dir=ps_data_dir, show_middle=True )
 # Plot_Power_Spectrum_Grid( output_dir, ps_samples=ps_samples, data_labels=data_labels, scales='large_small', ps_data_dir=ps_data_dir, show_middle=True )
-Plot_Power_Spectrum_Grid( output_dir, ps_samples=ps_samples, data_labels=data_labels, scales='all', ps_data_dir=ps_data_dir, show_middle=False )
+Plot_Power_Spectrum_Grid( output_dir, ps_samples=ps_samples, data_labels=data_labels, scales='all', ps_data_dir=ps_data_dir, show_middle=False, black_background=black_background )
 

@@ -48,7 +48,7 @@ data_thermal_history_Boera_2019 = {
 
 
 data_thermal_history_Gaikwad_2020a = {
-'name': 'Gaikwad et al. (2020a)',
+'name': 'Gaikwad et al. (2020b)',
 'z': np.array([ 5.4, 5.6, 5.8 ]),
 'T0': np.array([ 11000, 10500, 12000 ]),
 'T0_sigma_plus':  np.array([ 1600, 2100, 2200 ]) ,
@@ -60,7 +60,7 @@ data_thermal_history_Gaikwad_2020a = {
 
 
 data_thermal_history_Gaikwad_2020b = {
-'name': 'Gaikwad et al. (2020b)',
+'name': 'Gaikwad et al. (2020a)',
 'z': np.array([ 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8 ]),
 'T0': np.array([ 9500, 11000, 12750, 13500, 14750, 14750, 12750, 11250, 10250, 9250  ]),
 'T0_sigma_plus':  np.array([ 1393, 1028, 1132, 1390, 1341, 1322, 1493, 1125, 1070, 876 ]) ,

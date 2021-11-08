@@ -19,9 +19,17 @@ if system == 'Eagle': prop = matplotlib.font_manager.FontProperties( fname=os.pa
 if system == 'xps': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"),      size=legendsize)
 if system == 'Lux':      prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/brvillas/fonts', "Helvetica.ttf"),        size=legendsize)
 if system == 'Shamrock': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=legendsize)
-
+if system == 'Mac_mini': prop = None
 
 figure_width = 8
+border_width = 1
+
+tick_size_major, tick_size_minor = 5, 3
+tick_label_size_major, tick_label_size_minor = 11, 10
+tick_width_major, tick_width_minor = 1.5, 1
+label_size = 12
+legend_size = 9
+
 
 # Font Sizes
 fontsize_label = 16

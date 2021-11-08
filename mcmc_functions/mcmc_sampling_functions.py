@@ -160,7 +160,7 @@ def get_mcmc_model( comparable_data, comparable_grid, fields_to_fit, sub_field, 
   if n_param == 4:
     model, params_mcmc =  mcmc_model_4D( comparable_data, comparable_grid, fields_to_fit, 'mean', SG )
   if n_param == 3:
-    model, params_mcmc =  mcmc_model_4D( comparable_data, comparable_grid, fields_to_fit, 'mean', SG )
+    model, params_mcmc =  mcmc_model_3D( comparable_data, comparable_grid, fields_to_fit, 'mean', SG )
   return model, params_mcmc  
 
 

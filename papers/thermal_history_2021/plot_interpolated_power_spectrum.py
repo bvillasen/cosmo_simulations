@@ -10,10 +10,13 @@ sys.path.extend(subDirectories)
 from tools import *
 from colors import *
 
+black_background = True
+
 
 base_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/'
 input_dir = base_dir + 'interpolated_observables/'
 output_dir = data_dir + 'cosmo_sims/figures/paper_thermal_history/'
+if black_background: output_dir += 'black_background/'
 create_directory( output_dir )
 
 in_file_name = input_dir + 'interpolated_observables.pkl'
@@ -66,7 +69,24 @@ linewidth = 2
 alpha_bar = 0.5
 
 
+text_color  = 'black'
 colors = [ sky_blue, ocean_green, ocean_blue, dark_purple  ] 
+
+blue = blues[4]
+yellow = yellows[1]
+orange = yellows[4]
+if black_background:  
+  text_color = 'white'
+  
+  # colors = [ yellow,  light_orange, light_green, blue  ] 
+  colors = [ yellow,  orange, light_green, sky_blue  ] 
+  border_width = 1.5
+  label_size = 22
+  legend_font_size = 18
+  tick_label_size_major = 16
+  tick_size_major = 6
+  tick_size_minor = 4
+  
 
 import matplotlib
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
@@ -114,6 +134,7 @@ for indx_i in range(nrows):
     leg = ax.legend(  loc=legend_loc, frameon=False, prop=prop, fontsize=legend_font_size    )
     for text in leg.get_texts():
       plt.setp(text, color = text_color)
+    # [ text.set_color(text_color) for text in leg.get_texts() ] 
       
     z = z_to_plot[indx_i]
     ax.text(0.87, 0.95, r'$z=${0:.1f}'.format(z), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
@@ -129,7 +150,7 @@ for indx_i in range(nrows):
 
     if indx_j == 0: ax.set_ylabel( r'$\pi^{\mathregular{-1}} \,k \,P\,(k)$', fontsize=label_size, color= text_color )
     # if indx_i == nrows-1: ax.set_xlabel( r'$ k   \,\,\,  [\mathrm{s}\,\mathrm{km}^{-1}] $',  fontsize=label_size, color= text_color )
-    ax.set_xlabel( r'$k$  [s km$^{\mathrm{\mathregular{-1}}}$]', fontsize=label_size )
+    ax.set_xlabel( r'$k$  [s km$^{\mathrm{\mathregular{-1}}}$]', fontsize=label_size, color=text_color )
 
     x_min, x_max = 2e-3, 1e-1
     if indx_i == 0: y_min, y_max = 1e-2, 1.01e-1
@@ -140,6 +161,11 @@ for indx_i in range(nrows):
 
   
     [sp.set_linewidth(border_width) for sp in ax.spines.values()]
+    
+    if black_background: 
+      fig.patch.set_facecolor('black') 
+      ax.set_facecolor('k')
+      [ spine.set_edgecolor(text_color) for spine in list(ax.spines.values()) ]
 
 
 

@@ -177,7 +177,7 @@ data_yang = np.array([
 z = data_yang[0]
 tau = data_yang[1]
 sigma_tau = data_yang[2]
-data_optical_depth_Yang_2020 = {'name':'Yang et al. (2020)', 'z':z, 'tau':tau, 'tau_sigma':sigma_tau  }
+data_optical_depth_Yang_2020 = {'name':'Yang et al. (2020a)', 'z':z, 'tau':tau, 'tau_sigma':sigma_tau  }
 
 
 data_optical_depth_Gaikward_2020 = np.array([

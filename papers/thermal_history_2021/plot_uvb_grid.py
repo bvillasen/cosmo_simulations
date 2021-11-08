@@ -10,7 +10,10 @@ from tools import *
 from uvb_functions import Extend_Rates_Redshift, Modify_Rates_From_Grackle_File, Load_Grackle_File, Copy_Grakle_UVB_Rates
 from colors import *
 
+black_background = True 
+
 output_dir = data_dir + 'cosmo_sims/figures/paper_thermal_history/'
+if black_background: output_dir += 'black_background/'
 create_directory( output_dir ) 
 
 
@@ -147,8 +150,10 @@ tick_width_minor = 1
 font_size = 21
 legend_font_size = 21
 
+text_color = 'black'
 
-
+if black_background:
+  text_color = 'white'
 
 ylabels = {0:r'HI photoionization rate  $\Gamma_{\mathrm{HI}}$   [s$^{\mathregular{-1}}$]',
            1:r'HeI photoionization rate  $\Gamma_{\mathrm{HeI}}$   [s$^\mathregular{-1}$]',
@@ -161,6 +166,11 @@ ylabels = {0:r'HI photoionization rate  $\Gamma_{\mathrm{HI}}$   [s$^{\mathregul
 
 color_line = 'C3'
 color_band = sky_blue
+color_lines = dark_blue
+
+if black_background:
+  color_line = light_orange
+  color_lines = sky_blue
 
 matplotlib.font_manager.findSystemFonts(fontpaths=['/home/bruno/Helvetica'], fontext='ttf')
 matplotlib.rcParams['font.sans-serif'] = "Helvetica"
@@ -205,7 +215,7 @@ for i in range(nrows):
 
     z_P19 = rates['UVBRates']['z'] 
     rate_P19 = rates['UVBRates'][root_key][key] * factor
-    ax.plot( z_P19, rate_P19, lw=2.5, color=color_line, label='Puchwein et al. (2019)', zorder=3 )
+    ax.plot( z_P19, rate_P19, lw=2.7, color=color_line, label='Puchwein et al. (2019)', zorder=3 )
 
     for rates_id in rates_grid:
       rates = rates_grid[rates_id] 
@@ -218,7 +228,7 @@ for i in range(nrows):
         else: z_grid = rates['UVBRates']['z_He']
       if rates_id == 0: label = "Simulation Grid"
       else: label = ''
-      ax.plot( z_grid, rate_grid, c=dark_blue, lw=0.8, label=label, zorder=2 )
+      ax.plot( z_grid, rate_grid, c=color_lines, lw=0.8, label=label, zorder=2 )
       # if rates_id in selected_ids:
         # ax.fill_between( z_grid, rate_grid, rate_grid*.8 , alpha=0.6, color=color_band, )
 
@@ -247,16 +257,22 @@ for i in range(nrows):
     ax.fill_between( z_0, max, min , alpha=0.5, color=color_band, zorder=1)
 
     ylabel = ylabels[id]
-    ax.set_ylabel( ylabel, fontsize=font_size  )
-    ax.set_xlabel( r'Redshift  $z$', fontsize=font_size+2 )     
+    ax.set_ylabel( ylabel, fontsize=font_size, color=text_color  )
+    ax.set_xlabel( r'Redshift  $z$', fontsize=font_size+2, color=text_color )     
     ax.set_yscale('log')
     ax.set_xlim( 0, 14 )
-    ax.tick_params(axis='both', which='major', labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in' )
-    ax.tick_params(axis='both', which='minor', labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in')
+    ax.tick_params(axis='both', which='major', labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in', color=text_color, labelcolor=text_color )
+    ax.tick_params(axis='both', which='minor', labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in', color=text_color, labelcolor=text_color )
 
-    ax.legend( loc=1, frameon=False, fontsize=font_size-3)
+    leg = ax.legend( loc=1, frameon=False, fontsize=font_size-3)
+    [ text.set_color(text_color) for text in leg.get_texts() ] 
     [sp.set_linewidth(border_width) for sp in ax.spines.values()]
+    
+    if black_background: 
+      fig.patch.set_facecolor('black') 
+      ax.set_facecolor('k')
+      [ spine.set_edgecolor(text_color) for spine in list(ax.spines.values()) ]
 
 figure_name = output_dir + 'uvb_rates_grid.png'
-fig.savefig( figure_name, bbox_inches='tight', dpi=300 )
+fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )

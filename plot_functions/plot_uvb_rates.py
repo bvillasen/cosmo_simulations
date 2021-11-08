@@ -13,19 +13,24 @@ from colors import *
 from data_photoionization_HI import data_photoionization_HI_becker_bolton_2013, data_photoionization_HI_dalosio_2018, data_photoionization_HI_gallego_2021, data_photoionization_HI_calverley_2011, data_photoionization_HI_wyithe_2011, data_photoionization_HI_gaikwad_2017
 
 
-def Plot_HI_Photoionization( output_dir, rates_data=None, figure_name='fig_phothoionization_HI.png', show_low_z = False ):
+def Plot_HI_Photoionization( output_dir, rates_data=None, figure_name='fig_phothoionization_HI.png', show_low_z = False,
+                             black_background=False ):
   
   if system == 'Lux':      prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/brvillas/fonts', "Helvetica.ttf"), size=12)
   if system == 'Shamrock': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=12)
   if system == 'Tornado':  prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=12)
 
   font_size =  16
+  legend_font_size = 14
   text_color = 'black'
   tick_size_major, tick_size_minor = 6, 4
   tick_label_size_major, tick_label_size_minor = 14, 12
   tick_width_major, tick_width_minor = 1.5, 1
-  
   border_width = 1.5
+  
+  if black_background:
+    text_color = 'white'
+  
     
   data_sets = [ data_photoionization_HI_becker_bolton_2013, data_photoionization_HI_dalosio_2018, data_photoionization_HI_calverley_2011, data_photoionization_HI_wyithe_2011 ]
   if show_low_z: data_sets.append( data_photoionization_HI_gaikwad_2017 )
@@ -93,11 +98,12 @@ def Plot_HI_Photoionization( output_dir, rates_data=None, figure_name='fig_photh
   # ax.text(0.8, 0.95, text, horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=font_size )
   legend_loc = 0
   if not show_low_z:legend_loc = 3
-  leg = ax.legend(  loc=legend_loc, frameon=False, prop=prop    )
+  leg = ax.legend(  loc=legend_loc, frameon=False, fontsize=legend_font_size   )
+  [ text.set_color(text_color) for text in leg.get_texts() ] 
 
   ax.set_yscale('log')
-  ax.set_xlabel( r'Redshift  $z$', fontsize=font_size)
-  ax.set_ylabel( r'$\Gamma_{\mathrm{HI}}$  [$\mathregular{10^{-12}}$  s$^{\mathregular{-1}}$]', fontsize=font_size)
+  ax.set_xlabel( r'Redshift  $z$', fontsize=font_size, color=text_color)
+  ax.set_ylabel( r'$\Gamma_{\mathrm{HI}}$  [$\mathregular{10^{-12}}$  s$^{\mathregular{-1}}$]', fontsize=font_size, color=text_color)
   # ax.set_ylabel( r'$\Gamma_{\mathrm{HI}}$  [$\,10^{-12}$ s$^{-1}$  ]', fontsize=font_size)
 
   ax.tick_params(axis='both', which='major', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major  )
@@ -109,6 +115,11 @@ def Plot_HI_Photoionization( output_dir, rates_data=None, figure_name='fig_photh
   ax.set_ylim(0.05, 2.)
   
   [sp.set_linewidth(border_width) for sp in ax.spines.values()]
+  
+  if black_background: 
+    fig.patch.set_facecolor('black') 
+    ax.set_facecolor('k')
+    [ spine.set_edgecolor(text_color) for spine in list(ax.spines.values()) ]
   
   # if show_low_z: figure_name += 'low_z'
   figure_name = output_dir + figure_name + '.png'

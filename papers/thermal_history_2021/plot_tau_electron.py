@@ -15,8 +15,11 @@ from constants_cosmo import Mpc
 from figure_functions import *
 from colors import *
 
+black_background = True
+
 input_dir = data_dir + 'tau_electron/'
 output_dir = data_dir + 'cosmo_sims/figures/paper_thermal_history/'
+if black_background: output_dir += 'black_background/'
 create_directory( output_dir )
 
 
@@ -44,19 +47,25 @@ label_size = 16
 border_width = 1.5
 
 text_color = 'black'
-
 color = 'k'
+
+if black_background:
+  text_color = 'white'
+  color = purples[1]
+
+
+lw = 2.5
 
 fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(8*ncols,6*nrows))
 
 tau = tau_HL['HL']
 tau_h = tau_range['max']
 tau_l = tau_range['min']
-ax.plot( z_integral, tau, lw=3, c=color, label='This Work (Best-Fit)', zorder=3 )
-ax.fill_between( z_integral, tau_h, tau_l, color=color, alpha=0.6, zorder=3 )
+ax.plot( z_integral, tau, lw=3, c=color, label='This Work (Best-Fit)', zorder=4 )
+ax.fill_between( z_integral, tau_h, tau_l, color=color, alpha=0.6, zorder=4 )
 
 tau = tau_sigmoid['HL']
-ax.plot( z_integral, tau, ls='--', lw=2, c='C0', label= r'Modified to Match HI $\tau_{\mathrm{eff}}$', zorder=3 )
+ax.plot( z_integral, tau, ls='--', lw=lw, c='C0', label= r'Modified to Match HI $\tau_{\mathrm{eff}}$', zorder=5 )
 
 tau_planck = 0.0561 
 sigma_tau = 0.0071
@@ -64,19 +73,22 @@ tau_planck_h = tau_planck + sigma_tau
 tau_planck_l = tau_planck - sigma_tau
 
 alpha = 0.4
-
-ax.plot( [0, 14], [tau_planck, tau_planck], lw=2, c=light_orange, label='Planck Collaboration (2020)', zorder=2 )
-ax.fill_between( [0, 14], [tau_planck_h, tau_planck_h], [tau_planck_l, tau_planck_l], color=light_orange, alpha=alpha, zorder=2 )
+c = dark_blue
+if black_background: c = light_blue
+ax.plot( [0, 14], [tau_planck, tau_planck], lw=2, c=c, zorder=3 )
+ax.fill_between( [0, 14], [tau_planck_h, tau_planck_h], [tau_planck_l, tau_planck_l], label='Planck Collaboration (2020)',  color=c, alpha=alpha, zorder=2 )
 
 tau = 0.0627
 tau_h = tau + 0.0050
-tau_l = tau - 0.0065
-c = 'C3'
-ax.plot( [0, 14], [tau, tau], lw=2, c=c, label='de Belsunce et al. (2021)', zorder=1 )
-ax.fill_between( [0, 14], [tau_h, tau_h], [tau_l, tau_l], color=c, alpha=alpha, zorder=1 )
+tau_l = tau - 0.0062
+c = light_orange
+c = ocean_green
+ax.plot( [0, 14], [tau, tau], lw=lw, c=c, zorder=3 )
+ax.fill_between( [0, 14], [tau_h, tau_h], [tau_l, tau_l],  label='de Belsunce et al. (2021)', color=c, alpha=alpha, zorder=1 )
 
 
-leg = ax.legend(loc=4, frameon=False, fontsize=22, prop=prop)
+leg = ax.legend(loc=4, frameon=False, fontsize=14, prop=prop)
+[ text.set_color(text_color) for text in leg.get_texts() ] 
 
 # ax.set_ylabel( r'$\tau_{\mathrm{CMB}}$', fontsize=font_size, color=text_color  )
 ax.set_ylabel( r'$\tau_{\mathrm{e}}$', fontsize=font_size, color=text_color  )
@@ -89,6 +101,11 @@ ax.tick_params(axis='both', which='minor', direction='in', color=text_color, lab
 
 ax.set_xlim(4, 14 )
 ax.set_ylim(0.02, 0.072 )
+
+if black_background: 
+  fig.patch.set_facecolor('black') 
+  ax.set_facecolor('k')
+  [ spine.set_edgecolor(text_color) for spine in list(ax.spines.values()) ]
 
 
 figure_name = output_dir + 'tau_electron.png'

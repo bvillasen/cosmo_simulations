@@ -16,9 +16,11 @@ from data_optical_depth_HeII import data_tau_HeII_Worserc_2019
 from interpolation_functions import smooth_line
 from interpolation_functions import interp_line
 
+black_background = True
 
 input_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/properties/'
 output_dir = data_dir + f'cosmo_sims/figures/paper_thermal_history/'
+if black_background: output_dir += 'black_background/' 
 create_directory( output_dir )
 
 
@@ -67,8 +69,15 @@ tick_width_minor = 1
 
 color_data_tau = light_orange
 sim_color = 'k'
-
 color_range = sky_blue
+color_lines = dark_blue
+
+text_color = 'black'
+
+if black_background:
+  text_color = 'white'
+  color_lines = sky_blue
+  sim_color = purples[1]
 
 if system == 'Lux':      prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/brvillas/fonts', "Helvetica.ttf"), size=legend_font_size)
 if system == 'Shamrock': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=legend_font_size)
@@ -89,7 +98,8 @@ fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(6*ncols,4*nrows))
 interpolate_lines = True
 n_samples_interp = 500
 
-color_lines = dark_blue
+
+
 
 tau_max, tau_min = np.ones(n_samples_interp), np.ones(n_samples_interp)
 tau_max *= -np.inf
@@ -108,7 +118,7 @@ for data_id in data_all:
   ax.plot( z, tau, c=color_lines, lw=0.2, alpha=0.8, zorder=0 )
 # 
 label = 'Simulation Grid' 
-lines = ax.plot( [0,1], [0,0], c=color_lines, lw=1, alpha=0.6, zorder=1, label=label )
+lines = ax.plot( [0,1], [0,0], c=color_lines, lw=1, alpha=1, zorder=1, label=label )
 
 label = ''
 ax.fill_between( z, tau_min, tau_max, color=color_range,  alpha=0.4, zorder=1, label=label )
@@ -151,17 +161,23 @@ ax.fill_between( z_vals, tau_h, tau_l, color=sim_color, alpha=0.6, zorder=3 )
 ax.set_xlim(2.0, 3.4 )
 ax.set_ylim(0.3, 7 )
 
-ax.set_xlabel( r'Redshift  $z$', fontsize=label_size )
-ax.set_ylabel( r'HeII $\tau_{\mathrm{eff}}$', fontsize=label_size )
+ax.set_xlabel( r'Redshift  $z$', fontsize=label_size, color=text_color )
+ax.set_ylabel( r'HeII $\tau_{\mathrm{eff}}$', fontsize=label_size, color=text_color )
 
-ax.tick_params(axis='both', which='major', labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in' )
-ax.tick_params(axis='both', which='minor', labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in')
+ax.tick_params(axis='both', which='major', labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in', color=text_color, labelcolor=text_color )
+ax.tick_params(axis='both', which='minor', labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in', color=text_color, labelcolor=text_color)
 # ax.set_xticks([ 2.2, 2.4, 2.6, 2.8, 3.0])
 
 handles, labels = plt.gca().get_legend_handles_labels()
 order = [0,1, 2]
-plt.legend([handles[idx] for idx in order],[labels[idx] for idx in order], frameon=False, prop=prop)
+leg = plt.legend([handles[idx] for idx in order],[labels[idx] for idx in order], frameon=False, fontsize=legend_font_size)
 # ax.legend( loc=2, frameon=False, prop=prop)
+[ text.set_color(text_color) for text in leg.get_texts() ] 
+
+if black_background: 
+  fig.patch.set_facecolor('black') 
+  ax.set_facecolor('k')
+  [ spine.set_edgecolor(text_color) for spine in list(ax.spines.values()) ]
 
 figure_name = output_dir + 'tau_He_grid_new.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )

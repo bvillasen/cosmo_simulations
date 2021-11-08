@@ -13,7 +13,9 @@ from data_optical_depth import *
 
 
 import matplotlib
-import matplotlib.font_manager
+matplotlib.font_manager.findSystemFonts(fontpaths=['/home/bruno/fonts/Helvetica'], fontext='ttf')
+matplotlib.rcParams['font.sans-serif'] = "Helvetica"
+matplotlib.rcParams['font.family'] = "sans-serif"
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
 matplotlib.rcParams['mathtext.rm'] = 'serif'
 

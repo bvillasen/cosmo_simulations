@@ -14,6 +14,9 @@ sys.path.extend(subDirectories)
 from tools import *
 from plot_uvb_rates import Plot_HI_Photoionization
 from uvb_functions import *
+from colors import *
+
+black_background = True
 
 data_boss_irsic_boera = 'fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_systematic'
 data_name = data_boss_irsic_boera
@@ -22,6 +25,7 @@ root_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/'
 input_dir = root_dir + f'fit_mcmc/{data_name}/observable_samples/' 
 
 output_dir = data_dir + 'cosmo_sims/figures/paper_thermal_history/'
+if black_background: output_dir += 'black_background/'
 create_directory( output_dir ) 
 
 param_vals = {}
@@ -33,7 +37,7 @@ param_vals[3] = [ 0.02, 0.17 ]
   
 param_combinations = Get_Parameters_Combination( param_vals )  
 
-grackle_file_name = base_dir + 'rates_uvb/CloudyData_UVB_Puchwein2019_cloudy.h5'
+grackle_file_name = base_dir + 'rates_uvb/data/CloudyData_UVB_Puchwein2019_cloudy.h5'
 rates_P19 = Load_Grackle_File( grackle_file_name )
 max_delta_z = 0.02
 
@@ -75,6 +79,10 @@ params_HL = { 'scale_He':0.45, 'scale_H':0.77, 'deltaZ_He':0.31, 'deltaZ_H':0.1 
 rates_data = Copy_Grakle_UVB_Rates( rates_P19 )
 rates_HL = Modify_Rates_From_Grackle_File( params_HL,  rates_data=rates_data, extrapolate='spline' )
 
+
+line_color = 'k'
+if black_background: line_color = purples[1]
+
 rates_data = {}
 ion_HI = rates_HL['UVBRates']['Chemistry']['k24']
 high = rates_range['Chemistry']['k24']['max']
@@ -83,6 +91,9 @@ indices = z > 6.2
 high[indices] *= 10
 z -= 0.05
 rates_data[0] = { 'z':z, 'photoionization':ion_HI, 'higher':high, 'lower':low, 'label':'This Work (Best-Fit)' }
+rates_data[0]['line_color'] = line_color
+rates_data[0]['ls'] = '-'
+rates_data[0]['lw'] = 3.5
 
 
 x0 = 0
@@ -93,17 +104,14 @@ rates_sigmoid = Modify_UVB_Rates_sigmoid( input_rates, z_range, alpha, x0 )
 
 ion_HI_sig = rates_sigmoid['UVBRates']['Chemistry']['k24']
 rates_data[1] = { 'z':z, 'photoionization':ion_HI_sig, 'label': r'Modified to Match HI $\tau_{\mathrm{eff}}$'  }
-
-rates_data[0]['line_color'] = 'k'
 rates_data[1]['line_color'] = 'C0'
-
-rates_data[0]['ls'] = '-'
 rates_data[1]['ls'] = '--'
-
-
-rates_data[0]['lw'] = 3.5
 rates_data[1]['lw'] = 2.5
 
 
 
-Plot_HI_Photoionization( output_dir, rates_data=rates_data, figure_name='Gamma_HI_new', show_low_z=True )
+
+
+
+
+Plot_HI_Photoionization( output_dir, rates_data=rates_data, figure_name='Gamma_HI', show_low_z=True, black_background=black_background )

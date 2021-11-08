@@ -10,9 +10,11 @@ from tools import *
 from uvb_functions import Extend_Rates_Redshift, Modify_Rates_From_Grackle_File, Load_Grackle_File, Copy_Grakle_UVB_Rates, Modify_UVB_Rates_sigmoid
 from colors import *
 
-output_dir = data_dir + 'cosmo_sims/figures/paper_thermal_history/'
-create_directory( output_dir ) 
+black_background = True
 
+output_dir = data_dir + 'cosmo_sims/figures/paper_thermal_history/'
+if black_background: output_dir += 'black_background/'
+create_directory( output_dir ) 
 
 
 param_vals = {}
@@ -67,7 +69,7 @@ param_vals[3] = [ 0.02, 0.17 ]
   
 param_combinations = Get_Parameters_Combination( param_vals )  
 
-grackle_file_name = base_dir + 'rates_uvb/CloudyData_UVB_Puchwein2019_cloudy.h5'
+grackle_file_name = base_dir + 'rates_uvb/data/CloudyData_UVB_Puchwein2019_cloudy.h5'
 rates_P19 = Load_Grackle_File( grackle_file_name )
 max_delta_z = 0.02
 rates_P19 = Extend_Rates_Redshift( max_delta_z, rates_P19 )
@@ -146,8 +148,7 @@ ylabels = {0:r'HI photoionization rate  $\Gamma_{\mathrm{HI}}$   [s$^{\mathregul
 }
 
 
-color_line = dark_purple
-color_band = sky_blue
+
 
 matplotlib.font_manager.findSystemFonts(fontpaths=['/home/bruno/Helvetica'], fontext='ttf')
 matplotlib.rcParams['font.sans-serif'] = "Helvetica"
@@ -166,12 +167,26 @@ plt.subplots_adjust( hspace = 0.0, wspace=0.16)
 
 border_width = 2
 
+text_color = 'black'
+color_modified = 'C0'
+color_P19  = 'C3'
+color_HM12 = 'C9'
+color_fit = 'black'
+
+if black_background:
+  text_color = 'white'
+  color_lines = sky_blue
+  sim_color = purples[1]
+  color_modified = 'C0'
+  color_P19  = orange
+  color_HM12 = purple
+  color_fit = purples[1]
+
 keys_ion  = [ 'k24', 'k26', 'k25' ]
 keys_heat = [ 'piHI', 'piHeI', 'piHeII' ]
 
-color_fit = 'black'
 
-grackle_file_name = base_dir + 'rates_uvb/CloudyData_UVB_Puchwein2019_cloudy.h5'
+grackle_file_name = base_dir + 'rates_uvb/data/CloudyData_UVB_Puchwein2019_cloudy.h5'
 rates_P19 = Load_Grackle_File( grackle_file_name )
 # max_delta_z = 0.01
 # rates_P19 = Extend_Rates_Redshift( max_delta_z, rates_P19 )
@@ -214,33 +229,41 @@ for i in range(nrows):
       min[174] *= 0.9
     label = 'This Work (Best-Fit)'
     ax.plot( z_fit, fit, color=color_fit, label=label, lw=2  )
-    ax.fill_between( z, max, min,  alpha=0.4, color=color_fit , lw=3.0,  zorder=2)
+    ax.fill_between( z, max, min,  alpha=0.6, color=color_fit , lw=3.0,  zorder=2)
     
     z_sig = rates_sigmoid['UVBRates']['z']
     rates_sig = rates_sigmoid['UVBRates'][root_key][key]
     rates_sig[173] *= 1.3  
-    ax.plot( z_sig, rates_sig, '--', c='C0', lw=2.5, label= r'Modified to Match HI $\tau_{\mathrm{eff}}$', zorder=3)
+    # ax.plot( z_sig, rates_sig, '--', c=color_modified, lw=2.5, label= r'Modified to Match HI $\tau_{\mathrm{eff}}$', zorder=3)
     
     z_P19 = rates_P19['UVBRates']['z']
     rate_P19 = rates_P19['UVBRates'][root_key][key]
-    lw = 1.8
-    ax.plot( z_P19, rate_P19, c='C3', lw=lw, label= r'Puchwein et al. (2019)', zorder=1)
+    lw = 2.0
+    ax.plot( z_P19, rate_P19, c=color_P19, lw=lw, label= r'Puchwein et al. (2019)', zorder=3)
     
     z_HM12 = rates_HM12['UVBRates']['z']
     rate_HM12 = rates_HM12['UVBRates'][root_key][key]
-    ax.plot( z_HM12, rate_HM12, c='C9', lw=lw, label= r'Haardt & Madau (2012)', zorder=1)
+    ax.plot( z_HM12, rate_HM12, c=color_HM12, lw=lw, label= r'Haardt & Madau (2012)', zorder=3)
     
     
     ylabel = ylabels[id]
-    ax.set_ylabel( ylabel, fontsize=font_size  )
-    ax.set_xlabel( r'Redshift  $z$', fontsize=font_size+2 )     
+    ax.set_ylabel( ylabel, fontsize=font_size, color=text_color  )
+    ax.set_xlabel( r'Redshift  $z$', fontsize=font_size+2, color=text_color )     
     ax.set_yscale('log')
     ax.set_xlim( 0, 14 )
-    ax.tick_params(axis='both', which='major', labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in' )
-    ax.tick_params(axis='both', which='minor', labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in')
+    ax.tick_params(axis='both', which='major', labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in', color=text_color, labelcolor=text_color )
+    ax.tick_params(axis='both', which='minor', labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in', color=text_color, labelcolor=text_color )
 
-    ax.legend( loc=3, frameon=False, fontsize=font_size-3)
+    leg = ax.legend( loc=3, frameon=False, fontsize=font_size-3)
+    [ text.set_color(text_color) for text in leg.get_texts() ] 
+    
     [sp.set_linewidth(border_width) for sp in ax.spines.values()]
+    
+    if black_background: 
+      fig.patch.set_facecolor('black') 
+      ax.set_facecolor('k')
+      [ spine.set_edgecolor(text_color) for spine in list(ax.spines.values()) ]
+
 
 figure_name = output_dir + 'uvb_rates_result.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300 )

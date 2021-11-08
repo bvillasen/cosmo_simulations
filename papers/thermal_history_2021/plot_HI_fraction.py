@@ -15,6 +15,8 @@ from figure_functions import *
 from colors import *
 from data_HI_fraction import *
 
+black_background = True
+
 legendsize = 11.5
 if system == 'Tornado': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"),  size=legendsize)
 if system == 'Eagle': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"),    size=legendsize)
@@ -24,6 +26,7 @@ if system == 'Shamrock': prop = matplotlib.font_manager.FontProperties( fname=os
 
 input_dir = data_dir + 'tau_electron/'
 output_dir = data_dir + 'cosmo_sims/figures/paper_thermal_history/'
+if black_background: output_dir += 'black_background/'
 create_directory( output_dir )
 
 
@@ -111,8 +114,12 @@ border_width = 1.5
 
 
 text_color = 'black'
-
 color = 'k'
+
+if black_background:
+  text_color =  'white'
+  color =  purples[1]
+
 
 fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(8*ncols,6*nrows))
 
@@ -127,7 +134,7 @@ ax0 = plt.subplot(gs[0:split_y ,0])
 ax1 = plt.subplot(gs[split_y:,0])
 # leg = ax.legend(loc=4, frameon=False, fontsize=22, prop=prop)
 
-c = 'k'
+c = color
 alpha = 0.5
 lw = 3
 ax0.plot( z, xHI, lw=lw, c=c, zorder=1, label='This Work (Best-Fit)' )
@@ -207,7 +214,15 @@ ax0.yaxis.set_label_coords(-0.07,0.3)
 
 leg = ax1.legend(loc=4, frameon=False, fontsize=22, prop=prop, ncol=2 )
 # leg = ax0.legend(loc=4, frameon=False, fontsize=22, prop=prop, ncol=1 )
+[ text.set_color(text_color) for text in leg.get_texts() ] 
 
+
+if black_background: 
+  fig.patch.set_facecolor('black') 
+  ax0.set_facecolor('k')
+  ax1.set_facecolor('k')
+  [ spine.set_edgecolor(text_color) for spine in list(ax0.spines.values()) ]
+  [ spine.set_edgecolor(text_color) for spine in list(ax1.spines.values()) ]
 
 figure_name = output_dir + 'HI_fraction.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )

@@ -83,7 +83,7 @@ def Get_Data_Grid_thermal( fields, SG, sim_ids=None ):
   return data_grid
 ####################################################################################################################
   
-def Get_Data_Grid_Composite( fields_list,  SG, z_vals=None, load_normalized_ps=False, sim_ids=None, load_uvb_rates=False, z_fields_min=None ):
+def Get_Data_Grid_Composite( fields_list,  SG, z_vals=None, load_normalized_ps=False, sim_ids=None, load_uvb_rates=False, z_fields_min=None, files_to_load=None ):
   # fields_list = fields.split('+')
   data_grid_all = {}
   for field in fields_list:
@@ -210,7 +210,7 @@ def Load_Power_Spectum_Data( self, sim_id, indices, FPS_correction=None ):
     
 ####################################################################################################################
 
-def Load_Sim_Analysis_Data( self, sim_id, load_pd_fit=True, mcmc_fit_dir=None, load_thermal=False ):
+def Load_Sim_Analysis_Data( self, sim_id, load_pd_fit=True, mcmc_fit_dir=None, load_thermal=False, files_to_load=None ):
   str = f' Loading Simulation Analysis: {sim_id}' 
   print_line_flush( str )
   
@@ -218,6 +218,7 @@ def Load_Sim_Analysis_Data( self, sim_id, load_pd_fit=True, mcmc_fit_dir=None, l
   files = [f for f in listdir(input_dir) if (isfile(join(input_dir, f)) and ( f.find('_analysis') > 0) ) ]
   indices = [ '{0:03}'.format( int(file.split('_')[0]) ) for file in files ]
   indices.sort()
+  if files_to_load is not None: indices = files_to_load
   n_files = len( files )
   sim_data = {}
   
@@ -289,14 +290,14 @@ def Load_Sim_Analysis_Data( self, sim_id, load_pd_fit=True, mcmc_fit_dir=None, l
 
 ####################################################################################################################
 
-def Load_Analysis_Data( self, sim_ids=None, load_pd_fit=True, mcmc_fit_dir=None, load_thermal=False, FPS_correction=None  ):
+def Load_Analysis_Data( self, sim_ids=None, load_pd_fit=True, mcmc_fit_dir=None, load_thermal=False, FPS_correction=None, files_to_load=None  ):
   if sim_ids == None:  
     sim_ids = self.Grid.keys()
     indx_0 = list( sim_ids )[0]
   else: indx_0 = sim_ids[0]
   
   for sim_id in sim_ids:
-    self.Load_Simulation_Analysis_Data( sim_id, load_pd_fit=load_pd_fit, mcmc_fit_dir=mcmc_fit_dir, load_thermal=load_thermal  )
+    self.Load_Simulation_Analysis_Data( sim_id, load_pd_fit=load_pd_fit, mcmc_fit_dir=mcmc_fit_dir, load_thermal=load_thermal, files_to_load=files_to_load  )
   
   indices = self.Grid[indx_0]['analysis']['ps_available_indices']
   available_indices = []

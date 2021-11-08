@@ -12,12 +12,21 @@ if not system:
   exit(-1)
 # print( f'System: {system}')
 
-if system == 'Eagle':    data_dir = '/home/bruno/Desktop/data/'
+if system == 'Eagle':    data_dir = '/media/bruno/ssd_bruno/data/'
+# if system == 'Eagle':    data_dir = '/home/bruno/Desktop/data/'
 if system == 'Tornado':  data_dir = '/home/bruno/Desktop/ssd_0/data/'
 if system == 'Shamrock': data_dir = '/raid/bruno/data/'
 if system == 'Lux':      data_dir = '/data/groups/comp-astro/bruno/'
 if system == 'Summit':   data_dir = '/gpfs/alpine/ast169/scratch/bvilasen/'
 if system == 'xps':      data_dir = '/home/bruno/Desktop/data/'
+if system == 'Mac_mini': data_dir = '/Users/bruno/Desktop/data/'
+
+if system == 'Tornado':  home_dir = '/home/bruno/'
+if system == 'Shamrock': home_dir = '/home/bruno/'
+if system == 'xps':      home_dir = '/home/bruno/'
+if system == 'Mac_mini': home_dir = '/Users/bruno/'
+
+
 
 
 def Combine_List_Pair( a, b ):
