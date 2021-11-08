@@ -23,7 +23,8 @@ SG.Create_Grid_Directory_Structure()
 
 # wdm_mass = None
 wdm_mass = 1.0
-SG.Create_All_Parameter_Files( ics_type='wdm', wdm_mass=wdm_mass, verbose=False )
+z_start = 100
+SG.Create_All_Parameter_Files( ics_type='wdm', wdm_mass=wdm_mass, verbose=False, z_start=z_start )
 
 # Create the files for the UVB rates
 # grackle_UVB_file_name =  base_dir + 'rates_uvb/data/CloudyData_UVB_Puchwein2019_cloudy.h5' 

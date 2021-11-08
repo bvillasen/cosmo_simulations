@@ -32,24 +32,26 @@ grid_name = f'{n_points}_mwdm1p0_nsim20'
 if system == 'Lux':
   root_dir   = f'/data/groups/comp-astro/bruno/cosmo_sims/sim_grid/{grid_name}/'
   ics_dir    = f'/data/groups/comp-astro/bruno/cosmo_sims/sim_grid/ics/'
-  cholla_dir = '/home/brvillas/cholla/'    
+  cholla_dir = '/home/brvillas/cholla/'
+  n_gpus     = 32    
 
 if system == 'Shamrock':
   root_dir   = f'/raid/bruno/data/cosmo_sims/sim_grid/{grid_name}/'
   ics_dir    = f'/raid/bruno/data/cosmo_sims/sim_grid/ics/'
   cholla_dir = '/home/bruno/cholla/'    
-
+  n_gpus     = 8
+  
 if system == 'Summit':
   root_dir   = f'/gpfs/alpine/ast169/scratch/bvilasen/cosmo_sims/sim_grid/{grid_name}/'
   ics_dir    = f'/gpfs/alpine/ast169/scratch/bvilasen/cosmo_sims/ics/'
   cholla_dir = f'/ccs/home/bvilasen/cholla/'  
-
+  n_gpus     = 128 
 
 if system == 'Tornado':
   root_dir   = f'/home/bruno/Desktop/ssd_0/data/cosmo_sims/sim_grid/{grid_name}/'
   ics_dir    = f'/home/bruno/Desktop/ssd_0/data/cosmo_sims/sim_grid/ics/'
   cholla_dir = '/home/bruno/cholla/'    
-
+  n_gpus     = 1
 
 
 figures_dir = root_dir + 'figures/'
@@ -87,16 +89,16 @@ if n_points == 2048: sim_params['lya_skewers_stride'] = 32
 sim_params['lya_Pk_d_log_k'] = 0.1
 sim_params['init'] = 'Read_Grid'
 sim_params['nfile'] = 1
-if system == 'Lux':
-  if n_points == 512:  sim_params['indir'] = ics_dir + f'512_50Mpc/ics_8_z20/'
-  if n_points == 1024: sim_params['indir'] = ics_dir + f'1024_50Mpc/ics_16_z20/'
-if system == 'Summit':
-  # if n_points == 1024: sim_params['indir'] = ics_dir + f'1024_50Mpc/ics_128_z16/'
-  if n_points == 1024: 
-    # sim_params['indir'] = ics_dir + f'1024_50Mpc/ics_128_z100/'
-    sim_params['indir'] = ics_dir + f'1024_50Mpc/ics_128_z16/'
-    sim_params['nfile'] = 1
-if system == 'Shamrock': sim_params['indir'] = ics_dir + f'1024_50Mpc/ics_128_z16/'
+# if system == 'Lux':
+#   if n_points == 512:  sim_params['indir'] = ics_dir + f'512_50Mpc/ics_8_z20/'
+#   if n_points == 1024: sim_params['indir'] = ics_dir + f'1024_50Mpc/ics_16_z20/'
+# if system == 'Summit':
+#   # if n_points == 1024: sim_params['indir'] = ics_dir + f'1024_50Mpc/ics_128_z16/'
+#   if n_points == 1024: 
+#     # sim_params['indir'] = ics_dir + f'1024_50Mpc/ics_128_z100/'
+#     sim_params['indir'] = ics_dir + f'1024_50Mpc/ics_128_z16/'
+#     sim_params['nfile'] = 1
+# if system == 'Shamrock': sim_params['indir'] = ics_dir + f'1024_50Mpc/ics_128_z16/'
 # if system == 'Lux':    sim_params['scale_outputs_file'] = cholla_dir + 'scale_output_files/outputs_single_output_z2.txt'
 # if system == 'Summit': sim_params['scale_outputs_file'] = cholla_dir + 'scale_output_files/outputs_ps_comparison_n6.txt'
 # if system == 'Summit': sim_params['scale_outputs_file'] = cholla_dir + 'scale_output_files/outputs_single_output_z1.txt'
@@ -141,12 +143,18 @@ if system == 'Summit': job_params['command'] = cholla_dir + 'cholla.full_output'
 job_params['command_params'] = 'param.txt'
 
 
-
-def Get_ICs_dir_wdm( wdm_mass, sim_params ):
+def Get_ICs_dir( sim_params, z_start ):
   global ics_dir, Lbox
   n_points = sim_params['nx']
   L_Mpc = int( Lbox / 1000 )
-  input_dir = ics_dir + f'wdm/{n_points}_{L_Mpc}Mpc_wdm_m{wdm_mass}kev'
+  input_dir = ics_dir + f'{n_points}_{L_Mpc}Mpc/ics_{n_gpus}_z{int(z_start)}/'
+  return input_dir
+
+def Get_ICs_dir_wdm( wdm_mass, sim_params, z_start ):
+  global ics_dir, Lbox
+  n_points = sim_params['nx']
+  L_Mpc = int( Lbox / 1000 )
+  input_dir = ics_dir + f'wdm/{n_points}_{L_Mpc}Mpc_wdm_m{wdm_mass}kev/ics_{n_gpus}_z{int(z_start)}/'
   return input_dir
   
 
