@@ -166,15 +166,15 @@ class Simulation_Grid:
     return sim_dir    
         
 ###############################################################################################    
-  def Create_All_Parameter_Files( self, save_file=True, ics_type='cdm', wdm_mass=None, verbose=False, z_start=16 ):
+  def Create_All_Parameter_Files( self, save_file=True, ics_type='cdm', wdm_mass=None, verbose=False, z_start=16, n_file_start=1 ):
     print("Creating Parameter Files")
     for sim_id in self.Grid.keys():
-      self.Create_Simulation_Parameter_File( sim_id, save_file=save_file, ics_type=ics_type, wdm_mass=wdm_mass, verbose=verbose, z_start=z_start )
+      self.Create_Simulation_Parameter_File( sim_id, save_file=save_file, ics_type=ics_type, wdm_mass=wdm_mass, verbose=verbose, z_start=z_start, n_file_start=n_file_start )
       self.Write_Grid_Parameters( sim_id, verbose=verbose )
     print("Parameter Files Created Successfully ")
     
 ###############################################################################################    
-  def Create_Simulation_Parameter_File( self, sim_id, save_file=True, ics_type='cdm', wdm_mass=None, verbose=False, z_start=16  ):
+  def Create_Simulation_Parameter_File( self, sim_id, save_file=True, ics_type='cdm', wdm_mass=None, verbose=False, z_start=16, n_file_start=1  ):
     sim_dir = self.Get_Simulation_Directory( sim_id )
     sim_params = self.simulation_parameters.copy()
     sim_params['UVB_rates_file'] = sim_dir + 'UVB_rates.h5'
@@ -183,12 +183,6 @@ class Simulation_Grid:
     if root_dir[-1] != '/': root_dir += '/'
     simulation = self.Grid[sim_id]
     name = self.Grid[sim_id]['key'] 
-    sim_params['outdir']      = self.snapshots_dir + name + '/'
-    sim_params['analysisdir'] = self.analysis_dir  + name + '/'
-    sim_params['skewersdir']  = self.skewers_dir   + name + '/'
-    n_points = sim_params['nx']
-    Lbox = sim_params['xlen']
-    Lbox_Mpc = int( Lbox / 1000 )
     if ics_type == 'cdm': 
       from simulation_parameters import Get_ICs_dir
       # if ics_type == 'cdm': input_dir = sim_params['ics_dir'] + f'{n_points}_{Lbox_Mpc}Mpc/ics_{n_gpus}_z{int(z_start)}/'
@@ -197,7 +191,11 @@ class Simulation_Grid:
       from simulation_parameters import Get_ICs_dir_wdm
       if wdm_mass is None:  wdm_mass = simulation['parameters']['wdm_mass']
       input_dir = Get_ICs_dir_wdm( wdm_mass, sim_params, z_start )
+    sim_params['nfile'] = n_file_start
     sim_params['indir'] = input_dir
+    sim_params['outdir']      = self.snapshots_dir + name + '/'
+    sim_params['analysisdir'] = self.analysis_dir  + name + '/'
+    sim_params['skewersdir']  = self.skewers_dir   + name + '/'
         
     if save_file:
       file_name = sim_dir + 'param.txt'

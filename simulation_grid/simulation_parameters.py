@@ -88,7 +88,7 @@ if n_points == 1024: sim_params['lya_skewers_stride'] = 16
 if n_points == 2048: sim_params['lya_skewers_stride'] = 32
 sim_params['lya_Pk_d_log_k'] = 0.1
 sim_params['init'] = 'Read_Grid'
-sim_params['nfile'] = 1
+# sim_params['nfile'] = 1
 # if system == 'Lux':
 #   if n_points == 512:  sim_params['indir'] = ics_dir + f'512_50Mpc/ics_8_z20/'
 #   if n_points == 1024: sim_params['indir'] = ics_dir + f'1024_50Mpc/ics_16_z20/'
