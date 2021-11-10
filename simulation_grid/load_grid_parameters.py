@@ -19,6 +19,7 @@ elif grid_name == '1024_wdmgrid_nsim192':   from parameters_wdmgrid_nsim192 impo
 elif grid_name == '1024_wdmgrid_nsim320':   from parameters_wdmgrid_nsim320 import param_wdm_UVB_Rates as Grid_Parameters
 elif grid_name == '1024_wdmgrid_nsim100':   from parameters_wdmgrid_nsim100 import param_wdm_UVB_Rates as Grid_Parameters
 elif grid_name == '1024_mwdm1p0_nsim20':    from parameters_hydrogen_rates  import param_UVB_Rates as Grid_Parameters
+elif grid_name == '1024_mwdm8p0_nsim20':    from parameters_hydrogen_rates  import param_UVB_Rates as Grid_Parameters
 else:
   print( f'Unknokwn grid name: {grid_name}' )
   exit(-1)
