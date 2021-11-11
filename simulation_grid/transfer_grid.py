@@ -20,8 +20,8 @@ wdm_mass = 6.0
 # dst_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim320/'
 # constant_params = { 'wdm_mass': wdm_mass }
 
-src_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim320/'
-dst_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim100/'
+src_grid_dir = sim_grid_dir + '1024_mwdm1p0_nsim20/'
+dst_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim120/'
 constant_params = None
 
 src_params = Get_Grid_Parameter_Values( src_grid_dir, constant_params=constant_params )
