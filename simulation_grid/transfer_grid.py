@@ -20,7 +20,7 @@ wdm_mass = 1.0
 # dst_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim320/'
 
 # src_grid_dir = sim_grid_dir + '1024_mwdm1p0_nsim20/'
-src_grid_dir = sim_grid_dir + '1024_mwdm1p0_nsim100/'
+src_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim100/'
 dst_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim120/'
 
 # constant_params = { 'wdm_mass': wdm_mass }
