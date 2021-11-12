@@ -30,8 +30,8 @@ ps_data_dir = base_dir + '/lya_statistics/data/'
 
 # Fields to Fit using the mcmc
 fields_to_fit = 'P(k)+'
-# data_ps_sets = [ 'Boera' ]
-data_ps_sets = [ 'BoeraC' ]
+data_ps_sets = [ 'Boera' ]
+# data_ps_sets = [ 'BoeraC' ]
 
 independent_redshift = True
 
@@ -112,7 +112,7 @@ for p_id in params.keys():
   p_stats = stats[p_name]
   params[p_id]['mean'] = p_stats['mean']
   params[p_id]['sigma'] = p_stats['standard deviation']
-Plot_MCMC_Stats( stats, MDL, params_mcmc,  stats_file, output_dir, plot_corner=False )
+Plot_MCMC_Stats( stats, MDL, params_mcmc,  stats_file, output_dir, plot_corner=False, plot_model=False )
 param_samples = Write_MCMC_Results( stats, MDL, params_mcmc,  stats_file, samples_file,  output_dir  )
 
 

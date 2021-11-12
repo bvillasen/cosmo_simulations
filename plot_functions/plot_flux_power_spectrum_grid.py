@@ -300,12 +300,12 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
         lw = 1.5
         if 'lw' in data_sim: ls = data_sim['lw']
         ax.plot( k, delta, linewidth=lw, label=label, zorder=1, color=line_color, ls=ls  )        
-        if sim_id == 0:
-          high = data['higher'] 
-          low  = data['lower'] 
-          high *= 1.03
-          low *= 0.97
-          ax.fill_between( k, high, low, color=line_color, alpha=0.4 )
+        # if sim_id == 0:
+        high = data['higher'] 
+        low  = data['lower'] 
+        # high *= 1.03
+        # low *= 0.97
+        ax.fill_between( k, high, low, color=line_color, alpha=0.4 )
 
     if sim_data_sets:
       for sim_data in sim_data_sets:

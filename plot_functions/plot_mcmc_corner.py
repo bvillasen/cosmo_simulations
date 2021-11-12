@@ -14,7 +14,8 @@ from stats_functions import get_HPI_2D
 
 def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2D=30, 
     ticks=None, lower_mask_factor=50, multiple=False, system='Shamrock', show_label=True, 
-    HL_vals=None, show_best_fit=False, limits=None, param_values=None, black_background=False  ):
+    HL_vals=None, show_best_fit=False, limits=None, param_values=None, black_background=False,
+    bins=None,  ):
   
   
 
@@ -133,7 +134,12 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
         if plot_type == '1D':
           name  = samples[j]['name']
           trace = samples[j]['trace']
-          hist, bin_edges = np.histogram( trace, bins=n_bins_1D ) 
+          bins_1D = n_bins_1D 
+          if bins is not None and bins[j] is not None: 
+            bin_min, bin_max, n_bin = bins[j]['min'], bins[j]['max'], bins[j]['n'] 
+            bins_1D = np.linspace( bin_min, bin_max, n_bin )
+            print( f"Bins 1D: {bins_1D}" )
+          hist, bin_edges = np.histogram( trace, bins=bins_1D ) 
           # hist = hist / hist.sum()
           bin_centers = ( bin_edges[:-1] + bin_edges[1:] ) / 2.
           bin_width = bin_centers[0] - bin_centers[1]  

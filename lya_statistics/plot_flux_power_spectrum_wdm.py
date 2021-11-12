@@ -19,9 +19,10 @@ from plot_flux_power_spectrum_grid import Plot_Power_Spectrum_Grid
 
 # root_dir = data_dir + 'cosmo_sims/sim_grid/1024_np4_nsim81/fit_mcmc/fit_results_P(k)+_BoeraC/'
 # root_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim192/fit_mcmc/fit_results_P(k)+_BoeraC/'
-root_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim192/fit_mcmc/fit_results_P(k)+_Boera/'
+# root_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim192/fit_mcmc/fit_results_P(k)+_Boera/'
 # root_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim192/fit_mcmc/fit_results_P(k)+_Viel/'
-
+root_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim120/fit_mcmc/fit_results_P(k)+_Boera_/'
+ 
 input_dir = root_dir + 'observable_samples/'
 
 output_dir = root_dir + 'figures/'
@@ -58,10 +59,11 @@ label = ''
  
 data_all = {}
 data_all[0] = data_sim
-data_all[0]['line_color'] = 'C0'
+data_all[0]['line_color'] = 'k'
 # data_all[0]['label'] = r'WDM $m$=2 keV Joint Fit'
 data_all[0]['label'] = r'{0} Joint Fit'.format(label)
 
+plot_FPS_corrected = False
 
 # z_vals = [ 4.2, 4.6, 5.0, 5.4 ] 
 z_vals = [ 4.2, 4.6, 5.0, ] 
@@ -69,6 +71,7 @@ data_sim = {}
 for z_indx, z_val in enumerate(z_vals):
   input_dir = root_dir + f'fit_redshift/redshift_{z_indx}/observable_samples/'
   file_name = input_dir + 'samples_power_spectrum.pkl'
+  if plot_FPS_corrected: file_name = input_dir + 'samples_power_spectrum_corrected.pkl'
   data = Load_Pickle_Directory( file_name )
   data_sim[z_indx] = data[z_indx]
 data_sim['z_vals'] = np.array([ data_sim[i]['z'] for i in data_sim ])
@@ -80,5 +83,7 @@ data_all[1]['line_color'] = 'C1'
 data_all[1]['label'] = r'{0} Individual Fit'.format(label)
 
 
-Plot_Power_Spectrum_Grid( output_dir, ps_samples=data_all, fig_name='flux_ps.png', scales='small_highz', line_colors=None, sim_data_sets=None, plot_boeraC=True, HL_key='mean' )
+fig_name = 'flux_ps.png'
+if plot_FPS_corrected: fig_name = 'flux_ps_corrected.png'
+Plot_Power_Spectrum_Grid( output_dir, ps_samples=data_all, fig_name=fig_name, scales='small_highz', line_colors=None, sim_data_sets=None, plot_boeraC=False, HL_key='mean' )
 

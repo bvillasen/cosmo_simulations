@@ -35,8 +35,8 @@ ps_data_dir = base_dir + '/lya_statistics/data/'
 # data_name = 'fit_results_P(k)+_Viel'
 # data_name = 'fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_NOT_CORRECTED'
 # data_name = 'fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_systematic'
-data_name = 'fit_results_P(k)+_Boera'
-data_name = 'fit_results_P(k)+_BoeraC_'
+data_name = 'fit_results_P(k)+_Boera_'
+# data_name = 'fit_results_P(k)+_BoeraC_'
 
 if independent_redshift: data_name += f'/fit_redshift/redshift_{z_indx}'
 mcmc_dir = root_dir + 'fit_mcmc/'
@@ -48,8 +48,8 @@ create_directory( output_dir )
 load_global_properties = False
 
 correction_file_name = ps_data_dir + 'FPS_resolution_correction_1024_50Mpc.pkl'
-# FPS_resolution_correction = Load_Pickle_Directory( correction_file_name ) 
-FPS_resolution_correction = None
+FPS_resolution_correction = Load_Pickle_Directory( correction_file_name ) 
+# FPS_resolution_correction = None
 
 # sim_ids = range(10)
 sim_ids = None
@@ -62,11 +62,11 @@ kmax = 0.2
 ps_range = SG.Get_Power_Spectrum_Range( kmax=kmax )
 sim_ids = SG.sim_ids
 
-z_vals = [ 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4,  4.6, 5.0   ]
-z_fields_min = 2.0
-
+# z_vals = [ 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4,  4.6, 5.0   ]
 # z_vals = [ 4.2, 4.6, 5.0, 5.4   ]
-# z_vals = [ 4.2, 4.6, 5.0  ]
+z_vals = [ 4.2, 4.6, 5.0  ]
+z_fields_min = 4.0
+
 fields_to_sample = ['P(k)', 'T0', 'gamma', 'tau', 'tau_HeII', ]
 if load_global_properties: fields_to_sample.append( 'z_ion_H' )
 data_grid, data_grid_power_spectrum = Get_Data_Grid_Composite(  fields_to_sample, SG, z_vals=z_vals, z_fields_min=z_fields_min, sim_ids=sim_ids, load_uvb_rates=False  )
@@ -100,17 +100,18 @@ hpi_sum = 0.95
 n_samples = 400000 
 
 # Obtain distribution of the power spectrum
-# file_name = output_dir + 'samples_power_spectrum_corrected.pkl'
-# samples_ps = Sample_Power_Spectrum_from_Trace( param_samples, data_grid_power_spectrum, SG, hpi_sum=hpi_sum, n_samples=n_samples, params_HL=params_HL, output_trace=True )
-# Write_Pickle_Directory( samples_ps, file_name )
+file_name = output_dir + 'samples_power_spectrum.pkl'
+if FPS_resolution_correction is not None: file_name = output_dir + 'samples_power_spectrum_corrected.pkl'
+samples_ps = Sample_Power_Spectrum_from_Trace( param_samples, data_grid_power_spectrum, SG, hpi_sum=hpi_sum, n_samples=n_samples, params_HL=params_HL, output_trace=True )
+Write_Pickle_Directory( samples_ps, file_name )
 
-# Obtain distribution of the other fields
-file_name = output_dir + 'samples_fields.pkl' 
-field_list = ['T0', 'gamma', 'tau', 'tau_HeII']
-field_list = ['T0', 'tau']
-if load_global_properties: fields_list.append( 'z_ion_H' )
-samples_fields = Sample_Fields_from_Trace( field_list, param_samples, data_grid, SG, hpi_sum=hpi_sum, n_samples=n_samples, params_HL=params_HL, output_trace=True)
-Write_Pickle_Directory( samples_fields, file_name )
+# # Obtain distribution of the other fields
+# file_name = output_dir + 'samples_fields.pkl' 
+# field_list = ['T0', 'gamma', 'tau', 'tau_HeII']
+# # field_list = ['T0', 'tau']
+# if load_global_properties: fields_list.append( 'z_ion_H' )
+# samples_fields = Sample_Fields_from_Trace( field_list, param_samples, data_grid, SG, hpi_sum=hpi_sum, n_samples=n_samples, params_HL=params_HL, output_trace=True)
+# Write_Pickle_Directory( samples_fields, file_name )
 
 
 # 

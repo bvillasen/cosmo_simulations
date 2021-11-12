@@ -26,12 +26,13 @@ if type == 'particles': particles = True
 
 
 # Box Size
-Lbox = 50000.0    #kpc
+Lbox = 40000.0    #kpc
 nPoints = 1024
 nBoxes  = 128
 
-input_dir = data_dir + f'cosmo_sims/ics/enzo/wdm/1024_hydro_50Mpc_wdm_m8.0kev/raw/'
-output_dir = data_dir + f'cosmo_sims/ics/wdm/1024_50Mpc_wdm_m8.0kev/'
+L_Mpc = int( Lbox / 1000)
+input_dir = data_dir + f'cosmo_sims/ics/enzo/1024_{L_Mpc}Mpc/'
+output_dir = data_dir + f'cosmo_sims/ics/1024_{L_Mpc}Mpc/'
 create_directory( output_dir )
 output_dir += f'ics_{nBoxes}_z100/'
 create_directory( output_dir )

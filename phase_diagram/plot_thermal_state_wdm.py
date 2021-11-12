@@ -22,8 +22,8 @@ from plot_thermal_history import Plot_T0_gamma_evolution
 # base_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim192/fit_mcmc/fit_results_P(k)+_BoeraC/'
 # base_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim192/fit_mcmc/fit_results_P(k)+_Boera/'
 # base_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim192/fit_mcmc/fit_results_P(k)+_Viel/'
-# base_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim100/fit_mcmc/fit_results_P(k)+_Boera/'
-base_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim100/fit_mcmc/fit_results_P(k)+_BoeraC_/'
+base_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim120/fit_mcmc/fit_results_P(k)+_Boera_/'
+# base_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim120/fit_mcmc/fit_results_P(k)+_BoeraC_/'
 
 
 input_dir_0 = base_dir + 'observable_samples/'
