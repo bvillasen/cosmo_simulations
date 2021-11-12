@@ -26,7 +26,7 @@ if type == 'particles': particles = True
 
 
 # Box Size
-Lbox = 30000.0    #kpc
+Lbox = 25000.0    #kpc
 nPoints = 1024
 nBoxes  = 128
 
