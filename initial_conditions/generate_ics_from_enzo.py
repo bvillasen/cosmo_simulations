@@ -34,7 +34,7 @@ L_Mpc = int( Lbox / 1000)
 # input_dir = data_dir + f'cosmo_sims/ics/enzo/{nPoints}_{L_Mpc}Mpc/'
 # output_dir = data_dir + f'cosmo_sims/ics/{nPoints}_{L_Mpc}Mpc/'
 
-m_wdm = 4.0
+m_wdm = 5.0
 input_dir = data_dir + f'cosmo_sims/ics/enzo/wdm/{nPoints}_hydro_{L_Mpc}Mpc_wdm_m{m_wdm:.1f}kev/raw/'
 output_dir = data_dir + f'cosmo_sims/ics/wdm/{nPoints}_{L_Mpc}Mpc_wdm_m{m_wdm:.1f}kev/'
 
