@@ -93,7 +93,7 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, data_sets_gamma=None, t
     if black_background: colormap = palettable.colorbrewer.sequential.Blues_9_r.mpl_colormap
     
       
-    alpha = 0.5
+    alpha = 1
     colors = colormap( np.linspace(0,1,n_lines) )
     for data_id in data_sets:
       data_set = data_sets[data_id]

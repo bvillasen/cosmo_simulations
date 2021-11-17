@@ -25,10 +25,10 @@ colors_data = [ green, purple, orange, cyan ]
 colors_data = [ green, 'C3', light_orange, purple, cyan ]
 
 
-colors_lines = [ 'C0', 'C1' ]
+# colors_lines = [ 'C0', 'C1' ]
 
  
-def Plot_tau_HI( output_dir,  points_tau=None, samples_tau_HI=None, labels='', black_background=False, figure_name='fig_tau_HI.png' ):
+def Plot_tau_HI( output_dir,  points_tau=None, samples_tau_HI=None, labels='', black_background=False, figure_name='fig_tau_HI.png', z_max=6.4 ):
 
   if system == 'Lux':      prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/brvillas/fonts', "Helvetica.ttf"), size=12)
   if system == 'Shamrock': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=12)
@@ -61,7 +61,8 @@ def Plot_tau_HI( output_dir,  points_tau=None, samples_tau_HI=None, labels='', b
       samples = samples_tau_HI[data_id]
       z = samples['z']
       tau = samples['tau']
-      color_line = colors_lines[data_id]
+      # color_line = colors_lines[data_id]
+      color_line = 'C0'
       if 'line_color' in samples: color_line = samples['line_color']
       if 'label' in samples: label = samples['label']
       else: label = ''
@@ -176,7 +177,7 @@ def Plot_tau_HI( output_dir,  points_tau=None, samples_tau_HI=None, labels='', b
 
   ax.set_ylabel( r'HI $\tau_{\mathrm{eff}}$', fontsize=font_size, color=text_color  )
   ax.set_xlabel( r'Redshift  $z$', fontsize=font_size, color=text_color )
-  ax.set_xlim( 2, 6.4 )
+  ax.set_xlim( 2, z_max )
   ax.set_ylim( .1, 12 )
   ax.set_yscale('log')
 
