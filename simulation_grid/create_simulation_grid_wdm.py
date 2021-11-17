@@ -13,7 +13,8 @@ from uvb_functions import Load_Grackle_File
 
 
 grid_header = 'Base UVB Rates are the V21 rates (modified P19)'
-constant_UVB_parameters = { 'scale_He_Eheat':0.8 } 
+constant_UVB_parameters = { 'deltaZ_H':0.0 } 
+
 SG = Simulation_Grid( parameters=Grid_Parameters, sim_params=sim_params, constant_params=constant_UVB_parameters, 
                       job_params=job_params, dir=root_dir, grid_header=grid_header )
 SG.Create_Grid_Directory_Structure()
