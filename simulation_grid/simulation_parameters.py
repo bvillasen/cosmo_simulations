@@ -133,7 +133,7 @@ if system == 'Lux':
 
 if system == 'Summit':
   # job_params['time'] = '2:00'
-  job_params['time'] = '1:00'
+  job_params['time'] = '1:30'
   if n_points == 1024:
     job_params['n_mpi'] = 128
     job_params['n_nodes'] = 22
