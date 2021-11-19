@@ -59,7 +59,8 @@ if system == 'Tornado':
 figures_dir = root_dir + 'figures/'
 
 
-Lbox = 50000.0 # kpc
+# Lbox = 50000.0 # kpc
+Lbox = 25000.0 # kpc
 
 sim_params = {}
 sim_params['nx'] = n_points

@@ -11,6 +11,8 @@ from simulation_parameters import *
 from plot_uvb_rates import Plot_UVB_Rates
 from uvb_functions import Load_Grackle_File
 
+print( f'Simulation Boxes: {Lbox/1000} Mpc/h' )
+time.sleep(1)
 
 grid_header = 'Base UVB Rates are the V21 rates (modified P19)'
 constant_UVB_parameters = { 'deltaZ_H':0.0 } 
