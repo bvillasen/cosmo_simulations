@@ -19,7 +19,7 @@ from plot_optical_depth import Plot_tau_HI
 
 
 
-base_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim120/fit_mcmc/fit_results_P(k)+_Boera_/'
+base_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim175/fit_mcmc/fit_results_P(k)+_Boera/'
 
 input_dir_0 = base_dir + 'observable_samples/'
 output_dir = base_dir + '/figures/'
@@ -38,9 +38,9 @@ label = ''
 z_vals_all = [  4.2, 4.6, 5.0 ] 
 
 
-# HL_key = 'Highest_Likelihood'
+HL_key = 'Highest_Likelihood'
 # HL_key = 'mean'
-HL_key = 'max'
+# HL_key = 'max'
 
 print( f'HL key: {HL_key}')
 

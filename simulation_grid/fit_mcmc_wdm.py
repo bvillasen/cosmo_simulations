@@ -42,10 +42,10 @@ for data_set in data_ps_sets:
   data_label += data_set + ' + '
 fit_name = fit_name[:-1] 
 data_label = data_label[:-3]
-print(f'Data Label: {data_label}')
+print(f'Data Label: {data_label} {fit_name}')
 
 # extra_label = 'sigmaResCosmo_'
-extra_label = ''
+extra_label = None
 if extra_label is not None: fit_name += f'_{extra_label}'
 
 mcmc_dir = root_dir + 'fit_mcmc/'
@@ -87,7 +87,7 @@ if independent_redshift:
 
 data_systematic_uncertainties = { 'all':{}, 'P(k)':{} }
 data_systematic_uncertainties['all']['cosmological'] = { 'fractional':0.10 } #Fractional systematic error due to cosmological parameter uncertanty
-data_systematic_uncertainties['P(k)']['resolution'] = { 'file_name': FPS_correction_file_name, 'type':'delta'  }  #Systematic error due to resolution
+# data_systematic_uncertainties['P(k)']['resolution'] = { 'file_name': FPS_correction_file_name, 'type':'delta'  }  #Systematic error due to resolution
 ps_parameters = { 'range':ps_range, 'data_dir':ps_data_dir, 'data_sets':data_ps_sets  }
 comparable_data = Get_Comparable_Composite( fields_to_fit, z_min, z_max, ps_parameters=ps_parameters, log_ps=False, systematic_uncertainties=data_systematic_uncertainties   )
 comparable_grid = Get_Comparable_Composite_from_Grid( fields_to_fit, comparable_data, SG, log_ps=False )

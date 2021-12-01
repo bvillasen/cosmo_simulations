@@ -22,7 +22,7 @@ from plot_thermal_history import Plot_T0_gamma_evolution
 # base_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim192/fit_mcmc/fit_results_P(k)+_BoeraC/'
 # base_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim192/fit_mcmc/fit_results_P(k)+_Boera/'
 # base_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim192/fit_mcmc/fit_results_P(k)+_Viel/'
-base_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim120/fit_mcmc/fit_results_P(k)+_Boera_/'
+base_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim175/fit_mcmc/fit_results_P(k)+_Boera/'
 # base_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim120/fit_mcmc/fit_results_P(k)+_BoeraC_/'
 
 
@@ -42,9 +42,9 @@ label = ''
 z_vals_all = [  4.2, 4.6, 5.0 ] 
 
 
-# HL_key = 'Highest_Likelihood'
+HL_key = 'Highest_Likelihood'
 # HL_key = 'mean'
-HL_key = 'max'
+# HL_key = 'max'
 
 print( f'HL key: {HL_key}')
 

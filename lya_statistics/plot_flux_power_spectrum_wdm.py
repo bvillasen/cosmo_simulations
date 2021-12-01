@@ -21,15 +21,15 @@ from plot_flux_power_spectrum_grid import Plot_Power_Spectrum_Grid
 # root_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim192/fit_mcmc/fit_results_P(k)+_BoeraC/'
 # root_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim192/fit_mcmc/fit_results_P(k)+_Boera/'
 # root_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim192/fit_mcmc/fit_results_P(k)+_Viel/'
-root_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim120/fit_mcmc/fit_results_P(k)+_Boera_/'
+root_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim175/fit_mcmc/fit_results_P(k)+_Boera/'
  
 input_dir = root_dir + 'observable_samples/'
 
 output_dir = root_dir + 'figures/'
 create_directory( output_dir ) 
 
-# HL_key = 'Highest_Likelihood'
-HL_key = 'mean'
+HL_key = 'Highest_Likelihood'
+# HL_key = 'mean'
 # HL_key = 'max'
 
 print( f'HL key: {HL_key}')

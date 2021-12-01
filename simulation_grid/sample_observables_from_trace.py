@@ -35,7 +35,7 @@ ps_data_dir = base_dir + '/lya_statistics/data/'
 # data_name = 'fit_results_P(k)+_Viel'
 # data_name = 'fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_NOT_CORRECTED'
 # data_name = 'fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_systematic'
-data_name = 'fit_results_P(k)+_Boera_'
+data_name = 'fit_results_P(k)+_Boera'
 # data_name = 'fit_results_P(k)+_BoeraC_'
 
 if independent_redshift: data_name += f'/fit_redshift/redshift_{z_indx}'
@@ -48,8 +48,8 @@ create_directory( output_dir )
 load_global_properties = False
 
 correction_file_name = ps_data_dir + 'FPS_resolution_correction_1024_50Mpc.pkl'
-FPS_resolution_correction = Load_Pickle_Directory( correction_file_name ) 
-# FPS_resolution_correction = None
+# FPS_resolution_correction = Load_Pickle_Directory( correction_file_name ) 
+FPS_resolution_correction = None
 
 # sim_ids = range(10)
 sim_ids = None
@@ -90,10 +90,21 @@ Write_Pickle_Directory( stats, output_dir + 'fit_mcmc.pkl' )
 Write_Pickle_Directory( param_samples, output_dir + 'samples_mcmc.pkl' )
 
 # Get the Highest_Likelihood parameter values 
-params_HL = Get_Highest_Likelihood_Params( param_samples, n_bins=30 )
+# params_HL = Get_Highest_Likelihood_Params( param_samples, n_bins=10 )
 params_max = Get_1D_Likelihood_max( param_samples, n_bins_1D=100 )
 params_mean = Get_Params_mean( param_samples )
+
+# Get the Highest_Likelihood parameter values 
+if rank == 0: n_bins = 10  
+if rank == 1: n_bins = 25  
+if rank == 2: n_bins = 20 
+
+if not independent_redshift: n_bins = 60
+params_HL = Get_Highest_Likelihood_Params( param_samples, n_bins=n_bins )
+
 params_HL = { 'Highest_Likelihood':params_HL, 'max':params_max, 'mean':params_mean }
+if use_mpi: comm.Barrier()
+print( f'Rank: {rank}  HL:{params_HL} ' )
 
 
 hpi_sum = 0.95
@@ -105,13 +116,13 @@ if FPS_resolution_correction is not None: file_name = output_dir + 'samples_powe
 samples_ps = Sample_Power_Spectrum_from_Trace( param_samples, data_grid_power_spectrum, SG, hpi_sum=hpi_sum, n_samples=n_samples, params_HL=params_HL, output_trace=True )
 Write_Pickle_Directory( samples_ps, file_name )
 
-# # Obtain distribution of the other fields
-# file_name = output_dir + 'samples_fields.pkl' 
-# field_list = ['T0', 'gamma', 'tau', 'tau_HeII']
-# # field_list = ['T0', 'tau']
-# if load_global_properties: fields_list.append( 'z_ion_H' )
-# samples_fields = Sample_Fields_from_Trace( field_list, param_samples, data_grid, SG, hpi_sum=hpi_sum, n_samples=n_samples, params_HL=params_HL, output_trace=True)
-# Write_Pickle_Directory( samples_fields, file_name )
+# Obtain distribution of the other fields
+file_name = output_dir + 'samples_fields.pkl' 
+field_list = ['T0', 'gamma', 'tau', 'tau_HeII']
+# field_list = ['T0', 'tau']
+if load_global_properties: fields_list.append( 'z_ion_H' )
+samples_fields = Sample_Fields_from_Trace( field_list, param_samples, data_grid, SG, hpi_sum=hpi_sum, n_samples=n_samples, params_HL=params_HL, output_trace=True)
+Write_Pickle_Directory( samples_fields, file_name )
 
 
-# 
+

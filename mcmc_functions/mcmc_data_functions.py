@@ -336,7 +336,7 @@ def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_rang
           else:  
             for uncertanty_type in uncertanty_group:
               uncertanty = uncertanty_group[uncertanty_type]
-              print( f' Applying systematic uncertanty: {uncertanty_name}: {uncertanty_type} ')
+              print( f' Applying systematic uncertanty: {uncertanty_name}: {uncertanty_type} {uncertanty}')
               if uncertanty_type == 'fractional':
                 systematic[uncertanty_type] = uncertanty 
               
