@@ -28,7 +28,7 @@ if type == 'particles': particles = True
 # Box Size
 Lbox = 50000.0    #kpc
 nPoints = 1024
-nBoxes  = 16
+nBoxes  = 32
 L_Mpc = int( Lbox / 1000)
 
 # input_dir = data_dir + f'cosmo_sims/ics/enzo/{nPoints}_{L_Mpc}Mpc/'
