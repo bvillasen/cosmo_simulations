@@ -4,7 +4,6 @@ from os.path import isfile, join
 import h5py as h5
 import numpy as np
 import subprocess
-import yt
 #Extend path to inclide local modules
 root_dir = os.path.dirname(os.getcwd())
 sub_directories = [x[0] for x in os.walk(root_dir)]
@@ -94,7 +93,8 @@ def Load_Particles_Field( field_name, input_dir, attrs=None ):
   file.close()
   
   if field_name in [ 'pos_x', 'pos_y', 'pos_z' ]:
-    delta_x = 1 / attrs['n_points']
+    n_points = attrs['n_points']
+    delta_x = 1 / n_points
     ones_1d = np.ones( n_points )
     p_pos   = np.meshgrid( ones_1d, ones_1d, ones_1d )[0]
     for slice_id in range(n_points):
