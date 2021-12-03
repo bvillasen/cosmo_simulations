@@ -20,11 +20,15 @@ e_charge = 1.60217662e-19 # Coulombs
 c = 299792000.458 # velocity of light in m/sec
 # pc = 3.086e13  #km
 pc = 3.0857e16  #m
+# pc = 3.08567758128e16  #m
 kpc = 1e3 * pc
 Mpc = 1e6 * pc
 Msun = 1.98847e30  #kg
+# Msun = 1.9889200011445836e30  #kg
 Myear = 365 * 24 * 3600 * 1e6
 
 
 Gconst = 6.6740831e-11 #m3  s-2 kg-1
+# Gconst = 6.6743015e-11 #m3  s-2 kg-1
+
 Gcosmo = Gconst * ( 1./kpc) * 1./1000 * 1./1000 * Msun  # kpc km^2 s^-2 Msun^-1

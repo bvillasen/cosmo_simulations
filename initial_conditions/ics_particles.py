@@ -179,8 +179,9 @@ def generate_ics_particles( data_in, outDir, outputBaseName, proc_grid, box_size
   vel_x = data['vel_x'][...]
   vel_y = data['vel_y'][...]
   vel_z = data['vel_z'][...]
-  mass = data['mass'][...]
-  particle_mass = mass[0]
+  # mass = data['mass'][...]
+  # particle_mass = mass[0]
+  particle_mass = data['p_mass']
   nPart = pos_x.shape[0]
   ids = np.arange(nPart).astype(np.int64)
   print(' Nparticles: ', nPart)
@@ -218,13 +219,13 @@ def generate_ics_particles( data_in, outDir, outputBaseName, proc_grid, box_size
     vel_x_l = vel_x[indx]
     vel_y_l = vel_y[indx]
     vel_z_l = vel_z[indx]
-    mass_l = mass[indx]
+    # mass_l = mass[indx]
     ids_l = ids[indx]
     print('  n_local: ', n_local)
-    print('  Current_a: ', current_a)
+    # print('  Current_a: ', current_a)
     outFile.attrs['n_particles_local'] = n_local
     # outFile.attrs['N_DM_file'] = np.float(nPart)
-    outFile.create_dataset( 'mass', data=mass_l )
+    # outFile.create_dataset( 'mass', data=mass_l )
     outFile.create_dataset( 'pos_x', data=pos_x_l.astype(np.float64) )
     outFile.create_dataset( 'pos_y', data=pos_y_l.astype(np.float64) )
     outFile.create_dataset( 'pos_z', data=pos_z_l.astype(np.float64) )
@@ -235,4 +236,4 @@ def generate_ics_particles( data_in, outDir, outputBaseName, proc_grid, box_size
 
     outFile.close()
     print('')
-  print("Total Particles Saved: ", sum(n_local_all))
+  print( f'Total Particles Saved: {sum(n_local_all)} / {nPart}' )
