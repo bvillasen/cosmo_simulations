@@ -27,7 +27,7 @@ if type == 'hydro': hydro = True
 if type == 'particles': particles = True
 
 # Box Size
-Lbox = 50000.0    #kpc
+Lbox = 50000.0    #kpc/h
 n_points = 1024
 n_boxes  = 32
 L_Mpc = int( Lbox / 1000)
