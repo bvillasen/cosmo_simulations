@@ -47,8 +47,7 @@ print(f'Input Dir: {input_dir}' )
 print(f'Output Dir: {output_dir}' )
 
 temperature = 231.44931976   #k
-file_attrs = Load_File_Attrs( input_dir )
-file_attrs['Lbox'] = Lbox 
+file_attrs = Load_File_Attrs( input_dir, Lbox=Lbox )
 
 data_ics = { 'dm':{}, 'gas':{} }
 data_ics['current_a'] = file_attrs['a_start']

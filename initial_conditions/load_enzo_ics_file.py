@@ -17,16 +17,7 @@ from internal_energy import get_temperature, get_internal_energy
 correction_factor = 1.0000563343966022
 
 
-# Box Size
-Lbox = 50000.0    #kpc
-n_points = 256
-n_boxes  = 16
-L_Mpc = int( Lbox / 1000)
-
-input_dir = data_dir + f'cosmo_sims/ics/enzo/{n_points}_{L_Mpc}Mpc_test/'
-
-
-def Load_File_Attrs( input_dir, file_name='GridDensity' ):
+def Load_File_Attrs( input_dir, Lbox=None, file_name='GridDensity' ):
   file_name = input_dir + file_name
   file = h5.File( file_name, 'r' )
   attrs = file.attrs
@@ -51,19 +42,17 @@ def Load_File_Attrs( input_dir, file_name='GridDensity' ):
   rho_mean_dm  = rho_crit * ( Omega_m - Omega_b )
   rho_mean_gas = rho_crit * Omega_b
   dm_particle_mass =  rho_mean_dm * (Lbox)** 3  / n_particles #Msun/h
-  L_unit = Lbox / H0 / (1+z_start)
+  L_unit = Lbox / H0 / (1+z_start) 
   rho_0 = 3 * Omega_m * (100* H0*1e-3 )**2 / ( 8 * np.pi * Gcosmo )
   time_unit = 1/np.sqrt(  4 * np.pi * Gcosmo * rho_0 * (1+z_start)**3 )
   vel_unit = L_unit / time_unit 
   attrs = { 'dx':dx, 'h':h, 'box_size':box_size, 'H0':H0, 'a_start':a_start, 'Omega_b':Omega_b,
             'Omega_m': Omega_m, 'Omega_l':Omega_l, 'rho_crit':rho_crit, 'rho_mean_dm':rho_mean_dm,
             'rho_mean_gas':rho_mean_gas, 'dm_particle_mass':dm_particle_mass, 'vel_unit':vel_unit,
-            'n_points':n_cells[0], 'z_start':z_start }
+            'n_points':n_cells[0], 'z_start':z_start, 'Lbox':Lbox }
   return attrs
   
 
-
-attrs = Load_File_Attrs( input_dir )
 
 field_keys_gas = {'density':'GridDensity', 'vel_x':'GridVelocities_x', 'vel_y':'GridVelocities_y', 'vel_z':'GridVelocities_z', }
 field_keys_particles = { 'pos_x':'ParticleDisplacements_x', 'pos_y':'ParticleDisplacements_y', 'pos_z':'ParticleDisplacements_z', 'vel_x':'ParticleVelocities_x', 'vel_y':'ParticleVelocities_y', 'vel_z':'ParticleVelocities_z' }

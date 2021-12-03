@@ -52,8 +52,7 @@ gas_E_enzo = 0.5 * gas_density_enzo * ( gas_vel_x_enzo*gas_vel_x_enzo + gas_vel_
 
 
 temperature = 231.44931976   #k
-file_attrs = Load_File_Attrs( input_dir )
-file_attrs['Lbox'] = Lbox 
+file_attrs = Load_File_Attrs( input_dir, Lbox=Lbox )
 
 gas_density = Load_Gas_Field( 'density', input_dir, attrs=file_attrs )
 gas_vel_x = Load_Gas_Field( 'vel_x', input_dir, attrs=file_attrs )
