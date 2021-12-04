@@ -133,11 +133,11 @@ def expand_data_grid_to_cholla( proc_grid, inputData, outputDir, outputBaseName 
           xStr, xEnd = px*nx, (px+1)*nx
           pId = pz + py*nProc_z + px*nProc_z*nProc_y
           data_local = data[zStr:zEnd, yStr:yEnd, xStr:xEnd ]
-          print_line_flush( f'Writing field: {field}  total:{data.shape}  local:({data_local.shape})  file: {count} / {nProc}    ' )
+          print_line_flush( f'Writing field: {field}  total:{data.shape}  local:{data_local.shape}  file: {count} / {nProc}    ' )
           # print(f' File: {pId}  {data_local.shape}' )
           outFiles[pId].create_dataset( field , data=data_local.astype(np.float64) )
           count += 1
-  print('')        
+    print('')        
   for pId in range( nProc ):
     outFiles[pId].close()
 
