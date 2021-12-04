@@ -184,14 +184,14 @@ def generate_ics_particles( data_in, outDir, outputBaseName, proc_grid, box_size
   particle_mass = data['p_mass']
   nPart = pos_x.shape[0]
   ids = np.arange(nPart).astype(np.int64)
-  print(' Nparticles: ', nPart)
+  print('N total particles: ', nPart)
 
   dx = domain[0]['box']['dx']
   dy = domain[0]['box']['dy']
   dz = domain[0]['box']['dz']
   
   # print(( dx, dy, dz))
-
+  print('Selecting local indices')
   index_x = ( pos_x / dx ).astype(np.int)
   index_y = ( pos_y / dy ).astype(np.int)
   index_z = ( pos_z / dz ).astype(np.int)
