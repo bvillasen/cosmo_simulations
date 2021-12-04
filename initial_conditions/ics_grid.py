@@ -137,6 +137,7 @@ def expand_data_grid_to_cholla( proc_grid, inputData, outputDir, outputBaseName 
           # print(f' File: {pId}  {data_local.shape}' )
           outFiles[pId].create_dataset( field , data=data_local.astype(np.float64) )
           count += 1
+  print('')        
   for pId in range( nProc ):
     outFiles[pId].close()
 
