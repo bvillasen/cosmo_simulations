@@ -5,7 +5,7 @@ from load_data import get_domain_block
 root_dir = os.path.dirname(os.getcwd())
 tools_dir = root_dir + 'tools'
 sys.path.append( tools_dir )
-from tools import check_if_file_exists
+from tools import check_if_file_exists, print_line_flush
 
 def get_yt_field( field, data, current_a, h ):
   print( f'Loading YT Field: {field}')
@@ -204,7 +204,7 @@ def generate_ics_particles( data_in, outDir, outputBaseName, proc_grid, box_size
 
     outputFileName = outDir + outputBaseName + ".{0}".format(pId)
     if nprocs == 1: outputFileName = outDir + outputBaseName 
-    print(' Writing h5 file: ', outputFileName)
+    # print(' Writing h5 file: ', outputFileName)
     outFile = h5.File( outputFileName, 'w')
     outFile.attrs['current_a'] = current_a
     outFile.attrs['current_z'] = current_z
@@ -212,6 +212,7 @@ def generate_ics_particles( data_in, outDir, outputBaseName, proc_grid, box_size
 
     indx = np.where(indexs == pId)[0]
     n_local = len(indx)
+    print_line_flush(f'Writing file: {outputBaseName}.{pId}  n_local: {n_local}')    
     n_local_all.append(n_local)
     pos_x_l = pos_x[indx]
     pos_y_l = pos_y[indx]
@@ -221,7 +222,7 @@ def generate_ics_particles( data_in, outDir, outputBaseName, proc_grid, box_size
     vel_z_l = vel_z[indx]
     # mass_l = mass[indx]
     ids_l = ids[indx]
-    print('  n_local: ', n_local)
+    # print('  n_local: ', n_local)
     # print('  Current_a: ', current_a)
     outFile.attrs['n_particles_local'] = n_local
     # outFile.attrs['N_DM_file'] = np.float(nPart)
