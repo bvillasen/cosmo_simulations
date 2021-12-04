@@ -1,6 +1,11 @@
 import os, sys, time
 import h5py as h5
 import numpy as np
+#Extend path to inclide local modules
+root_dir = os.path.dirname(os.getcwd())
+sub_directories = [x[0] for x in os.walk(root_dir)]
+sys.path.extend(sub_directories)
+from tools import *
 
 
 def get_yt_field_hydro( field, data_grid, current_a, h ):
