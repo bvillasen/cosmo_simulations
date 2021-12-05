@@ -29,30 +29,27 @@ if rank == 0: show_progess = True
 
 
 
-# data_dir = '/raid/bruno/data/'
-# data_dir = '/data/groups/comp-astro/bruno/'
-data_dir = '/gpfs/alpine/csc434/proj-shared/cholla/'
-input_dir  = data_dir + f'cosmo_sims/rescaled_P19/2048_50Mpc/reduced_snapshots_hydro_temperature/'
-output_dir = data_dir + f'cosmo_sims/rescaled_P19/2048_50Mpc/slices_temperature/'
+input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m0.5kev/snapshot_files/'
+output_dir = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m0.5kev/slices_gas_density/'
 if rank == 0: create_directory( output_dir )
   
-n_points = 2048
+n_points = 1024
 Lbox = 50000.0 #kpc/h
 box_size = [ Lbox, Lbox, Lbox ]
 grid_size = [ n_points, n_points, n_points ]
 precision = np.float32
   
-fields = [ 'temperature' ]
+fields = [ 'density' ]
 data_type = 'hydro'
 
-slice_depth = 128
-slice_id = 3
+slice_depth = 256
+slice_id = 0
 slice_start = slice_id * slice_depth
 start = max( 0, slice_start )
 end   = min( n_points, slice_start+slice_depth )
 subgrid = [ [start, end], [0, n_points], [0, n_points] ]
 
-snapshots = range( 0, 170 )
+snapshots = range( 1, 97 )
 snapshot_ids = split_indices( snapshots, rank, nprocs )
 
 for n_snap in snapshot_ids:
@@ -61,7 +58,7 @@ for n_snap in snapshot_ids:
 
   # print( f' Slice:  start:{start}   end:{end}' )
 
-  out_file_name = output_dir + f'slice_{data_type}_{n_snap}_start{slice_start}_depth{slice_depth}.h5'
+  out_file_name = output_dir + f'slice_{n_snap}_start{slice_start}_depth{slice_depth}.h5'
   outfile = h5.File( out_file_name, 'w' )
   outfile.attrs['current_z'] = current_z
 
