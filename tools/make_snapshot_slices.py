@@ -51,6 +51,7 @@ subgrid = [ [start, end], [0, n_points], [0, n_points] ]
 
 snapshots = range( 1, 97 )
 snapshot_ids = split_indices( snapshots, rank, nprocs )
+print(snapshot_ids)
 snapshots_local = snapshots[snapshot_ids]
 
 for n_snap in snapshots_local:
