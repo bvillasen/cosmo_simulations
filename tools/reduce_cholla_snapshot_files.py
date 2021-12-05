@@ -44,40 +44,40 @@ files_per_snapshot = 16
 local_files = split_indices( range(files_per_snapshot), rank, n_procs )
 n_snapshots = len( snapshot_ids )
 print( f'proc_id: {rank}  local_files: {local_files}'  )
-# 
-# time_start = time.time()
-# n_snaps_copied = 0
-# for snapshot_id in snapshot_ids:
-# 
-#   for file_id in local_files:
-# 
-#     file_name = f'{snapshot_id}{file_name_base}.{file_id}'
-#     in_file = h5.File( input_dir + file_name, 'r' )
-#     out_file = h5.File( output_dir + file_name, 'w' )
-# 
-#     # Copy the header
-#     for key in in_file.attrs.keys():
-#       out_file.attrs[key] = in_file.attrs[key]
-# 
-#     # Copy the fields
-#     for field in fields_list:
-#       # print( f'  Copying Field: {field}')
-#       data = in_file[field][...].astype( precision )
-#       out_file.create_dataset( field, data=data )
-# 
-#     in_file.close()
-#     out_file.close()
-# 
-#   if use_mpi: comm.Barrier()
-#   n_snaps_copied += 1  
-# 
-#   if rank == 0 and verify_output_number: 
-#     files_copied = os.listdir( output_dir )  
-#     if len( files_copied ) != n_snaps_copied * files_per_snapshot: 
-#       print(f'ERROR: Number of files in output dir is incorrect: {len(files_copied)}    {n_snaps_copied * files_per_snapshot}')
-#       exit(-1)
-# 
-#   if rank == 0: print_progress( n_snaps_copied, n_snapshots, time_start )
-# 
-# if print_out:   print( '\nFinised Successfully')
-# 
+
+time_start = time.time()
+n_snaps_copied = 0
+for snapshot_id in snapshot_ids:
+
+  for file_id in local_files:
+
+    file_name = f'{snapshot_id}{file_name_base}.{file_id}'
+    in_file = h5.File( input_dir + file_name, 'r' )
+    out_file = h5.File( output_dir + file_name, 'w' )
+
+    # Copy the header
+    for key in in_file.attrs.keys():
+      out_file.attrs[key] = in_file.attrs[key]
+
+    # Copy the fields
+    for field in fields_list:
+      # print( f'  Copying Field: {field}')
+      data = in_file[field][...].astype( precision )
+      out_file.create_dataset( field, data=data )
+
+    in_file.close()
+    out_file.close()
+
+  if use_mpi: comm.Barrier()
+  n_snaps_copied += 1  
+
+  if rank == 0 and verify_output_number: 
+    files_copied = os.listdir( output_dir )  
+    if len( files_copied ) != n_snaps_copied * files_per_snapshot: 
+      print(f'ERROR: Number of files in output dir is incorrect: {len(files_copied)}    {n_snaps_copied * files_per_snapshot}')
+      exit(-1)
+
+  if rank == 0: print_progress( n_snaps_copied, n_snapshots, time_start )
+
+if print_out:   print( '\nFinised Successfully')
+
