@@ -51,10 +51,9 @@ subgrid = [ [start, end], [0, n_points], [0, n_points] ]
 
 snapshots = range( 1, 97 )
 snapshot_ids = split_indices( snapshots, rank, nprocs )
-snapshot_ids = np.array(snapshot_ids)
-snapshots_local = snapshots[snapshot_ids]
 
-for n_snap in snapshots_local:
+for snap_id in snapshot_ids:
+  n_snap = snapshots[snap_id]
   data_snap = load_snapshot_data_distributed( data_type, fields, n_snap, input_dir, box_size, grid_size,  precision, subgrid=subgrid, show_progess=show_progess,  print_fields=True )
   current_z = data_snap['Current_z']
 
