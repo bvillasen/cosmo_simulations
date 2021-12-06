@@ -14,7 +14,7 @@ create_directory( output_dir )
 
 slice_width = 1024
 slice_depth = 256
-slice_id = 1
+slice_id = 2
 slice_start = slice_id * slice_depth
 
 print( 'Loading slices' )
