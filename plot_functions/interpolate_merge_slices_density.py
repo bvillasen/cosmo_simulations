@@ -12,9 +12,10 @@ input_dir  = data_dir + 'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m0.5kev/slic
 output_dir = input_dir + 'interpolated/'
 create_directory( output_dir )
 
-slice_start = 0
 slice_width = 1024
 slice_depth = 256
+slice_id = 1
+slice_start = slice_id * slice_depth
 
 print( 'Loading slices' )
 slice_ids = range( 1, 97 )

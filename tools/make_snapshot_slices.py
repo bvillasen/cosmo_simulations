@@ -43,7 +43,7 @@ fields = [ 'density' ]
 data_type = 'hydro'
 
 slice_depth = 256
-slice_id = 0
+slice_id = 1
 slice_start = slice_id * slice_depth
 start = max( 0, slice_start )
 end   = min( n_points, slice_start+slice_depth )
