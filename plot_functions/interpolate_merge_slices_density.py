@@ -7,8 +7,8 @@ root_dir = os.path.dirname(os.getcwd()) + '/'
 sys.path.append( root_dir + 'tools')
 from tools import *
 
-
-input_dir  = data_dir + 'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m0.5kev/slices_gas_density/'
+m_wdm = 1.0
+input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m{m_wdm:.1f}kev/slices_gas_density/'
 output_dir = input_dir + 'interpolated/'
 create_directory( output_dir )
 

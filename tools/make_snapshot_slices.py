@@ -28,9 +28,9 @@ show_progess = False
 if rank == 0: show_progess = True
 
 
-
-input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m0.5kev/snapshot_files/'
-output_dir = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m0.5kev/slices_gas_density/'
+n_wdm = 1.0
+input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m{m_wdm:.1f}kev/snapshot_files/'
+output_dir = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m{m_wdm:.1f}kev/slices_gas_density/'
 if rank == 0: create_directory( output_dir )
   
 n_points = 1024
@@ -43,7 +43,7 @@ fields = [ 'density' ]
 data_type = 'hydro'
 
 slice_depth = 256
-slice_id = 3
+slice_id = 2
 slice_start = slice_id * slice_depth
 start = max( 0, slice_start )
 end   = min( n_points, slice_start+slice_depth )
