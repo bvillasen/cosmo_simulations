@@ -43,8 +43,7 @@ fields = [ 'density' ]
 data_type = 'hydro'
 
 slice_depth = 512
-slice_id = 2
-slice_start = slice_id * slice_depth
+slice_start = 512
 start = max( 0, slice_start )
 end   = min( n_points, slice_start+slice_depth )
 subgrid = [ [start, end], [0, n_points], [0, n_points] ]
