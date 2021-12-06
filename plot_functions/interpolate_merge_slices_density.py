@@ -9,7 +9,8 @@ from tools import *
 
 
 input_dir  = data_dir + 'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m0.5kev/slices_gas_density/'
-output_dir = input_dir
+output_dir = input_dir + 'interpolated/'
+create_directory( output_dir )
 
 slice_start = 0
 slice_width = 1024
@@ -84,13 +85,18 @@ pixel_z = np.array( pixel_z )
 print('')
 
 
-outfile_name = output_dir + f'interpolated_slice_ndepth{slice_depth}.h5'
+outfile_name = output_dir + f'interpolated_slice_start{slice_start}_ndepth{slice_depth}.h5'
 outfile = h5.File( outfile_name, 'w' )
 outfile.create_dataset( 'slice', data=image_data )
 outfile.create_dataset( 'pixel_a', data=pixel_a )
 outfile.create_dataset( 'pixel_z', data=pixel_z )
 outfile.close()
 print( f'Saved File: {outfile_name}' )
+
+
+output_dir = output_dir + 'figures/'
+create_directory( output_dir )
+
 
 nrows, ncols = 1, 1
 fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(10*ncols,10*nrows))
@@ -101,7 +107,7 @@ proj = np.log10( proj2/proj )
 # proj = np.log10( proj )
 ax.imshow( proj, cmap='inferno' )
 
-figure_name = output_dir + f'fig_density_slice.png'
+figure_name = output_dir + f'fig_density_slice_start{slice_start}.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
 
