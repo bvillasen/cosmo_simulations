@@ -54,7 +54,7 @@ snapshot_ids = split_indices( snapshots, rank, nprocs )
 
 for snap_id in snapshot_ids:
   n_snap = snapshots[snap_id]
-  data_snap = load_snapshot_data_distributed( data_type, fields, n_snap, input_dir, box_size, grid_size,  precision, subgrid=subgrid, show_progess=show_progess,  print_fields=True )
+  data_snap = load_snapshot_data_distributed( data_type, fields, n_snap, input_dir, box_size, grid_size,  precision, subgrid=subgrid, show_progess=show_progess )
   current_z = data_snap['Current_z']
 
   # print( f' Slice:  start:{start}   end:{end}' )
