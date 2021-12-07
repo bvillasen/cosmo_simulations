@@ -28,7 +28,7 @@ def load_slice( slice_id ):
   return slice
 
 print( 'Loading slices' )
-n_snap_max = 95
+n_snap_max = 96
 slice_ids = range( 1, n_snap_max+1 )
 n_slices = len(slice_ids)
 z_vals, slices = [], []
