@@ -89,8 +89,8 @@ for indx in range( image_width ):
 
   # print( f'indx: {indx}  id_l: {id_l}  id_r: {id_r}  z: {z:.3f}   z_l: {z_l:.3f}   z_r: {z_r:.3f}   alpha:{alpha}    '    )
   # time.sleep(0.01)
-  if slices[id_l] is None: slices[id_l] = load_slice( id_l )
-  if slices[id_r] is None: slices[id_r] = load_slice( id_r )
+  if slices[id_l] is None: slices[id_l] = load_slice( id_l + 1)
+  if slices[id_r] is None: slices[id_r] = load_slice( id_r + 1 )
   if id_l > 0 and slices[id_l-1] is not None: slices[id_l-1] = None 
 
   slice_l = slices[id_l][:, :, slice_indx]
