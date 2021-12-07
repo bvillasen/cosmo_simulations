@@ -7,17 +7,19 @@ root_dir = os.path.dirname(os.getcwd()) + '/'
 sys.path.append( root_dir + 'tools')
 from tools import *
 
-m_wdm = 2.5
+m_wdm = 3.0
 input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m{m_wdm:.1f}kev/slices_gas_density/'
 output_dir = data_dir + 'render_images/wdm_slice/slices/'
 create_directory( output_dir )
+
+print_out = False
 
 slice_width = 1024
 slice_depth = 512
 slice_start = 512
 
 def load_slice( slice_id ):
-  print( f'Loading slice: {slice_id}' )
+  if print_out: print( f'Loading slice: {slice_id}' )
   file_name = input_dir + f'slice_{slice_id}_start{slice_start}_depth{slice_depth}.h5'
   file = h5.File( file_name, 'r' )
   slice = file['density'][0:slice_depth, :, :]
@@ -94,7 +96,7 @@ for indx in range( image_width ):
   if slices[id_r] is None: slices[id_r] = load_slice( id_r + 1 )
   slice_remove = id_l - 10
   if slice_remove >= 0 and slices[slice_remove] is not None: 
-    print( f'Removing slice: {slice_remove}' )
+    if print_out: print( f'Removing slice: {slice_remove}' )
     slices[slice_remove] = None 
 
   slice_l = slices[id_l][:, :, slice_indx]
