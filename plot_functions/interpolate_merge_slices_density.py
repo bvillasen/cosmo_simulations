@@ -17,6 +17,7 @@ slice_depth = 512
 slice_start = 512
 
 def load_slice( slice_id ):
+  print( f'Loading slice: {slice_id}' )
   file_name = input_dir + f'slice_{slice_id}_start{slice_start}_depth{slice_depth}.h5'
   file = h5.File( file_name, 'r' )
   slice = file['density'][0:slice_depth, :, :]
@@ -91,7 +92,10 @@ for indx in range( image_width ):
   # time.sleep(0.01)
   if slices[id_l] is None: slices[id_l] = load_slice( id_l + 1)
   if slices[id_r] is None: slices[id_r] = load_slice( id_r + 1 )
-  if id_l > 0 and slices[id_l-1] is not None: slices[id_l-1] = None 
+  slice_remove = id_l - 20
+  if slice_remove >= 0 and slices[slice_remove] is not None: 
+    print( f'Removing slice: {slice_remove}' )
+    slices[slice_remove] = None 
 
   slice_l = slices[id_l][:, :, slice_indx]
   slice_r = slices[id_r][:, :, slice_indx]
