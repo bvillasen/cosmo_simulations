@@ -9,6 +9,7 @@ from tools import *
 
 m_wdm = 3.5
 input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m{m_wdm:.1f}kev/slices_gas_density/'
+input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m{m_wdm:.1f}kev/slices_gas_density/'
 output_dir = data_dir + 'render_images/wdm_slice/slices/'
 create_directory( output_dir )
 
@@ -27,7 +28,7 @@ def load_slice( slice_id ):
   return slice
 
 print( 'Loading slices' )
-n_snap_max = 95
+n_snap_max = 94
 slice_ids = range( 1, n_snap_max+1 )
 n_slices = len(slice_ids)
 z_vals, slices = [], []
