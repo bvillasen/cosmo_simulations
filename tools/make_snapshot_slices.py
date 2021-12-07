@@ -28,7 +28,7 @@ show_progess = False
 if rank == 0: show_progess = True
 
 
-m_wdm = 2.5
+m_wdm = 3.0
 input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m{m_wdm:.1f}kev/snapshot_files/'
 output_dir = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m{m_wdm:.1f}kev/slices_gas_density/'
 if rank == 0: create_directory( output_dir )
