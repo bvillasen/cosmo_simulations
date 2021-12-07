@@ -92,7 +92,7 @@ for indx in range( image_width ):
   # time.sleep(0.01)
   if slices[id_l] is None: slices[id_l] = load_slice( id_l + 1)
   if slices[id_r] is None: slices[id_r] = load_slice( id_r + 1 )
-  slice_remove = id_l - 20
+  slice_remove = id_l - 10
   if slice_remove >= 0 and slices[slice_remove] is not None: 
     print( f'Removing slice: {slice_remove}' )
     slices[slice_remove] = None 
