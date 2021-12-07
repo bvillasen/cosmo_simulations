@@ -7,18 +7,18 @@ root_dir = os.path.dirname(os.getcwd()) + '/'
 sys.path.append( root_dir + 'tools')
 from tools import *
 
-m_wdm = 0.5
+m_wdm = 3.0
 input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m{m_wdm:.1f}kev/slices_gas_density/'
-output_dir = data_dir + 'render_images/wdm_slice/slices/'
+output_dir = input_dir + 'interpolated/'
 create_directory( output_dir )
 
 slice_width = 1024
-slice_depth = 512
-slice_start = 512
+slice_depth = 256
+slice_id = 2
+slice_start = slice_id * slice_depth
 
 print( 'Loading slices' )
-n_snap_max = 96
-slice_ids = range( 1, n_snap_max+1 )
+slice_ids = range( 1, 97 )
 n_slices = len(slice_ids)
 z_vals, slices = [], []
 time_start = time.time()
@@ -36,9 +36,9 @@ print( '' )
 z_vals = np.array( z_vals )  
 a_vals = 1 / ( z_vals + 1 )
 
+# z_vals
 
 image_heigth, image_width = 1024,  1024*3
-
 z_start, z_end = z_vals.max(), z_vals.min()
 a_start, a_end = a_vals.min(), a_vals.max()
 delta_z = ( z_end - z_start ) / image_width
@@ -46,41 +46,33 @@ delta_a = ( a_end - a_start ) / image_width
 print( f'z_start: {z_start}  z_end: {z_end}  delta_z: {delta_z}')
 # print( f'a_start: {a_start}  a_end: {a_end}  delta_a: {delta_a}')
 
-pixel_z = np.zeros( image_width )
-z_middle = 1
-pixel_middle = int( 0.72 * image_width )
-pixels_l = np.linspace( z_start, z_middle, pixel_middle )
-pixels_r = np.linspace( z_middle, z_end, image_width - pixel_middle + 1,  )[1:]
-pixel_z[:pixel_middle] = pixels_l
-pixel_z[pixel_middle:] = pixels_r
-
-extra_l, extra_r = 256, 256
-image_width_complete = extra_l + image_width + extra_r
-image_data = np.zeros( (slice_depth, image_heigth, image_width_complete ), dtype=np.float32 ) 
-pixel_z_complete = np.zeros( image_width_complete )
-pixel_z_complete[:extra_l] = pixel_z[0]
-pixel_z_complete[extra_l:image_width+extra_l] = pixel_z
-pixel_z_complete[image_width+extra_l:] = pixel_z[-1]
-
-image_width = image_width_complete
-pixel_z = pixel_z_complete
-
+image_data = np.zeros( (slice_depth, image_heigth, image_width ), dtype=np.float32 ) 
+pixel_a, pixel_z = [], []
 print( 'Merging slices' )
 time_start = time.time()
 for indx in range( image_width ):
   slice_indx = indx % slice_width
+  a = a_start + ( indx + 0.5 ) * delta_a
 
-  z = pixel_z[indx]
+  # id_l = np.where( a_vals <= a )[0][-1]
+  # id_r = id_l + 1
+  # a_l = a_vals[id_l]
+  # a_r = a_vals[id_r]
+  # alpha = ( a - a_l ) / ( a_r - a_l )
+  # print( f'indx: {indx}  id_l: {id_l}  id_r: {id_r}  a: {a:.3f}   a_l: {a_l:.3f}   a_r: {a_r:.3f}   alpha:{alpha}    '    )
+
+  z = z_start + ( indx + 0.5 ) * delta_z
   id_l = np.where( z_vals >= z )[0][-1]
   id_r = id_l + 1
-  if id_r >= n_snap_max: id_r -= 1
   z_l = z_vals[id_l]
   z_r = z_vals[id_r]
-  if z_r == z_l: alpha = 1
-  else: alpha = ( z - z_l ) / ( z_r - z_l )
-
+  alpha = ( z - z_l ) / ( z_r - z_l )
+  
   # print( f'indx: {indx}  id_l: {id_l}  id_r: {id_r}  z: {z:.3f}   z_l: {z_l:.3f}   z_r: {z_r:.3f}   alpha:{alpha}    '    )
-  # time.sleep(0.01)
+  # time.sleep(0.05)
+
+  pixel_a.append( a )
+  pixel_z.append( z )
 
   slice_l = slices[id_l][:, :, slice_indx]
   slice_r = slices[id_r][:, :, slice_indx]
@@ -89,19 +81,21 @@ for indx in range( image_width ):
 
   print_progress( indx+1, image_width, time_start )
 
+pixel_a = np.array( pixel_a )
+pixel_z = np.array( pixel_z )
 print('')
 
 
-outfile_name = output_dir + f'interpolated_slice_mwdm{m_wdm:.1f}_start{slice_start}_ndepth{slice_depth}.h5'
+outfile_name = output_dir + f'interpolated_slice_start{slice_start}_ndepth{slice_depth}.h5'
 outfile = h5.File( outfile_name, 'w' )
 outfile.create_dataset( 'slice', data=image_data )
-# outfile.create_dataset( 'pixel_a', data=pixel_a )
+outfile.create_dataset( 'pixel_a', data=pixel_a )
 outfile.create_dataset( 'pixel_z', data=pixel_z )
 outfile.close()
 print( f'Saved File: {outfile_name}' )
 
 
-output_dir = data_dir + 'render_images/wdm_slice/figures/'
+output_dir = output_dir + 'figures/'
 create_directory( output_dir )
 
 
@@ -118,3 +112,4 @@ figure_name = output_dir + f'fig_density_slice_start{slice_start}.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
 
+# 
