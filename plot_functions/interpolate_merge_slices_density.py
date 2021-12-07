@@ -7,7 +7,7 @@ root_dir = os.path.dirname(os.getcwd()) + '/'
 sys.path.append( root_dir + 'tools')
 from tools import *
 
-m_wdm = 1.0
+m_wdm = 0.5
 input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m{m_wdm:.1f}kev/slices_gas_density/'
 output_dir = data_dir + 'render_images/wdm_slice/slices/'
 create_directory( output_dir )
@@ -16,8 +16,15 @@ slice_width = 1024
 slice_depth = 512
 slice_start = 512
 
+def load_slice( slice_id ):
+  file_name = input_dir + f'slice_{slice_id}_start{slice_start}_depth{slice_depth}.h5'
+  file = h5.File( file_name, 'r' )
+  slice = file['density'][0:slice_depth, :, :]
+  file.close()
+  return slice
+
 print( 'Loading slices' )
-n_snap_max = 96
+n_snap_max = 95
 slice_ids = range( 1, n_snap_max+1 )
 n_slices = len(slice_ids)
 z_vals, slices = [], []
@@ -27,8 +34,9 @@ for n_slice,slice_id in enumerate( slice_ids ):
   file = h5.File( file_name, 'r' )
   z = file.attrs['current_z']
   z_vals.append( z )
-  slice = file['density'][0:slice_depth, :, :]
-  slices.append( slice )
+  # slice = file['density'][0:slice_depth, :, :]
+  # slices.append( slice )
+  slices.append(None)
   file.close()
   print_progress( n_slice+1, n_slices, time_start )
 print( '' )
@@ -81,6 +89,9 @@ for indx in range( image_width ):
 
   # print( f'indx: {indx}  id_l: {id_l}  id_r: {id_r}  z: {z:.3f}   z_l: {z_l:.3f}   z_r: {z_r:.3f}   alpha:{alpha}    '    )
   # time.sleep(0.01)
+  if slices[id_l] is None: slices[id_l] = load_slice( id_l )
+  if slices[id_r] is None: slices[id_r] = load_slice( id_r )
+  if id_l > 0 and slices[id_l-1] is not None: slices[id_l-1] = None 
 
   slice_l = slices[id_l][:, :, slice_indx]
   slice_r = slices[id_r][:, :, slice_indx]
@@ -95,26 +106,24 @@ print('')
 outfile_name = output_dir + f'interpolated_slice_mwdm{m_wdm:.1f}_start{slice_start}_ndepth{slice_depth}.h5'
 outfile = h5.File( outfile_name, 'w' )
 outfile.create_dataset( 'slice', data=image_data )
-# outfile.create_dataset( 'pixel_a', data=pixel_a )
 outfile.create_dataset( 'pixel_z', data=pixel_z )
 outfile.close()
 print( f'Saved File: {outfile_name}' )
 
 
-output_dir = data_dir + 'render_images/wdm_slice/figures/'
-create_directory( output_dir )
-
-
-nrows, ncols = 1, 1
-fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(10*ncols,10*nrows))
-
-proj2 = (image_data**2).sum(axis=0)
-proj = image_data.sum(axis=0)
-proj = np.log10( proj2/proj )
-# proj = np.log10( proj )
-ax.imshow( proj, cmap='inferno' )
-
-figure_name = output_dir + f'fig_density_slice_start{slice_start}.png'
-fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
-print( f'Saved Figure: {figure_name}' )
+# output_dir = data_dir + 'render_images/wdm_slice/figures/'
+# create_directory( output_dir )
+# 
+# nrows, ncols = 1, 1
+# fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(10*ncols,10*nrows))
+# 
+# proj2 = (image_data**2).sum(axis=0)
+# proj = image_data.sum(axis=0)
+# proj = np.log10( proj2/proj )
+# # proj = np.log10( proj )
+# ax.imshow( proj, cmap='inferno' )
+# 
+# figure_name = output_dir + f'fig_density_slice_start{slice_start}.png'
+# fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
+# print( f'Saved Figure: {figure_name}' )
 
