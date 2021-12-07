@@ -28,9 +28,11 @@ show_progess = False
 if rank == 0: show_progess = True
 
 
-m_wdm = 3.5
-input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m{m_wdm:.1f}kev/snapshot_files/'
-output_dir = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m{m_wdm:.1f}kev/slices_gas_density/'
+# m_wdm = 3.5
+# sim_dir    = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m{m_wdm:.1f}kev/'
+sim_dir    = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_cdm/'
+input_dir  = sim_dir + 'snapshot_files/'
+output_dir = sim_dir + 'slices_gas_density/'
 if rank == 0: create_directory( output_dir )
   
 n_points = 1024
