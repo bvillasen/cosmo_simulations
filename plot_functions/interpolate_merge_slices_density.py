@@ -7,9 +7,9 @@ root_dir = os.path.dirname(os.getcwd()) + '/'
 sys.path.append( root_dir + 'tools')
 from tools import *
 
-m_wdm = 3.5
-# input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m{m_wdm:.1f}kev/slices_gas_density/'
-input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_cdm/slices_gas_density/'
+m_wdm = 0.25
+input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m{m_wdm:.2f}kev/slices_gas_density/'
+# input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_cdm/slices_gas_density/'
 output_dir = data_dir + 'render_images/wdm_slice/slices/'
 create_directory( output_dir )
 
