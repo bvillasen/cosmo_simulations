@@ -110,8 +110,8 @@ for indx in range( image_width ):
 print('')
 
 
-# outfile_name = output_dir + f'interpolated_slice_mwdm{m_wdm:.1f}_start{slice_start}_ndepth{slice_depth}.h5'
-outfile_name = output_dir + f'interpolated_slice_cdm_start{slice_start}_ndepth{slice_depth}.h5'
+outfile_name = output_dir + f'interpolated_slice_mwdm{m_wdm:.2f}_start{slice_start}_ndepth{slice_depth}.h5'
+# outfile_name = output_dir + f'interpolated_slice_cdm_start{slice_start}_ndepth{slice_depth}.h5'
 outfile = h5.File( outfile_name, 'w' )
 outfile.create_dataset( 'slice', data=image_data )
 outfile.create_dataset( 'pixel_z', data=pixel_z )
