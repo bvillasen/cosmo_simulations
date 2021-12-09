@@ -28,7 +28,8 @@ n_points = 1024
 # grid_name = f'{n_points}_mwdm1p0_nsim20'
 # grid_name = f'{n_points}_mwdm8p0_nsim20'
 # grid_name = f'{n_points}_wdmgrid_nsim100'
-grid_name = f'{n_points}_wdmgrid_nsim175'
+# grid_name = f'{n_points}_wdmgrid_nsim175'
+grid_name = f'{n_points}_wdmgrid_nsim175_deltaZ_0.5'
 
 
 if system == 'Lux':
