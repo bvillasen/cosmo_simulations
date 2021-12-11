@@ -30,7 +30,8 @@ n_points = 1024
 # grid_name = f'{n_points}_wdmgrid_nsim100'
 # grid_name = f'{n_points}_wdmgrid_nsim175'
 # grid_name = f'{n_points}_wdmgrid_nsim175_deltaZ_0.5'
-grid_name = f'{n_points}_wdmgrid_nsim350'
+# grid_name = f'{n_points}_wdmgrid_nsim350'
+grid_name = f'{n_points}_wdmgrid_nsim200_deltaZ_0p0'
 
 
 if system == 'Lux':
@@ -155,11 +156,13 @@ def Get_ICs_dir( sim_params, z_start ):
   input_dir = ics_dir + f'{n_points}_{L_Mpc}Mpc/ics_{n_gpus}_z{int(z_start)}/'
   return input_dir
 
-def Get_ICs_dir_wdm( wdm_mass, sim_params, z_start ):
+def Get_ICs_dir_wdm( wdm_mass, sim_params, z_start, cdm_wdm_mass=1e3 ):
   global ics_dir, Lbox
   n_points = sim_params['nx']
   L_Mpc = int( Lbox / 1000 )
   input_dir = ics_dir + f'wdm/{n_points}_{L_Mpc}Mpc_wdm_m{wdm_mass}kev/ics_{n_gpus}_z{int(z_start)}/'
+  # Use CDM instead of WDM for a large WDM mass
+  if wdm_mass >= cdm_wdm_mass: input_dir = ics_dir + f'wdm/{n_points}_{L_Mpc}Mpc_cdm/ics_{n_gpus}_z{int(z_start)}/'      
   return input_dir
   
 
