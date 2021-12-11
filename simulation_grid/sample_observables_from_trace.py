@@ -108,7 +108,7 @@ print( f'Rank: {rank}  HL:{params_HL} ' )
 
 
 hpi_sum = 0.95
-n_samples = 400000 
+n_samples = 400000 * 10
 
 # Obtain distribution of the power spectrum
 file_name = output_dir + 'samples_power_spectrum.pkl'

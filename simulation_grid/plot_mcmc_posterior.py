@@ -23,7 +23,7 @@ else:
 
 
 
-independent_redshift = False
+independent_redshift = True
 
 data_name = 'fit_results_P(k)+_Boera'
 # data_name = 'fit_results_P(k)+_BoeraC_'
@@ -67,6 +67,7 @@ bins = {}
 bins[0] = { 'min':min(params[0]['values']), 'max':max(params[0]['values']), 'n':30 }
 bins[1] = None
 bins[2] = None
+bins[3] = None
 
 data_labels =  '' 
 corner_labels = { 'scale_He':r'$\beta_{\mathrm{He}}$', 'scale_H':r'$\beta_{\mathrm{H}}$', 'deltaZ_He':r'$\Delta z_{\mathrm{He}}$', 'deltaZ_H':r'$\Delta z_{\mathrm{H}}$',
