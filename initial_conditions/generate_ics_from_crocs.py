@@ -37,9 +37,9 @@ create_directory( output_dir )
 # gas_dens = ReadDen( input_dir + file_base_name + '_B.den')
 # header, (gas_vel_x, gas_vel_y, gas_vel_z) = ReadXV(input_dir + file_base_name + '_B.vel')
 
-
-header, (p_pos_x, p_pos_y, p_pos_z) = ReadXV(input_dir + file_base_name + '_D.pos')
-header, (p_vel_x, p_vel_y, p_vel_z) = ReadXV(input_dir + file_base_name + '_D.vel')
+data_key = 'M'
+header, (p_pos_x, p_pos_y, p_pos_z) = ReadXV(input_dir + file_base_name + f'_{data_key}.pos')
+header, (p_vel_x, p_vel_y, p_vel_z) = ReadXV(input_dir + file_base_name + f'_{data_key}.vel')
 #
 # p_pos_x = p_pos_x.flatten() * 1e3
 # p_pos_y = p_pos_y.flatten() * 1e3
