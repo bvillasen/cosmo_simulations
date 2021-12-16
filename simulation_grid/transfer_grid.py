@@ -20,8 +20,8 @@ sim_grid_dir = data_dir + 'cosmo_sims/sim_grid/'
 # dst_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim320/'
 
 # src_grid_dir = sim_grid_dir + '1024_mwdm1p0_nsim20/'
-src_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim175_deltaZ_n0p5/'
-dst_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim200_deltaZ_n0p5/'
+src_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim175_deltaZ_n0p0/'
+dst_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim200_deltaZ_n0p0/'
 
 # constant_params = { 'wdm_mass': wdm_mass }
 constant_params = None
@@ -34,7 +34,9 @@ dst_ids_to_transfer = [ id for id in dst_params if dst_params[id]['src']  is not
 n_to_transfer = len( dst_ids_to_transfer )
 print( f'N to transfer: {n_to_transfer} ' )
 
-directories_to_copy = [ 'analysis_files', 'simulation_files' ] 
+# directories_to_copy = [ 'analysis_files', 'simulation_files' ] 
+directories_to_copy = [ 'skewers_files' ] 
+
 sim_files_to_copy = [ 'run_output.log' ]
 
 n_transferred = 0
@@ -47,6 +49,7 @@ for dst_id in dst_ids_to_transfer:
   src_root_dir = dst_data['src']['root_dir']
   src_name = dst_data['src']['name']
   print( f'\nCopying {src_name} -> {dst_name}' )
+
   if 'analysis_files' in  directories_to_copy:
     src_dir = src_root_dir + f'analysis_files/{src_name}/'
     dst_dir = dst_root_dir + f'analysis_files/{dst_name}/'
@@ -61,6 +64,23 @@ for dst_id in dst_ids_to_transfer:
     diff_files = dir_comparison.diff_files
     if len( diff_files ) > 0: 
       print( 'ERROR: Found diff_files > 0')
+  
+  if 'skewers_files' in directories_to_copy:
+    src_dir = src_root_dir + f'skewers_files/{src_name}/'
+    dst_dir = dst_root_dir + f'skewers_files/{dst_name}/'
+    print( f' src dir: {src_dir}' )
+    print( f' dst dir: {dst_dir}' )
+    dst_content = os.listdir( dst_dir )
+    if len( dst_content ) == 0: 
+      os.rmdir( dst_dir )
+      dst_result = copytree( src_dir, dst_dir )
+    dir_comparison = dircmp( src_dir, dst_dir )
+    # comparison_result = dir_comparison.report()
+    diff_files = dir_comparison.diff_files
+    if len( diff_files ) > 0: 
+      print( 'ERROR: Found diff_files > 0')
+  
+  
 
   if 'simulation_files' in directories_to_copy:
     src_dir = src_root_dir + f'simulation_files/{src_name}/'
