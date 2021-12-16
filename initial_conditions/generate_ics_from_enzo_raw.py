@@ -70,8 +70,8 @@ if type == 'hydro':
   data_ics['gas']['momentum_z'] = gas_density * gas_vel_z
   data_ics['gas']['GasEnergy'] = gas_U
   data_ics['gas']['Energy'] = gas_E
-  
-  
+
+
 if type == 'particles':
   p_pos_x = Load_Particles_Field( 'pos_x', input_dir, attrs=file_attrs )
   p_pos_y = Load_Particles_Field( 'pos_y', input_dir, attrs=file_attrs )

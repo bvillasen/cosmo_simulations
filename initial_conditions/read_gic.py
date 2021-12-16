@@ -151,7 +151,7 @@ def ReadXV(fname,loud=1):
             x = ReadArray(f,fh,fh["ntot"],0,loud=loud)
             y = ReadArray(f,fh,fh["ntot"],0,loud=loud)
             z = ReadArray(f,fh,fh["ntot"],0,loud=loud)
-            return (RepackArray(x,fh),RepackArray(y,fh),RepackArray(z,fh))
+            return fh, (RepackArray(x,fh),RepackArray(y,fh),RepackArray(z,fh))
         else:
             return None
         ##
