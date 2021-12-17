@@ -63,6 +63,7 @@ for dst_id in dst_ids_to_transfer:
     # if len( dst_content_0 ) == 0: 
     #   os.rmdir( dst_dir )
     #   dst_result = move( src_dir, dst_dir )
+    dst_content = os.listdir( dst_dir )
     n_files_src = len( src_content )
     n_files_dst = len( dst_content )
     if n_files_src != n_files_dst:
