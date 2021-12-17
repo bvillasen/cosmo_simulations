@@ -58,7 +58,7 @@ for dst_id in dst_ids_to_transfer:
     dst_dir = dst_root_dir + f'analysis_files/{dst_name}/'
     print( f' src dir: {src_dir}' )
     print( f' dst dir: {dst_dir}' )
-    src_content = os.listdir( stc_dir )
+    src_content = os.listdir( src_dir )
     dst_content = os.listdir( dst_dir )
     # if len( dst_content ) == 0: 
     #   os.rmdir( dst_dir )
