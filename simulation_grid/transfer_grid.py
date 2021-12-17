@@ -59,16 +59,16 @@ for dst_id in dst_ids_to_transfer:
     print( f' src dir: {src_dir}' )
     print( f' dst dir: {dst_dir}' )
     src_content = os.listdir( src_dir )
-    dst_content = os.listdir( dst_dir )
-    # if len( dst_content ) == 0: 
+    dst_content_0 = os.listdir( dst_dir )
+    # if len( dst_content_0 ) == 0: 
     #   os.rmdir( dst_dir )
-    #   dst_result = copytree( src_dir, dst_dir )
-    # dir_comparison = dircmp( src_dir, dst_dir )
-    # # comparison_result = dir_comparison.report()
-    # diff_files = dir_comparison.diff_files
-    # if len( diff_files ) > 0: 
-    #   print( 'ERROR: Found diff_files > 0')
-
+    #   dst_result = move( src_dir, dst_dir )
+    n_files_src = len( src_content )
+    n_files_dst = len( dst_content )
+    if n_files_src != n_files_dst:
+      print( 'ERROR: Number of files in src and dst directories differs' )
+      time.sleep(2)
+    
   if 'analysis_files' in  directories_to_copy:
     src_dir = src_root_dir + f'analysis_files/{src_name}/'
     dst_dir = dst_root_dir + f'analysis_files/{dst_name}/'
@@ -83,7 +83,8 @@ for dst_id in dst_ids_to_transfer:
     diff_files = dir_comparison.diff_files
     if len( diff_files ) > 0: 
       print( 'ERROR: Found diff_files > 0')
-  
+      time.sleep(2)
+      
   if 'skewers_files' in directories_to_copy:
     src_dir = src_root_dir + f'skewers_files/{src_name}/'
     dst_dir = dst_root_dir + f'skewers_files/{dst_name}/'
@@ -98,7 +99,7 @@ for dst_id in dst_ids_to_transfer:
     diff_files = dir_comparison.diff_files
     if len( diff_files ) > 0: 
       print( 'ERROR: Found diff_files > 0')
-  
+      time.sleep(2)
   
 
   if 'simulation_files' in directories_to_copy:
