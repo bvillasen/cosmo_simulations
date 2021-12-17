@@ -20,8 +20,8 @@ sim_grid_dir = data_dir + 'cosmo_sims/sim_grid/'
 # dst_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim320/'
 
 # src_grid_dir = sim_grid_dir + '1024_mwdm1p0_nsim20/'
-src_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim175_deltaZ_0p0/'
-dst_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim200_deltaZ_0p0/'
+src_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim175_deltaZ_0p5/'
+dst_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim200_deltaZ_0p5/'
 
 # constant_params = { 'wdm_mass': wdm_mass }
 constant_params = None
@@ -62,7 +62,7 @@ for dst_id in dst_ids_to_transfer:
     dst_content_0 = os.listdir( dst_dir )
     if len( dst_content_0 ) == 0: 
       os.rmdir( dst_dir )
-      print( 'Moving Directory')
+      print( ' Moving Directory')
       dst_result = move( src_dir, dst_dir )
     dst_content = os.listdir( dst_dir )
     n_files_src = len( src_content )
