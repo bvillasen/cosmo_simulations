@@ -54,8 +54,8 @@ for dst_id in dst_ids_to_transfer:
   print( f'\nCopying {src_name} -> {dst_name}' )
 
   if 'snapshot_files' in  directories_to_move:
-    src_dir = src_root_dir + f'analysis_files/{src_name}/'
-    dst_dir = dst_root_dir + f'analysis_files/{dst_name}/'
+    src_dir = src_root_dir + f'snapshot_files/{src_name}/'
+    dst_dir = dst_root_dir + f'snapshot_files/{dst_name}/'
     print( f' src dir: {src_dir}' )
     print( f' dst dir: {dst_dir}' )
     src_content = os.listdir( src_dir )
