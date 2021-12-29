@@ -14,7 +14,7 @@ sys.path.extend(subDirectories)
 from tools import * 
 from plot_thermal_history import Plot_T0_gamma_evolution
  
-root_dir = data_dir + 'cosmo_sims/sim_grid/1024_np5_nsim16/'
+root_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim200_deltaZ_0p0/'
 analysis_dir = root_dir + 'analysis_files/'
 output_dir = root_dir + 'figures/'
 create_directory( output_dir ) 
@@ -22,11 +22,12 @@ create_directory( output_dir )
 sim_dirs = [ f for f in os.listdir(analysis_dir) if f[0]=='S']
 sim_dirs.sort()
 
+n_snapshots = 36
 
 data_all = {}
 for data_id, sim_dir in enumerate(sim_dirs):
   z_vals, T0_vals, gamma_vals = [], [], []
-  for n_file in range(0,56):
+  for n_file in range(0,n_snapshots):
     input_dir = analysis_dir + sim_dir 
     file_name = input_dir + f'/{n_file}_analysis.h5'
     file = h5.File( file_name, 'r' )
