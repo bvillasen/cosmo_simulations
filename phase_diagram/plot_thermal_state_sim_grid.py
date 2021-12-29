@@ -14,7 +14,7 @@ sys.path.extend(subDirectories)
 from tools import * 
 from plot_thermal_history import Plot_T0_gamma_evolution
  
-root_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim200_deltaZ_0p0/'
+root_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim200_deltaZ_0p5/'
 analysis_dir = root_dir + 'analysis_files/'
 output_dir = root_dir + 'figures/'
 create_directory( output_dir ) 
