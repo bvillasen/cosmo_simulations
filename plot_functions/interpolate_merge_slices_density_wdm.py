@@ -39,7 +39,7 @@ for file_name in file_names:
 nz, ny, nx = slice_shape
 image_width = nx
 image_depth = nz
-image_heigth =  1024 * 2
+image_heigth =  2048 + 256 + 128 + 128
 image_data = np.zeros( (image_depth, image_heigth, image_width ), dtype=np.float32 )
 
 m_vals = inv_mass
@@ -48,9 +48,10 @@ m_end = m_vals[-1]
 delta_m = ( m_end - m_start ) / image_heigth
 
 print( 'Merging slices' )
+y_offset = -128
 time_start = time.time()
 for indx in range( image_heigth ):
-  slice_indx = indx % ny
+  slice_indx = (indx + y_offset) % ny
   m = m_start + (indx + 0.5) * delta_m
   id_l = np.where( m_vals >= m )[0][-1]
   id_r = id_l + 1
@@ -65,13 +66,13 @@ for indx in range( image_heigth ):
   slice_r = slices[id_r][:, slice_indx, :]
   image_data[:, indx, :] = slice_l + alpha * ( slice_r - slice_l )
 
-  print_progress( indx+1, image_width, time_start )
+  print_progress( indx+1, image_heigth, time_start )
 
 # image_data = np.flip( image)
 
 print('')
 
-outfile_name = output_dir + f'interpolated_slice_wdm_extended.h5'
+outfile_name = output_dir + f'interpolated_slice_wdm_extended_new.h5'
 outfile = h5.File( outfile_name, 'w' )
 outfile.create_dataset( 'slice', data=image_data )
 outfile.create_dataset( 'pixel_z', data=pixel_z )
