@@ -13,26 +13,8 @@ print( f'System: {system}')
 n_points = 1024
 
 # grid_name = f'{n_points}_P19m_np4_nsim400'
-# grid_name = f'{n_points}_np5_nsim16'
-# grid_name = f'{n_points}_np2_nsim16'
-# grid_name = f'{n_points}_np4_nsim81'
-# grid_name = f'{n_points}_mwdm2p0_nsim8'
-# grid_name = f'{n_points}_mwdm2p0_nsim64'
-# grid_name = f'{n_points}_mwdm3p0_nsim64'
-# grid_name = f'{n_points}_mwdm4p0_nsim64'
-# grid_name = f'{n_points}_mwdm5p0_nsim64'
-# grid_name = f'{n_points}_deltaZn0p6_nsim27'
-# grid_name = f'{n_points}_zreion5p4_nsim27'
-# grid_name = f'{n_points}_wdmgrid_nsim192'
-# grid_name = f'{n_points}_wdmgrid_nsim320'
-# grid_name = f'{n_points}_mwdm1p0_nsim20'
-# grid_name = f'{n_points}_mwdm8p0_nsim20'
-# grid_name = f'{n_points}_wdmgrid_nsim100'
-# grid_name = f'{n_points}_wdmgrid_nsim175'
-# grid_name = f'{n_points}_wdmgrid_nsim175_deltaZ_0.5'
-# grid_name = f'{n_points}_wdmgrid_nsim350'
-grid_name = f'{n_points}_wdmgrid_nsim200_deltaZ_0p0'
-# grid_name = f'{n_points}_wdmgrid_nsim200_deltaZ_0p5'
+# grid_name = f'{n_points}_wdmgrid_nsim200_deltaZ_0p0'
+grid_name = f'{n_points}_wdmgrid_nsim200_deltaZ_0p5'
 # grid_name = f'{n_points}_wdmgrid_nsim200_deltaZ_n0p5'
 
 
