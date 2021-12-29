@@ -20,8 +20,9 @@ delta_min, delta_max = 0, 1.0
 n_samples_line = 50
 
 input_dir = args[0]
-# fit_dir = input_dir + 'fit_mcmc_05/'
 fit_dir = input_dir + f'fit_mcmc_delta_{delta_min}_{delta_max}/'
+
+skiping_files = False
 
 use_mpi = True
 if use_mpi:
@@ -55,7 +56,7 @@ indices_to_generate = split_indices( indices, rank,  n_procs )
 for n_file in indices_to_generate:
   fit_file = fit_dir + f'fit_{n_file}.pkl'
   file_path = Path(fit_file)
-  if file_path.is_file():
+  if file_path.is_file() and skiping_files:
     print( f' Skiping File: {n_file} ') 
     continue
   data = load_analysis_data( n_file, input_dir )
