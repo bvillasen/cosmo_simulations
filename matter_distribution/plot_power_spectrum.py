@@ -62,37 +62,33 @@ for i in range(nrows):
 
       snap_data = sim_data[snap_id]
       z = snap_data['z']
-      bin_centers = snap_data['bin_centers']
-      distribution = snap_data['distribution']
+      k_vals = snap_data['k_vals']
+      power_spectrum = snap_data['power_spectrum']
       if sim_name == 'cdm': label = 'CDM'
       else:
         wdm_mass = wdm_masses[sim_id]
         label = f'WDM {wdm_mass} keV'
        
-      ax.plot( bin_centers, distribution, label=label )
+      ax.plot( k_vals, power_spectrum, label=label )
     
-    ax.text(0.1, 0.95, r'$z=${0:.1f}'.format(np.round(z)), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
+    ax.text(0.1, 0.02, r'$z=${0:.1f}'.format(np.round(z)), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
 
     leg = ax.legend(  loc=1, frameon=False, fontsize=legend_font_size    )
-    
-    
-    ax.set_xlim( -2.5, 4 )
+        
+    # ax.set_xlim( -2.5, 4 )
     # ax.set_ylim( 0, .1 )
     
-    # ax.set_ylim( 10**-8, 1 )
-    # ax.set_yscale('log')
+    ax.set_yscale('log')
+    ax.set_xscale('log')
     
-    ax.set_ylabel( r' $P\,(\Delta)$', fontsize=label_size, color= text_color )
-    ax.set_xlabel( r'$ \mathrm{log_{10}} \, \Delta$', fontsize=label_size, color= text_color )
-
+    ax.set_ylabel( r' $P(k) [h^3\, \mathrm{Mpc}^{-3}]$', fontsize=label_size, color= text_color )
+    ax.set_xlabel( r'$k \,\, [h\, \mathrm{Mpc}^{-1}]$', fontsize=label_size, color= text_color )
 
     ax.tick_params(axis='both', which='major', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in' )
     ax.tick_params(axis='both', which='minor', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in')
 
 
-
-
-figure_name = output_dir + 'density_distribution.png'
+figure_name = output_dir + f'power_spectrum_{data_type}.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
 

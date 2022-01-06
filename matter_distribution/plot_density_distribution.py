@@ -81,7 +81,7 @@ for i in range(nrows):
     # ax.set_ylim( 10**-8, 1 )
     # ax.set_yscale('log')
     
-    ax.set_ylabel( r' $P\,(\Delta)$', fontsize=label_size, color= text_color )
+    ax.set_ylabel( r' $f\,(\Delta)$', fontsize=label_size, color= text_color )
     ax.set_xlabel( r'$ \mathrm{log_{10}} \, \Delta$', fontsize=label_size, color= text_color )
 
 
