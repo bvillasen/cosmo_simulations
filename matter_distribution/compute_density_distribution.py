@@ -45,7 +45,7 @@ precision = np.float32
 fields = [ 'density' ]
 n_bins = 100
 
-data_type = 'particles'
+data_type = 'hydro'
 snap_id = snap_ids[0]
 
 snap_data = load_snapshot_data_distributed( data_type, fields,  snap_id, input_dir,  box_size, grid_size, precision  )
