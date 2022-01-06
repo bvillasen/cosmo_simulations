@@ -21,5 +21,5 @@ for snap_id in snap_ids:
   file_name = input_dir + f'{snap_id}.h5.0'
   file = h5.File( file_name, 'r' )
   z = file.attrs['Current_z'][0]
-  z_vals.append(z_vals)
+  z_vals.append(z)
   file.close()
