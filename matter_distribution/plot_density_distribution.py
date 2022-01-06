@@ -21,6 +21,23 @@ snap_ids = [1, 4, 8, 13, 23, 42 ]
 file_name = input_dir + 'density_distribution_cdm.pkl'
 sim_data = Load_Pickle_Directory( file_name )
 
+import matplotlib
+matplotlib.rcParams['font.sans-serif'] = "Helvetica"
+matplotlib.rcParams['font.family'] = "sans-serif"
+matplotlib.rcParams['mathtext.fontset'] = 'cm'
+matplotlib.rcParams['mathtext.rm'] = 'serif'
+
+label_size = 14
+figure_text_size = 14
+tick_label_size_major = 15
+tick_label_size_minor = 13
+tick_size_major = 5
+tick_size_minor = 3
+tick_width_major = 1.5
+tick_width_minor = 1
+text_color = 'black'
+legend_font_size = 14
+
 ncols, nrows = 2, 3
 figure_width = 6
 figure_height = 18
@@ -39,6 +56,9 @@ for i in range(nrows):
     
     ax = ax_l[i][j]
     ax.plot( bin_centers, distribution )
+    
+    ax.text(0.9, 0.93, r'$z=${0:.1f}'.format(np.round(z)), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
+
 
 
 figure_name = output_dir + 'density_distribution.png'
