@@ -7,7 +7,7 @@ root_dir = os.path.dirname(os.getcwd()) + '/'
 subDirectories = [x[0] for x in os.walk(root_dir)]
 sys.path.extend(subDirectories)
 from tools import *
-
+from load_data import load_snapshot_data_distributed
 
 output_dir = data_dir + 'cosmo_sims/rescaled_P19/wdm/figures/'
 create_directory( output_dir )
@@ -36,3 +36,15 @@ for z in z_vals:
 snap_indices = np.array( snap_indices )
 
 snap_ids = snap_ids[snap_indices]
+
+Lbox = 50000.0    #kpc/h
+n_cells = 1024
+box_size = [ Lbox, Lbox, Lbox ]
+grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
+precision = np.float32
+fields = [ 'density' ]
+
+data_type = 'particles'
+snap_id = snap_ids[0]
+
+snap_data = load_snapshot_data_distributed( data_type, fields,  nSnap, inDir,  box_size, grid_size, precision, subgrid )
