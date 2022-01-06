@@ -47,4 +47,4 @@ fields = [ 'density' ]
 data_type = 'particles'
 snap_id = snap_ids[0]
 
-snap_data = load_snapshot_data_distributed( data_type, fields,  snap_id, input_dir,  box_size, grid_size, precision, subgrid )
+snap_data = load_snapshot_data_distributed( data_type, fields,  snap_id, input_dir,  box_size, grid_size, precision  )
