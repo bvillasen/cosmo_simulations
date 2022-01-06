@@ -52,7 +52,7 @@ snap_data = load_snapshot_data_distributed( data_type, fields,  snap_id, input_d
 z = snap_data['current_z']
 density = snap_data['density']
 log_density = np.log10(density)
-bin_edges = np.lispace( log_density.min(), log_density.max(), n_bins )
+bin_edges = np.linspace( log_density.min(), log_density.max(), n_bins )
 hist, bin_edges = np.histogram( log_density, bins=bin_edges )
 distribution = hist / hist.sum()
 bin_centers = ( bin_edges[1:] - bin_edges[:-1] ) / 2
