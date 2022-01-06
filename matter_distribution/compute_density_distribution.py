@@ -64,6 +64,6 @@ for snap_id in snap_ids:
   break
 
 
-file_name = output_dir 'density_distribution.pkl'
+file_name = output_dir + 'density_distribution.pkl'
 Write_Pickle_Directory( sim_data, file_name )
 
