@@ -21,7 +21,7 @@ Lbox = 50000.0    #kpc/h
 n_cells = 1024
 box_size = [ Lbox, Lbox, Lbox ]
 grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
-precision = np.float32
+precision = np.float64
 fields = [ 'density' ]
 
 n_bins = 40
@@ -46,7 +46,7 @@ snap_id = snap_ids[0]
 snap_data = load_snapshot_data_distributed( data_type, fields,  snap_id, input_dir,  box_size, grid_size, precision  )
 z = snap_data['Current_z']
 density = snap_data['density']
-print( f'snap_id: {snap_id}  z:{z}' )
+print( f'Computing Power Spectrum  snap_id: {snap_id}  z:{z}' )
 power_spectrum, k_vals, count = get_power_spectrum( density, Lbox, nx, ny, nz, dx, dy, dz,  n_kSamples=n_bins )
 
 
