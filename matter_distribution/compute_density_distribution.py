@@ -56,7 +56,7 @@ bin_edges = np.lispace( log_density.min(), log_density.max(), n_bins )
 hist, bin_edges = np.histogram( log_density, bins=bin_edges )
 distribution = hist / hist.sum()
 bin_centers = ( bin_edges[1:] - bin_edges[:-1] ) / 2
-sim_data[snap_id] = { 'bin_centers':bin_centers, 'distribution'=distribution }
+sim_data[snap_id] = { 'bin_centers':bin_centers, 'distribution':distribution }
 
 
 
