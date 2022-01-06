@@ -9,11 +9,11 @@ sys.path.extend(subDirectories)
 from tools import *
 from load_data import load_snapshot_data_distributed
 
-output_dir = data_dir + 'cosmo_sims/rescaled_P19/wdm/figures/'
-create_directory( output_dir )
 
 simulation_dir = data_dir + 'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_cdm/'
 input_dir = simulation_dir + 'snapshot_files/'
+output_dir = simulation_dir
+
 
 snap_ids = np.arange( 1, 99, 1, dtype=int )
 snaps_z = []
@@ -60,7 +60,10 @@ for snap_id in snap_ids:
   hist, bin_edges = np.histogram( log_density, bins=bin_edges )
   distribution = hist / hist.sum()
   bin_centers = ( bin_edges[1:] - bin_edges[:-1] ) / 2
-  sim_data[snap_id] = { 'bin_centers':bin_centers, 'distribution':distribution }
+  sim_data[snap_id] = { 'z':z, 'bin_centers':bin_centers, 'distribution':distribution }
+  break
 
 
+file_name = output_dir 'density_distribution.pkl'
+Write_Pickle_Directory( sim_data, file_name )
 
