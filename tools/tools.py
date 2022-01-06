@@ -20,11 +20,13 @@ if system == 'Lux':      data_dir = '/data/groups/comp-astro/bruno/'
 if system == 'Summit':   data_dir = '/gpfs/alpine/ast169/scratch/bvilasen/'
 if system == 'xps':      data_dir = '/home/bruno/Desktop/data/'
 if system == 'Mac_mini': data_dir = '/Users/bruno/Desktop/data/'
+if system == 'MacBook':  data_dir = '/Users/bruno/Desktop/data/'
 
 if system == 'Tornado':  home_dir = '/home/bruno/'
 if system == 'Shamrock': home_dir = '/home/bruno/'
 if system == 'xps':      home_dir = '/home/bruno/'
 if system == 'Mac_mini': home_dir = '/Users/bruno/'
+if system == 'MacBook':  home_dir = '/Users/bruno/'
 
 
 

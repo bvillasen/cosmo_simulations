@@ -33,7 +33,7 @@ fields_to_fit = 'P(k)+'
 data_ps_sets = [ 'Boera' ]
 # data_ps_sets = [ 'BoeraC' ]
 
-independent_redshift = True
+independent_redshift = False
 
 fit_name = ''
 data_label  = ''
@@ -99,7 +99,7 @@ params = SG.parameters
 stats_file   = output_dir + 'fit_mcmc.pkl'
 samples_file = output_dir + 'samples_mcmc.pkl'
 
-nIter = 5000000 
+nIter = 1000000 
 nBurn = nIter / 10
 nThin = 1
 model, params_mcmc = get_mcmc_model( comparable_data, comparable_grid, fields_to_fit, 'mean', SG )
