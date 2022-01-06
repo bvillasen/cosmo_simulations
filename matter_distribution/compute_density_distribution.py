@@ -68,10 +68,10 @@ for snap_id in snap_ids:
   bin_edges = np.linspace( log_density.min(), log_density.max(), n_bins )
   hist, bin_edges = np.histogram( log_density, bins=bin_edges )
   distribution = hist / hist.sum()
-  bin_centers = ( bin_edges[1:] - bin_edges[:-1] ) / 2
+  bin_centers = ( bin_edges[1:] + bin_edges[:-1] ) / 2
   sim_data[snap_id] = { 'z':z, 'bin_centers':bin_centers, 'distribution':distribution }
-  break
+  # break
   
-# file_name = output_dir + f'density_distribution_{sim_name}.pkl'
-# Write_Pickle_Directory( sim_data, file_name )
+file_name = output_dir + f'density_distribution_{sim_name}.pkl'
+Write_Pickle_Directory( sim_data, file_name )
 
