@@ -25,6 +25,7 @@ precision = np.float64
 fields = [ 'density' ]
 
 n_bins = 40
+Lbox = 50.0    #Mpc/h
 nx, ny, nz = grid_size
 dx, dy, dz = Lbox/nx, Lbox/ny, Lbox/nz
 
