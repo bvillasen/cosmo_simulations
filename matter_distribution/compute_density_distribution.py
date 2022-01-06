@@ -61,7 +61,7 @@ for snap_id in snap_ids:
   distribution = hist / hist.sum()
   bin_centers = ( bin_edges[1:] - bin_edges[:-1] ) / 2
   sim_data[snap_id] = { 'z':z, 'bin_centers':bin_centers, 'distribution':distribution }
-  break
+
 
 
 file_name = output_dir + 'density_distribution.pkl'
