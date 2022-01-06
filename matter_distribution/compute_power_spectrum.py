@@ -24,7 +24,7 @@ grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
 precision = np.float64
 fields = [ 'density' ]
 
-n_bins = 30
+n_bins = 25
 Lbox = 50.0    #Mpc/h
 nx, ny, nz = grid_size
 dx, dy, dz = Lbox/nx, Lbox/ny, Lbox/nz

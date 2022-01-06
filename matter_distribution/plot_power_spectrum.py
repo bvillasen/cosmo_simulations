@@ -71,7 +71,7 @@ for i in range(nrows):
        
       ax.plot( k_vals, power_spectrum, label=label )
     
-    ax.text(0.1, 0.02, r'$z=${0:.1f}'.format(np.round(z)), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
+    ax.text(0.4, 0.95, r'$z=${0:.1f}'.format(np.round(z)), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
 
     leg = ax.legend(  loc=1, frameon=False, fontsize=legend_font_size    )
         
@@ -81,7 +81,7 @@ for i in range(nrows):
     ax.set_yscale('log')
     ax.set_xscale('log')
     
-    ax.set_ylabel( r' $P(k) [h^3\, \mathrm{Mpc}^{-3}]$', fontsize=label_size, color= text_color )
+    ax.set_ylabel( r' $P\,(k) [h^3\, \mathrm{Mpc}^{-3}]$', fontsize=label_size, color= text_color )
     ax.set_xlabel( r'$k \,\, [h\, \mathrm{Mpc}^{-1}]$', fontsize=label_size, color= text_color )
 
     ax.tick_params(axis='both', which='major', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in' )
