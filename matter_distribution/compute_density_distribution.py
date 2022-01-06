@@ -51,7 +51,7 @@ sim_data = {}
 
 snap_id = snap_ids[0]
 snap_data = load_snapshot_data_distributed( data_type, fields,  snap_id, input_dir,  box_size, grid_size, precision  )
-z = snap_data['current_z']
+z = snap_data['Current_z']
 density = snap_data['density']
 dens_mean = density.mean()
 log_density = np.log10(density/dens_mean)
