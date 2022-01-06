@@ -8,10 +8,12 @@ subDirectories = [x[0] for x in os.walk(root_dir)]
 sys.path.extend(subDirectories)
 from tools import *
 from load_data import load_snapshot_data_distributed
+from power_spectrum_functions import get_power_spectrum
 
 output_dir = data_dir + f'cosmo_sims/rescaled_P19/wdm/density_distribution_files/'
 create_directory( output_dir )
 
+data_type = 'hydro'
 
 snap_ids = [ 1, 4, 8, 13, 23, 42 ]
 print( snap_ids )
@@ -22,9 +24,10 @@ grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
 precision = np.float32
 fields = [ 'density' ]
 
-dens_min, dens_max = -3, 4
-n_bins = 200
-data_type = 'hydro'
+n_bins = 40
+nx, ny, nz = grid_size
+dx, dy, dz = Lbox/nx, Lbox/ny, Lbox/nz
+
 
 wdm_masses = [ 0.25, 0.5, 1.0, 2.0, 3.0 ]
 
@@ -44,7 +47,9 @@ snap_data = load_snapshot_data_distributed( data_type, fields,  snap_id, input_d
 z = snap_data['Current_z']
 density = snap_data['density']
 print( f'snap_id: {snap_id}  z:{z}' )
-dens_mean = density.mean()
+power_spectrum, k_vals, count = get_power_spectrum( density, Lbox, nx, ny, nz, dx, dy, dz,  n_kSamples=n_bins )
+
+
 
 # sim_data[snap_id] = { 'z':z, 'bin_centers':bin_centers, 'distribution':distribution }
   # break
