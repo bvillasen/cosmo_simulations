@@ -23,7 +23,7 @@ precision = np.float32
 fields = [ 'density' ]
 
 dens_min, dens_max = -3, 4
-n_bins = 100
+n_bins = 200
 data_type = 'hydro'
 
 wdm_masses = [ 0.25, 0.5, 1.0, 2.0, 3.0 ]
