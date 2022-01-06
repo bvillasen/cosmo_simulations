@@ -30,8 +30,8 @@ wdm_masses = [ 0.25, 0.5, 1.0, 2.0, 3.0 ]
 
 # for wdm_mass in wdm_masses:
 
-# sim_name = 'cdm'
-sim_name = f'wdm_m{wdm_mass}kev'
+sim_name = 'cdm'
+# sim_name = f'wdm_m{wdm_mass}kev'
 simulation_dir = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_{sim_name}/'
 input_dir = simulation_dir + 'snapshot_files/'
 
