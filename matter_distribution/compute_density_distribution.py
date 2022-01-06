@@ -33,5 +33,6 @@ for z in z_vals:
   if z_diff_min > 0.1: print( f'WARNING: Large z_diff_min: {z_diff_min}' )
   snap_id = np.where( z_diff == z_diff_min )[0][0]
   snap_indices.append( snap_id )
+snap_indices = np.array( snap_indices )
 
 snap_ids = snap_ids[snap_indices]
