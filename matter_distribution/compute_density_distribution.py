@@ -43,8 +43,20 @@ box_size = [ Lbox, Lbox, Lbox ]
 grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
 precision = np.float32
 fields = [ 'density' ]
+n_bins = 100
 
 data_type = 'particles'
 snap_id = snap_ids[0]
 
 snap_data = load_snapshot_data_distributed( data_type, fields,  snap_id, input_dir,  box_size, grid_size, precision  )
+z = snap_data['current_z']
+density = snap_data['density']
+log_density = np.log10(density)
+bin_edges = np.lispace( log_density.min(), log_density.max(), n_bins )
+hist, bin_edges = np.histogram( log_density, bins=bin_edges )
+distribution = hist / hist.sum()
+bin_centers = ( bin_edges[1:] - bin_edges[:-1] ) / 2
+sim_data[snap_id] = { 'bin_centers':bin_centers, 'distribution'=distribution }
+
+
+
