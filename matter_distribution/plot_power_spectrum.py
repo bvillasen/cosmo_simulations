@@ -42,11 +42,12 @@ figure_height = 18
 fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(ncols*figure_width,figure_height))
 plt.subplots_adjust( hspace = 0.15, wspace=0.2)
 
-wdm_masses = [ 0.25, 0.5, 1.0, 2.0, 3.0 ]
+# wdm_masses = [ 0.25, 0.5, 1.0, 2.0, 3.0 ]
+wdm_masses = [ 0.25 ]
 
 sim_names = [ ]
-# for wdm_mass in wdm_masses:
-#   sim_names.append( f'wdm_m{wdm_mass}kev' )
+for wdm_mass in wdm_masses:
+  sim_names.append( f'wdm_m{wdm_mass}kev' )
 sim_names.append('cdm')
 
 

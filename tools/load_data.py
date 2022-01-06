@@ -274,7 +274,7 @@ def load_snapshot_data_distributed( data_type, fields,  nSnap, inDir,  box_size,
         added_header = True
     
       if show_progess:
-        terminalString  = '\r Loading File: {0}/{1}   {2}'.format(i, n_to_load, field)
+        terminalString  = '\r Loading File: {0}/{1}   {2}   {3}'.format(i, n_to_load, data_type, field)
         sys.stdout. write(terminalString)
         sys.stdout.flush() 
     
