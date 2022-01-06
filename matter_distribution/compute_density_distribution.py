@@ -10,7 +10,8 @@ from tools import *
 from load_data import load_snapshot_data_distributed
 
 
-simulation_dir = data_dir + 'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_cdm/'
+# simulation_dir = data_dir + 'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_cdm/'
+simulation_dir = data_dir + 'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m0.25kev/'
 input_dir = simulation_dir + 'snapshot_files/'
 output_dir = simulation_dir
 
