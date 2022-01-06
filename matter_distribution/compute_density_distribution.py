@@ -20,7 +20,7 @@ for wdm_mass in wdm_masses:
   output_dir = simulation_dir
 
 
-  snap_ids = np.arange( 1, 99, 1, dtype=int )
+  snap_ids = np.arange( 1, 95, 1, dtype=int )
   snaps_z = []
   for snap_id in snap_ids:
     file_name = input_dir + f'{snap_id}.h5.0'
@@ -41,7 +41,7 @@ for wdm_mass in wdm_masses:
   snap_indices = np.array( snap_indices )
 
   snap_ids = snap_ids[snap_indices]
-
+  print( snap_ids )
   Lbox = 50000.0    #kpc/h
   n_cells = 1024
   box_size = [ Lbox, Lbox, Lbox ]
