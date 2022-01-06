@@ -50,6 +50,9 @@ def get_power_spectrum(dens, Lbox, nx, ny, nz, dx, dy, dz, n_kSamples=20, n_thre
   n_in_bin, bin_edges = np.histogram( K_mag, bins=intervals )
   n_in_bin = n_in_bin.astype('float')
   bin_centers = np.sqrt(bin_edges[1:] * bin_edges[:-1])
-  power = power / n_in_bin / Lbox**3
   indices = n_in_bin > 0
-  return power[indices], bin_centers[indices], n_in_bin[indices]
+  n_in_bin = n_in_bin[indices]
+  power = power[indices]
+  bin_centers = bin_centers[indices]
+  power = power / n_in_bin / Lbox**3
+  return power, bin_centers, n_in_bin
