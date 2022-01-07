@@ -18,9 +18,9 @@ param_wdm_UVB_Rates[2]['key']    = 'C'
 param_wdm_UVB_Rates[2]['name']   = 'scale_H_Eheat'
 param_wdm_UVB_Rates[2]['values'] = [ 0.1, 0.5, 0.9, 1.3, 1.7 ]
 
-param_wdm_UVB_Rates[2] = {}
-param_wdm_UVB_Rates[2]['key']    = 'D'
-param_wdm_UVB_Rates[2]['name']   = 'deltaZ_H'
-param_wdm_UVB_Rates[2]['values'] = [ -0.5, 0.0, 0.5 ]
+param_wdm_UVB_Rates[3] = {}
+param_wdm_UVB_Rates[3]['key']    = 'D'
+param_wdm_UVB_Rates[3]['name']   = 'deltaZ_H'
+param_wdm_UVB_Rates[3]['values'] = [ -0.5, 0.0, 0.5 ]
 
 
