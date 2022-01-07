@@ -19,9 +19,8 @@ sim_grid_dir = data_dir + 'cosmo_sims/sim_grid/'
 # if wdm_mass == 6.0: src_grid_dir = sim_grid_dir + '1024_mwdm6p0_nsim64/' 
 # dst_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim320/'
 
-# src_grid_dir = sim_grid_dir + '1024_mwdm1p0_nsim20/'
-src_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim175_deltaZ_n0p5/'
-dst_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim200_deltaZ_n0p5/'
+src_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim200_deltaZ_0p0/'
+dst_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim600/'
 
 # constant_params = { 'wdm_mass': wdm_mass }
 constant_params = None
