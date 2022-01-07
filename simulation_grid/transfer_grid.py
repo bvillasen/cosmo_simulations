@@ -33,9 +33,11 @@ dst_ids_to_transfer = [ id for id in dst_params if dst_params[id]['src']  is not
 n_to_transfer = len( dst_ids_to_transfer )
 print( f'N to transfer: {n_to_transfer} ' )
 
-directories_to_copy = [ ]
+# directories_to_copy = [ ]
 directories_to_copy = [ 'analysis_files', 'simulation_files' ] 
 # directories_to_copy = [ 'skewers_files' ] 
+
+directories_to_move = []
 # directories_to_move = [ 'snapshot_files' ]
 
 
