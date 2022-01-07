@@ -33,6 +33,8 @@ fields_to_fit = 'P(k)+'
 data_ps_sets = [ 'Boera' ]
 # data_ps_sets = [ 'BoeraC' ]
 
+use_inv_wdm = True
+
 independent_redshift = False
 
 fit_name = ''
@@ -62,10 +64,29 @@ if independent_redshift:
 
 
 # Apply the resolution correction to the P(k) fronm the simulations
-FPS_correction_file_name = ps_data_dir + 'FPS_resolution_correction_1024_50Mpc_delta.pkl'
+# FPS_correction_file_name = ps_data_dir + 'FPS_resolution_correction_1024_50Mpc_delta.pkl'
 # FPS_resolution_correction = Load_Pickle_Directory( correction_file_name ) 
 FPS_resolution_correction = None #Instead we apply a systematic uncertanty to the observed P(k)
 
+# Change wdm_mass to inv_wdm_mass
+if use_inv_wdm:
+  parameters = {}
+  for param_indx in Grid_Parameters:
+    if Grid_Parameters[param_indx]['name'] == 'wdm_mass':
+      print( f'Changing wdm_mass to inv_wdm_mass' )
+      parameters[param_indx] = {}
+      parameters[param_indx]['name'] = 'inv_wdm_mass'
+      parameters[param_indx]['key'] = Grid_Parameters[param_indx]['key']
+      wdm_mass_vals = Grid_Parameters[param_indx]['values']
+      inv_wdm_mass_vals = []
+      for wdm_mass in wdm_mass_vals:
+        inv_wdm_mass = 1./wdm_mass
+        if wdm_mass > 1000: inv_wdm_mass = 0.0
+        inv_wdm_mass_vals.append( inv_wdm_mass )
+      print( f'Changed: {wdm_mass_vals} -> {inv_wdm_mass_vals}' )
+      parameters[param_indx]['values'] = inv_wdm_mass_vals
+    else: parameters[param_indx] = Grid_Parameters[param_indx].copy()
+  Grid_Parameters = parameters
 
 # sim_ids = [0]
 sim_ids = None
@@ -99,7 +120,7 @@ params = SG.parameters
 stats_file   = output_dir + 'fit_mcmc.pkl'
 samples_file = output_dir + 'samples_mcmc.pkl'
 
-nIter = 1000000 
+nIter = 5000000 
 nBurn = nIter / 10
 nThin = 1
 model, params_mcmc = get_mcmc_model( comparable_data, comparable_grid, fields_to_fit, 'mean', SG )
@@ -119,6 +140,6 @@ param_samples = Write_MCMC_Results( stats, MDL, params_mcmc,  stats_file, sample
 data_labels = [ '' ]
 corner_labels = { 'scale_He':r'$\beta_{\mathrm{He}}$', 'scale_H':r'$\beta_{\mathrm{H}}$', 'deltaZ_He':r'$\Delta z_{\mathrm{He}}$', 'deltaZ_H':r'$\Delta z_{\mathrm{H}}$',
                   'scale_H_ion': r'$\beta_{\mathrm{H}}^{\mathrm{ion}}$', 'scale_He_ion': r'$\beta_{\mathrm{He}}^{\mathrm{ion}}$', 'scale_He_Eheat': r'$\alpha E_{\mathrm{He}}$', 'scale_H_Eheat': r'$\alpha E_{\mathrm{H}}$',
-                  'wdm_mass':r'$m_{\mathrm{WDM}}$  [keV]'      }
+                  'wdm_mass':r'$m_{\mathrm{WDM}}$  [keV]', 'inv_wdm_mass':r'$m_{\mathrm{WDM}}^{-1}$  [keV$^{-1}$]'       }
 Plot_Corner( param_samples, data_labels, corner_labels, output_dir,n_bins_1D=40, n_bins_2D=40, lower_mask_factor=500, multiple=False  )  
 

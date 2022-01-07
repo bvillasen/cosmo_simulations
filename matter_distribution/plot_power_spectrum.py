@@ -17,7 +17,9 @@ output_dir = data_dir + f'cosmo_sims/rescaled_P19/wdm/figures/'
 create_directory( output_dir )
 
 snap_ids = [1, 4, 8, 13, 23, 42 ]
+
 data_type = 'hydro'
+# data_type = 'particles'
 
 import matplotlib
 matplotlib.rcParams['font.sans-serif'] = "Helvetica"
@@ -42,8 +44,8 @@ figure_height = 18
 fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(ncols*figure_width,figure_height))
 plt.subplots_adjust( hspace = 0.15, wspace=0.2)
 
-# wdm_masses = [ 0.25, 0.5, 1.0, 2.0, 3.0 ]
-wdm_masses = [ 0.25 ]
+wdm_masses = [ 0.25, 0.5, 1.0, 2.0, 3.0 ]
+# wdm_masses = [ 0.25 ]
 
 sim_names = [ ]
 for wdm_mass in wdm_masses:
@@ -72,9 +74,9 @@ for i in range(nrows):
        
       ax.plot( k_vals, power_spectrum, label=label )
     
-    ax.text(0.4, 0.95, r'$z=${0:.1f}'.format(np.round(z)), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
+    ax.text(0.9, 0.95, r'$z=${0:.1f}'.format(np.round(z)), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
 
-    leg = ax.legend(  loc=1, frameon=False, fontsize=legend_font_size    )
+    leg = ax.legend(  loc=3, frameon=False, fontsize=legend_font_size    )
         
     # ax.set_xlim( -2.5, 4 )
     # ax.set_ylim( 0, .1 )
