@@ -34,9 +34,9 @@ n_to_transfer = len( dst_ids_to_transfer )
 print( f'N to transfer: {n_to_transfer} ' )
 
 directories_to_copy = [ ]
-# directories_to_copy = [ 'analysis_files', 'simulation_files' ] 
+directories_to_copy = [ 'analysis_files', 'simulation_files' ] 
 # directories_to_copy = [ 'skewers_files' ] 
-directories_to_move = [ 'snapshot_files' ]
+# directories_to_move = [ 'snapshot_files' ]
 
 
 sim_files_to_copy = [ 'run_output.log' ]
