@@ -28,9 +28,11 @@ else:
   rank = 0
   n_procs = 1
 
-input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_cdm/skewers_files/'
-
 # input_dir = args[1]
+input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_cdm/skewers_files/'
+files = [ f for f in os.listdir(input_dir) if 'skewers' in f ]
+n_files = len( files )
+
 output_dir = input_dir + f'transmitted_flux/'
 if rank == 0: create_directory( output_dir )
 if rank == 0: 
@@ -38,8 +40,6 @@ if rank == 0:
   print( f'Ourput Dir: {input_dir}')
   print( f'N files: {n_files}')
 
-files = [ f for f in os.listdir(input_dir) if 'skewers' in f ]
-n_files = len( files )
 
 snap_ids = [ int(f.split('_')[0]) for f in files ]
 snap_ids.sort()
