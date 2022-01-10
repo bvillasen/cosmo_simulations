@@ -35,6 +35,12 @@ files = [ f for f in os.listdir(input_dir) if 'skewers' in f ]
 n_files = len( files )
 
 snap_ids = [ int(f.split('_')[0]) for f in files ]
+snap_ids.sort()
+snap_ids = np.array(snap_ids)
+
+local_ids = split_indices( snap_ids, rank, n_procs )
+local_snaps = snap_ids[local_ids]
+print( f'proc_id: {rank}  snaps: {local_snaps}' )
 
 
 
