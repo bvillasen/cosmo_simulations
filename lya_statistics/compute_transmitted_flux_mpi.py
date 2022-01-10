@@ -82,7 +82,7 @@ for n_file in local_snaps:
   
   out_file_name = output_dir + f'lya_flux_{n_file:03}.h5'
   file = h5.File( out_file_name, 'w' )
-  file.attrs['current_z'] = current_z
+  file.attrs['current_z'] = skewer_dataset['current_z']
   file.attrs['Flux_mean'] = data_Flux['Flux_mean']
   file.create_dataset( 'vel_Hubble', data=data_Flux['vel_Hubble'] )
   file.create_dataset( 'skewers_Flux', data=data_Flux['skewers_Flux'] )
