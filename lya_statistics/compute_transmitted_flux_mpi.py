@@ -73,7 +73,7 @@ skewer_ids_list = [ 'all', 'all', 'all']
 fields_to_load = [  'HI_density', 'los_velocity', 'temperature' ]
 
 # for n_file in local_snaps:
-n_file = 56
+n_file = 55
 skewer_dataset = Load_Skewers_File( n_file, input_dir, axis_list=axis_list, fields_to_load=fields_to_load )
 # current_z = skewer_dataset['current_z']
 # print( f'current_z: {current_z}')
