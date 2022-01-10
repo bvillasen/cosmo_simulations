@@ -49,7 +49,7 @@ if rank == 0:
 snap_ids = [ int(f.split('_')[0]) for f in files ]
 snap_ids.sort()
 snap_ids = np.array(snap_ids)
-snap_ids = np.array([ 1, 4, 8, 13, 23, 42 ])
+snap_ids = np.array([ 15, 25, 35, 45, 55 ])
 
 local_ids = split_indices( snap_ids, rank, n_procs )
 local_snaps = snap_ids[local_ids]
@@ -75,18 +75,19 @@ for n_file in local_snaps:
   cosmology['Omega_M'] = skewer_dataset['Omega_M']
   cosmology['Omega_L'] = skewer_dataset['Omega_L']
   cosmology['current_z'] = skewer_dataset['current_z']
-
-  skewers_data = { field:skewer_dataset[field] for field in field_list }
-  data_Flux = Compute_Skewers_Transmitted_Flux( skewers_data, cosmology, box )
-
-  out_file_name = output_dir + f'lya_flux_{n_file:03}.h5'
-  file = h5.File( out_file_name, 'w' )
-  file.attrs['current_z'] = current_z
-  file.attrs['Flux_mean'] = data_Flux['Flux_mean']
-  file.create_dataset( 'vel_Hubble', data=data_Flux['vel_Hubble'] )
-  file.create_dataset( 'skewers_Flux', data=data_Flux['skewers_Flux'] )
-  file.close()
-  print( f'Saved File: {out_file_name}')
-
+  print( f'z: {cosmology['current_z']}' )
+  
+  # skewers_data = { field:skewer_dataset[field] for field in field_list }
+  # data_Flux = Compute_Skewers_Transmitted_Flux( skewers_data, cosmology, box )
+  # 
+  # out_file_name = output_dir + f'lya_flux_{n_file:03}.h5'
+  # file = h5.File( out_file_name, 'w' )
+  # file.attrs['current_z'] = current_z
+  # file.attrs['Flux_mean'] = data_Flux['Flux_mean']
+  # file.create_dataset( 'vel_Hubble', data=data_Flux['vel_Hubble'] )
+  # file.create_dataset( 'skewers_Flux', data=data_Flux['skewers_Flux'] )
+  # file.close()
+  # print( f'Saved File: {out_file_name}')
+  # 
 
 
