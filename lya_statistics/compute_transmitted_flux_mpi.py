@@ -16,6 +16,7 @@ from spectra_functions import Compute_Skewers_Transmitted_Flux
 from flux_power_spectrum import Compute_Flux_Power_Spectrum
 
 
+args = sys.argv
 
 use_mpi = True
 if use_mpi:
@@ -27,7 +28,10 @@ else:
   rank = 0
   n_procs = 1
 
-input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_cdm/skewers_files/'
+# input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_cdm/skewers_files/'
+
+input_dir = args[1]
+if rank == 0: print( f'Input Dir: {input_dir}')
 output_dir = input_dir + f'transmitted_flux/'
 if rank == 0: create_directory( output_dir )
 
