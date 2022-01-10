@@ -28,8 +28,13 @@ else:
   rank = 0
   n_procs = 1
 
-# input_dir = args[1]
-input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_cdm/skewers_files/'
+if len( args ) < 2:
+  if rank == 0: print( 'Input dir needed')
+  exit(-1)
+
+
+input_dir = args[1]
+# input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_cdm/skewers_files/'
 files = [ f for f in os.listdir(input_dir) if 'skewers' in f ]
 n_files = len( files )
 
@@ -44,21 +49,14 @@ if rank == 0:
 snap_ids = [ int(f.split('_')[0]) for f in files ]
 snap_ids.sort()
 snap_ids = np.array(snap_ids)
+snap_ids = np.array([ 1, 4, 8, 13, 23, 42 ])
 
 local_ids = split_indices( snap_ids, rank, n_procs )
 local_snaps = snap_ids[local_ids]
 print( f'proc_id: {rank}  snaps: {local_snaps}' )
 
-
-
-
 # Box parameters
 Lbox = 50000.0 #kpc/h
-nPoints = 2048
-nx = nPoints
-ny = nPoints
-nz = nPoints
-ncells = nx * ny * nz
 box = {'Lbox':[ Lbox, Lbox, Lbox ] }
 
 
@@ -67,28 +65,28 @@ n_skewers_list = [ 'all', 'all', 'all']
 skewer_ids_list = [ 'all', 'all', 'all']
 field_list = [  'HI_density', 'los_velocity', 'temperature' ]
 
-# for n_file in local_snaps:
-n_file = 55
-skewer_dataset = Load_Skewers_File( n_file, input_dir, axis_list=axis_list, fields_to_load=field_list )
+for n_file in local_snaps:
 
-# Cosmology parameters
-cosmology = {}
-cosmology['H0'] = skewer_dataset['H0']
-cosmology['Omega_M'] = skewer_dataset['Omega_M']
-cosmology['Omega_L'] = skewer_dataset['Omega_L']
-cosmology['current_z'] = skewer_dataset['current_z']
+  skewer_dataset = Load_Skewers_File( n_file, input_dir, axis_list=axis_list, fields_to_load=field_list )
 
-skewers_data = { field:skewer_dataset[field] for field in field_list }
-data_Flux = Compute_Skewers_Transmitted_Flux( skewers_data, cosmology, box )
+  # Cosmology parameters
+  cosmology = {}
+  cosmology['H0'] = skewer_dataset['H0']
+  cosmology['Omega_M'] = skewer_dataset['Omega_M']
+  cosmology['Omega_L'] = skewer_dataset['Omega_L']
+  cosmology['current_z'] = skewer_dataset['current_z']
 
-out_file_name = output_dir + f'lya_flux_{n_file:03}.h5'
-file = h5.File( out_file_name, 'w' )
-file.attrs['current_z'] = current_z
-file.attrs['Flux_mean'] = data_Flux['Flux_mean']
-file.create_dataset( 'vel_Hubble', data=data_Flux['vel_Hubble'] )
-file.create_dataset( 'skewers_Flux', data=data_Flux['skewers_Flux'] )
-file.close()
-print( f'Saved File: {out_file_name}')
+  skewers_data = { field:skewer_dataset[field] for field in field_list }
+  data_Flux = Compute_Skewers_Transmitted_Flux( skewers_data, cosmology, box )
+
+  out_file_name = output_dir + f'lya_flux_{n_file:03}.h5'
+  file = h5.File( out_file_name, 'w' )
+  file.attrs['current_z'] = current_z
+  file.attrs['Flux_mean'] = data_Flux['Flux_mean']
+  file.create_dataset( 'vel_Hubble', data=data_Flux['vel_Hubble'] )
+  file.create_dataset( 'skewers_Flux', data=data_Flux['skewers_Flux'] )
+  file.close()
+  print( f'Saved File: {out_file_name}')
 
 
 
