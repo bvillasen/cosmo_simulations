@@ -20,6 +20,7 @@ if system == 'xps': prop = matplotlib.font_manager.FontProperties( fname=os.path
 if system == 'Lux':      prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/brvillas/fonts', "Helvetica.ttf"),        size=legendsize)
 if system == 'Shamrock': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=legendsize)
 if system == 'Mac_mini': prop = None
+if system == 'MacBook':  prop = None
 
 figure_width = 8
 border_width = 1

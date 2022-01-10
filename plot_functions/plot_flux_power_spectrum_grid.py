@@ -195,7 +195,10 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
   
   c_boss = dark_blue
   if c_boera is None: c_boera = dark_green
+  c_boera = 'C3'
+  
   c_boera_c = 'C4'
+  
   
   c_viel = 'C1'
   c_viel = 'C9'

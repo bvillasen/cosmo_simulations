@@ -36,6 +36,7 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
   color = 'C0'
   data_color = 'C9'
   font_size = 22
+  legend_font_size = 18
   label_size = 30
   alpha = 0.6
   fig_size = 5
@@ -56,7 +57,7 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
   color_map_2 = palettable.cmocean.sequential.Tempo_20
   color_map_3 = palettable.cmocean.sequential.Dense_20
   color_map_4 = palettable.cmocean.sequential.Algae_20
-  color_map_list = [ color_map_0, color_map_2, color_map_2, color_map_3, color_map_4 ]
+  color_map_list = [ color_map_0, color_map_2, color_map_3, color_map_4 ]
   
   text_color = 'black'
   
@@ -165,10 +166,10 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
           x_label = labels[samples[j]['name']]  
           secax.set_xlabel( x_label, fontsize=label_size, color=text_color, labelpad=15 )
           if ticks is not None: secax.set_ticks(ticks[j])
-            
-            
+
+                      
           max = f_interp(bin_centers_interp).max()
-          ax.set_ylim( -max/20, max*1.1 )
+          # ax.set_ylim( -max/20, max*1.1 )
         
         if plot_type == '2D':
           trace_y = samples[j]['trace']
@@ -195,7 +196,7 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
           
         
         if add_data_label and show_label:
-          leg = ax.legend( loc=1, frameon=False, fontsize=font_size, prop=prop )
+          leg = ax.legend( loc=3, frameon=False, fontsize=legend_font_size, prop=prop )
           for text in leg.get_texts():
             plt.setp(text, color = text_color)
             
@@ -207,8 +208,8 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
         [ spine.set_edgecolor(text_color) for spine in list(ax.spines.values()) ]
           
       
-      ax.xaxis.set_major_locator(plt.MaxNLocator(n_tricks))
-      ax.yaxis.set_major_locator(plt.MaxNLocator(n_tricks))
+      # ax.xaxis.set_major_locator(plt.MaxNLocator(n_tricks))
+      # ax.yaxis.set_major_locator(plt.MaxNLocator(n_tricks))
   
   # fig.align_ylabels(ax_l[:, 1])
   for j in range(n_param):
@@ -221,10 +222,8 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
       for i in range( n_param ):
         ax = ax_l[j][i]
         ax.set_xticks(ticks[i])
-        # ax.set_xticklabels(ticks[i])
         ax.set_yticks(ticks[j])
-        # ax.set_yticklabels(ticks[j])
-
+        
   if limits is not None:  
     for j in range( n_param ):
       for i in range( n_param ):
@@ -233,7 +232,9 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
         y_lims = limits[j] 
         ax.set_xlim( x_lims[0], x_lims[1] )
         if j > i: ax.set_ylim( y_lims[0], y_lims[1] )
-        
+        if j == i: ax.set_ylim(0,None)
+
+      
         
   if param_values is not None:
     offset_y_add = 0.02

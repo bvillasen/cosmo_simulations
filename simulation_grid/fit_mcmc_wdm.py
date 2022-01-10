@@ -69,24 +69,7 @@ if independent_redshift:
 FPS_resolution_correction = None #Instead we apply a systematic uncertanty to the observed P(k)
 
 # Change wdm_mass to inv_wdm_mass
-if use_inv_wdm:
-  parameters = {}
-  for param_indx in Grid_Parameters:
-    if Grid_Parameters[param_indx]['name'] == 'wdm_mass':
-      print( f'Changing wdm_mass to inv_wdm_mass' )
-      parameters[param_indx] = {}
-      parameters[param_indx]['name'] = 'inv_wdm_mass'
-      parameters[param_indx]['key'] = Grid_Parameters[param_indx]['key']
-      wdm_mass_vals = Grid_Parameters[param_indx]['values']
-      inv_wdm_mass_vals = []
-      for wdm_mass in wdm_mass_vals:
-        inv_wdm_mass = 1./wdm_mass
-        if wdm_mass > 1000: inv_wdm_mass = 0.0
-        inv_wdm_mass_vals.append( inv_wdm_mass )
-      print( f'Changed: {wdm_mass_vals} -> {inv_wdm_mass_vals}' )
-      parameters[param_indx]['values'] = inv_wdm_mass_vals
-    else: parameters[param_indx] = Grid_Parameters[param_indx].copy()
-  Grid_Parameters = parameters
+if use_inv_wdm: Grid_Parameters = Invert_wdm_masses( Grid_Parameters )
 
 # sim_ids = [0]
 sim_ids = None

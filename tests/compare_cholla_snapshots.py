@@ -14,14 +14,14 @@ import matplotlib
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
 matplotlib.rcParams['mathtext.rm'] = 'serif'
 
-input_dir_0 = data_dir + 'cosmo_sims/256_hydro_50Mpc/output_files_original/'
-input_dir_1 = data_dir + 'cosmo_sims/256_hydro_50Mpc/output_files_new/'
-output_dir  = data_dir + 'cosmo_sims/256_hydro_50Mpc/figures/'
+input_dir_0 = data_dir + 'cosmo_sims/chemistry_test/output_files_grackle/'
+input_dir_1 = data_dir + 'cosmo_sims/chemistry_test/output_files/'
+output_dir  = data_dir + 'cosmo_sims/chemistry_test/figures/'
 create_directory( output_dir ) 
 
 precision = np.float64
 Lbox = 50000.0    #kpc/h
-n_cells = 256
+n_cells = 64
 box_size = [ Lbox, Lbox, Lbox ]
 grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
 
@@ -40,11 +40,13 @@ for n_snapshot in range(n_snaps):
   
   for field in fields:
     dens_0 = data_0[field]
-    dens_1 = data_1[field]    
+    dens_1 = data_1[field]
+    
+    print( f'Field: {field}  min: {dens_0.min()}  max: {dens_0.max()}')    
 
     diff = np.abs( dens_0 - dens_1 ) / dens_0
     diff_gas.append( diff.max())
-    print( f'\nDiff Hydro {field} min: {diff.min()}   max: {diff.max()}   Mean: {diff.mean()}')
+    # print( f'\nDiff Hydro {field} min: {diff.min()}   max: {diff.max()}   Mean: {diff.mean()}')
 
   # 
   # 

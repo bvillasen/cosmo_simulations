@@ -25,7 +25,7 @@ else:
 
 z_indx = rank
 
-independent_redshift = True
+independent_redshift = False
 
 # Directories 
 ps_data_dir = base_dir + '/lya_statistics/data/'
@@ -47,9 +47,13 @@ create_directory( output_dir )
 
 load_global_properties = False
 
-correction_file_name = ps_data_dir + 'FPS_resolution_correction_1024_50Mpc.pkl'
+# correction_file_name = ps_data_dir + 'FPS_resolution_correction_1024_50Mpc.pkl'
 # FPS_resolution_correction = Load_Pickle_Directory( correction_file_name ) 
 FPS_resolution_correction = None
+
+use_inv_wdm = True
+# Change wdm_mass to inv_wdm_mass
+if use_inv_wdm: Grid_Parameters = Invert_wdm_masses( Grid_Parameters )
 
 # sim_ids = range(10)
 sim_ids = None
@@ -95,11 +99,7 @@ params_max = Get_1D_Likelihood_max( param_samples, n_bins_1D=100 )
 params_mean = Get_Params_mean( param_samples )
 
 # Get the Highest_Likelihood parameter values 
-if rank == 0: n_bins = 10  
-if rank == 1: n_bins = 25  
-if rank == 2: n_bins = 20 
-
-if not independent_redshift: n_bins = 60
+n_bins = 10
 params_HL = Get_Highest_Likelihood_Params( param_samples, n_bins=n_bins )
 
 params_HL = { 'Highest_Likelihood':params_HL, 'max':params_max, 'mean':params_mean }
@@ -108,7 +108,7 @@ print( f'Rank: {rank}  HL:{params_HL} ' )
 
 
 hpi_sum = 0.95
-n_samples = 400000 * 10
+n_samples = None
 
 # Obtain distribution of the power spectrum
 file_name = output_dir + 'samples_power_spectrum.pkl'

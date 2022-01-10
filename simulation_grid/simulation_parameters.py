@@ -151,3 +151,22 @@ def Get_ICs_dir_wdm( wdm_mass, sim_params, z_start, cdm_wdm_mass=1e3 ):
   return input_dir
   
 
+
+def Invert_wdm_masses( Grid_Parameters ):
+  parameters = {}
+  for param_indx in Grid_Parameters:
+    if Grid_Parameters[param_indx]['name'] == 'wdm_mass':
+      print( f'Changing wdm_mass to inv_wdm_mass' )
+      parameters[param_indx] = {}
+      parameters[param_indx]['name'] = 'inv_wdm_mass'
+      parameters[param_indx]['key'] = Grid_Parameters[param_indx]['key']
+      wdm_mass_vals = Grid_Parameters[param_indx]['values']
+      inv_wdm_mass_vals = []
+      for wdm_mass in wdm_mass_vals:
+        inv_wdm_mass = 1./wdm_mass
+        if wdm_mass > 1000: inv_wdm_mass = 0.0
+        inv_wdm_mass_vals.append( inv_wdm_mass )
+      print( f'Changed: {wdm_mass_vals} -> {inv_wdm_mass_vals}' )
+      parameters[param_indx]['values'] = inv_wdm_mass_vals
+    else: parameters[param_indx] = Grid_Parameters[param_indx].copy()
+  return parameters
