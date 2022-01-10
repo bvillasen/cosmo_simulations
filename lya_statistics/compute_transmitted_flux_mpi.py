@@ -31,7 +31,9 @@ input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_cdm/skewers_fil
 output_dir = input_dir + f'transmitted_flux/'
 if rank == 0: create_directory( output_dir )
 
-files = [ f for f in os.listdir(input_dir) if 'analysis' in f ]
+files = [ f for f in os.listdir(input_dir) if 'skewers_files' in f ]
+files.sort()
+n_files = len( files )
 
 
 
