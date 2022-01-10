@@ -27,7 +27,7 @@ else:
   rank = 0
   n_procs = 1
 
-input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_cdm/skewers/'
+input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_cdm/skewers_files/'
 output_dir = input_dir + f'transmitted_flux/'
 if rank == 0: create_directory( output_dir )
 
