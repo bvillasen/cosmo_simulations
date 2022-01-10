@@ -65,11 +65,11 @@ box = {'Lbox':[ Lbox, Lbox, Lbox ] }
 axis_list = [ 'x', 'y', 'z' ]
 n_skewers_list = [ 'all', 'all', 'all']
 skewer_ids_list = [ 'all', 'all', 'all']
-fields_to_load = [  'HI_density', 'los_velocity', 'temperature' ]
+field_list = [  'HI_density', 'los_velocity', 'temperature' ]
 
 # for n_file in local_snaps:
 n_file = 55
-skewer_dataset = Load_Skewers_File( n_file, input_dir, axis_list=axis_list, fields_to_load=fields_to_load )
+skewer_dataset = Load_Skewers_File( n_file, input_dir, axis_list=axis_list, fields_to_load=field_list )
 
 # Cosmology parameters
 cosmology = {}
