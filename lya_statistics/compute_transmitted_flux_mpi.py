@@ -32,8 +32,9 @@ output_dir = input_dir + f'transmitted_flux/'
 if rank == 0: create_directory( output_dir )
 
 files = [ f for f in os.listdir(input_dir) if 'skewers' in f ]
-files.sort()
 n_files = len( files )
+
+snap_ids = [ int(f.split('_')[0]) for f in files ]
 
 
 
