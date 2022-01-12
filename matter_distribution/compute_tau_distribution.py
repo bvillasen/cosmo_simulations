@@ -44,7 +44,7 @@ snap_id = snap_ids[0]
 for snap_id in snap_ids:
   file_name = input_dir + f'lya_flux_{snap_id:03}.h5'
   file = h5.File( file_name, 'r' )
-  z = file.attrs['z']
+  z = file.attrs['current_z']
   vel_hubble = file['vel_hubble'][...]
   skewers_flux = file['skewers_Flux'][...]
   F_mean = skewers_flux.mean()
