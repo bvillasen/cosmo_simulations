@@ -9,7 +9,7 @@ sys.path.extend(subDirectories)
 from tools import *
 from load_data import load_snapshot_data_distributed
 
-output_dir = data_dir + f'cosmo_sims/rescaled_P19/wdm/density_distribution_files/'
+output_dir = data_dir + f'cosmo_sims/rescaled_P19/wdm/tau_distribution_files/'
 create_directory( output_dir )
 
 
