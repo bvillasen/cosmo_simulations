@@ -53,7 +53,7 @@ for snap_id in snap_ids:
   bin_centers = ( bin_edges[1:] + bin_edges[:-1] ) / 2
   sim_data[snap_id] = { 'z':z, 'bin_centers':bin_centers, 'distribution_flux':hist }
   
-  skewers_tau = -np.log( skewers_Flux )
+  skewers_tau = -np.log( skewers_flux )
   
   
   break
