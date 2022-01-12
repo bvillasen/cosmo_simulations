@@ -52,6 +52,7 @@ for snap_id in snap_ids:
   z = file.attrs['current_z']
   vel_hubble = file['vel_Hubble'][...]
   skewers_flux = file['skewers_Flux'][...]
+  skewers_flux[skewers_flux < flux_min] = flux_min
   F_mean = skewers_flux.mean()
   sim_data[snap_id]['z'] = z
   
