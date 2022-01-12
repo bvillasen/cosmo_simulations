@@ -35,6 +35,8 @@ sim_name = 'cdm'
 simulation_dir = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_{sim_name}/'
 input_dir = simulation_dir + 'skewers_files/transmitted_flux/'
 
+F_min, F_max, n_bins_F = 0, 1, 50
+F_bins = np.linspace( F_min, F_max, n_bins_F  )
 
 sim_data = {}
 
@@ -42,8 +44,18 @@ snap_id = snap_ids[0]
 for snap_id in snap_ids:
   file_name = input_dir + f'lya_flux_{snap_id:03}.h5'
   file = h5.File( file_name, 'r' )
+  z = file.attrs['z']
+  vel_hubble = file['vel_hubble'][...]
+  skewers_flux = file['skewers_Flux'][...]
+  F_mean = skewers_flux.mean()
   
-  # sim_data[snap_id] = { 'z':z, 'bin_centers':bin_centers, 'distribution':distribution }
+  hist, bin_edges = np.histogram( skewers_Flux, bins=F_bins )
+  bin_centers = ( bin_edges[1:] + bin_edges[:-1] ) / 2
+  sim_data[snap_id] = { 'z':z, 'bin_centers':bin_centers, 'distribution_flux':hist }
+  
+  skewers_tau = -np.log( skewers_Flux )
+  
+  
   break
 
 file_name = output_dir + f'density_distribution_{sim_name}.pkl'
