@@ -48,6 +48,7 @@ snap_id = snap_ids[0]
 for snap_id in snap_ids:
   sim_data[snap_id] = {}
   file_name = input_dir + f'lya_flux_{snap_id:03}.h5'
+  print( f'Loadig File: {file_name}' )
   file = h5.File( file_name, 'r' )
   z = file.attrs['current_z']
   vel_hubble = file['vel_Hubble'][...]
