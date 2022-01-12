@@ -65,9 +65,8 @@ for snap_id in snap_ids:
   bin_centers = ( bin_edges[1:] + bin_edges[:-1] ) / 2
   sim_data[snap_id]['tau'] = { 'bin_centers':bin_centers, 'distribution':hist }
   
-  
-  break
-# 
-# file_name = output_dir + f'density_distribution_{sim_name}.pkl'
-# Write_Pickle_Directory( sim_data, file_name )
+
+
+file_name = output_dir + f'tau_distribution_{sim_name}.pkl'
+Write_Pickle_Directory( sim_data, file_name )
 
