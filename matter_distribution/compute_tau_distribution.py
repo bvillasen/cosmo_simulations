@@ -61,6 +61,7 @@ for snap_id in snap_ids:
   hist, bin_edges = np.histogram( skewers_flux, bins=F_bins )
   bin_centers = ( bin_edges[1:] + bin_edges[:-1] ) / 2
   sim_data[snap_id]['flux'] = { 'bin_centers':bin_centers, 'distribution':hist, 'mean':F_mean }
+  print( 'Saved mean Flux')
   
   skewers_tau = -np.log( skewers_flux )
   hist, bin_edges = np.histogram( skewers_tau, bins=tau_bins )
