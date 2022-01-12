@@ -38,7 +38,7 @@ for wdm_mass in wdm_masses:
   F_min, F_max, n_bins_F = 0, 1, 50
   F_bins = np.linspace( F_min, F_max, n_bins_F  )
 
-  tau_min, tau_max, n_bins_tau = 0.1, 3, 50
+  tau_min, tau_max, n_bins_tau = 0.1, 6, 50
   tau_bins = np.linspace( tau_min, tau_max, n_bins_tau  )
 
   sim_data = {}
