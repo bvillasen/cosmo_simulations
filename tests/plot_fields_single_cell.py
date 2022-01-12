@@ -113,7 +113,7 @@ plt.subplots_adjust( hspace = 0.15, wspace=0.2)
 ax_labels_0 = [ r'$T$ [K]', r'$x_\mathrm{HI}$', r'$x_\mathrm{HII}$', r'$x_\mathrm{HeI}$', r'$x_\mathrm{HeII}$',  r'$x_\mathrm{HeIII}$' ]
 ax_labels_1 = [ r'$\Delta T / T$', r'$\Delta x_\mathrm{HI} / x_\mathrm{HI}$', r'$ \Delta x_\mathrm{HII} / x_\mathrm{HII}$', r'$\Delta x_\mathrm{HeI} / x_\mathrm{HeI}$', r'$ \Delta x_\mathrm{HeII} / x_\mathrm{HeII} $',  r'$\Delta x_\mathrm{HeIII} / x_\mathrm{HeIII}$' ]
 
-xmin, xmax = 2, 16
+xmin, xmax = 2, 12
 
 for field_id, field in enumerate(fields_to_plot):
 
@@ -143,7 +143,7 @@ for field_id, field in enumerate(fields_to_plot):
 
 
 
-figure_name = output_dir + 'single_cell_comparison_cholla.png'
+figure_name = output_dir + 'single_cell_comparison_cholla_new.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
 

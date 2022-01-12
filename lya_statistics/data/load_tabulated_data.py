@@ -91,10 +91,22 @@ def load_tabulated_data_boera( dir_data_boera, corrected=False ):
     delta_power = k_vals * power_vals / np.pi
     delta_power_error = k_vals * power_error / np.pi
     data_out[data_index] = {}
-    data_out[data_index]['z'] = z_vals[data_index]
+    z = z_vals[data_index]
+    file_name = dir_data_boera + f'Cov_Matrixz={z}.dat'
+    print( f'Loading File: {file_name}') 
+    file = open( file_name, 'rb' )
+    cov_matrix = np.load( file )
+    nx, ny = cov_matrix.shape
+    diagonal = np.array([ cov_matrix[i,i] for i in range(nx) ])
+    diff = ( np.sqrt(diagonal) - power_error ) / power_error
+    # print(diff)
+    data_out[data_index]['z'] = z
     data_out[data_index]['k_vals'] = k_vals
     data_out[data_index]['delta_power'] = delta_power
     data_out[data_index]['delta_power_error'] = delta_power_error
+    data_out[data_index]['power_spectrum'] = power_vals
+    data_out[data_index]['power_spectrum_error'] = power_error
+    data_out[data_index]['covariance_matrix'] = cov_matrix
   return data_out
 
 def load_power_spectrum_table( data_filename, kmax=100 ):

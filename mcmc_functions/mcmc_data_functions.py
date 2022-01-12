@@ -11,6 +11,7 @@ from load_tabulated_data import load_power_spectrum_table, load_tabulated_data_b
 from data_optical_depth_HeII import data_tau_HeII_Worserc_2019
 from data_thermal_history import data_thermal_history_Gaikwad_2020a, data_thermal_history_Gaikwad_2020b
 from data_optical_depth import *
+from matrix_functions import Merge_Matrices
 
 
 
@@ -41,7 +42,7 @@ def Write_MCMC_Results( stats, MDL, params_mcmc,  stats_file, samples_file,  out
 
 ##################################################################################################################################
 
-def Get_Comparable_Power_Spectrum_from_Grid( comparable_data, SG, log_ps=False, normalized_ps=False ):
+def Get_Comparable_Power_Spectrum_from_Grid( comparable_data, SG, log_ps=False, normalized_ps=False, no_use_delta_p=False ):
   
   print( 'Generating Simulation P(k) comparable data:')
   indices = comparable_data.keys()
@@ -73,6 +74,7 @@ def Get_Comparable_Power_Spectrum_from_Grid( comparable_data, SG, log_ps=False, 
       sim_kvals = sim_k_vals_all[id_sim]
       sim_ps = sim_ps_all[id_sim]
       sim_delta = sim_ps * sim_kvals / np.pi
+      if no_use_delta_p: sim_delta = sim_ps
       if log_ps: sim_delta = np.log( sim_delta ) 
       sim_delta_interp = np.interp( data_kvals, sim_kvals, sim_delta )
       diff = ( sim_delta_interp - data_delta_vals ) / data_delta_vals
@@ -142,7 +144,7 @@ def Get_Comparable_Field_from_Grid( field, comparable_data, SG, interpolate=True
 
 ##################################################################################################################################
 
-def Get_Comparable_Composite_from_Grid( fields, comparable_data, SG, log_ps=False, load_normalized_ps=False ):
+def Get_Comparable_Composite_from_Grid( fields, comparable_data, SG, log_ps=False, load_normalized_ps=False, no_use_delta_p=False ):
   fields_list = fields.split('+')
 
   sim_ids = SG.sim_ids
@@ -150,7 +152,7 @@ def Get_Comparable_Composite_from_Grid( fields, comparable_data, SG, log_ps=Fals
   for field in fields_list:
     if field == 'T0':   comparable_grid_all[field] = Get_Comparable_T0_from_Grid(  comparable_data[field], SG )
     if field == 'tau':  comparable_grid_all[field] = Get_Comparable_tau_from_Grid( comparable_data[field], SG )
-    if field == 'P(k)': comparable_grid_all[field] = Get_Comparable_Power_Spectrum_from_Grid( comparable_data[field]['separate'], SG, log_ps=log_ps, normalized_ps=load_normalized_ps )
+    if field == 'P(k)': comparable_grid_all[field] = Get_Comparable_Power_Spectrum_from_Grid( comparable_data[field]['separate'], SG, log_ps=log_ps, normalized_ps=load_normalized_ps, no_use_delta_p=no_use_delta_p )
     if field == 'tau_HeII':  comparable_grid_all[field] = Get_Comparable_tau_HeII_from_Grid( comparable_data[field], SG )
     if field == 'z_ion_H': comparable_grid_all[field] = Get_Comparable_Global_from_Grid( field, SG )
   comparable_grid = {}
@@ -293,7 +295,7 @@ def Get_Comparable_T0_Gaikwad():
 
 ##################################################################################################################################
 
-def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_range, log_ps=False, systematic_uncertainties=None, print_systematic=False ):
+def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_range, log_ps=False, systematic_uncertainties=None, print_systematic=False, no_use_delta_p=False, load_covariance_matrix=False ):
   print( f'Loading P(k) Data:' )
   dir_boss = ps_data_dir + 'data_power_spectrum_boss/'
   data_filename = dir_boss + 'data_table.py'
@@ -319,7 +321,7 @@ def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_rang
   data_kvals, data_ps, data_ps_sigma, data_indices, data_z  = [], [], [], [], []
   log_data_ps, log_data_ps_sigma = [], []
   sim_z, sim_kmin, sim_kmax = ps_range['z'], ps_range['k_min'], ps_range['k_max']
-
+  if load_covariance_matrix: cov_matrix_all = []
   systematic = None
   if systematic_uncertainties is not None:
     systematic = {}
@@ -340,9 +342,6 @@ def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_rang
               if uncertanty_type == 'fractional':
                 systematic[uncertanty_type] = uncertanty 
               
-      
-    
-
   ps_data = {}
   data_id = 0
   for data_index, data_name in enumerate(data_sets):
@@ -364,6 +363,19 @@ def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_rang
         k_vals = k_vals[k_indices]
         delta_ps = data['delta_power'][k_indices]
         delta_ps_sigma = data['delta_power_error'][k_indices]
+        if no_use_delta_p:
+          # Use P(k) instead of Delta_P(k)
+          print( 'WARNING: Using P(k) instead of Delta_P(k)' )
+          delta_ps = delta_ps / k_vals * np.pi
+          delta_ps_sigma = delta_ps_sigma / k_vals * np.pi
+        
+        if load_covariance_matrix:
+          cov_matrix = data['covariance_matrix'][k_indices]
+          ny, nx = cov_matrix.shape
+          if len(k_vals) != ny: 
+            print( 'ERROR: P(k) vector does not have the same size as covariance matrix')
+            exit(-1) 
+          
         # log_delta_ps = np.log( delta_ps )
         # log_delta_ps_sigma = 1/delta_ps * delta_ps_sigma
         
@@ -415,24 +427,30 @@ def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_rang
         data_kvals.append( k_vals )
         data_ps.append( delta_ps )
         data_ps_sigma.append( delta_ps_sigma )
+        if load_covariance_matrix: 
+          ps_data[data_id]['cov_matrix'] = cov_matrix
+          cov_matrix_all.append( cov_matrix )
         # log_data_ps.append( log_delta_ps )
         # log_data_ps_sigma.append( log_delta_ps_sigma )
         data_id += 1
   k_vals_all         = np.concatenate( data_kvals )
   delta_ps_all       = np.concatenate( data_ps )
   delta_ps_sigma_all = np.concatenate( data_ps_sigma )
+  if load_covariance_matrix:
+    cov_matrix_all = Merge_Matrices( cov_matrix_all )
   # log_delta_ps_all       = np.concatenate( log_data_ps )
   # log_delta_ps_sigma_all = np.concatenate( log_data_ps_sigma )
   ps_data_out = {'P(k)':{}, 'separate':ps_data }
   ps_data_out['P(k)']['k_vals'] = k_vals_all
   if log_ps:
-    print( 'Log P(k) not supported, need to imp[lement uncertanty')
+    print( 'Log P(k) not supported, need to implement uncertanty')
     exit(-1)
     # ps_data_out['P(k)']['mean']   = log_delta_ps_all
     # ps_data_out['P(k)']['sigma']  = log_delta_ps_sigma_all
   else:
     ps_data_out['P(k)']['mean']   = delta_ps_all
     ps_data_out['P(k)']['sigma']  = delta_ps_sigma_all
+    if load_covariance_matrix: ps_data_out['P(k)']['cov_matrix']  = cov_matrix_all
 
   n_data_points = len( k_vals_all )
   print( f' N data points: {n_data_points}' )
@@ -441,7 +459,7 @@ def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_rang
 
 ##################################################################################################################################
 
-def Get_Comparable_Composite( fields, z_min, z_max, ps_parameters=None, tau_parameters=None, log_ps=False, z_reion=None, factor_sigma_tauHeII=1.0, systematic_uncertainties=None  ):
+def Get_Comparable_Composite( fields, z_min, z_max, ps_parameters=None, tau_parameters=None, log_ps=False, z_reion=None, factor_sigma_tauHeII=1.0, systematic_uncertainties=None, no_use_delta_p=False, load_covariance_matrix=False  ):
   
   rescaled_walther = False
   rescale_walter_file = None
@@ -459,13 +477,16 @@ def Get_Comparable_Composite( fields, z_min, z_max, ps_parameters=None, tau_para
   fields_list = fields.split('+')
   mean_all, sigma_all = [], []
   comparable_all = {}
+  if load_covariance_matrix: cov_matrix_all = []
   for field in fields_list:
     append_comparable = False
     if field == 'P(k)':
-      comparable_ps = Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_ps_sets, ps_range, log_ps=log_ps, systematic_uncertainties=systematic_uncertainties  )
+      comparable_ps = Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_ps_sets, ps_range, log_ps=log_ps, systematic_uncertainties=systematic_uncertainties, no_use_delta_p=no_use_delta_p, load_covariance_matrix=load_covariance_matrix  )
       comparable_ps_all = comparable_ps['P(k)']
       comparable_ps_separate = comparable_ps['separate']
       comparable_all['P(k)'] = { 'all':comparable_ps_all, 'separate':comparable_ps_separate }
+      if load_covariance_matrix:
+        cov_matrix_all.append(comparable_ps_all['cov_matrix'])
       print('Added comparable P(k) separate')
       mean_all.append( comparable_ps_all['mean'] )
       sigma_all.append( comparable_ps_all['sigma'] )
@@ -489,5 +510,8 @@ def Get_Comparable_Composite( fields, z_min, z_max, ps_parameters=None, tau_para
       mean_all.append( comparable_field['mean'] )
       sigma_all.append( comparable_field['sigma'] )
   comparable_all[fields] = { 'mean':np.concatenate(mean_all), 'sigma':np.concatenate(sigma_all) }  
+  if load_covariance_matrix: 
+    cov_matrix_all = Merge_Matrices( cov_matrix_all )
+    comparable_all[fields]['cov_matrix'] = cov_matrix_all 
   return comparable_all
   

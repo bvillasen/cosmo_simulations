@@ -67,6 +67,7 @@ for i in range(nrows):
       z = snap_data['z']
       k_vals = snap_data['k_vals']
       power_spectrum = snap_data['power_spectrum']
+      power_spectrum *= k_vals**3
       if sim_name == 'cdm': label = 'CDM'
       else:
         wdm_mass = wdm_masses[sim_id]
@@ -84,6 +85,7 @@ for i in range(nrows):
     ax.set_yscale('log')
     ax.set_xscale('log')
     
+    # ax.set_ylabel( r' $P\,(k) [h^3\, \mathrm{Mpc}^{-3}]$', fontsize=label_size, color= text_color )
     ax.set_ylabel( r' $P\,(k) [h^3\, \mathrm{Mpc}^{-3}]$', fontsize=label_size, color= text_color )
     ax.set_xlabel( r'$k \,\, [h\, \mathrm{Mpc}^{-1}]$', fontsize=label_size, color= text_color )
 

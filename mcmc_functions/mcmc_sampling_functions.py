@@ -152,21 +152,21 @@ def Sample_Power_Spectrum_from_Trace( param_samples, data_grid, SG, hpi_sum=0.7,
 
 ############################################################################################################
 
-def get_mcmc_model( comparable_data, comparable_grid, fields_to_fit, sub_field, SG  ):
+def get_mcmc_model( comparable_data, comparable_grid, fields_to_fit, sub_field, SG, use_covariance_matrix=False  ):
   params = SG.parameters
   n_param = len( params )
   print( f'Geting MCMC model for {n_param} parameters ')
   model, param_mcmc = None, None
   if n_param == 4:
-    model, params_mcmc =  mcmc_model_4D( comparable_data, comparable_grid, fields_to_fit, 'mean', SG )
+    model, params_mcmc =  mcmc_model_4D( comparable_data, comparable_grid, fields_to_fit, 'mean', SG, use_covariance_matrix=use_covariance_matrix )
   if n_param == 3:
-    model, params_mcmc =  mcmc_model_3D( comparable_data, comparable_grid, fields_to_fit, 'mean', SG )
+    model, params_mcmc =  mcmc_model_3D( comparable_data, comparable_grid, fields_to_fit, 'mean', SG, use_covariance_matrix=use_covariance_matrix )
   return model, params_mcmc  
 
 
 ############################################################################################################
 
-def mcmc_model_4D( comparable_data, comparable_grid, field, sub_field, SG):
+def mcmc_model_4D( comparable_data, comparable_grid, field, sub_field, SG, use_covariance_matrix=False ):
   print( '\nRunning MCMC Sampler')
   parameters = SG.parameters
   param_ids = parameters.keys()
@@ -186,7 +186,15 @@ def mcmc_model_4D( comparable_data, comparable_grid, field, sub_field, SG):
   def mcmc_model_4D( comparable_grid=comparable_grid, SG=SG, p0=params_mcmc[0]['sampler'], p1=params_mcmc[1]['sampler'], p2=params_mcmc[2]['sampler'], p3=params_mcmc[3]['sampler']   ):
     mean_interp = Interpolate_4D( p0, p1, p2, p3, comparable_grid, field, sub_field, SG ) 
     return mean_interp
-  densObsrv = pymc.Normal(field, mu=mcmc_model_4D, tau=1./(comparable_data[field]['sigma']**2), value=comparable_data[field]['mean'], observed=True)
+  mean  = comparable_data[field]['mean']
+  sigma = comparable_data[field]['sigma']
+  if use_covariance_matrix:
+    print( 'WARNING: Using covariance matrix for the likelihood calculation')
+    cov_matrix = comparable_data[field]['cov_matrix']
+    precision_matrix = np.linalg.inv( cov_matrix )
+    densObsrv = pymc.MvNormal( field, mu=mcmc_model_4D, tau=precision_matrix, value=mean, observed=True)
+  else:  
+    densObsrv = pymc.Normal(field, mu=mcmc_model_4D, tau=1./(sigma**2), value=mean, observed=True)
   return locals(), params_mcmc
    
 

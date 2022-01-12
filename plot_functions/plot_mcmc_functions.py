@@ -55,4 +55,16 @@ def Plot_Comparable_Data( field, comparable_data, comparable_grid, output_dir, l
   figure_name = output_dir + 'data_for_fit.png'
   fig.savefig( figure_name, bbox_inches='tight', dpi=500 )
   print( f'Saved Figure: {figure_name}' )
+  
+  if 'cov_matrix' in comparable_data[field]:
+      
+    nrows, ncols = 1, 1
+    fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(20*ncols,5*nrows))
+    
+    cov_matrix = comparable_data[field]['cov_matrix']
+    ax.imshow( cov_matrix, cmap='turbo' )
+    ax.set_aspect('equal')
 
+    figure_name = output_dir + 'covariance_matrix.png'
+    fig.savefig( figure_name, bbox_inches='tight', dpi=500 )
+    print( f'Saved Figure: {figure_name}' )

@@ -24,6 +24,7 @@ if use_mpi:
 else:
   rank = 0
   n_procs = 1
+  
 
 # Directories 
 ps_data_dir = base_dir + '/lya_statistics/data/'
@@ -37,6 +38,9 @@ use_inv_wdm = True
 
 independent_redshift = False
 
+use_covariance_matrix = True
+zeros_non_diagonal = False
+
 fit_name = ''
 data_label  = ''
 for data_set in data_ps_sets:
@@ -44,11 +48,16 @@ for data_set in data_ps_sets:
   data_label += data_set + ' + '
 fit_name = fit_name[:-1] 
 data_label = data_label[:-3]
+
+if use_covariance_matrix: fit_name += '_covMatrix'
+if zeros_non_diagonal: fit_name += '_zeros'
+
 print(f'Data Label: {data_label} {fit_name}')
 
 # extra_label = 'sigmaResCosmo_'
 extra_label = None
 if extra_label is not None: fit_name += f'_{extra_label}'
+
 
 mcmc_dir = root_dir + 'fit_mcmc/'
 if rank == 0: create_directory( mcmc_dir )
@@ -92,15 +101,22 @@ if independent_redshift:
 # Use P(k) instead of Delta_P(k)
 no_use_delta_p = True 
 
-# data_systematic_uncertainties = { 'all':{}, 'P(k)':{} }
-# data_systematic_uncertainties['all']['cosmological'] = { 'fractional':0.10 } #Fractional systematic error due to cosmological parameter uncertanty
-# data_systematic_uncertainties['P(k)']['resolution'] = { 'file_name': FPS_correction_file_name, 'type':'delta'  }  #Systematic error due to resolution
 data_systematic_uncertainties = None
 ps_parameters = { 'range':ps_range, 'data_dir':ps_data_dir, 'data_sets':data_ps_sets  }
-comparable_data = Get_Comparable_Composite( fields_to_fit, z_min, z_max, ps_parameters=ps_parameters, log_ps=False, systematic_uncertainties=data_systematic_uncertainties, no_use_delta_p=no_use_delta_p   )
+comparable_data = Get_Comparable_Composite( fields_to_fit, z_min, z_max, ps_parameters=ps_parameters, log_ps=False, systematic_uncertainties=data_systematic_uncertainties, no_use_delta_p=no_use_delta_p, load_covariance_matrix=use_covariance_matrix   )
 comparable_grid = Get_Comparable_Composite_from_Grid( fields_to_fit, comparable_data, SG, log_ps=False, no_use_delta_p=no_use_delta_p )
-Plot_Comparable_Data( fields_to_fit, comparable_data, comparable_grid, output_dir, log_ps=False  )
 
+if zeros_non_diagonal:
+  cov_matrix = comparable_data[fields_to_fit]['cov_matrix']
+  ny, nx = cov_matrix.shape
+  for i in range(ny):
+    for j in range(nx):
+      if i==j: continue
+      cov_matrix[i,j] = 0
+  comparable_data[fields_to_fit]['cov_matrix'] = cov_matrix    
+
+Plot_Comparable_Data( fields_to_fit, comparable_data, comparable_grid, output_dir, log_ps=False  )
+# 
 params = SG.parameters
 stats_file   = output_dir + 'fit_mcmc.pkl'
 samples_file = output_dir + 'samples_mcmc.pkl'
@@ -108,7 +124,7 @@ samples_file = output_dir + 'samples_mcmc.pkl'
 nIter = 5000000 
 nBurn = nIter / 10
 nThin = 1
-model, params_mcmc = get_mcmc_model( comparable_data, comparable_grid, fields_to_fit, 'mean', SG )
+model, params_mcmc = get_mcmc_model( comparable_data, comparable_grid, fields_to_fit, 'mean', SG, use_covariance_matrix=use_covariance_matrix)
 MDL = pymc.MCMC( model )  
 MDL.sample( iter=nIter, burn=nBurn, thin=nThin )
 stats = MDL.stats()
