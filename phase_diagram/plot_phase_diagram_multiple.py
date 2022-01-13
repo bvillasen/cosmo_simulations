@@ -34,7 +34,7 @@ delta_min, delta_max = 0, 1.0
 
 
 input_dir_0 = data_dir + f'cosmo_sims/256_50Mpc/analysis_files_grackle/'
-input_dir_1 = data_dir + f'cosmo_sims/256_50Mpc/analysis_files/'
+input_dir_1 = data_dir + f'cosmo_sims/256_50Mpc/analysis_files_cholla/'
 output_dir = data_dir + f'cosmo_sims/256_50Mpc/figures/phase_diagram/'
 create_directory( output_dir )
 
