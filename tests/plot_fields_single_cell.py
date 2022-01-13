@@ -21,13 +21,18 @@ create_directory( output_dir )
 
 input_dirs = [ input_dir_0, input_dir_1 ]
 
+M_sun = 1.989e+30
+MP = 1.6726219e-27
+kpc = 3.086e+19 
+h = 0.6766
+
 n_snaps = 170
 precision = np.float64
 Lbox = 50000.0    #kpc/h
 n_cells = 64
 box_size = [ Lbox, Lbox, Lbox ]
 grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
-fields = [ 'density', 'temperature', 'HI_density', 'HII_density', 'HeI_density', 'HeII_density', 'HeIII_density' ]
+fields = [ 'density', 'temperature', 'HI_density', 'HII_density', 'HeI_density', 'HeII_density', 'HeIII_density', 'e_density' ]
 # fields = [ 'temperature' ]
 
 x_H  = 0.75984603480 + 1.53965115054e-4
@@ -72,6 +77,8 @@ for sim_id,input_dir in enumerate(input_dirs):
       val_min, val_max = field_vals.min(), field_vals.max()
       if np.abs(val_max - val_min) > 1e-12: print( f'WARNING: Large difference in field {field}:  min:{val_min}  max:{val_max} ')
       if field not in data_sim: data_sim[field] = []
+      if field == 'e_density':
+        val_min *= M_sun / (kpc**3) / MP * h * h
       data_sim[field].append( val_min )
     
   for key in data_sim:
@@ -100,9 +107,9 @@ tick_width_minor = 1
 text_color = 'black'
 legend_font_size = 11
 
-fields_to_plot = [ 'temperature', 'x_HI', 'x_HII', 'x_HeI', 'x_HeII', 'x_HeIII' ]
+fields_to_plot = [ 'temperature', 'x_HI', 'x_HII', 'x_HeI', 'x_HeII', 'x_HeIII', 'e_density' ]
 
-ncols, nrows = 2, 6
+ncols, nrows = 2, 7
 ax_lenght = 6
 figure_width = ncols * ax_lenght
 figure_height = nrows * ax_lenght / 2
@@ -110,8 +117,8 @@ fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(figure_width,figure_
 plt.subplots_adjust( hspace = 0.15, wspace=0.2)
 
 
-ax_labels_0 = [ r'$T$ [K]', r'$x_\mathrm{HI}$', r'$x_\mathrm{HII}$', r'$x_\mathrm{HeI}$', r'$x_\mathrm{HeII}$',  r'$x_\mathrm{HeIII}$' ]
-ax_labels_1 = [ r'$\Delta T / T$', r'$\Delta x_\mathrm{HI} / x_\mathrm{HI}$', r'$ \Delta x_\mathrm{HII} / x_\mathrm{HII}$', r'$\Delta x_\mathrm{HeI} / x_\mathrm{HeI}$', r'$ \Delta x_\mathrm{HeII} / x_\mathrm{HeII} $',  r'$\Delta x_\mathrm{HeIII} / x_\mathrm{HeIII}$' ]
+ax_labels_0 = [ r'$T \,\,\, [\mathrm{K}]$ ', r'$x_\mathrm{HI}$', r'$x_\mathrm{HII}$', r'$x_\mathrm{HeI}$', r'$x_\mathrm{HeII}$',  r'$x_\mathrm{HeIII}$', r'$n_\mathrm{e} \,\,\, [\mathrm{m^{-3}}]$' ]
+ax_labels_1 = [ r'$\Delta T / T$', r'$\Delta x_\mathrm{HI} / x_\mathrm{HI}$', r'$ \Delta x_\mathrm{HII} / x_\mathrm{HII}$', r'$\Delta x_\mathrm{HeI} / x_\mathrm{HeI}$', r'$ \Delta x_\mathrm{HeII} / x_\mathrm{HeII} $',  r'$\Delta x_\mathrm{HeIII} / x_\mathrm{HeIII}$', r'$\Delta n_\mathrm{e} / n_\mathrm{e}$' ]
 
 xmin, xmax = 2, 12
 
@@ -132,18 +139,15 @@ for field_id, field in enumerate(fields_to_plot):
   
 
   ax = ax_l[field_id][1]
-  ax.axhline( y=0, c='C3')
-  ax.plot( z, diff, ls='-' )
+  ax.axhline( y=0, c='C0')
+  ax.plot( z, diff, ls='--', c='C1'  )
   ax.set_ylim( -0.2, 0.2 )
   ax.set_xlim( xmin, xmax )
   ax.set_ylabel( ax_labels_1[field_id], fontsize=label_size )
   if field_id == nrows-1: ax.set_xlabel( r'$z$', fontsize=label_size )
 
-  
 
-
-
-figure_name = output_dir + 'single_cell_comparison_cholla_new.png'
+figure_name = output_dir + 'single_cell_comparison.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
 

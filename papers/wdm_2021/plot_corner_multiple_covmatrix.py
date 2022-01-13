@@ -10,23 +10,26 @@ from plot_mcmc_corner import Plot_Corner
 # from mcmc_sampling_functions import Get_Highest_Likelihood_Params
 
 grid_name = '1024_wdmgrid_nsim600'
-grid_names = [ grid_name ]
 
-data_name = 'fit_results_P(k)+_Boera'
-data_labels = [ '' ]
+# fit_names = [ 'fit_results_P(k)+_Boera', 'fit_results_P(k)+_Boera_covMatrix_zeros', 'fit_results_P(k)+_Boera_covMatrix'  ]
+# data_labels = [ r'Sigma', r'Diagonal Matrix', r'Covariance Matirx' ]
 
+fit_names = [ 'fit_results_P(k)+_Boera_covMatrix'  ]
+data_labels = [ 'Covariance Matirx' ]
+
+
+output_dir = data_dir + f'cosmo_sims/sim_grid/figures_wdm_new/'
+create_directory( output_dir )
 
 samples_all = {}
 samples_all['param'] = {}
-for data_id,grid_name in enumerate(grid_names):
-  output_dir = data_dir + f'cosmo_sims/sim_grid/figures_wdm_new/'
-  create_directory( output_dir )
+for data_id, fit_name in enumerate(fit_names):
    
   root_dir = data_dir + f'cosmo_sims/sim_grid/{grid_name}/'
   mcmc_dir = root_dir + 'fit_mcmc/'
 
-  print(f'Loading Dataset: {data_name}' )
-  input_dir = mcmc_dir + f'{data_name}/' 
+  print(f'Loading Dataset: {fit_name}' )
+  input_dir = mcmc_dir + f'{fit_name}/' 
   stats_file = input_dir + 'fit_mcmc.pkl'
   samples_file = input_dir + 'samples_mcmc.pkl'
 
@@ -45,7 +48,7 @@ corner_labels = { 'scale_He':r'$\beta_{\mathrm{He}}$', 'scale_H':r'$\beta_{\math
                   'scale_H_ion': r'$\beta_{\mathrm{H}}^{\mathrm{ion}}$', 'scale_He_ion': r'$\beta_{\mathrm{He}}^{\mathrm{ion}}$', 'scale_He_Eheat': r'$\alpha E_{\mathrm{He}}$', 'scale_H_Eheat': r'$\alpha E_{\mathrm{H}}$',
                   'wdm_mass':r'$m_{\mathrm{WDM}}$  [keV]', 'inv_wdm_mass':r'$m_{\mathrm{WDM}}^{-1}$  [keV$^{-1}$]'       }
 
-ticks = {0:[0., 0.1, 0.2, 0.3, 0.4], 1:[0.4, 0.6, 0.8, 1.0, 1.2, 01.4], 2:[ 0.6, 0.8, 1.0, 1.2, 1.4 ], 3:[ -0.5, -0.25, 0, 0.25, 0.5,]}
+ticks = {0:[0., 0.1, 0.2, 0.3, 0.4], 1:[0.4, 0.6, 0.8, 1.0, 1.2, 01.4], 2:[ 0.6, 0.8, 1.0, 1.2, 1.4 ], 3:[ -0.4,-0.2, 0, 0.2, 0.4]}
 # ticks = None
 
 limits = {0:( 0, 0.45 ), 1:( 0.8, 1.5 ), 2:( 0.4, 1.4 ), 3:( -0.5, 0.5 )}

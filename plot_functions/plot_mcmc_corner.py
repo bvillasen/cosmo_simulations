@@ -57,7 +57,7 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
   color_map_2 = palettable.cmocean.sequential.Tempo_20
   color_map_3 = palettable.cmocean.sequential.Dense_20
   color_map_4 = palettable.cmocean.sequential.Algae_20
-  color_map_list = [ color_map_0, color_map_2, color_map_3, color_map_4 ]
+  color_map_list = [ color_map_0, color_map_2, color_map_1, color_map_4 ]
   
   text_color = 'black'
   
@@ -71,7 +71,7 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
   if black_background:
     color_map_0 = palettable.cmocean.sequential.Ice_20
     # color_map_0 = palettable.matplotlib.Inferno_20
-    color_map_list = [ color_map_0, color_map_1, color_map_2, color_map_3, color_map_4 ]
+    color_map_list = [ color_map_0, color_map_1, color_map_3, color_map_3, color_map_4 ]
     text_color = 'white'
     tick_label_size = 18
     label_size = 32
@@ -232,7 +232,7 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
         y_lims = limits[j] 
         ax.set_xlim( x_lims[0], x_lims[1] )
         if j > i: ax.set_ylim( y_lims[0], y_lims[1] )
-        if j == i: ax.set_ylim(0,None)
+        if j == i: ax.set_ylim(-1,None)
 
       
         

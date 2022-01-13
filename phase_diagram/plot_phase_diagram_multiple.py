@@ -13,6 +13,16 @@ sys.path.extend(subDirectories)
 from tools import *
 from phase_diagram_functions import *
 
+use_mpi = True
+if use_mpi:
+  from mpi4py import MPI
+  comm = MPI.COMM_WORLD
+  rank = comm.Get_rank()
+  n_procs = comm.Get_size()
+else:
+  rank = 0
+  n_procs = 1
+
 import matplotlib
 matplotlib.font_manager.findSystemFonts(fontpaths=['/home/bruno/Downloads'], fontext='ttf')
 matplotlib.rcParams['font.sans-serif'] = "Helvetica"
@@ -23,15 +33,18 @@ matplotlib.rcParams['mathtext.rm'] = 'serif'
 delta_min, delta_max = 0, 1.0
 
 
-input_dir_0 = data_dir + f'cosmo_sims/256_hydro_50Mpc/analysis_files_grackle/'
-input_dir_1 = data_dir + f'cosmo_sims/256_hydro_50Mpc/analysis_files/'
-output_dir = data_dir + f'cosmo_sims/256_hydro_50Mpc/figures/'
+input_dir_0 = data_dir + f'cosmo_sims/256_50Mpc/analysis_files_grackle/'
+input_dir_1 = data_dir + f'cosmo_sims/256_50Mpc/analysis_files/'
+output_dir = data_dir + f'cosmo_sims/256_50Mpc/figures/phase_diagram/'
 create_directory( output_dir )
 
 
 input_dirs = [ input_dir_0, input_dir_1 ]
 
-snapshots = range( 0, 45 )
+snapshots = np.arange( 0, 200, 1, dtype=int )
+
+local_ids = split_indices( snapshots, rank, n_procs )
+snaps_local = snapshots[local_ids]
 
 data_all = {}
 for sim_id,input_dir in enumerate(input_dirs):
@@ -39,7 +52,7 @@ for sim_id,input_dir in enumerate(input_dirs):
   # Load phase diagram
   v_min, v_max = np.inf, -np.inf 
   data_sim = {}
-  for n_snap in snapshots:
+  for n_snap in snaps_local:
     in_file_name = input_dir + f'{n_snap}_analysis.h5'
     in_file = h5.File( in_file_name, 'r' )
     current_z = in_file.attrs['current_z'][0]
@@ -110,7 +123,7 @@ labels = ['Grackle', 'Cholla']
 
 
 # n_snap = 0
-for n_snap in snapshots:
+for n_snap in snaps_local:
 
   # Set up figure and image grid
   fig = plt.figure( figsize=(fig_width*n_cols,10*n_rows),  )
@@ -127,8 +140,8 @@ for n_snap in snapshots:
   colormap =  'turbo'
   alpha = 0.6
 
-  x_min, x_max = -3, 5.5
-  y_min, y_max =  1.8, 8.
+  x_min, x_max = -2, 4
+  y_min, y_max =  0, 8.
   
   for sim_id in data_all:
 
@@ -160,7 +173,7 @@ for n_snap in snapshots:
     ax.cax.toggle_label(True)
     [sp.set_linewidth(border_width) for sp in cb.ax.spines.values()]
 
-    # ax.set_aspect( 0.8)
+    ax.set_aspect( 0.6)
     # 
     font = {'fontname': 'Helvetica',
         'color':  text_color,

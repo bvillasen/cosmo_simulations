@@ -6,12 +6,13 @@ from subprocess import call
 from shutil import copyfile
 from tools import *
 
-input_dir = data_dir + 'cosmo_sims/rescaled_P19/zero_heat_ion/sim_3/phase_diagram/'
+
+input_dir = data_dir + 'cosmo_sims/256_50Mpc/figures/phase_diagram/'
 
 output_dir = home_dir + 'Desktop/'
 base_image_name = 'phase_diagram'
 
-out_anim_name = 'phase_diagram_P19m_zero_heat_ion_2'
+out_anim_name = 'phase_diagram_grackle_cholla'
 
 image_names = [ f for f in os.listdir(input_dir) if f.find(base_image_name) >= 0 and os.path.isfile(input_dir+f) ]
 image_names.sort()
@@ -39,7 +40,7 @@ if resize_images:
 
 
 start_frame = 0
-frame_rate = 2
+frame_rate = 6
 
 
 cmd = f'ffmpeg -framerate {frame_rate} -start_number {start_frame}  '

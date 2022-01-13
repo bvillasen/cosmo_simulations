@@ -16,7 +16,7 @@ from plot_thermal_history import Plot_T0_gamma_evolution
  
 
 base_dir = data_dir + 'cosmo_sims/sim_grid/'
-output_dir = base_dir + 'figures_wdm/'
+output_dir = base_dir + 'figures_wdm_new/'
 create_directory( output_dir )
 
 data_name = 'fit_results_P(k)+_Boera'
@@ -38,7 +38,7 @@ grid_name_0 = '1024_wdmgrid_nsim600'
 grid_names = [ grid_name_0 ]
 data_labels = [ '' ]
 
-data_name = 'fit_results_P(k)+_Boera'
+data_name = 'fit_results_P(k)+_Boera_covMatrix'
 line_colors = [ 'C0', 'C1', 'C2' ]
 
 field_name = 'T0'
