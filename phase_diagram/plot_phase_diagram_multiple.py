@@ -13,7 +13,7 @@ sys.path.extend(subDirectories)
 from tools import *
 from phase_diagram_functions import *
 
-use_mpi = False
+use_mpi = True
 if use_mpi:
   from mpi4py import MPI
   comm = MPI.COMM_WORLD
