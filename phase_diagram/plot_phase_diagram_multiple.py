@@ -181,7 +181,8 @@ for n_snap in snaps_local:
         'size': label_size,
         'ha':'center'
         }
-    cb.set_label_text( r'$\log_{10}  \,\, P\,(\Delta, T\,) $', fontdict=font )
+    # cb.set_label_text( r'$\log_{10}  \,\, P\,(\Delta, T\,) $', fontdict=font )
+    cb.set_label( r'$\log_{10}  \,\, P\,(\Delta, T\,) $', fontdict=font )
     ax.set_ylabel(r'$\log_{10} \, T \,\,[\,\mathrm{K}\,]$', fontsize=label_size , color=text_color)
     ax.set_xlabel(r'$\log_{10} \, \Delta$ ', fontsize=label_size , color=text_color )
 
