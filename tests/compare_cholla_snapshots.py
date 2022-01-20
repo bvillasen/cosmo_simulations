@@ -26,7 +26,7 @@ box_size = [ Lbox, Lbox, Lbox ]
 grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
 
 
-n_snaps = 2
+n_snaps = 200
 
 # fields = [ 'density', 'momentum_x', 'momentum_y', 'momentum_z', 'GasEnergy', 'Energy'  ]
 fields = [ 'density' ]
@@ -50,10 +50,11 @@ for n_snapshot in range(n_snaps):
     dens_0 = data_0[field]
     dens_1 = data_1[field]
     
-    print( f'Field: {field}  min: {dens_0.min()}  max: {dens_0.max()}')    
+    # print( f'Field: {field}  min: {dens_0.min()}  max: {dens_0.max()}')    
 
     if field not in diff: diff[field] = [] 
     diff_vals = np.abs( dens_0 - dens_1 ) / dens_0
     diff_max = diff_vals.max()
     diff[field].append( diff_max )
-    # print( f'\nDiff Hydro {field} min: {diff.min()}   max: {diff.max()}   Mean: {diff.mean()}')
+    
+    print( f'\nDiff Hydro {field} min: {diff.min()}   max: {diff.max()}   Mean: {diff.mean()}')
