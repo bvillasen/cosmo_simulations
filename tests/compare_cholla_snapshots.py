@@ -57,4 +57,4 @@ for n_snapshot in range(n_snaps):
     diff_max = diff_vals.max()
     diff[field].append( diff_max )
     
-    print( f'\nDiff Hydro {field} min: {diff.min()}   max: {diff.max()}   Mean: {diff.mean()}')
+    print( f'\nDiff Hydro {field} min: {diff_vals.min()}   max: {diff_vals.max()}   Mean: {diff_vals.mean()}')
