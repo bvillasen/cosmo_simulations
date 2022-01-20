@@ -44,7 +44,7 @@ for n_snapshot in range(n_snaps):
   z = data_0['Current_z']
   
   if 'z' not in diff: diff['z'] = []
-  z.append(z)          
+  diff['z'].append(z)          
   
   for field in fields:
     dens_0 = data_0[field]
