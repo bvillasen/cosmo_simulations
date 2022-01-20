@@ -295,7 +295,7 @@ def Get_Comparable_T0_Gaikwad():
 
 ##################################################################################################################################
 
-def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_range, log_ps=False, systematic_uncertainties=None, print_systematic=False, no_use_delta_p=False, load_covariance_matrix=False ):
+def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_range, log_ps=False, systematic_uncertainties=None, print_systematic=False, no_use_delta_p=False, load_covariance_matrix=False, simulated_data_param=None ):
   print( f'Loading P(k) Data:' )
   dir_boss = ps_data_dir + 'data_power_spectrum_boss/'
   data_filename = dir_boss + 'data_table.py'
@@ -315,8 +315,13 @@ def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_rang
 
   data_dir_viel = ps_data_dir + 'data_power_spectrum_viel_2013/'
   data_viel = load_tabulated_data_viel( data_dir_viel)
-
+  
   data_dir = { 'Boss':data_boss, 'Walther':data_walther, 'Boera':data_boera, 'Viel':data_viel, 'Irsic':data_irsic, 'BoeraC':data_boera_c }
+
+  if simulated_data_param is not None:
+    data_file_name = simulated_data_param['data_file_name']
+    simulated_data = Load_Pickle_Directory( data_file_name )
+    data_dir['Simulated'] = simulated_data
 
   data_kvals, data_ps, data_ps_sigma, data_indices, data_z  = [], [], [], [], []
   log_data_ps, log_data_ps_sigma = [], []
@@ -459,7 +464,7 @@ def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_rang
 
 ##################################################################################################################################
 
-def Get_Comparable_Composite( fields, z_min, z_max, ps_parameters=None, tau_parameters=None, log_ps=False, z_reion=None, factor_sigma_tauHeII=1.0, systematic_uncertainties=None, no_use_delta_p=False, load_covariance_matrix=False  ):
+def Get_Comparable_Composite( fields, z_min, z_max, ps_parameters=None, tau_parameters=None, log_ps=False, z_reion=None, factor_sigma_tauHeII=1.0, systematic_uncertainties=None, no_use_delta_p=False, load_covariance_matrix=False, simulated_data_param=None  ):
   
   rescaled_walther = False
   rescale_walter_file = None
@@ -481,7 +486,7 @@ def Get_Comparable_Composite( fields, z_min, z_max, ps_parameters=None, tau_para
   for field in fields_list:
     append_comparable = False
     if field == 'P(k)':
-      comparable_ps = Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_ps_sets, ps_range, log_ps=log_ps, systematic_uncertainties=systematic_uncertainties, no_use_delta_p=no_use_delta_p, load_covariance_matrix=load_covariance_matrix  )
+      comparable_ps = Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_ps_sets, ps_range, log_ps=log_ps, systematic_uncertainties=systematic_uncertainties, no_use_delta_p=no_use_delta_p, load_covariance_matrix=load_covariance_matrix, simulated_data_param=simulated_data_param  )
       comparable_ps_all = comparable_ps['P(k)']
       comparable_ps_separate = comparable_ps['separate']
       comparable_all['P(k)'] = { 'all':comparable_ps_all, 'separate':comparable_ps_separate }

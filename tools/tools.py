@@ -33,6 +33,31 @@ if system == 'MacBook':  home_dir = '/Users/bruno/'
 
 
 
+def Select_Indices( x_to_select, x_vals, tolerance=1e-3 ):
+  indices = []
+  for x in x_to_select:
+    diff = np.abs( x_vals - x )
+    diff_min = diff.min()
+    if diff_min > tolerance:
+      print( f'ERROR: No index found for {x}, min difference is : {diff_min}')
+      return None
+    indx = np.where( diff == diff_min )[0]
+    if len( indx ) > 1:
+      print( f'WARNING:Multiple values found for {x}, found: {x_vals[indx]}. Only selected: {x_vals[indx[0]]}   ' )
+    indx = indx[0]
+    indices.append( indx )
+  indices = np.array( indices )
+  selected_vals = x_vals[indices]
+  n_to_select = len( x_to_select )
+  selected_diff = 0
+  for i in range(n_to_select):
+    selected_diff += np.abs( x_vals[indices[i]] - x_to_select[i] )
+  if selected_diff > (n_to_select * tolerance) :
+    print( f'ERROR: Selected values dosent match the values to select' )
+    return None
+  return indices
+  
+
 def Combine_List_Pair( a, b ):
   output = []
   for a_i in a:

@@ -132,6 +132,7 @@ class Simulation_Grid:
   Load_Simulation_Analysis_Data = Load_Sim_Analysis_Data
   Get_Power_Spectrum_Range = Get_PS_Range
   Load_Simulation_Power_Spectum_Data = Load_Power_Spectum_Data
+  Select_Simulations = Select_Simulations_local
 ###############################################################################################    
   def Create_Grid_Directory_Structure( self ):
     print( f" Root Dir: {self.root_dir}")

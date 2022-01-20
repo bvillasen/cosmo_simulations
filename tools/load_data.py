@@ -6,7 +6,7 @@ import numpy as np
 import pickle
 
 
-def Load_Skewers_File( n_file, input_dir, axis_list=[ 'x', 'y', 'z' ], fields_to_load=[ 'HI_density', 'HeII_density', 'temperature', 'los_velocity' ] ):
+def Load_Skewers_File( n_file, input_dir, axis_list=[ 'x', 'y', 'z' ], fields_to_load=[ 'HI_density', 'temperature', 'los_velocity' ] ):
   file_name = input_dir + f'{n_file}_skewers.h5'
   file = h5.File( file_name, 'r' )
   data_out = { key:file.attrs[key][0] for key in file.attrs }

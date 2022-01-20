@@ -167,7 +167,6 @@ def interp_line( x, x_interp, y, kind='cubic' ):
   func = interp.interp1d( x, y, kind=kind )
   return func(x_interp)
 
-  
 def smooth_line( values, x_vals, log=False, n_neig=3, order=2, interpolate=False,  n_interp=1000 ):
   from scipy.signal import savgol_filter
   if log: values = np.log10(values)

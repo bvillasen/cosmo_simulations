@@ -27,20 +27,20 @@ if type == 'hydro': hydro = True
 if type == 'particles': particles = True
 
 # Box Size
-Lbox = 25000.0    #kpc/h
-n_points = 1024
-n_boxes  = 128
+Lbox = 50000.0    #kpc/h
+n_points = 128
+n_boxes  = 8
 L_Mpc = int( Lbox / 1000)
 
-# input_dir = data_dir + f'cosmo_sims/ics/enzo/{n_points}_{L_Mpc}Mpc/'
-# output_dir = data_dir + f'cosmo_sims/ics/{n_points}_{L_Mpc}Mpc/'
+input_dir = data_dir + f'cosmo_sims/ics/enzo/{n_points}_{L_Mpc}Mpc/'
+output_dir = data_dir + f'cosmo_sims/ics/{n_points}_{L_Mpc}Mpc/'
 
 # m_wdm = 0.25
 # input_dir = data_dir + f'cosmo_sims/ics/enzo/wdm/{n_points}_hydro_{L_Mpc}Mpc_wdm_m{m_wdm:.2f}kev/raw/'
 # output_dir = data_dir + f'cosmo_sims/ics/wdm/{n_points}_{L_Mpc}Mpc_wdm_m{m_wdm:.2f}kev/'
 
-input_dir = data_dir + f'cosmo_sims/ics/enzo/wdm/{n_points}_hydro_{L_Mpc}Mpc_cdm/raw/'
-output_dir = data_dir + f'cosmo_sims/ics/wdm/{n_points}_{L_Mpc}Mpc_cdm/'
+# input_dir = data_dir + f'cosmo_sims/ics/enzo/wdm/{n_points}_hydro_{L_Mpc}Mpc_cdm/raw/'
+# output_dir = data_dir + f'cosmo_sims/ics/wdm/{n_points}_{L_Mpc}Mpc_cdm/'
 
 
 create_directory( output_dir )
@@ -87,8 +87,6 @@ if type == 'particles':
   data_ics['dm']['vel_x'] = p_vel_x
   data_ics['dm']['vel_y'] = p_vel_y
   data_ics['dm']['vel_z'] = p_vel_z
-
-
 
 
 if n_boxes == 1: proc_grid  = [ 1, 1, 1 ]

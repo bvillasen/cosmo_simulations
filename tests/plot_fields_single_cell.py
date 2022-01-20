@@ -147,7 +147,7 @@ for field_id, field in enumerate(fields_to_plot):
   if field_id == nrows-1: ax.set_xlabel( r'$z$', fontsize=label_size )
 
 
-figure_name = output_dir + 'single_cell_comparison.png'
+figure_name = output_dir + 'single_cell_comparison_new.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
 

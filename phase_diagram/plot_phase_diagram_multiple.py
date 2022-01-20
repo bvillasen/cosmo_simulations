@@ -34,7 +34,7 @@ delta_min, delta_max = 0, 1.0
 
 
 input_dir_0 = data_dir + f'cosmo_sims/256_50Mpc/analysis_files_grackle/'
-input_dir_1 = data_dir + f'cosmo_sims/256_50Mpc/analysis_files_cholla/'
+input_dir_1 = data_dir + f'cosmo_sims/256_50Mpc/analysis_files/'
 output_dir = data_dir + f'cosmo_sims/256_50Mpc/figures/phase_diagram/'
 create_directory( output_dir )
 
@@ -181,8 +181,8 @@ for n_snap in snaps_local:
         'size': label_size,
         'ha':'center'
         }
-    # cb.set_label_text( r'$\log_{10}  \,\, P\,(\Delta, T\,) $', fontdict=font )
-    cb.set_label( r'$\log_{10}  \,\, P\,(\Delta, T\,) $', fontdict=font )
+    cb.set_label_text( r'$\log_{10}  \,\, P\,(\Delta, T\,) $', fontdict=font )
+    # cb.set_label( r'$\log_{10}  \,\, P\,(\Delta, T\,) $', fontdict=font )
     ax.set_ylabel(r'$\log_{10} \, T \,\,[\,\mathrm{K}\,]$', fontsize=label_size , color=text_color)
     ax.set_xlabel(r'$\log_{10} \, \Delta$ ', fontsize=label_size , color=text_color )
 

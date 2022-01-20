@@ -14,11 +14,31 @@ grid_name = '1024_wdmgrid_nsim600'
 # fit_names = [ 'fit_results_P(k)+_Boera', 'fit_results_P(k)+_Boera_covMatrix_zeros', 'fit_results_P(k)+_Boera_covMatrix'  ]
 # data_labels = [ r'Sigma', r'Diagonal Matrix', r'Covariance Matirx' ]
 
-fit_names = [ 'fit_results_P(k)+_Boera_covMatrix'  ]
-data_labels = [ 'Covariance Matirx' ]
+# fit_names = [ 'fit_results_P(k)+_Boera_covMatrix'  ]
+# data_labels = [ 'Covariance Matirx' ]
 
 
-output_dir = data_dir + f'cosmo_sims/sim_grid/figures_wdm_new/'
+
+# fit_names = [ 'fit_results_P(k)+_Boera', 'fit_results_P(k)+_Boera_covMatrix_zeros', 'fit_results_P(k)+_Boera_covMatrix'  ]
+# data_labels = [ r'Sigma', r'Diagonal Matrix', r'Covariance Matirx' ]
+
+# fit_names = [ 'fit_results_P(k)+_Boera_covMatrix'  ]
+# data_labels = [ 'Covariance Matirx' ]\
+
+# sigma_fractions = [ 1.0, 0.5, 0.1 ]
+# # fit_names = [ f'fit_results_P(k)+_Simulated_covMatrix_sigma{sigma_fraction}' for sigma_fraction in sigma_fractions ]
+# data_labels = [ r'$x \sigma = {0}$'.format(sigma_fraction) for sigma_fraction in sigma_fractions ]
+# 
+# fit_names = [ f'fit_results_P(k)+_Simulated_sigma{sigma_fraction}' for sigma_fraction in sigma_fractions ]
+# data_labels = [ r'$x \sigma = {0}$'.format(sigma_fraction) for sigma_fraction in sigma_fractions ]
+
+
+sigma_fraction = 0.1
+fit_names = [ f'fit_results_P(k)+_Simulated_sigma{sigma_fraction}', f'fit_results_P(k)+_Simulated_covMatrix_sigma{sigma_fraction}'  ]
+data_labels = [ 'Sigma', 'Cov Matrix']
+
+
+output_dir = data_dir + f'cosmo_sims/sim_grid/1024_wdmgrid_nsim600/figures/'
 create_directory( output_dir )
 
 samples_all = {}

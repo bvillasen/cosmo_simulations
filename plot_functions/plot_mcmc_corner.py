@@ -36,7 +36,7 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
   color = 'C0'
   data_color = 'C9'
   font_size = 22
-  legend_font_size = 18
+  legend_font_size = 16
   label_size = 30
   alpha = 0.6
   fig_size = 5
@@ -196,7 +196,7 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
           
         
         if add_data_label and show_label:
-          leg = ax.legend( loc=3, frameon=False, fontsize=legend_font_size, prop=prop )
+          leg = ax.legend( loc=2, frameon=False, fontsize=legend_font_size)
           for text in leg.get_texts():
             plt.setp(text, color = text_color)
             

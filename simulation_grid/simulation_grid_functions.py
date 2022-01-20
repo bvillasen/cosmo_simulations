@@ -26,24 +26,44 @@ def Get_Grid_Params( root_dir, base_key='S'):
   return grid_sim_params, sim_dirs
 
 
-def Select_Simulations( params, grid_params=None, tolerance=5e-3, SG=None ):
-  vals_to_find = { key:params[key] for key in params if params[key] != None }
+def Select_Simulations_local( self, params_to_select, tolerance=5e-3, ):
+  vals_to_find = { key:params_to_select[key] for key in params_to_select if params_to_select[key] != None }
   selected_sims = []
 
-  if SG is not None:
-    if not sim_ids: sim_ids = self.sim_ids
-    for sim_id in sim_ids: 
-      sim_data = self.Grid[sim_id]
-      sim_parameters = sim_data['parameters']
+  print(f'Selecting from grid: {self.root_dir}')
+  sim_ids = self.sim_ids
+  for sim_id in sim_ids: 
+    sim_data = self.Grid[sim_id]
+    sim_parameters = sim_data['parameters']
+    sim_vals = { key:sim_parameters[key] for key in vals_to_find }
+    same_vals = True
+    for key in sim_vals:
+      if np.abs( sim_vals[key] - vals_to_find[key] ) > tolerance: same_vals = False
+    if same_vals: selected_sims.append( sim_id )
+  
+  return selected_sims
+  
+
+def Select_Simulations_From_Grid( params_to_select, grid_params=None, tolerance=5e-3, SG=None ):
+  vals_to_find = { key:params_to_select[key] for key in params_to_select if params_to_select[key] != None }
+  selected_sims = []
+
+  
+  if grid_params is not None:
+    for sim_id in grid_params:
+      sim_parameters = grid_params[sim_id]
       sim_vals = { key:sim_parameters[key] for key in vals_to_find }
       same_vals = True
       for key in sim_vals:
         if np.abs( sim_vals[key] - vals_to_find[key] ) > tolerance: same_vals = False
       if same_vals: selected_sims.append( sim_id )
   
-  if grid_params is not None:
-    for sim_id in grid_params:
-      sim_parameters = grid_params[sim_id]
+  if SG is not None:
+    print(f'Selecting from grid: {SG.root_dir}')
+    sim_ids = SG.sim_ids
+    for sim_id in sim_ids: 
+      sim_data = SG.Grid[sim_id]
+      sim_parameters = sim_data['parameters']
       sim_vals = { key:sim_parameters[key] for key in vals_to_find }
       same_vals = True
       for key in sim_vals:
