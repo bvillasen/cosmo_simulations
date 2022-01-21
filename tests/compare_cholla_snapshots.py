@@ -34,9 +34,7 @@ diff = {}
 
 data_type = 'hydro'
 
-
-
-dens_min = 1e-10
+v_min = 1e-10
 for n_snapshot in range(n_snaps):
 
   data_0 = load_snapshot_data_distributed( data_type, fields, n_snapshot, input_dir_0, box_size, grid_size,  precision, show_progess=False )
@@ -50,11 +48,11 @@ for n_snapshot in range(n_snaps):
     dens_0 = data_0[field]
     dens_1 = data_1[field]
     
-    # print( f'Field: {field}  min: {dens_0.min()}  max: {dens_0.max()}')    
+
 
     if field not in diff: diff[field] = [] 
     diff_vals = np.abs( dens_0 - dens_1 ) / dens_0
     diff_max = diff_vals.max()
     diff[field].append( diff_max )
     
-    print( f'\nDiff Hydro {field} min: {diff_vals.min()}   max: {diff_vals.max()}   Mean: {diff_vals.mean()}')
+    print( f'n: {n_snapshot}  z: {z}  Diff {data_type} {field} min: {diff_vals.min()}   max: {diff_vals.max()}   Mean: {diff_vals.mean()}')
