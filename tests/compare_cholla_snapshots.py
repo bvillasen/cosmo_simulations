@@ -14,9 +14,9 @@ import matplotlib
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
 matplotlib.rcParams['mathtext.rm'] = 'serif'
 
-input_dir_0 = data_dir + 'cosmo_sims/256_50Mpc_adiabatic/sim_caar_gcc/snapshot_files/'
-input_dir_1 = data_dir + 'cosmo_sims/256_50Mpc_adiabatic/sim_cosmo/snapshot_files/'
-output_dir  = data_dir + 'cosmo_sims/256_50Mpc_adiabatic/figures/'
+input_dir_0 = data_dir + 'cosmo_sims/1024_50Mpc_adiabatic/snapshot_files_caar/'
+input_dir_1 = data_dir + 'cosmo_sims/1024_50Mpc_adiabatic/sim_cosmo/snapshot_files/'
+output_dir  = data_dir + 'cosmo_sims/1024_50Mpc_adiabatic/figures/'
 create_directory( output_dir ) 
 
 precision = np.float64
@@ -26,7 +26,7 @@ box_size = [ Lbox, Lbox, Lbox ]
 grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
 
 
-n_snaps = 200
+n_snaps = 10
 
 # fields = [ 'density', 'momentum_x', 'momentum_y', 'momentum_z', 'GasEnergy', 'Energy'  ]
 fields = [ 'density' ]
