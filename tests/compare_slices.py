@@ -78,12 +78,12 @@ for field_id, field in enumerate(fields):
   diff = ( slice_1 - slice_0 ) / slice_0
   vmin, vmax = min( slice_0.min(), slice_1.min() ), max( slice_0.max(), slice_1.max() )
   
-  slice_0 = no.log10( slice_0 )
-  slice_1 = no.log10( slice_1 )
+  slice_0 = np.log10( slice_0 )
+  slice_1 = np.log10( slice_1 )
   
   ax_l[0].imshow( slice_0, vmin=vmin, vmax=vmax )
   ax_l[1].imshow( slice_1, vmin=vmin, vmax=vmax )
-  ax_l[2].imshow( diff, vmin=-delta, vmax=delta )
+  ax_l[2].imshow( diff, vmin=-delta, vmax=delta, cmap='bwr' )
   
 
 
