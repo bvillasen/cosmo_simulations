@@ -54,14 +54,14 @@ for field in fields:
 n_fields = len( fields )
 
 label_size = 16
-figure_text_size = 14
+figure_text_size = 16
 tick_label_size_major = 15
 tick_label_size_minor = 13
 tick_size_major = 5
 tick_size_minor = 3
 tick_width_major = 1.5
 tick_width_minor = 1
-text_color = 'black'
+text_color = 'white'
 legend_font_size = 14
 
 ncols, nrows = 3, n_fields
@@ -88,7 +88,7 @@ for field_id, field in enumerate(fields):
   ax_l[field_id][1].imshow( slice_1, vmin=vmin, vmax=vmax, cmap=cmap )
   ax_l[field_id][2].imshow( diff, vmin=-delta, vmax=delta, cmap='bwr' )
   
-  ax_l[0][0].text(0.05, 0.9, r'$z=${0:.1f}'.format(z_0), horizontalalignment='center',  verticalalignment='center', transform=ax_l[0][0].transAxes, fontsize=figure_text_size, color=text_color) 
+  ax_l[0][0].text(0.1, 0.93, r'$z=${0:.1f}'.format(z_0), horizontalalignment='center',  verticalalignment='center', transform=ax_l[0][0].transAxes, fontsize=figure_text_size, color=text_color) 
 
   
   for i in range(3):
