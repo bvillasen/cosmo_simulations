@@ -88,8 +88,9 @@ for field_id, field in enumerate(fields):
   ax_l[field_id][1].imshow( slice_1, vmin=vmin, vmax=vmax, cmap=cmap )
   im=ax_l[field_id][2].imshow( diff, vmin=-delta, vmax=delta, cmap='bwr' )
   
-  fig.colorbar(im, ax=ax_l.ravel().tolist(), shrink=0.5)
-  
+  ax = ax[field_id][2]
+  cax = ax.inset_axes([1.04, 0.2, 0.05, 0.6], transform=ax.transAxes)
+  fig.colorbar(im, ax=ax, cax=cax)
   
   ax_l[0][0].text(0.1, 0.93, r'$z=${0:.1f}'.format(z_0), horizontalalignment='center',  verticalalignment='center', transform=ax_l[0][0].transAxes, fontsize=figure_text_size, color=text_color) 
 
