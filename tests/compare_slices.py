@@ -35,8 +35,8 @@ diff = {}
 
 
 n_snapshot = 10 
-data_0 = load_snapshot_data_distributed( data_type, fields, n_snapshot, input_dir_0, box_size, grid_size,  precision, show_progess=False )
-data_1 = load_snapshot_data_distributed( data_type, fields, n_snapshot, input_dir_1, box_size, grid_size,  precision, show_progess=False )
+data_0 = load_snapshot_data_distributed( data_type, fields, n_snapshot, input_dir_0, box_size, grid_size,  precision, show_progess=True )
+data_1 = load_snapshot_data_distributed( data_type, fields, n_snapshot, input_dir_1, box_size, grid_size,  precision, show_progess=True )
 z_0 = data_0['Current_z']
 z_1 = data_1['Current_z']
 if np.abs( z_0 - z_1 ) > 1e-3:
