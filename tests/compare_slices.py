@@ -46,11 +46,10 @@ n_snapshot = 10
 #   print( 'ERROR: Redshift of snapshots does not match')
 #   exit(-1)  
 # 
-# for field in fields:
-#   if field not in slices: slices[field] = {}
-#   slices[field][0] = data_0[field][slice_start:slice_start+slice_depth, :, :].sum( axis=0 ) / slice_depth
-#   slices[field][1] = data_1[field][slice_start:slice_start+slice_depth, :, :].sum( axis=0 ) / slice_depth
-# 
+for field in fields:
+  if field not in slices: slices[field] = {}
+  slices[field][0] = data_0[field][slice_start:slice_start+slice_depth, :, :].sum( axis=0 ) / slice_depth
+  slices[field][1] = data_1[field][slice_start:slice_start+slice_depth, :, :].sum( axis=0 ) / slice_depth
   
 n_fields = len( fields )
 
@@ -71,6 +70,18 @@ figure_height = 6
 fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(ncols*figure_width, nrows*figure_height))
 plt.subplots_adjust( hspace = 0.15, wspace=0.2)
 
+delta = 1
+
+for field_id, field in enumerate(fields):
+  slice_0 = slices[field][0]
+  slice_1 = slices[field][1]
+  diff = ( slice_1 - slice_0 ) / slice_0
+  vmin, vmax = min( slice_0.min(), slice_1.min() ), max( slice_0.max(), slice_1.max() )
+  
+  ax_l[0].imshow( slice_0, vmin=vmin, vmax=vmax )
+  ax_l[1].imshow( slice_1, vmin=vmin, vmax=vmax )
+  ax_l[2].imshow( diff, vmin=-delta, vmax=delta )
+  
 
 
 
