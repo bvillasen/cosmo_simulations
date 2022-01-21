@@ -30,7 +30,7 @@ grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
 data_type = 'hydro'
 
 # fields = [ 'density', 'momentum_x', 'momentum_y', 'momentum_z', 'GasEnergy', 'Energy'  ]
-fields = [ 'density' ]
+fields = [ 'density', 'temperature' ]
 diff = {}
 
 slice_start, slice_depth = 0, 256
@@ -72,6 +72,8 @@ plt.subplots_adjust( hspace = 0.15, wspace=0.2)
 
 delta = 1
 
+cmaps = [ 'viridis', 'turbo' ]
+
 for field_id, field in enumerate(fields):
   slice_0 = slices[field][0]
   slice_1 = slices[field][1]
@@ -81,9 +83,10 @@ for field_id, field in enumerate(fields):
   slice_1 = np.log10( slice_1 )
   vmin, vmax = min( slice_0.min(), slice_1.min() ), max( slice_0.max(), slice_1.max() )
   
-  ax_l[0].imshow( slice_0, vmin=vmin, vmax=vmax )
-  ax_l[1].imshow( slice_1, vmin=vmin, vmax=vmax )
-  ax_l[2].imshow( diff, vmin=-delta, vmax=delta, cmap='bwr' )
+  cmap = cmaps[field_id]
+  ax_l[field_id][0].imshow( slice_0, vmin=vmin, vmax=vmax, cmap=cmap )
+  ax_l[field_id][1].imshow( slice_1, vmin=vmin, vmax=vmax, cmap=cmap )
+  ax_l[field_id][2].imshow( diff, vmin=-delta, vmax=delta, cmap='bwr' )
   
 
 
