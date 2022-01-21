@@ -48,6 +48,6 @@ if np.abs( z_0 - z_1 ) > 1e-3:
   
 for field in fields:
   if field not in slices: slices[field] = {}
-  slices[field][0] = data_0[field][slice_start:slice_start+slice_depth, :, ;].sum( axix=0 ) / slice_depth
-  slices[field][1] = data_1[field][slice_start:slice_start+slice_depth, :, ;].sum( axix=0 ) / slice_depth
+  slices[field][0] = (data_0[field][slice_start:slice_start+slice_depth, :, ;]).sum( axis=0 ) / slice_depth
+  slices[field][1] = (data_1[field][slice_start:slice_start+slice_depth, :, ;]).sum( axis=0 ) / slice_depth
   
