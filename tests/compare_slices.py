@@ -88,7 +88,7 @@ for field_id, field in enumerate(fields):
   ax_l[field_id][1].imshow( slice_1, vmin=vmin, vmax=vmax, cmap=cmap )
   im=ax_l[field_id][2].imshow( diff, vmin=-delta, vmax=delta, cmap='bwr' )
   
-  ax = ax[field_id][2]
+  ax = ax_l[field_id][2]
   cax = ax.inset_axes([1.04, 0.2, 0.05, 0.6], transform=ax.transAxes)
   fig.colorbar(im, ax=ax, cax=cax)
   
