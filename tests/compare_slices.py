@@ -30,7 +30,7 @@ grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
 data_type = 'hydro'
 
 # fields = [ 'density', 'momentum_x', 'momentum_y', 'momentum_z', 'GasEnergy', 'Energy'  ]
-fields = [ 'density', 'temperature' ]
+fields = [ 'density', 'temperature', 'HI_density' ]
 diff = {}
 
 slice_start, slice_depth = 0, 256
@@ -68,11 +68,11 @@ ncols, nrows = 3, n_fields
 figure_width = 6
 figure_height = 6
 fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(ncols*figure_width, nrows*figure_height))
-plt.subplots_adjust( hspace = 0.15, wspace=0.2)
+plt.subplots_adjust( hspace = 0.05, wspace=0.05 )
 
 delta = 0.5
 
-cmaps = [ 'viridis', 'jet' ]
+cmaps = [ 'viridis', 'jet', 'cividis' ]
 
 for field_id, field in enumerate(fields):
   slice_0 = slices[field][0]
