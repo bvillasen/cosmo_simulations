@@ -21,7 +21,7 @@ create_directory( output_dir )
 
 precision = np.float64
 Lbox = 50000.0    #kpc/h
-n_cells = 256
+n_cells = 1024
 box_size = [ Lbox, Lbox, Lbox ]
 grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
 
