@@ -68,7 +68,7 @@ ncols, nrows = 3, n_fields
 figure_width = 6
 figure_height = 6
 fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(ncols*figure_width, nrows*figure_height))
-plt.subplots_adjust( hspace = 0.05, wspace=0.05 )
+plt.subplots_adjust( hspace = 0.02, wspace=0.02 )
 
 delta = 0.2
 
