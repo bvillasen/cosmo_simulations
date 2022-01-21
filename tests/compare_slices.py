@@ -37,15 +37,15 @@ slice_start, slice_depth = 0, 256
 
 n_snapshot = 10 
 
-# slices = {} 
-# data_0 = load_snapshot_data_distributed( data_type, fields, n_snapshot, input_dir_0, box_size, grid_size,  precision, show_progess=True )
-# data_1 = load_snapshot_data_distributed( data_type, fields, n_snapshot, input_dir_1, box_size, grid_size,  precision, show_progess=True )
-# z_0 = data_0['Current_z']
-# z_1 = data_1['Current_z']
-# if np.abs( z_0 - z_1 ) > 1e-3:
-#   print( 'ERROR: Redshift of snapshots does not match')
-#   exit(-1)  
-# 
+slices = {} 
+data_0 = load_snapshot_data_distributed( data_type, fields, n_snapshot, input_dir_0, box_size, grid_size,  precision, show_progess=True )
+data_1 = load_snapshot_data_distributed( data_type, fields, n_snapshot, input_dir_1, box_size, grid_size,  precision, show_progess=True )
+z_0 = data_0['Current_z']
+z_1 = data_1['Current_z']
+if np.abs( z_0 - z_1 ) > 1e-3:
+  print( 'ERROR: Redshift of snapshots does not match')
+  exit(-1)  
+
 for field in fields:
   if field not in slices: slices[field] = {}
   slices[field][0] = data_0[field][slice_start:slice_start+slice_depth, :, :].sum( axis=0 ) / slice_depth
