@@ -88,7 +88,7 @@ for field_id, field in enumerate(fields):
   ax_l[field_id][1].imshow( slice_1, vmin=vmin, vmax=vmax, cmap=cmap )
   ax_l[field_id][2].imshow( diff, vmin=-delta, vmax=delta, cmap='bwr' )
   
-  ax[0][0].text(0.05, 0.9, r'$z=${0:.1f}'.format(z_0), horizontalalignment='center',  verticalalignment='center', transform=ax[0][0].transAxes, fontsize=figure_text_size, color=text_color) 
+  ax_l[0][0].text(0.05, 0.9, r'$z=${0:.1f}'.format(z_0), horizontalalignment='center',  verticalalignment='center', transform=ax_l[0][0].transAxes, fontsize=figure_text_size, color=text_color) 
 
   
   for i in range(3):
