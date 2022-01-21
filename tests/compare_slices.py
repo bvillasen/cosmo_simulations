@@ -89,8 +89,8 @@ for field_id, field in enumerate(fields):
   ax_l[field_id][2].imshow( diff, vmin=-delta, vmax=delta, cmap='bwr' )
   
   for i in range(3):
-    ax_l[field_id][i].set_xticks(ticks[i])
-    ax_l[field_id][i].set_yticks(ticks[i])
+    ax_l[field_id][i].set_xticks([])
+    ax_l[field_id][i].set_yticks([])
             
 
 
