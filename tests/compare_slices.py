@@ -92,10 +92,13 @@ for field_id, field in enumerate(fields):
     ax_l[field_id][i].set_xticks([])
     ax_l[field_id][i].set_yticks([])
   
+  
+  ax_l[field_id][0].set_ylabel( field, fontsize=label_size )
   if field_id == 0: 
     ax_l[field_id][0].set_title( 'Grackle', fontsize=label_size )
     ax_l[field_id][1].set_title( 'Cholla', fontsize=label_size )
     ax_l[field_id][2].set_title( 'Fractional Difference', fontsize=label_size )
+    
             
 
 
