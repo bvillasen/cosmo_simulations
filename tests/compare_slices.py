@@ -86,7 +86,10 @@ for field_id, field in enumerate(fields):
   cmap = cmaps[field_id]
   ax_l[field_id][0].imshow( slice_0, vmin=vmin, vmax=vmax, cmap=cmap )
   ax_l[field_id][1].imshow( slice_1, vmin=vmin, vmax=vmax, cmap=cmap )
-  ax_l[field_id][2].imshow( diff, vmin=-delta, vmax=delta, cmap='bwr' )
+  im=ax_l[field_id][2].imshow( diff, vmin=-delta, vmax=delta, cmap='bwr' )
+  
+  fig.colorbar(im, ax=ax_l.ravel().tolist(), shrink=0.5)
+  
   
   ax_l[0][0].text(0.1, 0.93, r'$z=${0:.1f}'.format(z_0), horizontalalignment='center',  verticalalignment='center', transform=ax_l[0][0].transAxes, fontsize=figure_text_size, color=text_color) 
 
