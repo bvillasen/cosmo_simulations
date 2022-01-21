@@ -70,9 +70,9 @@ figure_height = 6
 fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(ncols*figure_width, nrows*figure_height))
 plt.subplots_adjust( hspace = 0.15, wspace=0.2)
 
-delta = 1
+delta = 0.5
 
-cmaps = [ 'viridis', 'turbo' ]
+cmaps = [ 'viridis', 'jet' ]
 
 for field_id, field in enumerate(fields):
   slice_0 = slices[field][0]
