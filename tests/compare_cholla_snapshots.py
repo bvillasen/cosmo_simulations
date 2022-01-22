@@ -14,7 +14,10 @@ import matplotlib
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
 matplotlib.rcParams['mathtext.rm'] = 'serif'
 
-sim_dir = data_dir + 'cosmo_sims/256_50Mpc_adiabatic/'
+Lbox = 50000.0    #kpc/h
+n_cells = 256
+
+sim_dir = data_dir + f'cosmo_sims/{n_cells}_50Mpc_adiabatic/'
 input_dir_0 = sim_dir + 'sim_caar/snapshot_files/'
 input_dir_1 = sim_dir + 'snapshot_files/'
 output_dir  = sim_dir + 'figures/'
@@ -26,8 +29,6 @@ output_dir  = sim_dir + 'figures/'
 create_directory( output_dir ) 
 
 precision = np.float64
-Lbox = 50000.0    #kpc/h
-n_cells = 1024
 box_size = [ Lbox, Lbox, Lbox ]
 grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
 
