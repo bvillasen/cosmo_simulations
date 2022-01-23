@@ -19,8 +19,8 @@ n_cells = 1024
 n_snaps = 60
 
 sim_dir = data_dir + f'cosmo_sims/{n_cells}_50Mpc_adiabatic/'
-input_dir_0 = sim_dir + 'sim_caar/snapshot_files/'
-input_dir_1 = sim_dir + 'snapshot_files/'
+input_dir_0 = sim_dir + 'sim_cosmo/snapshot_files/'
+input_dir_1 = sim_dir + 'snapshot_files_caar/'
 output_dir  = sim_dir + 'figures/'
 
 # input_dir_0 = data_dir + 'cosmo_sims/1024_50Mpc_adiabatic/snapshot_files_caar/'
