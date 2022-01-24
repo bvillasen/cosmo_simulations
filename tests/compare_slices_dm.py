@@ -49,6 +49,7 @@ diff = {}
 
 snapshots = range( 0, 60 )
 indices_local = split_indices( snapshots, rank, n_procs )
+print( f'rank: {rank}  indices_local:{indices_local}' )
 snapshots_local = snapshots[indices_local]
 
 for n_snapshot in snapshots_local:
