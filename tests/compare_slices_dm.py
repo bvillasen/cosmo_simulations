@@ -93,7 +93,10 @@ for n_snapshot in snapshots_local:
     slice_0 = slices[field][0]
     slice_1 = slices[field][1]
     diff = ( slice_1 - slice_0 ) / slice_0
-    if absolute_difference: diff = np.abs( diff )
+    if absolute_difference: 
+      diff = np.abs( diff )
+      diff = np.log10(diff)
+      
     delta_min, delta_max = diff.min(), diff.max()
     
     slice_0 = np.log10( slice_0 )
