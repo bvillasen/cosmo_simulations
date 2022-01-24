@@ -10,13 +10,26 @@ sys.path.extend(subDirectories)
 from load_data import load_snapshot_data_distributed
 from tools import *
 
+use_mpi = True
+if use_mpi:
+  from mpi4py import MPI
+  comm = MPI.COMM_WORLD
+  rank = comm.Get_rank()
+  n_procs = comm.Get_size()
+else:
+  rank = 0
+  n_procs = 1
+
 import matplotlib
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
 matplotlib.rcParams['mathtext.rm'] = 'serif'
 
 Lbox = 50000.0    #kpc/h
 n_cells = 1024
-n_snaps = 60
+
+snapshots = np.arange( 0, 60, 1, dtype=int )
+snapshots_local = split_array_mpi( snapshots, rank, n_procs )
+print( f'rank: {rank}  snapshots_local:{snapshots_local}' )
 
 sim_dir = data_dir + f'cosmo_sims/{n_cells}_50Mpc_dmo/'
 input_dir_0 = sim_dir + 'snapshot_files_caar_0/'
@@ -43,7 +56,7 @@ diff = {}
 
 
 v_min = 1e-10
-for n_snapshot in range(n_snaps):
+for n_snapshot in snapshots_local:
 
   data_0 = load_snapshot_data_distributed( data_type, fields, n_snapshot, input_dir_0, box_size, grid_size,  precision, show_progess=False )
   data_1 = load_snapshot_data_distributed( data_type, fields, n_snapshot, input_dir_1, box_size, grid_size,  precision, show_progess=False )
