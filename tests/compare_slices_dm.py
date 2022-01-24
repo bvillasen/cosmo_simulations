@@ -96,7 +96,7 @@ for n_snapshot in snapshots:
     cax = ax.inset_axes([1.04, 0.1, 0.05, 0.8], transform=ax.transAxes)
     fig.colorbar(im, ax=ax, cax=cax)
     
-    ax_l[0][0].text(0.1, 0.93, r'$z=${0:.1f}'.format(z_0), horizontalalignment='center',  verticalalignment='center', transform=ax_l[0][0].transAxes, fontsize=figure_text_size, color=text_color) 
+    ax_l[0].text(0.1, 0.93, r'$z=${0:.1f}'.format(z_0), horizontalalignment='center',  verticalalignment='center', transform=ax_l[0].transAxes, fontsize=figure_text_size, color=text_color) 
 
     for i in range(3):
       ax_l[i].set_xticks([])
