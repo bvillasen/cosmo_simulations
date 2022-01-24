@@ -28,7 +28,7 @@ sim_dir = data_dir + 'cosmo_sims/1024_50Mpc_dmo/'
 input_dir_0 = sim_dir + 'snapshot_files_caar_0/'
 input_dir_1 = sim_dir + 'snapshot_files_caar/'
 output_dir  = sim_dir + 'figures/slices_full/'
-create_directory( output_dir ) 
+if rank == 0: create_directory( output_dir ) 
 
 slice_start, slice_depth = 0, 1024
 
