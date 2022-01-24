@@ -46,7 +46,10 @@ for n_snapshot in range(n_snaps):
 
   data_0 = load_snapshot_data_distributed( data_type, fields, n_snapshot, input_dir_0, box_size, grid_size,  precision, show_progess=False )
   data_1 = load_snapshot_data_distributed( data_type, fields, n_snapshot, input_dir_1, box_size, grid_size,  precision, show_progess=False )
-  z = data_0['Current_z']
+  z_0 = data_0['Current_z']
+  z_1 = data_1['Current_z']
+  if np.abs( z_0 - z_0 ) > 1e-3: print( f'Large redshift difference: {z_0}  {z_1}' )
+  z = z_0
   
   if 'z' not in diff: diff['z'] = []
   diff['z'].append(z)          
@@ -55,8 +58,6 @@ for n_snapshot in range(n_snaps):
     dens_0 = data_0[field]
     dens_1 = data_1[field]
     
-
-
     if field not in diff: diff[field] = [] 
     diff_vals = np.abs( dens_0 - dens_1 ) / dens_0
     diff_max = diff_vals.max()
