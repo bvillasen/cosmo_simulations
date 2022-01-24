@@ -72,6 +72,10 @@ for n_snapshot in snapshots_local:
     dens_0 = data_0[field]
     dens_1 = data_1[field]
     
+    if field in [ 'density' ]:
+      dens_0[dens_0<v_min] = v_min
+      dens_1[dens_1<v_min] = v_min
+    
     if field not in diff: diff[field] = [] 
     diff_vals = np.abs( dens_0 - dens_1 ) / dens_0
     diff_max = diff_vals.max()
