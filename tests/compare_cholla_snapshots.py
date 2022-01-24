@@ -18,7 +18,7 @@ Lbox = 50000.0    #kpc/h
 n_cells = 1024
 n_snaps = 60
 
-sim_dir = data_dir + f'cosmo_sims/{n_cells}_50Mpc_adiabatic/'
+sim_dir = data_dir + f'cosmo_sims/{n_cells}_50Mpc_dmo/'
 input_dir_0 = sim_dir + 'snapshot_files_caar_0/'
 input_dir_1 = sim_dir + 'snapshot_files_caar/'
 output_dir  = sim_dir + 'figures/'
@@ -29,6 +29,8 @@ output_dir  = sim_dir + 'figures/'
 
 create_directory( output_dir ) 
 
+# data_type = 'hydro'
+data_type = 'particles'
 precision = np.float64
 box_size = [ Lbox, Lbox, Lbox ]
 grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
@@ -39,7 +41,6 @@ grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
 fields = [ 'density' ]
 diff = {}
 
-data_type = 'hydro'
 
 v_min = 1e-10
 for n_snapshot in range(n_snaps):

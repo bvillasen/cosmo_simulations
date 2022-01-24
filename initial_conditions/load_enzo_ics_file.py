@@ -17,7 +17,9 @@ from internal_energy import get_temperature, get_internal_energy
 correction_factor = 1.0000563343966022
 
 
-def Load_File_Attrs( input_dir, Lbox=None, file_name='GridDensity' ):
+def Load_File_Attrs( input_dir, Lbox=None, type='hydro'):
+  if type == 'hydro': file_name='GridDensity'
+  if type == 'particles': file_name='ParticleDisplacements_x'
   file_name = input_dir + file_name
   file = h5.File( file_name, 'r' )
   attrs = file.attrs

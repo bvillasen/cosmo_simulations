@@ -28,12 +28,12 @@ if type == 'particles': particles = True
 
 # Box Size
 Lbox = 50000.0    #kpc/h
-n_points = 128
-n_boxes  = 8
+n_points = 1024
+n_boxes  = 128
 L_Mpc = int( Lbox / 1000)
 
-input_dir = data_dir + f'cosmo_sims/ics/enzo/{n_points}_{L_Mpc}Mpc/'
-output_dir = data_dir + f'cosmo_sims/ics/{n_points}_{L_Mpc}Mpc/'
+input_dir = data_dir + f'cosmo_sims/ics/enzo/{n_points}_{L_Mpc}Mpc_dmo/'
+output_dir = data_dir + f'cosmo_sims/ics/{n_points}_{L_Mpc}Mpc_dmo/'
 
 # m_wdm = 0.25
 # input_dir = data_dir + f'cosmo_sims/ics/enzo/wdm/{n_points}_hydro_{L_Mpc}Mpc_wdm_m{m_wdm:.2f}kev/raw/'
@@ -50,7 +50,7 @@ print(f'Input Dir: {input_dir}' )
 print(f'Output Dir: {output_dir}' )
 
 temperature = 231.44931976   #k
-file_attrs = Load_File_Attrs( input_dir, Lbox=Lbox )
+file_attrs = Load_File_Attrs( input_dir, Lbox=Lbox, type=type )
 
 data_ics = { 'dm':{}, 'gas':{} }
 data_ics['current_a'] = file_attrs['a_start']
