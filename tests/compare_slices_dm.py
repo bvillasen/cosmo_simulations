@@ -88,25 +88,25 @@ for n_snapshot in snapshots:
     vmin, vmax = min( slice_0.min(), slice_1.min() ), max( slice_0.max(), slice_1.max() )
     
     cmap = cmaps[field_id]
-    ax_l[field_id][0].imshow( slice_0, vmin=vmin, vmax=vmax, cmap=cmap )
-    ax_l[field_id][1].imshow( slice_1, vmin=vmin, vmax=vmax, cmap=cmap )
-    im=ax_l[field_id][2].imshow( diff, vmin=delta_min, vmax=delta_max, cmap='bwr' )
+    ax_l[0].imshow( slice_0, vmin=vmin, vmax=vmax, cmap=cmap )
+    ax_l[1].imshow( slice_1, vmin=vmin, vmax=vmax, cmap=cmap )
+    im=ax_l[2].imshow( diff, vmin=delta_min, vmax=delta_max, cmap='bwr' )
     
-    ax = ax_l[field_id][2]
+    ax = ax_l[2]
     cax = ax.inset_axes([1.04, 0.1, 0.05, 0.8], transform=ax.transAxes)
     fig.colorbar(im, ax=ax, cax=cax)
     
     ax_l[0][0].text(0.1, 0.93, r'$z=${0:.1f}'.format(z_0), horizontalalignment='center',  verticalalignment='center', transform=ax_l[0][0].transAxes, fontsize=figure_text_size, color=text_color) 
 
     for i in range(3):
-      ax_l[field_id][i].set_xticks([])
-      ax_l[field_id][i].set_yticks([])
+      ax_l[i].set_xticks([])
+      ax_l[i].set_yticks([])
         
-    ax_l[field_id][0].set_ylabel( field, fontsize=label_size )
+    ax_l[0].set_ylabel( field, fontsize=label_size )
     if field_id == 0: 
-      ax_l[field_id][0].set_title( '', fontsize=label_size )
-      ax_l[field_id][1].set_title( '', fontsize=label_size )
-      ax_l[field_id][2].set_title( 'Fractional Difference', fontsize=label_size )
+      ax_l[0].set_title( '', fontsize=label_size )
+      ax_l[1].set_title( '', fontsize=label_size )
+      ax_l[2].set_title( 'Fractional Difference', fontsize=label_size )
       
             
   figure_name = output_dir + f'slices_comparison_{n_snapshot}.png'
