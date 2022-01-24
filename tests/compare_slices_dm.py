@@ -27,10 +27,10 @@ matplotlib.rcParams['mathtext.rm'] = 'serif'
 sim_dir = data_dir + 'cosmo_sims/1024_50Mpc_dmo/'
 input_dir_0 = sim_dir + 'snapshot_files_caar_0/'
 input_dir_1 = sim_dir + 'snapshot_files_caar/'
-output_dir  = sim_dir + 'figures/slices/'
+output_dir  = sim_dir + 'figures/slices_full/'
 create_directory( output_dir ) 
 
-slice_start, slice_depth = 0, 256
+slice_start, slice_depth = 0, 1024
 
 precision = np.float64
 Lbox = 50000.0    #kpc/h
@@ -40,18 +40,16 @@ grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
 subgrid = [ [slice_start, slice_start+slice_depth], [0, n_cells], [0, n_cells]]
 
 
+absolute_difference = True
 data_type = 'particles'
 
-# fields = [ 'density', 'momentum_x', 'momentum_y', 'momentum_z', 'GasEnergy', 'Energy'  ]
 fields = [ 'density' ]
 diff = {}
-
 
 snapshots = np.arange( 0, 60, 1, dtype=int )
 snapshots_local = split_array_mpi( snapshots, rank, n_procs )
 print( f'rank: {rank}  snapshots_local:{snapshots_local}' )
 
-absolute_difference = True
 
 for n_snapshot in snapshots_local:
 
