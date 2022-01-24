@@ -51,6 +51,7 @@ snapshots = np.arange( 0, 60, 1, dtype=int )
 snapshots_local = split_array_mpi( snapshots, rank, n_procs )
 print( f'rank: {rank}  snapshots_local:{snapshots_local}' )
 
+absolute_difference = True
 
 for n_snapshot in snapshots_local:
 
@@ -94,6 +95,7 @@ for n_snapshot in snapshots_local:
     slice_0 = slices[field][0]
     slice_1 = slices[field][1]
     diff = ( slice_1 - slice_0 ) / slice_0
+    if absolute_difference: diff = np.abs( diff )
     delta_min, delta_max = diff.min(), diff.max()
     
     slice_0 = np.log10( slice_0 )
@@ -122,7 +124,8 @@ for n_snapshot in snapshots_local:
       ax_l[2].set_title( 'Fractional Difference', fontsize=label_size )
       
             
-  figure_name = output_dir + f'slices_comparison_{n_snapshot}.png'
+  figure_name = output_dir + f'slices_comparison_{n_snapshot}.png' 
+  if absolute_difference: figure_name = output_dir + f'slices_comparison_absolute_{n_snapshot}.png'
   fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
   print( f'Saved Figure: {figure_name}' )
 
