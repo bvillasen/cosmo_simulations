@@ -37,10 +37,8 @@ fields = [ 'density' ]
 diff = {}
 
 
-
 snapshots = range( 0, 60 )
 
-n_snapshot = 10 
 for n_snapshot in snapshots:
 
   slices = {} 
@@ -76,7 +74,6 @@ for n_snapshot in snapshots:
   fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(ncols*figure_width, nrows*figure_height))
   plt.subplots_adjust( hspace = 0.02, wspace=0.02 )
 
-  delta = 0.2
 
   cmaps = [ 'inferno' ]
 
