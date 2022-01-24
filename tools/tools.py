@@ -125,6 +125,15 @@ def Write_Pickle_Directory( dir, output_name ):
   print ( f'Saved File: {output_name}' )
 
 
+def split_array_mpi( array, rank, n_procs, adjacent=False ):
+  n_index_total = len(array)
+  n_proc_indices = (n_index_total-1) // n_procs + 1
+  indices_to_generate = np.array([ rank + i*n_procs for i in range(n_proc_indices) ])
+  if adjacent: indices_to_generate = np.array([ i + rank*n_proc_indices for i in range(n_proc_indices) ])
+  else: indices_to_generate = np.array([ rank + i*n_procs for i in range(n_proc_indices) ])
+  indices_to_generate = indices_to_generate[ indices_to_generate < n_index_total ]
+  return array[indices_to_generate]
+
 def split_indices( indices, rank, n_procs, adjacent=False ):
   n_index_total = len(indices)
   n_proc_indices = (n_index_total-1) // n_procs + 1

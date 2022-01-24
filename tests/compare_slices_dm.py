@@ -47,10 +47,10 @@ fields = [ 'density' ]
 diff = {}
 
 
-snapshots = range( 0, 60 )
-indices_local = split_indices( snapshots, rank, n_procs )
-print( f'rank: {rank}  indices_local:{indices_local}' )
-snapshots_local = snapshots[indices_local]
+snapshots = np.arange( 0, 60, 1, dtype=int )
+snapshots_local = split_array_mpi( snapshots, rank, n_procs )
+print( f'rank: {rank}  snapshots_local:{snapshots_local}' )
+
 
 for n_snapshot in snapshots_local:
 
