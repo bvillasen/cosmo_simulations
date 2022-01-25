@@ -36,7 +36,16 @@ if len( args ) < 2:
 grid_dir = args[1]
 skewers_dir = grid_dir + 'skewers_files/'
 sim_dirs = [ d for d in os.listdir(skewers_dir) if d[0]=='S' ]
+sim_dirs.sort()
 n_sims = len( sim_dirs )
+
+grid_files = {}
+for sim_id,sim_dir in enumerate(sim_dirs):
+  files_indices = [  int(f.split('_')[0]) for f in os.listdir(skewers_dir+sim_dir) if 'skewers.h5' in f ]
+  files_indices.sort()
+  n_files = len(files_indices)
+  print( f'{sim_dir}   n_files: {n_files}')
+
  
 if rank == 0: 
   print( f'Grid  Dir: {grid_dir}' )
