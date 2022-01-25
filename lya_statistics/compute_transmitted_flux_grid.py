@@ -120,14 +120,14 @@ for file_id in local_indices:
   if not os.path.isdir(input_dir):
     print( f'ERROR: Directory not found {input_dir}' )
     continue  
-  if not os.path.isdir(output_dir):
-    print( f'ERROR: Directory not found {output_dir}' )
+  if not os.path.isdir(flux_dir):
+    print( f'ERROR: Directory not found {flux_dir}' )
     continue  
   
   flux_file_name = flux_dir + f'lya_flux_{file_indx:03}.h5'
   flux_file_exists = False
-  if os.path.isfile( out_file_name ):
-    print( f'File exists, skipping: {out_file_name}' )
+  if os.path.isfile( flux_file_name ):
+    print( f'File exists, skipping: {flux_file_name}' )
     flux_file_exists = True
   
   if not flux_file_exists:  
