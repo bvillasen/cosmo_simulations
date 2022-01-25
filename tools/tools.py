@@ -88,7 +88,7 @@ def Get_Parameters_Combination( param_vals ):
   return param_combinations
   
   
-def print_progress( i, n, time_start ):
+def print_progress( i, n, time_start, extra_line="" ):
   import time
   time_now = time.time()
   time = time_now - time_start
@@ -98,7 +98,7 @@ def print_progress( i, n, time_start ):
   min = (remaining - hrs*3600) // 60
   sec = remaining - hrs*3600 - min*60
   etr = f'{hrs:02.0f}:{min:02.0f}:{sec:02.0f}'
-  progres = f'Progress:   {i}/{n}   {i/n*100:.1f}%   ETR: {etr} '
+  progres = f'{extra_line}Progress:   {i}/{n}   {i/n*100:.1f}%   ETR: {etr} '
   print_line_flush (progres )
 
 def Get_Free_Memory( print_out=False):
