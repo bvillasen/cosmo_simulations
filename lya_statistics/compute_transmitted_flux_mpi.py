@@ -44,17 +44,17 @@ if rank == 0:
   print( f'Input  Dir: {input_dir}')
   print( f'Ourput Dir: {input_dir}')
   print( f'N files: {n_files}')
-
+  time.sleep(1)
+  if use_mpi: comm.Barrier()
 
 snap_ids = [ int(f.split('_')[0]) for f in files ]
 snap_ids.sort()
 snap_ids = np.array(snap_ids)
-n_snaps = len( snap_ids )
-if rank == 0 : print( f'N snapshots: {n_snaps}' )
-# 
-# local_ids = split_indices( snap_ids, rank, n_procs )
-# local_snaps = snap_ids[local_ids]
-# print( f'proc_id: {rank}  snaps: {local_snaps}' )
+
+
+local_snaps = split_array_mpi( snap_ids, rank, n_procs )
+local_snaps = snap_ids[local_ids]
+print( f'proc_id: {rank}  snaps: {local_snaps}' )
 # 
 # # Box parameters
 # Lbox = 50000.0 #kpc/h
