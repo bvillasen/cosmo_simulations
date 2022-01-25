@@ -53,7 +53,6 @@ snap_ids = np.array(snap_ids)
 
 
 local_snaps = split_array_mpi( snap_ids, rank, n_procs )
-local_snaps = snap_ids[local_ids]
 print( f'proc_id: {rank}  snaps: {local_snaps}' )
 # 
 # # Box parameters
