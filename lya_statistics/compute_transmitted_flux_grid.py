@@ -140,12 +140,12 @@ for file_id in local_indices:
   print_string = f'  file  {file_id:04} / {n_total_files}.'
   data_Flux = Compute_Skewers_Transmitted_Flux( skewers_data, cosmology, box, print_string=print_string )
    
-  file = h5.File( out_file_name, 'w' )
-  file.attrs['current_z'] = skewer_dataset['current_z']
-  file.attrs['Flux_mean'] = data_Flux['Flux_mean']
-  file.create_dataset( 'vel_Hubble', data=data_Flux['vel_Hubble'] )
-  file.create_dataset( 'skewers_Flux', data=data_Flux['skewers_Flux'] )
-  file.close()
+  # file = h5.File( out_file_name, 'w' )
+  # file.attrs['current_z'] = skewer_dataset['current_z']
+  # file.attrs['Flux_mean'] = data_Flux['Flux_mean']
+  # file.create_dataset( 'vel_Hubble', data=data_Flux['vel_Hubble'] )
+  # file.create_dataset( 'skewers_Flux', data=data_Flux['skewers_Flux'] )
+  # file.close()
   print( f'Saved File: {out_file_name}')
 
 
