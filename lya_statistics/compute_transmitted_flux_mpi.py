@@ -42,7 +42,7 @@ output_dir = input_dir + f'transmitted_flux/'
 if rank == 0: create_directory( output_dir )
 if rank == 0: 
   print( f'Input  Dir: {input_dir}')
-  print( f'Ourput Dir: {input_dir}')
+  print( f'Output Dir: {output_dir}')
   print( f'N files: {n_files}')
   time.sleep(1)
 if use_mpi: comm.Barrier()
