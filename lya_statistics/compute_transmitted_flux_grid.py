@@ -124,7 +124,7 @@ for file_id in local_indices:
     print( f'ERROR: Directory not found {output_dir}' )
     continue  
   
-  out_file_name = output_dir + f'lya_flux_{n_file:03}.h5'
+  out_file_name = output_dir + f'lya_flux_{file_indx:03}.h5'
   if os.path.isfile( out_file_name ):
     print( f'File exists, skipping: {out_file_name}' )
   skewer_dataset = Load_Skewers_File( file_indx, input_dir, axis_list=axis_list, fields_to_load=field_list )
