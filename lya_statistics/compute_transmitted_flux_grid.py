@@ -89,25 +89,25 @@ if rank == 0:
   
   print('Creating Transmitted Flux Directories')
   create_directory( transmitted_flux_dir )
-  for sim_name in sim_dirs:
+  for sim_dir in sim_dirs:
     dir = transmitted_flux_dir + sim_dir
     print( dir ) 
   
 
-if use_mpi: comm.Barrier()
-skewers_files_data = Load_Pickle_Directory( grid_skewers_file_name, print_out=print_out )
-file_indices = np.array([ file_id for file_id in skewers_files_data ])
-local_indices = split_array_mpi( file_indices, rank, n_procs )
-print( f'rank: {rank}  n_local:{len(local_indices)}' )
-
-# Box parameters
-Lbox = 50000.0 #kpc/h
-box = {'Lbox':[ Lbox, Lbox, Lbox ] }
-
-axis_list = [ 'x', 'y', 'z' ]
-n_skewers_list = [ 'all', 'all', 'all']
-skewer_ids_list = [ 'all', 'all', 'all']
-field_list = [  'HI_density', 'los_velocity', 'temperature' ]
+# if use_mpi: comm.Barrier()
+# skewers_files_data = Load_Pickle_Directory( grid_skewers_file_name, print_out=print_out )
+# file_indices = np.array([ file_id for file_id in skewers_files_data ])
+# local_indices = split_array_mpi( file_indices, rank, n_procs )
+# print( f'rank: {rank}  n_local:{len(local_indices)}' )
+# 
+# # Box parameters
+# Lbox = 50000.0 #kpc/h
+# box = {'Lbox':[ Lbox, Lbox, Lbox ] }
+# 
+# axis_list = [ 'x', 'y', 'z' ]
+# n_skewers_list = [ 'all', 'all', 'all']
+# skewer_ids_list = [ 'all', 'all', 'all']
+# field_list = [  'HI_density', 'los_velocity', 'temperature' ]
 
 
 # for file_id in local_indices:
