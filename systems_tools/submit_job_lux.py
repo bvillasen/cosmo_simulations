@@ -39,7 +39,7 @@ mpirun -N {n_mpi_tasks} --map-by ppr:{n_tasks_per_node}:node {command} {command_
 
 if work_directory[-1] != '/': work_directory += '/'
 file_name = 'submit_job_lux'
-file_name = sim_directory + file_name
+file_name = work_directory + file_name
 file = open( file_name, 'w' )
 file.write( submit_str )
 file.close()
