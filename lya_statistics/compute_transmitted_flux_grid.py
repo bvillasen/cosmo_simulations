@@ -32,6 +32,9 @@ if len( args ) < 2:
   if rank == 0: print( 'Grid directory needed')
   exit(-1)
 
+print_out = False
+if rank == 0: print_out = True
+
 grid_dir = args[1]
 skewers_dir = grid_dir + 'skewers_files/'
 grid_skewers_file_name = grid_dir + 'grid_skewers_files.pkl'
@@ -58,7 +61,7 @@ if rank == 0:
   Write_Pickle_Directory( grid_files, grid_skewers_file_name )
 
 if use_mpi: comm.Barrier()
-grid_skewers_files = Load_Pickle_Directory( grid_skewers_file_name )
+grid_skewers_files = Load_Pickle_Directory( grid_skewers_file_name, print_out=print_out )
 
 
 skewers_file_names = []
