@@ -37,15 +37,12 @@ grid_dir = args[1]
 skewers_dir = grid_dir + 'skewers_files'
 sim_dirs = [ d for d in os.listdir(skewers_dir) if os.path.isdir(d) and d[0]=='S'  ]
 n_sims = len( sim_dirs )
-# 
-# output_dir = input_dir + f'transmitted_flux/'
-# if rank == 0: create_directory( output_dir )
-# if rank == 0: 
-#   print( f'Input  Dir: {input_dir}')
-#   print( f'Output Dir: {output_dir}')
-#   print( f'N files: {n_files}')
-#   time.sleep(1)
-# if use_mpi: comm.Barrier()
+ 
+if rank == 0: 
+  print( f'Grid  Dir: {grid_dir}')
+  print( f'N simulations: {n_sims}')
+  time.sleep(1)
+if use_mpi: comm.Barrier()
 # 
 # snap_ids = [ int(f.split('_')[0]) for f in files ]
 # snap_ids.sort()
