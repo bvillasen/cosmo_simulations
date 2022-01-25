@@ -111,12 +111,12 @@ skewer_ids_list = [ 'all', 'all', 'all']
 field_list = [  'HI_density', 'los_velocity', 'temperature' ]
 
 for file_id in local_indices:
-  
+    
   file_data = skewers_files_data[file_id]
   sim_dir = file_data['sim_dir']
   file_indx = file_data['file_indx']
   input_dir = skewers_dir + sim_dir + '/'
-  output_dir = transmitted_flux_dir + sim_dir + '/'
+  flux_dir = transmitted_flux_dir + sim_dir + '/'
   if not os.path.isdir(input_dir):
     print( f'ERROR: Directory not found {input_dir}' )
     continue  
@@ -124,29 +124,46 @@ for file_id in local_indices:
     print( f'ERROR: Directory not found {output_dir}' )
     continue  
   
-  out_file_name = output_dir + f'lya_flux_{file_indx:03}.h5'
+  flux_file_name = flux_dir + f'lya_flux_{file_indx:03}.h5'
+  flux_file_exists = False
   if os.path.isfile( out_file_name ):
     print( f'File exists, skipping: {out_file_name}' )
-  skewer_dataset = Load_Skewers_File( file_indx, input_dir, axis_list=axis_list, fields_to_load=field_list )
+    flux_file_exists = True
   
-  # Cosmology parameters
-  cosmology = {}
-  cosmology['H0'] = skewer_dataset['H0']
-  cosmology['Omega_M'] = skewer_dataset['Omega_M']
-  cosmology['Omega_L'] = skewer_dataset['Omega_L']
-  cosmology['current_z'] = skewer_dataset['current_z']
+  if not flux_file_exists:  
+    skewer_dataset = Load_Skewers_File( file_indx, input_dir, axis_list=axis_list, fields_to_load=field_list )
+    
+    # Cosmology parameters
+    cosmology = {}
+    cosmology['H0'] = skewer_dataset['H0']
+    cosmology['Omega_M'] = skewer_dataset['Omega_M']
+    cosmology['Omega_L'] = skewer_dataset['Omega_L']
+    cosmology['current_z'] = skewer_dataset['current_z']
+    
+    skewers_data = { field:skewer_dataset[field] for field in field_list }
+    print_string = f'  file  {file_id:04} / {n_total_files}.  '
+    data_Flux = Compute_Skewers_Transmitted_Flux( skewers_data, cosmology, box, print_string=print_string )
+    vel_Hubble = data_Flux['vel_Hubble']
+    skewers_Flux = data_Flux['skewers_Flux']
+     
+    file = h5.File( flux_file_name, 'w' )
+    file.attrs['current_z'] = skewer_dataset['current_z']
+    file.attrs['Flux_mean'] = data_Flux['Flux_mean']
+    file.create_dataset( 'vel_Hubble', data=vel_Hubble )
+    file.create_dataset( 'skewers_Flux', data=skewers_Flux )
+    file.close()
   
-  skewers_data = { field:skewer_dataset[field] for field in field_list }
-  print_string = f'  file  {file_id:04} / {n_total_files}.  '
-  data_Flux = Compute_Skewers_Transmitted_Flux( skewers_data, cosmology, box, print_string=print_string )
-   
-  # file = h5.File( out_file_name, 'w' )
-  # file.attrs['current_z'] = skewer_dataset['current_z']
-  # file.attrs['Flux_mean'] = data_Flux['Flux_mean']
-  # file.create_dataset( 'vel_Hubble', data=data_Flux['vel_Hubble'] )
-  # file.create_dataset( 'skewers_Flux', data=data_Flux['skewers_Flux'] )
-  # file.close()
+  if flux_file_exists:
+    file = h5.File( flux_file_name, 'r' )
+    current_z = file.attrs['current_z']
+    Flux_mean = file.attrs['Flux_mean']
+    vel_Hubble   = file['vel_Hubble'][...]
+    skewers_Flux = file['skewers_Flux'][...]
+    file.close()
+  
+  
   # print( f'Saved File: {out_file_name}')
 
 
 
+  break
