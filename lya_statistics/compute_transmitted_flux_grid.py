@@ -119,9 +119,7 @@ for file_id in local_indices:
   # 
   flux_file_name = flux_dir + f'lya_flux_{file_indx:03}.h5'
   flux_file_exists = False
-  if os.path.isfile( flux_file_name ):
-    print( f'File exists, skipping: {flux_file_name}' )
-    flux_file_exists = True
+  if os.path.isfile( flux_file_name ):  flux_file_exists = True
   
   if not flux_file_exists:  
     skewer_dataset = Load_Skewers_File( file_indx, input_dir, axis_list=axis_list, fields_to_load=field_list )
