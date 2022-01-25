@@ -49,6 +49,8 @@ if rank == 0:
 snap_ids = [ int(f.split('_')[0]) for f in files ]
 snap_ids.sort()
 snap_ids = np.array(snap_ids)
+n_snaps = len( snap_ids )
+if rank == 0 : print( f'N snapshots: {n_snaps}' )
 # 
 # local_ids = split_indices( snap_ids, rank, n_procs )
 # local_snaps = snap_ids[local_ids]
