@@ -91,7 +91,7 @@ if use_mpi: comm.Barrier()
 skewers_files_data = Load_Pickle_Directory( grid_skewers_file_name, print_out=print_out )
 file_indices = np.array([ file_id for file_id in skewers_files_data ])
 local_indices = split_array_mpi( file_indices, rank, n_procs )
-print( f'rank: {rank}  n_local:{len(local_indices)})
+print( f'rank: {rank}  n_local:{len(local_indices)}' )
 
 
 
