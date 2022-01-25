@@ -23,7 +23,7 @@ if system == 'MacBook':  data_dir = '/Users/bruno/Desktop/data/'
 # if system == 'Summit':   data_dir = '/gpfs/alpine/ast169/scratch/bvilasen/'
 if system == 'Summit':   data_dir = '/gpfs/alpine/ast175/scratch/bvilasen/'
 
-if system == 'Lux':      data_dir = '/home/brvillas/'
+if system == 'Lux':      home_dir = '/home/brvillas/'
 if system == 'Summit':   home_dir = '/ccs/home/bvilasen/'
 if system == 'Tornado':  home_dir = '/home/bruno/'
 if system == 'Shamrock': home_dir = '/home/bruno/'
