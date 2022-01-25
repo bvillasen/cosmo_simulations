@@ -91,7 +91,8 @@ if rank == 0:
   create_directory( transmitted_flux_dir )
   for sim_dir in sim_dirs:
     dir = transmitted_flux_dir + sim_dir
-    print( dir ) 
+    if os.path.isdir( dir ): continue
+    create_directory( dir )
   
 
 # if use_mpi: comm.Barrier()
