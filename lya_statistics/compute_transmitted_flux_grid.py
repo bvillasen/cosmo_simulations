@@ -59,7 +59,19 @@ if rank == 0:
   if ( n_files_per_sim == n_files_per_sim[0] ).all(): print( f'N files per sim (all): {n_files_per_sim[0]}')
   else: print( f'N files per sim: {n_files_per_sim} ')
   
-  skewers_file_names = []
+  # skewers_file_names = []
+  # for sim_id in grid_files:
+  #   sim_dir = grid_files[sim_id]['sim_dir']
+  #   file_indices = grid_files[sim_id]['file_indices']
+  #   for file_indx in file_indices:
+  #     file_name = f'{skewers_dir}{sim_dir}/{file_indx}_skewers.h5'
+  #     is_file = os.path.isfile( file_name )
+  #     if is_file: skewers_file_names.append( file_name )
+  #     else: print(f'ERROR: File not found {file_name}' )
+  # n_total_files = len( skewers_file_names )
+  # 
+  skewers_files_data = {}
+  file_id = 0
   for sim_id in grid_files:
     sim_dir = grid_files[sim_id]['sim_dir']
     file_indices = grid_files[sim_id]['file_indices']
@@ -68,17 +80,18 @@ if rank == 0:
       is_file = os.path.isfile( file_name )
       if is_file: skewers_file_names.append( file_name )
       else: print(f'ERROR: File not found {file_name}' )
-  n_total_files = len( skewers_file_names )
-  print( f'N total files: {n_total_files}')
-  grid_skewers_files = { 'file_names': skewers_file_names } 
-  Write_Pickle_Directory( grid_skewers_files, grid_skewers_file_name )
+      skewers_files_data[file_id] = { 'sim_id': sim_id, 'sim_dir':sim_dir, 'file_indx':file_indx, 'file_name':file_name }
+      file_id += 1
+  
+  n_total_files = file_id
+  print( f'N total files: {n_total_files}') 
+  Write_Pickle_Directory( skewers_files_data, grid_skewers_file_name )
 
 if use_mpi: comm.Barrier()
-grid_skewers_files = Load_Pickle_Directory( grid_skewers_file_name, print_out=print_out )
-file_names_all = grid_skewers_files['file_names']
-local_file_names = split_array_mpi( file_names_all, rank, n_procs )
-print( local_file_names )
-
+skewers_files_data = Load_Pickle_Directory( grid_skewers_file_name, print_out=print_out )
+file_indices = np.array([ file_id for file_id in skewers_files_data ])
+local_indices = split_array_mpi( file_indices, rank, n_procs )
+print( f'rank: {rank}  n_local:{len(local_indices)})
 
 
 
