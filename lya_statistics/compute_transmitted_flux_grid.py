@@ -144,6 +144,7 @@ for file_id in local_indices:
     file.create_dataset( 'vel_Hubble', data=vel_Hubble )
     file.create_dataset( 'skewers_Flux', data=skewers_Flux )
     file.close()
+    # print( f'Saved File: {out_file_name}')
   
   if flux_file_exists:
     file = h5.File( flux_file_name, 'r' )
@@ -153,9 +154,4 @@ for file_id in local_indices:
     skewers_Flux = file['skewers_Flux'][...]
     file.close()
   
-  
-  # print( f'Saved File: {out_file_name}')
 
-
-
-  break
