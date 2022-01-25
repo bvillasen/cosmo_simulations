@@ -66,8 +66,8 @@ grid_skewers_files = Load_Pickle_Directory( grid_skewers_file_name, print_out=pr
 
 skewers_file_names = []
 for sim_id in grid_skewers_files:
-  sim_dir = grid_skewers_file_name[sim_id]['sim_dir']
-  file_indices = grid_skewers_file_name[sim_id]['file_indices']
+  sim_dir = grid_skewers_files[sim_id]['sim_dir']
+  file_indices = grid_skewers_files[sim_id]['file_indices']
   for file_indx in file_indices:
     file_name = f'{skewers_dir}{file_indx}_skewers.h5'
     is_file = os.path.isfile( file_name )
