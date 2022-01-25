@@ -114,7 +114,11 @@ for file_id in local_indices:
   file_data = skewers_files_data[file_id]
   sim_dir = file_data['sim_dir']
   file_indx = file_data['file_indx']
+  input_dir = skewers_dir + sim_dir + '/'
   output_dir = transmitted_flux_dir + sim_dir + '/'
+  if not os.path.isdir(input_dir):
+    print( f'ERROR: Directory not found {input_dir}' )
+    continue  
   if not os.path.isdir(output_dir):
     print( f'ERROR: Directory not found {output_dir}' )
     continue  
