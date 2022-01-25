@@ -48,7 +48,7 @@ file.write( submit_str )
 file.close()
 print(f'Saved File: {file_name}')
 
-print(f'Changing dir: {job_dir}' )
+print(f'Changing dir: {work_directory}' )
 os.chdir( job_dir )
 if partition == 'comp-astro': partition_key = 'comp'
 if partition == 'gpuq':       partition_key = 'gpu'
