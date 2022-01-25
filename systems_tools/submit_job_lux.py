@@ -50,8 +50,9 @@ print(f'Saved File: {file_name}')
 # os.chdir( work_directory )
 if partition == 'comp-astro': partition_key = 'comp'
 if partition == 'gpuq':       partition_key = 'gpu'
+exclude_nodes = []
 exclude_comand = '' 
-for node in job['exclude']:
+for node in exclude_nodes:
   exclude_comand += node + ','
 if exclude_comand != '': exclude_comand = exclude_comand[:-1]
 command = f'submit_script {partition_key} {file_name} {exclude_comand}'
