@@ -120,6 +120,7 @@ for file_id in local_indices:
   file_indx = file_data['file_indx']
   input_dir = skewers_dir + sim_dir + '/'
   flux_dir = transmitted_flux_dir + sim_dir + '/'
+  ps_sim_dir = ps_dir + sim_dir + '/'
   if not os.path.isdir(input_dir):
     print( f'ERROR: Directory not found {input_dir}' )
     continue  
@@ -166,7 +167,7 @@ for file_id in local_indices:
   
   
   if compute_ps:
-    ps_file_name = ps_dir + f'flux_ps_{file_indx:03}.h5'
+    ps_file_name = ps_sim_dir + f'flux_ps_{file_indx:03}.h5'
     ps_file_exists = False
     if os.path.isfile( ps_file_name ):  ps_file_exists = True
     

@@ -67,7 +67,7 @@ def Compute_Flux_Power_Spectrum( data_Flux, print_string='' ):
   vel_Hubble = data_Flux['vel_Hubble']
   n_skewers = skewers_Flux.shape[0]
 
-  extra_line = f'Computing Flux along Skewers.{print_string}'
+  extra_line = f'Computing Flux PS along Skewers.{print_string}'
   # Compute the Power Spectrum from the Flux
   d_log_k = 0.1
   skewers_power_spectrum = []
