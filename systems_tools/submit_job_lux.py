@@ -59,5 +59,5 @@ for node in exclude_nodes:
 if exclude_comand != '': exclude_comand = exclude_comand[:-1]
 command = f'submit_script {partition_key} {file_name} {exclude_comand}'
 print( f' Submitting: {command}' )
-# os.system( command )
+os.system( command )
 
