@@ -18,6 +18,7 @@ command_params = '1024_wdmgrid_nsim200_deltaZ_0p0'
 partition = 'comp-astro'
 output = 'run_output.log'
 work_directory = '/home/brvillas/jobs'
+create_directory( work_directory )
 
 submit_str = f"""#!/bin/bash          
 #SBATCH --job-name={job_name}    
