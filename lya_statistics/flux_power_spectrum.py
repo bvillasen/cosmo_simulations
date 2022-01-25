@@ -1,5 +1,5 @@
 import numpy as np
-
+import time
 
 def get_skewer_flux_fft_amplitude( vel_Hubble, delta_F ):
   n = len( vel_Hubble )
@@ -57,25 +57,27 @@ def get_skewer_flux_power_spectrum( vel_Hubble, delta_F, d_log_k=None, n_bins=No
   return bin_centers, power_avrg
 
 
-def Compute_Flux_Power_Spectrum( data_Flux ):
+def Compute_Flux_Power_Spectrum( data_Flux, print_string='' ):
   skewers_Flux = data_Flux['skewers_Flux']
   # Flux_mean = data_Flux['Flux_mean']
   Flux_mean = skewers_Flux.mean()
   vel_Hubble = data_Flux['vel_Hubble']
   n_skewers = skewers_Flux.shape[0]
 
+  extra_line = f'Computing Flux along Skewers.{print_string}'
   # Compute the Power Spectrum from the Flux
   d_log_k = 0.1
-  print( 'Computing Flux Power Spectrum')
   skewers_power_spectrum = []
+  start = time.time()
   for skewer_id in range(n_skewers):
     flux = skewers_Flux[skewer_id]
     delta_flux = flux / Flux_mean 
     k_vals, flux_power_spectrum = get_skewer_flux_power_spectrum( vel_Hubble, delta_flux, d_log_k=d_log_k )
     flux_power_spectrum = flux_power_spectrum 
     skewers_power_spectrum.append( flux_power_spectrum )
-
+    print_progress( skewer_id+1, n_skewers, start, extra_line=extra_line )
+    
   skewers_power_spectrum = np.array( skewers_power_spectrum ) 
   mean_power_spectrum = skewers_power_spectrum.mean( axis=0 ) 
-  data_ps = { 'mean':mean_power_spectrum, 'k_vals':k_vals }
+  data_ps = { 'mean':mean_power_spectrum, 'k_vals':k_vals, 'skewers_ps':skewers_power_spectrum }
   return data_ps
