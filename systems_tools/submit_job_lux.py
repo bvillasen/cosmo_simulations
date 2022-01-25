@@ -34,7 +34,7 @@ module load hdf5/1.10.6
 module load cuda10.2/10.2
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/brvillas/code/grackle/lib
-cd {work_directory}
+cd {job_dir}
 
 set OMP_NUM_THREADS=10
 mpirun -N {n_mpi_tasks} --map-by ppr:{n_tasks_per_node}:node {command} {command_params} 
