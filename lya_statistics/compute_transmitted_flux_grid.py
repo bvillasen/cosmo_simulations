@@ -32,30 +32,33 @@ if len( args ) < 2:
   if rank == 0: print( 'Grid directory needed')
   exit(-1)
 
-
 grid_dir = args[1]
 skewers_dir = grid_dir + 'skewers_files/'
-sim_dirs = [ d for d in os.listdir(skewers_dir) if d[0]=='S' ]
-sim_dirs.sort()
-n_sims = len( sim_dirs )
+grid_skewers_file_name = grid_dir + 'grid_skewers_files.pkl'
 
-grid_files = {}
-for sim_id,sim_dir in enumerate(sim_dirs):
-  file_indices = [  int(f.split('_')[0]) for f in os.listdir(skewers_dir+sim_dir) if 'skewers.h5' in f ]
-  file_indices.sort()
-  n_files = len(file_indices)
-  grid_files[sim_id] = { 'sim_dir':sim_dir, 'n_files':n_files, 'file_indices':file_indices }
-  
-n_files_per_sim = np.array([ grid_files[sim_id]['n_files'] for sim_id in grid_files ])
- 
 if rank == 0: 
-  print( f'Grid  Dir: {grid_dir}' )
+  print( f'Loading Grid: {grid_dir}')
+
+  sim_dirs = [ d for d in os.listdir(skewers_dir) if d[0]=='S' ]
+  sim_dirs.sort()
+  n_sims = len( sim_dirs )
+
+  grid_files = {}
+  for sim_id,sim_dir in enumerate(sim_dirs):
+    file_indices = [  int(f.split('_')[0]) for f in os.listdir(skewers_dir+sim_dir) if 'skewers.h5' in f ]
+    file_indices.sort()
+    n_files = len(file_indices)
+    grid_files[sim_id] = { 'sim_dir':sim_dir, 'n_files':n_files, 'file_indices':file_indices }
+    
+  n_files_per_sim = np.array([ grid_files[sim_id]['n_files'] for sim_id in grid_files ])   
   print( f'Skewers Dir: {skewers_dir}' )
   print( f'N simulations: {n_sims}' )
   if ( n_files_per_sim == n_files_per_sim[0] ).all(): print( f'N files per sim (all): {n_files_per_sim[0]}')
   else: print( f'N files per sim: {n_files_per_sim} ')
-  time.sleep(2)
+  Write_Pickle_Directory( grid_files, grid_skewers_file_name )
+
 if use_mpi: comm.Barrier()
+grid_skewers_files = Load_Pickle_Directory( grid_skewers_file_name )
 
 
 skewers_file_names = []
