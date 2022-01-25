@@ -76,7 +76,7 @@ if rank == 0:
 if use_mpi: comm.Barrier()
 grid_skewers_files = Load_Pickle_Directory( grid_skewers_file_name, print_out=print_out )
 file_names_all = grid_skewers_files['file_names']
-local_file_names = split_array_mpi( file_names_all )
+local_file_names = split_array_mpi( file_names_all, rank, n_procs )
 print( local_file_names )
 
 
