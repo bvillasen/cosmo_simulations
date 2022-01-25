@@ -40,6 +40,8 @@ skewers_dir = grid_dir + 'skewers_files/'
 transmitted_flux_dir = grid_dir + 'transmitted_flux/'
 grid_skewers_file_name = grid_dir + 'grid_skewers_files.pkl'
 
+selected_file_indices = [ 25, 29, 33 ] # redshits 5.0, 4.6 and 4.2
+
 if rank == 0: 
   print( f'Loading Grid: {grid_dir}')
 
@@ -49,7 +51,8 @@ if rank == 0:
 
   grid_files = {}
   for sim_id,sim_dir in enumerate(sim_dirs):
-    file_indices = [  int(f.split('_')[0]) for f in os.listdir(skewers_dir+sim_dir) if 'skewers.h5' in f ]
+    if selected_file_indices is not None: file_indices = selected_file_indices
+    else: file_indices = [  int(f.split('_')[0]) for f in os.listdir(skewers_dir+sim_dir) if 'skewers.h5' in f ]
     file_indices.sort()
     n_files = len(file_indices)
     grid_files[sim_id] = { 'sim_dir':sim_dir, 'n_files':n_files, 'file_indices':file_indices }
@@ -60,17 +63,6 @@ if rank == 0:
   if ( n_files_per_sim == n_files_per_sim[0] ).all(): print( f'N files per sim (all): {n_files_per_sim[0]}')
   else: print( f'N files per sim: {n_files_per_sim} ')
   
-  # skewers_file_names = []
-  # for sim_id in grid_files:
-  #   sim_dir = grid_files[sim_id]['sim_dir']
-  #   file_indices = grid_files[sim_id]['file_indices']
-  #   for file_indx in file_indices:
-  #     file_name = f'{skewers_dir}{sim_dir}/{file_indx}_skewers.h5'
-  #     is_file = os.path.isfile( file_name )
-  #     if is_file: skewers_file_names.append( file_name )
-  #     else: print(f'ERROR: File not found {file_name}' )
-  # n_total_files = len( skewers_file_names )
-  # 
   skewers_files_data = {}
   file_id = 0
   for sim_id in grid_files:
