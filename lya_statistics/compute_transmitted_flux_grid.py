@@ -36,6 +36,7 @@ print_out = False
 if rank == 0: print_out = True
 
 grid_dir = args[1]
+if grid_dir[-1] != '/': grid_dir += '/'
 skewers_dir = grid_dir + 'skewers_files/'
 transmitted_flux_dir = grid_dir + 'transmitted_flux/'
 grid_skewers_file_name = grid_dir + 'grid_skewers_files.pkl'
