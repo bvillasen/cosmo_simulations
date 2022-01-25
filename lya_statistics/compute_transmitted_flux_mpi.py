@@ -34,7 +34,6 @@ if len( args ) < 2:
 
 
 input_dir = args[1]
-# input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_cdm/skewers_files/'
 files = [ f for f in os.listdir(input_dir) if 'skewers' in f ]
 n_files = len( files )
 
