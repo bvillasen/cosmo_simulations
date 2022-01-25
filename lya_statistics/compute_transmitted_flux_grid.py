@@ -69,7 +69,7 @@ for sim_id in grid_skewers_files:
   sim_dir = grid_skewers_files[sim_id]['sim_dir']
   file_indices = grid_skewers_files[sim_id]['file_indices']
   for file_indx in file_indices:
-    file_name = f'{skewers_dir}{file_indx}_skewers.h5'
+    file_name = f'{skewers_dir}{sim_dir}/{file_indx}_skewers.h5'
     is_file = os.path.isfile( file_name )
     if is_file: skewers_file_names.append( file_name )
     else: print(f'ERROR: File not found {file_name}' )
