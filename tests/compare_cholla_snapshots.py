@@ -42,7 +42,7 @@ output_dir  = sim_dir + 'figures/'
 # output_dir  = data_dir + 'cosmo_sims/1024_50Mpc_adiabatic/figures/'
 create_directory( output_dir ) 
 print( f'Input 0: {input_dir_0}')
-print( f'Input 0: {input_dir_1}')
+print( f'Input 1: {input_dir_1}')
 
 # data_type = 'hydro'
 data_type = 'particles'
