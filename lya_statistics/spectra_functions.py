@@ -141,8 +141,6 @@ def Compute_Skewers_Transmitted_Flux( skewers_data, cosmology, box, print_string
 
     # text = ' Skewer {0}/{1}    {2:.0f} %'.format(skewer_id+1, n_skewers,  float(skewer_id+1)/n_skewers*100)
     # print_line_flush( text )
-    
-    if skewer_id > 100: continue
 
     skewer_data = {}  
     skewer_data['HI_density']  = skewers_data['HI_density'][skewer_id]
