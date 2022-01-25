@@ -6,16 +6,17 @@ sys.path.append( root_dir + 'tools' )
 from tools import *
 
 
-
 job_name  = 'python' 
-partition = 'comp-astro'
 n_mpi_tasks = 320
 n_nodes = 8
 n_tasks_per_node = 40
 time = '24:00:00'
-output = 'run_output.log'
 command = 'python'
 command_params = '1024_wdmgrid_nsim200_deltaZ_0p0'
+
+
+partition = 'comp-astro'
+output = 'run_output.log'
 work_directory = '/home/brvillas/jobs'
 
 submit_str = f"""#!/bin/bash          
