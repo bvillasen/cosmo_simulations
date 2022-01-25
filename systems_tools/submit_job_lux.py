@@ -47,7 +47,7 @@ file.write( submit_str )
 file.close()
 print(f'Saved File: {file_name}')
 
-os.chdir( work_dir )
+os.chdir( work_directory )
 if partition == 'comp-astro': partition_key = 'comp'
 if partition == 'gpuq':       partition_key = 'gpu'
 exclude_comand = '' 
