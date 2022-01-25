@@ -126,7 +126,9 @@ for file_id in local_indices:
   if not os.path.isdir(flux_dir):
     print( f'ERROR: Directory not found {flux_dir}' )
     continue  
-  # 
+    
+  print_string = f'  file  {file_id:04} / {n_total_files}.  '
+  
   flux_file_name = flux_dir + f'lya_flux_{file_indx:03}.h5'
   flux_file_exists = False
   if os.path.isfile( flux_file_name ):  flux_file_exists = True
@@ -143,7 +145,6 @@ for file_id in local_indices:
     cosmology['current_z'] = skewer_dataset['current_z']
   
     skewers_data = { field:skewer_dataset[field] for field in field_list }
-    print_string = f'  file  {file_id:04} / {n_total_files}.  '
     data_Flux = Compute_Skewers_Transmitted_Flux( skewers_data, cosmology, box, print_string=print_string )
     
     file = h5.File( flux_file_name, 'w' )
