@@ -1,5 +1,5 @@
+import sys, os, time
 import numpy as np
-import time
 root_dir = os.path.dirname(os.getcwd()) + '/'
 sys.path.append( root_dir + 'tools')
 from tools import print_line_flush, print_progress
