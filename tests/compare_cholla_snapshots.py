@@ -32,8 +32,8 @@ snapshots_local = split_array_mpi( snapshots, rank, n_procs )
 print( f'rank: {rank}  snapshots_local:{snapshots_local}' )
 
 sim_dir = data_dir + f'cosmo_sims/{n_cells}_50Mpc_dmo/'
-input_dir_0 = sim_dir + 'snapshot_files_cpu_0/'
-input_dir_1 = sim_dir + 'snapshot_files_cpu/'
+input_dir_0 = sim_dir + 'snapshot_files_caar_new_0/'
+input_dir_1 = sim_dir + 'snapshot_files_caar/'
 output_dir  = sim_dir + 'figures/'
 
 
