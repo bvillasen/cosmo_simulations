@@ -52,7 +52,7 @@ if rank == 0:
   print( f'Grid  Dir: {grid_dir}' )
   print( f'Skewers Dir: {skewers_dir}' )
   print( f'N simulations: {n_sims}' )
-  if ( n_files_per_sim == n_files_per_sim[0] ).all(): print( f'N files per sim: {n_files_per_sim[0]}')
+  if ( n_files_per_sim == n_files_per_sim[0] ).all(): print( f'N files per sim (all): {n_files_per_sim[0]}')
   else: print( f'N files per sim: {n_files_per_sim} ')
   time.sleep(2)
 if use_mpi: comm.Barrier()
