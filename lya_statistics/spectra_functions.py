@@ -156,7 +156,6 @@ def Compute_Skewers_Transmitted_Flux( skewers_data, cosmology, box, print_string
     extra_line = f'Computing Flux along Skewers.{print_string}'
     print_progress( skewer_id+1, n_skewers, start, extra_line=extra_line )
   
-  print('')
   skewers_Flux = np.array( skewers_Flux )
   Flux_mean = skewers_Flux.mean()
   vel_Hubble = los_vel_hubble
