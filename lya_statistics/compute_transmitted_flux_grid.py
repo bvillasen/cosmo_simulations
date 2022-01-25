@@ -58,21 +58,24 @@ if rank == 0:
   print( f'N simulations: {n_sims}' )
   if ( n_files_per_sim == n_files_per_sim[0] ).all(): print( f'N files per sim (all): {n_files_per_sim[0]}')
   else: print( f'N files per sim: {n_files_per_sim} ')
-  Write_Pickle_Directory( grid_files, grid_skewers_file_name )
+  
+  skewers_file_names = []
+  for sim_id in grid_skewers_files:
+    sim_dir = grid_skewers_files[sim_id]['sim_dir']
+    file_indices = grid_skewers_files[sim_id]['file_indices']
+    for file_indx in file_indices:
+      file_name = f'{skewers_dir}{sim_dir}/{file_indx}_skewers.h5'
+      is_file = os.path.isfile( file_name )
+      if is_file: skewers_file_names.append( file_name )
+      else: print(f'ERROR: File not found {file_name}' )
+  
+  grid_skewers_files = { 'file_names': skewers_file_names } 
+  Write_Pickle_Directory( grid_skewers_files, grid_skewers_file_name )
 
 if use_mpi: comm.Barrier()
 grid_skewers_files = Load_Pickle_Directory( grid_skewers_file_name, print_out=print_out )
 
 
-skewers_file_names = []
-for sim_id in grid_skewers_files:
-  sim_dir = grid_skewers_files[sim_id]['sim_dir']
-  file_indices = grid_skewers_files[sim_id]['file_indices']
-  for file_indx in file_indices:
-    file_name = f'{skewers_dir}{sim_dir}/{file_indx}_skewers.h5'
-    is_file = os.path.isfile( file_name )
-    if is_file: skewers_file_names.append( file_name )
-    else: print(f'ERROR: File not found {file_name}' )
 
 # 
 # snap_ids = [ int(f.split('_')[0]) for f in files ]
