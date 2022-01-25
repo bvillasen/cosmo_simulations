@@ -41,17 +41,20 @@ n_sims = len( sim_dirs )
 
 grid_files = {}
 for sim_id,sim_dir in enumerate(sim_dirs):
-  files_indices = [  int(f.split('_')[0]) for f in os.listdir(skewers_dir+sim_dir) if 'skewers.h5' in f ]
-  files_indices.sort()
-  n_files = len(files_indices)
-  print( f'{sim_dir}   n_files: {n_files}')
-
+  file_indices = [  int(f.split('_')[0]) for f in os.listdir(skewers_dir+sim_dir) if 'skewers.h5' in f ]
+  file_indices.sort()
+  n_files = len(file_indices)
+  grid_files[sim_id] = { 'sim_dir':sim_dir, 'n_files':n_files, 'file_indices':file_indices }
+  
+n_files_per_sim = np.array([ grid_files[sim_id]['n_files'] for sim_id in grid_files ])
  
 if rank == 0: 
   print( f'Grid  Dir: {grid_dir}' )
   print( f'Skewers Dir: {skewers_dir}' )
   print( f'N simulations: {n_sims}' )
-  time.sleep(1)
+  if ( n_files_per_sim == n_files_per_sim[0] ).all(): print( f'N files per sim: {n_files_per_sim[0]}')
+  else: print( f'N files per sim: {n_files_per_sim} ')
+  time.sleep(2)
 if use_mpi: comm.Barrier()
 # 
 # snap_ids = [ int(f.split('_')[0]) for f in files ]
