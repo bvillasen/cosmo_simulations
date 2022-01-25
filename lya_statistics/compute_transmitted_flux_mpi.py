@@ -45,7 +45,7 @@ if rank == 0:
   print( f'Ourput Dir: {input_dir}')
   print( f'N files: {n_files}')
   time.sleep(1)
-  if use_mpi: comm.Barrier()
+if use_mpi: comm.Barrier()
 
 snap_ids = [ int(f.split('_')[0]) for f in files ]
 snap_ids.sort()
