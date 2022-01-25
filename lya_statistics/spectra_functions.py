@@ -131,7 +131,7 @@ def compute_optical_depth( cosmology, box, skewer, space='redshift', method='err
   
 
 
-def Compute_Skewers_Transmitted_Flux( skewers_data, cosmology, box ):
+def Compute_Skewers_Transmitted_Flux( skewers_data, cosmology, box, print_string='' ):
   # Compute the Transmitted Flux along all the skewers
   n_skewers = skewers_data['HI_density'].shape[0]
   
@@ -141,6 +141,8 @@ def Compute_Skewers_Transmitted_Flux( skewers_data, cosmology, box ):
 
     # text = ' Skewer {0}/{1}    {2:.0f} %'.format(skewer_id+1, n_skewers,  float(skewer_id+1)/n_skewers*100)
     # print_line_flush( text )
+    
+    if skewer_id > 100: continue
 
     skewer_data = {}  
     skewer_data['HI_density']  = skewers_data['HI_density'][skewer_id]
@@ -153,7 +155,7 @@ def Compute_Skewers_Transmitted_Flux( skewers_data, cosmology, box ):
     los_F = np.exp( -los_tau )
     skewers_Flux.append( los_F )
     
-    extra_line = 'Computing Flux along Skewers.  '
+    extra_line = f'Computing Flux along Skewers.{print_string}'
     print_progress( skewer_id+1, n_skewers, start, extra_line=extra_line )
   
   print('')
