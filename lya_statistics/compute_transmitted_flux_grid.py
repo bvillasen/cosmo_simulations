@@ -18,7 +18,7 @@ from flux_power_spectrum import Compute_Flux_Power_Spectrum
 
 args = sys.argv
 
-use_mpi = True
+use_mpi = False
 if use_mpi:
   from mpi4py import MPI
   comm = MPI.COMM_WORLD
@@ -56,6 +56,11 @@ if rank == 0:
   else: print( f'N files per sim: {n_files_per_sim} ')
   time.sleep(2)
 if use_mpi: comm.Barrier()
+
+
+skewers_file_names = []
+
+
 # 
 # snap_ids = [ int(f.split('_')[0]) for f in files ]
 # snap_ids.sort()
