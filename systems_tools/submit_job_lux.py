@@ -12,12 +12,13 @@ n_nodes = 8
 n_tasks_per_node = 40
 time = '24:00:00'
 command = 'python'
-command_params = f'{home_dir}/cosmo_simulations/lya_statistics/compute_transmitted_flux_grid.py {data_dir}/cosmo_sims/sim_grid/1024_wdmgrid_nsim200_deltaZ_0p0'
+job_dir = home_dir + 'cosmo_simulations/lya_statistics/'
+command_params = f'compute_transmitted_flux_grid.py {data_dir}/cosmo_sims/sim_grid/1024_wdmgrid_nsim200_deltaZ_0p0'
 
 
 partition = 'comp-astro'
-output = 'run_output'
-work_directory = '/home/brvillas/jobs'
+work_directory = '/home/brvillas/jobs/'
+output = work_directory + 'run_output'
 create_directory( work_directory )
 
 submit_str = f"""#!/bin/bash          
@@ -47,7 +48,8 @@ file.write( submit_str )
 file.close()
 print(f'Saved File: {file_name}')
 
-os.chdir( work_directory )
+print(f'Changing dir: {job_dir}' )
+os.chdir( job_dir )
 if partition == 'comp-astro': partition_key = 'comp'
 if partition == 'gpuq':       partition_key = 'gpu'
 exclude_nodes = []
@@ -57,5 +59,5 @@ for node in exclude_nodes:
 if exclude_comand != '': exclude_comand = exclude_comand[:-1]
 command = f'submit_script {partition_key} {file_name} {exclude_comand}'
 print( f' Submitting: {command}' )
-os.system( command )
+# os.system( command )
 
