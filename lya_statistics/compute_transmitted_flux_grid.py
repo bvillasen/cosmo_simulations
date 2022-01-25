@@ -88,31 +88,37 @@ if rank == 0:
   Write_Pickle_Directory( skewers_files_data, grid_skewers_file_name )
   
   print('Creating Transmitted Flux Directories')
-  create_directory( transmitted_flux_dir )
+  if not os.path.isdir( transmitted_flux_dir ): create_directory( transmitted_flux_dir )
   for sim_dir in sim_dirs:
     dir = transmitted_flux_dir + sim_dir
     if os.path.isdir( dir ): continue
     create_directory( dir )
   
 
-# if use_mpi: comm.Barrier()
-# skewers_files_data = Load_Pickle_Directory( grid_skewers_file_name, print_out=print_out )
-# file_indices = np.array([ file_id for file_id in skewers_files_data ])
-# local_indices = split_array_mpi( file_indices, rank, n_procs )
-# print( f'rank: {rank}  n_local:{len(local_indices)}' )
-# 
-# # Box parameters
-# Lbox = 50000.0 #kpc/h
-# box = {'Lbox':[ Lbox, Lbox, Lbox ] }
-# 
-# axis_list = [ 'x', 'y', 'z' ]
-# n_skewers_list = [ 'all', 'all', 'all']
-# skewer_ids_list = [ 'all', 'all', 'all']
-# field_list = [  'HI_density', 'los_velocity', 'temperature' ]
+if use_mpi: comm.Barrier()
+skewers_files_data = Load_Pickle_Directory( grid_skewers_file_name, print_out=print_out )
+file_indices = np.array([ file_id for file_id in skewers_files_data ])
+local_indices = split_array_mpi( file_indices, rank, n_procs )
 
+# Box parameters
+Lbox = 50000.0 #kpc/h
+box = {'Lbox':[ Lbox, Lbox, Lbox ] }
 
-# for file_id in local_indices:
+axis_list = [ 'x', 'y', 'z' ]
+n_skewers_list = [ 'all', 'all', 'all']
+skewer_ids_list = [ 'all', 'all', 'all']
+field_list = [  'HI_density', 'los_velocity', 'temperature' ]
 
+for file_id in local_indices:
+  
+  file_data = skewers_files_data[file_id]
+  sim_dir = file_data['sim_dir']
+  file_indx = file_data['file_indx']
+  output_dir = transmitted_flux_dir + sim_dir + '/'
+  if not os.path.isdir(output_dir):
+    print( f'ERROR: Directory not found {output_dir}' )
+    continue  
+  
   # skewer_dataset = Load_Skewers_File( n_file, input_dir, axis_list=axis_list, fields_to_load=field_list )
   # 
   # # Cosmology parameters
