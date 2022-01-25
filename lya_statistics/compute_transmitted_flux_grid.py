@@ -34,13 +34,14 @@ if len( args ) < 2:
 
 
 grid_dir = args[1]
-skewers_dir = grid_dir + 'skewers_files'
+skewers_dir = grid_dir + 'skewers_files/'
 sim_dirs = [ d for d in os.listdir(skewers_dir) if os.path.isdir(d) and d[0]=='S'  ]
 n_sims = len( sim_dirs )
  
 if rank == 0: 
-  print( f'Grid  Dir: {grid_dir}')
-  print( f'N simulations: {n_sims}')
+  print( f'Grid  Dir: {grid_dir}' )
+  print( f'Skewers Dir: {skewers_dir}' )
+  print( f'N simulations: {n_sims}' )
   time.sleep(1)
 if use_mpi: comm.Barrier()
 # 
