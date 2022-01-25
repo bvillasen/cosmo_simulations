@@ -12,7 +12,7 @@ n_nodes = 8
 n_tasks_per_node = 40
 time = '24:00:00'
 command = 'python'
-command_params = '/home/brvillas/cosmo_simulations/lya_statistics/compute_transmitted_flux_grid.py /data/groups/comp-astro/bruno/cosmo_sims/sim_grid/1024_wdmgrid_nsim200_deltaZ_0p0'
+command_params = f'{home_dir}/cosmo_simulations/lya_statistics/compute_transmitted_flux_grid.py {data_dir}/cosmo_sims/sim_grid/1024_wdmgrid_nsim200_deltaZ_0p0'
 
 
 partition = 'comp-astro'
