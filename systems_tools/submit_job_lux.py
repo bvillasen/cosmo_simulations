@@ -12,11 +12,11 @@ n_nodes = 8
 n_tasks_per_node = 40
 time = '24:00:00'
 command = 'python'
-command_params = '1024_wdmgrid_nsim200_deltaZ_0p0'
+command_params = 'compute_transmitted_flux_grid.py 1024_wdmgrid_nsim200_deltaZ_0p0'
 
 
 partition = 'comp-astro'
-output = 'run_output.log'
+output = 'run_output'
 work_directory = '/home/brvillas/jobs'
 create_directory( work_directory )
 
