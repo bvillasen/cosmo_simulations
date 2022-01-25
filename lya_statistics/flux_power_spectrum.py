@@ -1,5 +1,8 @@
 import numpy as np
 import time
+root_dir = os.path.dirname(os.getcwd()) + '/'
+sys.path.append( root_dir + 'tools')
+from tools import print_line_flush, print_progress
 
 def get_skewer_flux_fft_amplitude( vel_Hubble, delta_F ):
   n = len( vel_Hubble )
