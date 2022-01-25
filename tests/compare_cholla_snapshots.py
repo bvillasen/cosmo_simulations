@@ -36,11 +36,13 @@ input_dir_0 = sim_dir + 'snapshot_files_cpu_0/'
 input_dir_1 = sim_dir + 'snapshot_files_cpu/'
 output_dir  = sim_dir + 'figures/'
 
+
 # input_dir_0 = data_dir + 'cosmo_sims/1024_50Mpc_adiabatic/snapshot_files_caar/'
 # input_dir_1 = data_dir + 'cosmo_sims/1024_50Mpc_adiabatic/sim_cosmo/snapshot_files/'
 # output_dir  = data_dir + 'cosmo_sims/1024_50Mpc_adiabatic/figures/'
-
 create_directory( output_dir ) 
+print( f'Input 0: {input_dir_0}')
+print( f'Input 0: {input_dir_1}')
 
 # data_type = 'hydro'
 data_type = 'particles'
