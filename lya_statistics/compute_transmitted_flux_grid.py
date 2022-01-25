@@ -182,6 +182,5 @@ for file_id in local_indices:
       file.create_dataset( 'skewers_ps', data=data_ps['skewers_ps'] )
       file.close()
   
-  break
   
 
