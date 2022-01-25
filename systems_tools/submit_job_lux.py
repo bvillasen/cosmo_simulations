@@ -45,4 +45,15 @@ file_name = work_directory + file_name
 file = open( file_name, 'w' )
 file.write( submit_str )
 file.close()
-print(f' Saved File: {file_name}')
+print(f'Saved File: {file_name}')
+
+os.chdir( work_dir )
+if partition == 'comp-astro': partition_key = 'comp'
+if partition == 'gpuq':       partition_key = 'gpu'
+exclude_comand = '' 
+for node in job['exclude']:
+  exclude_comand += node + ','
+if exclude_comand != '': exclude_comand = exclude_comand[:-1]
+command = f'submit_script {partition_key} {file_name} {exclude_comand}'
+print( f'Command: {command}' )
+
