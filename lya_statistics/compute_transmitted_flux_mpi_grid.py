@@ -221,6 +221,9 @@ for file_id in file_indices:
   ps_data = lya_statistics['power_spectrum']
   sim_k_vals  = ps_data['k_vals'][...]
   sim_ps_mean = ps_data['p(k)'][...]
+  indices = sim_ps_mean > 0 
+  sim_k_vals  = sim_k_vals[indices]
+  sim_ps_mean = sim_ps_mean[indices]
   file.close()
   
   k_diff = ( k_vals - sim_k_vals ) / sim_k_vals
