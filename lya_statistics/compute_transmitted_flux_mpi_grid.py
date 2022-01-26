@@ -128,7 +128,7 @@ for file_id in local_indices:
     print( f'ERROR: Directory not found {flux_dir}' )
     continue  
     
-  print_string = f'  file  {file_id:04} / {n_total_files}.  '
+  print_string = f'  file  {file_id} / {n_total_files}.  '
   
   flux_file_name = flux_dir + f'lya_flux_{file_indx:03}.h5'
   flux_file_exists = False
@@ -168,7 +168,7 @@ for file_id in local_indices:
   file_indx = file_data['file_indx']
   flux_dir = transmitted_flux_dir + sim_dir + '/'
   ps_sim_dir = ps_dir + sim_dir + '/'
-  print_string = f'  file  {file_id:04} / {n_total_files}.  '
+  print_string = f'  file  {file_id} / {n_total_files}.  '
   
   ps_file_name = ps_sim_dir + f'flux_ps_{file_indx:03}.h5'
   ps_file_exists = False
@@ -196,7 +196,7 @@ if use_mpi: comm.Barrier()
 if rank != 0: exit()
 if not compute_ps: exit()
 
-# Now compare the Power Spectrum to the one computed in-the-
+# Now compare the Power Spectrum to the one computed in-the-fly
 print( 'Comparing flux power spectrum')
 for file_id in file_indices:
     
@@ -205,7 +205,7 @@ for file_id in file_indices:
   file_indx = file_data['file_indx']
   ps_sim_dir = ps_dir + sim_dir + '/'
   analysis_sim_dir = analysis_dir + sim_dir + '/'
-  print_string = f'  file  {file_id:04} / {n_total_files}.  '
+  print_string = f'  file  {file_id} / {n_total_files}.  '
 
   ps_file_name = ps_sim_dir + f'flux_ps_{file_indx:03}.h5'
   file = h5.File( ps_file_name, 'r' )
