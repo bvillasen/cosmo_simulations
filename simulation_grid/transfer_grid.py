@@ -36,7 +36,7 @@ print( f'N to transfer: {n_to_transfer} ' )
 # directories_to_copy = [ ]
 # directories_to_copy = [ 'analysis_files', 'simulation_files' ]
 # directories_to_copy = [ 'skewers_files' ] 
-directories_to_copy = [ 'trasmitted_flux', 'flux_power_spectrum' ] 
+directories_to_copy = [ 'transmitted_flux', 'flux_power_spectrum' ] 
 
 # directories_to_move = [ 'snapshot_files' ]
 directories_to_move = []
@@ -84,6 +84,25 @@ for dst_id in dst_ids_to_transfer:
       dst_result = copytree( src_dir, dst_dir )
     dir_comparison = dircmp( src_dir, dst_dir )
     # comparison_result = dir_comparison.report()
+    diff_files = dir_comparison.diff_files
+    if len( diff_files ) > 0: 
+      print( 'ERROR: Found diff_files > 0')
+      time.sleep(2)
+      
+  if 'transmitted_flux' in  directories_to_copy:
+    dst_transmitted_flux_dir = dst_root_dir + f'transmitted_flux'
+    if not os.path.isdir( dst_transmitted_flux_dir ): create_directory( dst_transmitted_flux_dir )
+    src_dir = src_root_dir + f'transmitted_flux/{src_name}/'
+    dst_dir = dst_root_dir + f'transmitted_flux/{dst_name}/'
+    print( f' src dir: {src_dir}' )
+    print( f' dst dir: {dst_dir}' )
+    if os.path.isdir( dst_dir ):
+      dst_content = os.listdir( dst_dir )
+        if len( dst_content ) == 0: 
+          os.rmdir( dst_dir )
+          dst_result = copytree( src_dir, dst_dir )
+    else: dst_result = copytree( src_dir, dst_dir )
+    dir_comparison = dircmp( src_dir, dst_dir )
     diff_files = dir_comparison.diff_files
     if len( diff_files ) > 0: 
       print( 'ERROR: Found diff_files > 0')
