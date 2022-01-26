@@ -216,8 +216,15 @@ for file_id in file_indices:
   
   analysis_file_name = analysis_sim_dir + f'{file_indx}_analysis.h5'
   file = h5.File( analysis_file_name, 'r' )
+  sim_z = file.attrs['current_z'][0]
+  lya_statistics = file['lya_statistics']
+  ps_data = lya_statistics['power_specrum']
+  sim_k_vals  = ps_data['k_vals'][...]
+  sim_ps_mean = ps_data['p(k)'][...]
+  file.close()
   
-  
+  k_diff = ( k_vals - sim_k_vals ) / sim_k_vals
+  print( k_diff )
   
   break
   
