@@ -13,7 +13,7 @@ n_tasks_per_node = 40
 time = '24:00:00'
 command = 'python'
 job_dir = home_dir + 'cosmo_simulations/lya_statistics/'
-command_params = f'compute_transmitted_flux_mpi_grid.py {data_dir}cosmo_sims/sim_grid/1024_wdmgrid_nsim200_deltaZ_0p5'
+command_params = f'compute_transmitted_flux_mpi_grid.py {data_dir}cosmo_sims/sim_grid/1024_wdmgrid_nsim200_deltaZ_0p0'
 
 
 partition = 'comp-astro'
