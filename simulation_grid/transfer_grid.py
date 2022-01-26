@@ -19,7 +19,7 @@ sim_grid_dir = data_dir + 'cosmo_sims/sim_grid/'
 # if wdm_mass == 6.0: src_grid_dir = sim_grid_dir + '1024_mwdm6p0_nsim64/' 
 # dst_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim320/'
 
-src_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim200_deltaZ_n0p5/'
+src_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim200_deltaZ_0p0/'
 dst_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim600/'
 
 # constant_params = { 'wdm_mass': wdm_mass }
@@ -34,8 +34,9 @@ n_to_transfer = len( dst_ids_to_transfer )
 print( f'N to transfer: {n_to_transfer} ' )
 
 # directories_to_copy = [ ]
-directories_to_copy = [ 'analysis_files', 'simulation_files' ] 
+# directories_to_copy = [ 'analysis_files', 'simulation_files' ]
 # directories_to_copy = [ 'skewers_files' ] 
+directories_to_copy = [ 'trasmitted_flux', 'flux_power_spectrum' ] 
 
 directories_to_move = []
 # directories_to_move = [ 'snapshot_files' ]
