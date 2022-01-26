@@ -194,10 +194,11 @@ for file_id in local_indices:
 
 if use_mpi: comm.Barrier()
 if rank != 0: exit()
+if not compute_ps: exit()
 
-# Now compare the Power Spectrum to the one computed in-the-fly
+# Now compare the Power Spectrum to the one computed in-the-
+print( 'Comparing flux power spectrum')
 for file_id in file_indices:
-  if not compute_ps: continue
     
   file_data = skewers_files_data[file_id]
   sim_dir = file_data['sim_dir']
@@ -213,7 +214,7 @@ for file_id in file_indices:
   ps_mean = file['ps_mean'][...]
   file.close()
   
-  analysis_file_name = analysis_dir + f'{file_indx}_analysis.h5'
+  analysis_file_name = analysis_sim_dir + f'{file_indx}_analysis.h5'
   file = h5.File( analysis_file_name, 'r' )
   
   
