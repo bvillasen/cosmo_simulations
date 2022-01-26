@@ -47,6 +47,10 @@ grid_skewers_file_name = grid_dir + 'grid_skewers_files.pkl'
 
 selected_file_indices = [ 25, 29, 33 ] # redshits 5.0, 4.6 and 4.2
 
+# Box parameters
+Lbox = 25000.0 #kpc/h
+box = {'Lbox':[ Lbox, Lbox, Lbox ] }
+
 if rank == 0: 
   print( f'Loading Grid: {grid_dir}')
 
@@ -104,10 +108,6 @@ skewers_files_data = Load_Pickle_Directory( grid_skewers_file_name, print_out=pr
 file_indices = np.array([ file_id for file_id in skewers_files_data ])
 n_total_files = len( file_indices )
 local_indices = split_array_mpi( file_indices, rank, n_procs )
-
-# Box parameters
-Lbox = 50000.0 #kpc/h
-box = {'Lbox':[ Lbox, Lbox, Lbox ] }
 
 axis_list = [ 'x', 'y', 'z' ]
 n_skewers_list = [ 'all', 'all', 'all']
