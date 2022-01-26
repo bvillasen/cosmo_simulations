@@ -228,7 +228,7 @@ for file_id in file_indices:
   
   k_diff  = np.abs( k_vals - sim_k_vals ) / sim_k_vals
   ps_diff = np.abs( ps_mean - sim_ps_mean ) / sim_ps_mean
-  print( f'file_id: {file_id} k_diff: {k_diff.mean()},  ps_diff: {ps_diff.mean()}' ) 
+  print( f'file_id: {file_id} k_diff: {k_diff.mean():.3e},  ps_diff: {ps_diff.mean():.3e}' ) 
   
   
   
