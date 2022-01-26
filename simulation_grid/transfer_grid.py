@@ -107,7 +107,27 @@ for dst_id in dst_ids_to_transfer:
     if len( diff_files ) > 0: 
       print( 'ERROR: Found diff_files > 0')
       time.sleep(2)
+
+  if 'flux_power_spectrum' in  directories_to_copy:
+    dst_ps_dir = dst_root_dir + f'flux_power_spectrum'
+    if not os.path.isdir( dst_ps_dir ): create_directory( dst_ps_dir )
+    src_dir = src_root_dir + f'flux_power_spectrum/{src_name}/'
+    dst_dir = dst_root_dir + f'flux_power_spectrum/{dst_name}/'
+    print( f' src dir: {src_dir}' )
+    print( f' dst dir: {dst_dir}' )
+    if os.path.isdir( dst_dir ):
+      dst_content = os.listdir( dst_dir )
+      if len( dst_content ) == 0: 
+        os.rmdir( dst_dir )
+        dst_result = copytree( src_dir, dst_dir )
+    else: dst_result = copytree( src_dir, dst_dir )
+    dir_comparison = dircmp( src_dir, dst_dir )
+    diff_files = dir_comparison.diff_files
+    if len( diff_files ) > 0: 
+      print( 'ERROR: Found diff_files > 0')
+      time.sleep(2)
       
+
   if 'skewers_files' in directories_to_copy:
     src_dir = src_root_dir + f'skewers_files/{src_name}/'
     dst_dir = dst_root_dir + f'skewers_files/{dst_name}/'
