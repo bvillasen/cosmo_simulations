@@ -170,6 +170,11 @@ for file_id in local_indices:
   ps_sim_dir = ps_dir + sim_dir + '/'
   print_string = f'  file  {file_id:04} / {n_total_files}.  '
   
+  ps_file_name = ps_sim_dir + f'flux_ps_{file_indx:03}.h5'
+  ps_file_exists = False
+  if os.path.isfile( ps_file_name ):  ps_file_exists = True
+  if ps_file_exists: continue
+  
   flux_file_name = flux_dir + f'lya_flux_{file_indx:03}.h5'      
   file = h5.File( flux_file_name, 'r' )
   current_z = file.attrs['current_z']
@@ -179,11 +184,6 @@ for file_id in local_indices:
   file.close()
   data_Flux = { 'vel_Hubble':vel_Hubble, 'skewers_Flux':skewers_Flux }
 
-  ps_file_name = ps_sim_dir + f'flux_ps_{file_indx:03}.h5'
-  ps_file_exists = False
-  if os.path.isfile( ps_file_name ):  ps_file_exists = True
-  if ps_file_exists: continue
-  
   data_ps = Compute_Flux_Power_Spectrum( data_Flux, print_string=print_string )
   file = h5.File( ps_file_name, 'w' )
   file.attrs['current_z'] = current_z
