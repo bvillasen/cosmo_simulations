@@ -98,9 +98,9 @@ for dst_id in dst_ids_to_transfer:
     print( f' dst dir: {dst_dir}' )
     if os.path.isdir( dst_dir ):
       dst_content = os.listdir( dst_dir )
-        if len( dst_content ) == 0: 
-          os.rmdir( dst_dir )
-          dst_result = copytree( src_dir, dst_dir )
+      if len( dst_content ) == 0: 
+        os.rmdir( dst_dir )
+        dst_result = copytree( src_dir, dst_dir )
     else: dst_result = copytree( src_dir, dst_dir )
     dir_comparison = dircmp( src_dir, dst_dir )
     diff_files = dir_comparison.diff_files
