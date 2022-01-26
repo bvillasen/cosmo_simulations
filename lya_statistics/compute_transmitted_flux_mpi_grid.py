@@ -226,8 +226,9 @@ for file_id in file_indices:
   sim_ps_mean = sim_ps_mean[indices]
   file.close()
   
-  k_diff = ( k_vals - sim_k_vals ) / sim_k_vals
-  print( k_diff )
+  k_diff  = np.abs( k_vals - sim_k_vals ) / sim_k_vals
+  ps_diff = np.abs( ps_mean - sim_ps_mean ) / sim_ps_mean
+  print( k_diff.mean(), ps_diff.mean() ) 
   
   break
   
