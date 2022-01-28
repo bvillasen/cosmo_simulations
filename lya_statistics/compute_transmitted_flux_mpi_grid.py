@@ -177,8 +177,13 @@ if resample_to_data is not None:
   k_vals = k_vals_data[resample_to_data]
   log_k = np.log10( k_vals )
   delta_log_k = log_k[1:] - log_k[:-1]
+  n_k = len( k_vals )
+  log_k_edges = np.zeros( n_k+1 )
+  log_k_edges[0] = log_k[0] - 0.5*delta_log_k
+  log_k_edges[1:] = log_k + 0.5*delta_log_k 
   print( f'log k_vals: { log_k }' )
   print( f'delta log k_vals: { delta_log_k }' )
+  print( f'log k_edges: { log_k_edges }' )
 
 
 # 
