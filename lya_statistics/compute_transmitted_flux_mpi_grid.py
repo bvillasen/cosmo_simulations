@@ -176,7 +176,9 @@ if resample_to_data is not None:
   if rank == 0: print( f'Resampling P(k) k_vals: {resample_to_data}')
   k_vals = k_vals_data[resample_to_data]
   log_k = np.log10( k_vals )
+  delta_log_k = log_k[1:] - log_k[:-1]
   print( f'log k_vals: { log_k }' )
+  print( f'delta log k_vals: { delta_log_k }' )
 
 
 # 
