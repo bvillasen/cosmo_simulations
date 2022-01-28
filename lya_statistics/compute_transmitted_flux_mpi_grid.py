@@ -14,6 +14,7 @@ from data_optical_depth import data_optical_depth_Bosman_2021
 from load_skewers import load_skewers_multiple_axis
 from spectra_functions import Compute_Skewers_Transmitted_Flux
 from flux_power_spectrum import Compute_Flux_Power_Spectrum
+from load_tabulated_data import load_tabulated_data_boera 
 
 ps_data_dir = root_dir + 'lya_statistics/data/'
 data_boera_dir = ps_data_dir + 'data_power_spectrum_boera_2019/'
