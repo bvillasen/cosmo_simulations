@@ -15,6 +15,16 @@ from load_skewers import load_skewers_multiple_axis
 from spectra_functions import Compute_Skewers_Transmitted_Flux
 from flux_power_spectrum import Compute_Flux_Power_Spectrum
 
+ps_data_dir = root_dir + 'lya_statistics/data/'
+data_boera_dir = ps_data_dir + 'data_power_spectrum_boera_2019/'
+data_boera = load_tabulated_data_boera( data_boera_dir )
+k_vals_boera = data_boera[0]['k_vals']
+
+k_vals_data = { 'boera':k_vals_boera }
+
+# resample_to_data = None
+resample_to_data = 'boera'
+
 
 args = sys.argv
 
@@ -160,6 +170,11 @@ if use_mpi: comm.Barrier()
 if rank == 0: print('')
 
 # Now compute the flux power spectrum
+k_vals = None
+if resample_to_data is not None:
+  if rank == 0: print( f'Resampling P(k) k_vals: {resample_to_data}')
+  k_vals = k_vals_data[resample_to_data]
+
 for file_id in local_indices:
   if not compute_ps: continue
 
@@ -170,7 +185,9 @@ for file_id in local_indices:
   ps_sim_dir = ps_dir + sim_dir + '/'
   print_string = f'  file  {file_id} / {n_total_files}.  '
 
-  ps_file_name = ps_sim_dir + f'flux_ps_{file_indx:03}.h5'
+  if resample_to_data is not None: ps_file_name = ps_sim_dir + f'flux_ps_resample_{resample_to_data}_{file_indx:03}.h5' 
+  else:ps_file_name = ps_sim_dir + f'flux_ps_{file_indx:03}.h5'
+    
   ps_file_exists = False
   if os.path.isfile( ps_file_name ):  ps_file_exists = True
   if ps_file_exists: continue
@@ -183,8 +200,9 @@ for file_id in local_indices:
   skewers_Flux = file['skewers_Flux'][...]
   file.close()
   data_Flux = { 'vel_Hubble':vel_Hubble, 'skewers_Flux':skewers_Flux }
+  
 
-#   data_ps = Compute_Flux_Power_Spectrum( data_Flux, print_string=print_string )
+  data_ps = Compute_Flux_Power_Spectrum( data_Flux, print_string=print_string, k_vals=kvals )
 #   file = h5.File( ps_file_name, 'w' )
 #   file.attrs['current_z'] = current_z
 #   file.create_dataset( 'k_vals', data=data_ps['k_vals'] )
