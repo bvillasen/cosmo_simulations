@@ -203,7 +203,7 @@ for file_id in local_indices:
   data_Flux = { 'vel_Hubble':vel_Hubble, 'skewers_Flux':skewers_Flux }
   
 
-  data_ps = Compute_Flux_Power_Spectrum( data_Flux, print_string=print_string, k_vals=kvals )
+  data_ps = Compute_Flux_Power_Spectrum( data_Flux, print_string=print_string, k_vals=k_vals )
 #   file = h5.File( ps_file_name, 'w' )
 #   file.attrs['current_z'] = current_z
 #   file.create_dataset( 'k_vals', data=data_ps['k_vals'] )
