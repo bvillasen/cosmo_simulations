@@ -175,35 +175,39 @@ k_vals = None
 if resample_to_data is not None:
   if rank == 0: print( f'Resampling P(k) k_vals: {resample_to_data}')
   k_vals = k_vals_data[resample_to_data]
+  log_k = np.log10( k_vals )
+  print( f'log k_vals: { log_k }' )
 
-for file_id in local_indices:
-  if not compute_ps: continue
 
-  file_data = skewers_files_data[file_id]
-  sim_dir = file_data['sim_dir']
-  file_indx = file_data['file_indx']
-  flux_dir = transmitted_flux_dir + sim_dir + '/'
-  ps_sim_dir = ps_dir + sim_dir + '/'
-  print_string = f'  file  {file_id} / {n_total_files}.  '
-
-  if resample_to_data is not None: ps_file_name = ps_sim_dir + f'flux_ps_resample_{resample_to_data}_{file_indx:03}.h5' 
-  else:ps_file_name = ps_sim_dir + f'flux_ps_{file_indx:03}.h5'
-    
-  ps_file_exists = False
-  if os.path.isfile( ps_file_name ):  ps_file_exists = True
-  if ps_file_exists: continue
-
-  flux_file_name = flux_dir + f'lya_flux_{file_indx:03}.h5'      
-  file = h5.File( flux_file_name, 'r' )
-  current_z = file.attrs['current_z']
-  Flux_mean = file.attrs['Flux_mean']
-  vel_Hubble   = file['vel_Hubble'][...]
-  skewers_Flux = file['skewers_Flux'][...]
-  file.close()
-  data_Flux = { 'vel_Hubble':vel_Hubble, 'skewers_Flux':skewers_Flux }
-  
-
-  data_ps = Compute_Flux_Power_Spectrum( data_Flux, print_string=print_string, k_vals=k_vals )
+# 
+# for file_id in local_indices:
+#   if not compute_ps: continue
+# 
+#   file_data = skewers_files_data[file_id]
+#   sim_dir = file_data['sim_dir']
+#   file_indx = file_data['file_indx']
+#   flux_dir = transmitted_flux_dir + sim_dir + '/'
+#   ps_sim_dir = ps_dir + sim_dir + '/'
+#   print_string = f'  file  {file_id} / {n_total_files}.  '
+# 
+#   if resample_to_data is not None: ps_file_name = ps_sim_dir + f'flux_ps_resample_{resample_to_data}_{file_indx:03}.h5' 
+#   else:ps_file_name = ps_sim_dir + f'flux_ps_{file_indx:03}.h5'
+# 
+#   ps_file_exists = False
+#   if os.path.isfile( ps_file_name ):  ps_file_exists = True
+#   if ps_file_exists: continue
+# 
+#   flux_file_name = flux_dir + f'lya_flux_{file_indx:03}.h5'      
+#   file = h5.File( flux_file_name, 'r' )
+#   current_z = file.attrs['current_z']
+#   Flux_mean = file.attrs['Flux_mean']
+#   vel_Hubble   = file['vel_Hubble'][...]
+#   skewers_Flux = file['skewers_Flux'][...]
+#   file.close()
+#   data_Flux = { 'vel_Hubble':vel_Hubble, 'skewers_Flux':skewers_Flux }
+# 
+# 
+#   data_ps = Compute_Flux_Power_Spectrum( data_Flux, print_string=print_string, k_edges=k_edges )
 #   file = h5.File( ps_file_name, 'w' )
 #   file.attrs['current_z'] = current_z
 #   file.create_dataset( 'k_vals', data=data_ps['k_vals'] )
