@@ -1,6 +1,26 @@
 import numpy as np
 from tools import print_line_flush
 
+
+
+def compute_covariance_matrix( samples ):
+  n_samples, sample_length = samples.shape 
+  cov_matrix =  np.zeros( [sample_length, sample_length] )
+  for i in range( sample_length ):
+    for j in range( sample_length ):
+      vals_i = samples[:,i]
+      vals_j = samples[:,j]
+      mean_i, mean_j = vals_i.mean(), vals_j.mean()
+      n_samples_i = vals_i.shape[0]
+      n_samples_j = vals_j.shape[0]
+      if n_samples_i != n_samples_j: 
+        print('ERROR: Number od samples mismatch')
+        exit
+      n_samples = n_samples_i
+      # cov_matrix[i,j] = np.array([ (vals_i[k] - mean_i)*(vals_j[k] - mean_j) for k in range(n_samples)  ]).mean()
+      cov_matrix[i,j] = ( (vals_i - mean_i)*(vals_j - mean_j) ).mean() 
+  return cov_matrix
+
 def get_sample_mean( n_in_sample, data ):
   n_dim = data.ndim
   n_total = data.shape[0]

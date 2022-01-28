@@ -19,6 +19,14 @@ from plot_flux_power_spectrum_grid import Plot_Power_Spectrum_Grid
 from load_tabulated_data import load_tabulated_data_boera 
 from matrix_functions import Normalize_Covariance_Matrix
 
+import matplotlib
+matplotlib.font_manager.findSystemFonts(fontpaths=['/home/bruno/fonts/Helvetica'], fontext='ttf')
+matplotlib.rcParams['font.sans-serif'] = "Helvetica"
+matplotlib.rcParams['font.family'] = "sans-serif"
+matplotlib.rcParams['mathtext.fontset'] = 'cm'
+matplotlib.rcParams['mathtext.rm'] = 'serif'
+
+
 ps_data_dir = cosmo_dir + 'lya_statistics/data/'
 data_boera_dir = ps_data_dir + 'data_power_spectrum_boera_2019/'
 data_boera = load_tabulated_data_boera( data_boera_dir )
@@ -86,26 +94,72 @@ tick_width_minor = 1
 text_color = 'black'
 legend_font_size = 14
 
+# 
+# ncols, nrows = 1, 1
+# ax_lenght = 6 
+# figure_width, figure_height = ncols * ax_lenght, nrows * ax_lenght
+# fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(figure_width,figure_height))
+# plt.subplots_adjust( hspace = 0.15, wspace=0.2)
+# 
+# if plot_normalized: cov_matrix_merge = cov_matrix_merge_norm
+# inv = np.linalg.inv(cov_matrix_merge)
+# 
+# ax.imshow( np.log10(inv), cmap='turbo' )
+# ax.set_aspect('equal')
+# 
+# 
+# 
+# ax.tick_params(axis='both', which='major', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in' )
+# ax.tick_params(axis='both', which='minor', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in')
+# 
+# 
+# figure_name = output_dir + 'covariance_matrix_merge_inv'
+# if plot_normalized: figure_name += '_normalized'
+# figure_name += '.png'
+# fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
+# print( f'Saved Figure: {figure_name}' )
+# 
 
-ncols, nrows = 1, 1
+
+
+
+ncols, nrows = 3, 1
 ax_lenght = 6 
 figure_width, figure_height = ncols * ax_lenght, nrows * ax_lenght
-fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(figure_width,figure_height))
+fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(figure_width,figure_height))
 plt.subplots_adjust( hspace = 0.15, wspace=0.2)
 
-if plot_normalized: cov_matrix_merge = cov_matrix_merge_norm
-inv = np.linalg.inv(cov_matrix_merge)
+for data_id in data_all:
 
-ax.imshow( np.log10(inv), cmap='turbo' )
-ax.set_aspect('equal')
+  ax = ax_l[data_id]
 
 
+  data = data_all[data_id]
+  z = data['z']
+  cov_matrix = data['cov_matrix']
+  if plot_normalized: cov_matrix = data['cov_matrix_norm']
+  k_vals = data['k_vals']
+  k_min, k_max = np.log10(k_vals.min()), np.log10(k_vals.max())
+  im = ax.imshow( cov_matrix, cmap='turbo', extent=(k_min, k_max, k_max, k_min) )
+  ax.set_aspect('equal')
 
-ax.tick_params(axis='both', which='major', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in' )
-ax.tick_params(axis='both', which='minor', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in')
+  if data_id == 2:
+    cax = ax.inset_axes([1.04, 0.1, 0.05, 0.8], transform=ax.transAxes)
+    fig.colorbar(im, ax=ax, cax=cax)
+  
+  ax.text(0.85, 0.92, r'$z=${0:.1f}'.format(z), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color='white') 
+
+  ax.set_ylabel( r'$\log_{10} \,k\,\,\, [\mathregular{s/km}]$  ', fontsize=label_size, color= text_color )
+  ax.set_xlabel( r'$\log_{10} \,k\,\,\, [\mathregular{s/km}]$  ', fontsize=label_size, color= text_color )
 
 
-figure_name = output_dir + 'covariance_matrix_merge_inv'
+  ax.tick_params(axis='both', which='major', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in' )
+  ax.tick_params(axis='both', which='minor', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in')
+
+  ax.set_xticks( [ -2, -1.5, -1])
+  ax.set_yticks( [ -2, -1.5, -1])
+
+figure_name = output_dir + 'covariance_matrix'
 if plot_normalized: figure_name += '_normalized'
 figure_name += '.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
@@ -113,47 +167,6 @@ print( f'Saved Figure: {figure_name}' )
 
 
 
-# 
-# 
-# ncols, nrows = 3, 1
-# ax_lenght = 6 
-# figure_width, figure_height = ncols * ax_lenght, nrows * ax_lenght
-# fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(figure_width,figure_height))
-# plt.subplots_adjust( hspace = 0.15, wspace=0.2)
-# 
-# for data_id in data_all:
-# 
-#   ax = ax_l[data_id]
-# 
-# 
-#   data = data_all[data_id]
-#   z = data['z']
-#   cov_matrix = data['cov_matrix']
-#   if plot_normalized: cov_matrix = data['cov_matrix_norm']
-#   k_vals = data['k_vals']
-#   k_min, k_max = np.log10(k_vals.min()), np.log10(k_vals.max())
-#   ax.imshow( cov_matrix, cmap='turbo', extent=(k_min, k_max, k_min, k_max) )
-#   ax.set_aspect('equal')
-# 
-# 
-#   ax.text(0.85, 0.92, r'$z=${0:.1f}'.format(z), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color='white') 
-# 
-#   ax.set_ylabel( r'$\log_{10} \,k\,\,\, [\mathregular{s/km}]$  ', fontsize=label_size, color= text_color )
-#   ax.set_xlabel( r'$\log_{10} \,k\,\,\, [\mathregular{s/km}]$  ', fontsize=label_size, color= text_color )
-# 
-# 
-#   ax.tick_params(axis='both', which='major', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in' )
-#   ax.tick_params(axis='both', which='minor', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in')
-# 
-# 
-# figure_name = output_dir + 'covariance_matrix'
-# if plot_normalized: figure_name += '_normalized'
-# figure_name += '.png'
-# fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
-# print( f'Saved Figure: {figure_name}' )
-# 
-# 
-# 
-# 
+
 # 
 # 

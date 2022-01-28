@@ -19,8 +19,10 @@ grid_name = '1024_wdmgrid_nsim600'
 
 
 
-# fit_names = [ 'fit_results_P(k)+_Boera', 'fit_results_P(k)+_Boera_covMatrix_zeros', 'fit_results_P(k)+_Boera_covMatrix'  ]
-# data_labels = [ r'Sigma', r'Diagonal Matrix', r'Covariance Matirx' ]
+fit_names = [ 'fit_results_P(k)+_Boera_sigma', 'fit_results_P(k)+_Boera_covmatrix'  ]
+data_labels = [ r'Sigma', r'Covariance Matrix' ]
+# extra_name = 'fit_redshift/redshift_2/'
+extra_name = None
 
 # fit_names = [ 'fit_results_P(k)+_Boera_covMatrix'  ]
 # data_labels = [ 'Covariance Matirx' ]\
@@ -33,12 +35,12 @@ grid_name = '1024_wdmgrid_nsim600'
 # data_labels = [ r'$x \sigma = {0}$'.format(sigma_fraction) for sigma_fraction in sigma_fractions ]
 
 
-sigma_fraction = 0.1
-fit_names = [ f'fit_results_P(k)+_Simulated_sigma{sigma_fraction}', f'fit_results_P(k)+_Simulated_covMatrix_sigma{sigma_fraction}'  ]
-data_labels = [ 'Sigma', 'Cov Matrix']
+# sigma_fraction = 0.1
+# fit_names = [ f'fit_results_P(k)+_Simulated_sigma{sigma_fraction}', f'fit_results_P(k)+_Simulated_covMatrix_sigma{sigma_fraction}'  ]
+# data_labels = [ 'Sigma', 'Cov Matrix']
 
 
-output_dir = data_dir + f'cosmo_sims/sim_grid/1024_wdmgrid_nsim600/figures/'
+output_dir = data_dir + f'cosmo_sims/sim_grid/1024_wdmgrid_nsim600/figures/fit_new/'
 create_directory( output_dir )
 
 samples_all = {}
@@ -49,7 +51,8 @@ for data_id, fit_name in enumerate(fit_names):
   mcmc_dir = root_dir + 'fit_mcmc/'
 
   print(f'Loading Dataset: {fit_name}' )
-  input_dir = mcmc_dir + f'{fit_name}/' 
+  input_dir = mcmc_dir + f'{fit_name}/'
+  if extra_name is not None: input_dir += extra_name 
   stats_file = input_dir + 'fit_mcmc.pkl'
   samples_file = input_dir + 'samples_mcmc.pkl'
 
@@ -68,8 +71,8 @@ corner_labels = { 'scale_He':r'$\beta_{\mathrm{He}}$', 'scale_H':r'$\beta_{\math
                   'scale_H_ion': r'$\beta_{\mathrm{H}}^{\mathrm{ion}}$', 'scale_He_ion': r'$\beta_{\mathrm{He}}^{\mathrm{ion}}$', 'scale_He_Eheat': r'$\alpha E_{\mathrm{He}}$', 'scale_H_Eheat': r'$\alpha E_{\mathrm{H}}$',
                   'wdm_mass':r'$m_{\mathrm{WDM}}$  [keV]', 'inv_wdm_mass':r'$m_{\mathrm{WDM}}^{-1}$  [keV$^{-1}$]'       }
 
-ticks = {0:[0., 0.1, 0.2, 0.3, 0.4], 1:[0.4, 0.6, 0.8, 1.0, 1.2, 01.4], 2:[ 0.6, 0.8, 1.0, 1.2, 1.4 ], 3:[ -0.4,-0.2, 0, 0.2, 0.4]}
+ticks = {0:[0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6], 1:[0.4, 0.6, 0.8, 1.0, 1.2, 01.4], 2:[ 0.6, 0.8, 1.0, 1.2, 1.4 ], 3:[ -0.4,-0.2, 0, 0.2, 0.4]}
 # ticks = None
 
-limits = {0:( 0, 0.45 ), 1:( 0.8, 1.5 ), 2:( 0.4, 1.4 ), 3:( -0.5, 0.5 )}
+limits = {0:( 0, 0.65 ), 1:( 0.8, 1.5 ), 2:( 0.4, 1.4 ), 3:( -0.5, 0.5 )}
 Plot_Corner( samples_all['param'], data_labels, corner_labels, output_dir, n_bins_1D=40, n_bins_2D=40, lower_mask_factor=500, multiple=True, show_label=True, HL_vals=params_HL, ticks=ticks, limits=limits, param_values=None, black_background=False)

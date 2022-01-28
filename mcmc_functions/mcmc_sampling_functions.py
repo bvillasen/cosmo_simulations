@@ -152,21 +152,21 @@ def Sample_Power_Spectrum_from_Trace( param_samples, data_grid, SG, hpi_sum=0.7,
 
 ############################################################################################################
 
-def get_mcmc_model( comparable_data, comparable_grid, fields_to_fit, sub_field, SG, use_covariance_matrix=False  ):
+def get_mcmc_model( comparable_data, comparable_grid, fields_to_fit, sub_field, SG, error_type='sigma'  ):
   params = SG.parameters
   n_param = len( params )
   print( f'Geting MCMC model for {n_param} parameters ')
   model, param_mcmc = None, None
   if n_param == 4:
-    model, params_mcmc =  mcmc_model_4D( comparable_data, comparable_grid, fields_to_fit, 'mean', SG, use_covariance_matrix=use_covariance_matrix )
+    model, params_mcmc =  mcmc_model_4D( comparable_data, comparable_grid, fields_to_fit, 'mean', SG, error_type=error_type )
   if n_param == 3:
-    model, params_mcmc =  mcmc_model_3D( comparable_data, comparable_grid, fields_to_fit, 'mean', SG, use_covariance_matrix=use_covariance_matrix )
+    model, params_mcmc =  mcmc_model_3D( comparable_data, comparable_grid, fields_to_fit, 'mean', SG, error_type=error_type )
   return model, params_mcmc  
 
 
 ############################################################################################################
 
-def mcmc_model_4D( comparable_data, comparable_grid, field, sub_field, SG, use_covariance_matrix=False ):
+def mcmc_model_4D( comparable_data, comparable_grid, field, sub_field, SG, error_type='sigma' ):
   print( '\nRunning MCMC Sampler')
   parameters = SG.parameters
   param_ids = parameters.keys()
@@ -188,20 +188,24 @@ def mcmc_model_4D( comparable_data, comparable_grid, field, sub_field, SG, use_c
     return mean_interp
   mean  = comparable_data[field]['mean']
   sigma = comparable_data[field]['sigma']
-  if use_covariance_matrix:
+  if error_type == 'covmatrix':
     print( 'WARNING: Using covariance matrix for the likelihood calculation')
     cov_matrix = comparable_data[field]['cov_matrix']
     precision_matrix = np.linalg.inv( cov_matrix )
     densObsrv = pymc.MvNormal( field, mu=mcmc_model_4D, tau=precision_matrix, value=mean, observed=True)
-  else:  
+  elif error_type == 'sigma':
+    print( 'WARNING: Using sigma for the likelihood calculation')  
     densObsrv = pymc.Normal(field, mu=mcmc_model_4D, tau=1./(sigma**2), value=mean, observed=True)
+  else:
+    print( 'ERROR: Not a valid error_type')
+    return None
   return locals(), params_mcmc
    
 
 ############################################################################################################
 
 
-def mcmc_model_3D( comparable_data, comparable_grid, field, sub_field, SG):
+def mcmc_model_3D( comparable_data, comparable_grid, field, sub_field, SG, error_type='sigma'):
   print( '\nRunning MCMC Sampler')
   parameters = SG.parameters
   param_ids = parameters.keys()
