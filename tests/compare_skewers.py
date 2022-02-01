@@ -105,7 +105,7 @@ for snap_id in range(len(file_indices)):
     # flux_0[flux_0<flux_min] = flux_min
     # flux_1[flux_1<flux_min] = flux_min
     diff = ( flux_1 - flux_0 ) 
-    diff *= 0.8
+    diff *= 0.5
     
     xmin, xmax = vel_Hubble_0.min(), vel_Hubble_0.max()
     
