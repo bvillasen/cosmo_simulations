@@ -117,9 +117,9 @@ for i in range(nrows):
     ax1.set_ylabel( r'$P\, (k)$', fontsize=label_size )
 
 
-    ax2.plot( k_vals, diff, ls='--', c='C1', label='Cholla' )
     ax2.axhline( y=0, c='C0')
-    ax2.set_ylim( -0.3, 0.3 )
+    ax2.plot( k_vals, diff, ls='--', c='C1', label='Cholla' )
+    ax2.set_ylim( -0.1, 0.1 )
     ax2.tick_params(axis='both', which='major', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major  )
     ax2.tick_params(axis='both', which='minor', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor  )
     ax2.set_ylabel( r'$\Delta P\,(k) / P\, (k)$', fontsize=label_size )

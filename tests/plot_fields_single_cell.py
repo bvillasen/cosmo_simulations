@@ -114,7 +114,7 @@ ax_lenght = 6
 figure_width = ncols * ax_lenght
 figure_height = nrows * ax_lenght / 2
 fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(figure_width,figure_height))
-plt.subplots_adjust( hspace = 0.15, wspace=0.2)
+plt.subplots_adjust( hspace = 0.15, wspace=0.25)
 
 
 ax_labels_0 = [ r'$T \,\,\, [\mathrm{K}]$ ', r'$x_\mathrm{HI}$', r'$x_\mathrm{HII}$', r'$x_\mathrm{HeI}$', r'$x_\mathrm{HeII}$',  r'$x_\mathrm{HeIII}$', r'$n_\mathrm{e} \,\,\, [\mathrm{m^{-3}}]$' ]
@@ -141,6 +141,8 @@ for field_id, field in enumerate(fields_to_plot):
   # if field == 'temperature': 
   #   print( field_1.max(), field_1.min())
   #   ax.set_yscale('log')
+  if field == 'temperature': delta = 0.05
+  else: delta = 0.01
 
   ax = ax_l[field_id][1]
   ax.axhline( y=0, c='C0')
