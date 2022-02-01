@@ -10,6 +10,16 @@ sys.path.extend(subDirectories)
 from load_data import load_snapshot_data_distributed
 from tools import *
 
+use_mpi = True
+if use_mpi:
+  from mpi4py import MPI
+  comm = MPI.COMM_WORLD
+  rank = comm.Get_rank()
+  n_procs = comm.Get_size()
+else:
+  rank = 0
+  n_procs = 1
+
 import matplotlib
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
 matplotlib.rcParams['mathtext.rm'] = 'serif'
@@ -38,10 +48,12 @@ diff = {}
 
 
 
-snapshots = range( 1, 16 )
+snapshots = np.arange( 1, 16, 1, dtype=int )
+snapshots_local = split_array_mpi( snapshots, rank, n_procs )
+
 
 n_snapshot = 10 
-for n_snapshot in snapshots:
+for n_snapshot in snapshots_local:
 
   slices = {} 
   data_0 = load_snapshot_data_distributed( data_type, fields, n_snapshot, input_dir_0, box_size, grid_size, precision, subgrid=subgrid, show_progess=True )
