@@ -26,7 +26,7 @@ matplotlib.rcParams['mathtext.rm'] = 'serif'
 
 sim_dir = data_dir + 'cosmo_sims/1024_50Mpc/'
 input_dir_0 = sim_dir + 'snapshot_files_grackle/'
-input_dir_1 = sim_dir + 'snapshot_files_cholla_0/'
+input_dir_1 = sim_dir + 'snapshot_files_cholla/'
 output_dir  = sim_dir + 'figures/slices/'
 create_directory( output_dir ) 
 
