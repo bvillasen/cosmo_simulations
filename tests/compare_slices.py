@@ -97,7 +97,7 @@ for n_snapshot in snapshots_local:
   for field_id, field in enumerate(fields):
     slice_0 = slices[field][0]
     slice_1 = slices[field][1]
-    diff = ( slice_1 - slice_0 ) / slice_0
+    diff = ( slice_1 - slice_0 ) / slice_0 / 5
     
     slice_0 = np.log10( slice_0 )
     slice_1 = np.log10( slice_1 )
