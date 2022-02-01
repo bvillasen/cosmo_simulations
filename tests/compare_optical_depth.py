@@ -91,6 +91,7 @@ tau_1 = data_all[1]['tau_vals']
 diff = ( tau_1 - tau_0 ) / tau_0
 
 xmin, xmax = z_vals.min(), z_vals.max()
+xmin, xmax = 2, 6
 
 ax1.plot( z_vals, tau_0, ls='-',  c='C0', label='Grackle' )
 ax1.plot( z_vals, tau_1, ls='--', c='C1', label='Cholla' )
@@ -104,8 +105,8 @@ ax1.tick_params(axis='x', which='major', direction='in', color=text_color, label
 
 ax1.set_ylabel( r'$\tau$', fontsize=label_size )
  
-ax2.plot( z_vals, diff, ls='--', c='C1', label='Cholla' )
 ax2.axhline( y=0, c='C0')
+ax2.plot( z_vals, diff, ls='--', c='C1', label='Cholla' )
 ax2.set_ylim( -0.04, 0.04 )
 ax2.set_xlim( xmin, xmax )
 ax2.tick_params(axis='both', which='major', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major  )
