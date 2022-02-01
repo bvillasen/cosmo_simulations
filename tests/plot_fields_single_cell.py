@@ -14,7 +14,7 @@ import matplotlib
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
 matplotlib.rcParams['mathtext.rm'] = 'serif'
 
-input_dir_0 = data_dir + 'cosmo_sims/chemistry_test/output_files_grackle/'
+input_dir_0 = data_dir + 'cosmo_sims/chemistry_test/output_files_grackle_0/'
 input_dir_1 = data_dir + 'cosmo_sims/chemistry_test/output_files/'
 output_dir  = data_dir + 'cosmo_sims/chemistry_test/figures/'
 create_directory( output_dir ) 
@@ -121,6 +121,7 @@ ax_labels_0 = [ r'$T \,\,\, [\mathrm{K}]$ ', r'$x_\mathrm{HI}$', r'$x_\mathrm{HI
 ax_labels_1 = [ r'$\Delta T / T$', r'$\Delta x_\mathrm{HI} / x_\mathrm{HI}$', r'$ \Delta x_\mathrm{HII} / x_\mathrm{HII}$', r'$\Delta x_\mathrm{HeI} / x_\mathrm{HeI}$', r'$ \Delta x_\mathrm{HeII} / x_\mathrm{HeII} $',  r'$\Delta x_\mathrm{HeIII} / x_\mathrm{HeIII}$', r'$\Delta n_\mathrm{e} / n_\mathrm{e}$' ]
 
 xmin, xmax = 2, 12
+delta = 0.1
 
 for field_id, field in enumerate(fields_to_plot):
 
@@ -137,15 +138,18 @@ for field_id, field in enumerate(fields_to_plot):
   ax.set_ylabel( ax_labels_0[field_id], fontsize=label_size )
   if field_id == nrows-1: ax.set_xlabel( r'$z$', fontsize=label_size )
   
+  # if field == 'temperature': 
+  #   print( field_1.max(), field_1.min())
+  #   ax.set_yscale('log')
 
   ax = ax_l[field_id][1]
   ax.axhline( y=0, c='C0')
   ax.plot( z, diff, ls='--', c='C1'  )
-  ax.set_ylim( -0.2, 0.2 )
+  ax.set_ylim( -delta, delta )
   ax.set_xlim( xmin, xmax )
   ax.set_ylabel( ax_labels_1[field_id], fontsize=label_size )
   if field_id == nrows-1: ax.set_xlabel( r'$z$', fontsize=label_size )
-
+  
 
 figure_name = output_dir + 'single_cell_comparison_new.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
