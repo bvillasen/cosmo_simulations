@@ -44,6 +44,7 @@ if len( args ) < 2:
   exit(-1)
 
 compute_ps = True
+compare_ps_to_sim = False
   
 print_out = False
 if rank == 0: print_out = True
@@ -247,51 +248,51 @@ for file_id in local_indices:
   file.create_dataset( 'ps_mean', data=data_ps['mean'] )
   file.create_dataset( 'skewers_ps', data=data_ps['skewers_ps'] )
   file.close()
-  print( f'Saved File: {ps_file_name}' )
+  # print( f'Saved File: {ps_file_name}' )
 
-  break
+  # break
 
 
-# 
-# if use_mpi: comm.Barrier()
-# if rank != 0: exit()
-# if not compute_ps: exit()
-# 
-# 
-# # Now compare the Power Spectrum to the one computed in-the-fly
-# if compare_power_spectrum:
-#   print( 'Comparing flux power spectrum')
-#   for file_id in file_indices:
-# 
-#     file_data = skewers_files_data[file_id]
-#     sim_dir = file_data['sim_dir']
-#     file_indx = file_data['file_indx']
-#     ps_sim_dir = ps_dir + sim_dir + '/'
-#     analysis_sim_dir = analysis_dir + sim_dir + '/'
-#     print_string = f'  file  {file_id} / {n_total_files}.  '
-# 
-#     ps_file_name = ps_sim_dir + f'flux_ps_{file_indx:03}.h5'
-#     file = h5.File( ps_file_name, 'r' )
-#     current_z = file.attrs['current_z']
-#     k_vals = file['k_vals'][...] 
-#     ps_mean = file['ps_mean'][...]
-#     file.close()
-# 
-#     analysis_file_name = analysis_sim_dir + f'{file_indx}_analysis.h5'
-#     file = h5.File( analysis_file_name, 'r' )
-#     sim_z = file.attrs['current_z'][0]
-#     lya_statistics = file['lya_statistics']
-#     ps_data = lya_statistics['power_spectrum']
-#     sim_k_vals  = ps_data['k_vals'][...]
-#     sim_ps_mean = ps_data['p(k)'][...]
-#     indices = sim_ps_mean > 0 
-#     sim_k_vals  = sim_k_vals[indices]
-#     sim_ps_mean = sim_ps_mean[indices]
-#     file.close()
-# 
-#     k_diff  = np.abs( k_vals - sim_k_vals ) / sim_k_vals
-#     ps_diff = np.abs( ps_mean - sim_ps_mean ) / sim_ps_mean
-#     print( f'file_id: {file_id} k_diff: {k_diff.mean():.3e},  ps_diff: {ps_diff.mean():.3e}' ) 
-# 
-# 
-# 
+
+if use_mpi: comm.Barrier()
+if rank != 0: exit()
+if not compute_ps or not compare_ps_to_sim: exit()
+
+
+# Now compare the Power Spectrum to the one computed in-the-fly
+if compare_power_spectrum:
+  print( 'Comparing flux power spectrum')
+  for file_id in file_indices:
+
+    file_data = skewers_files_data[file_id]
+    sim_dir = file_data['sim_dir']
+    file_indx = file_data['file_indx']
+    ps_sim_dir = ps_dir + sim_dir + '/'
+    analysis_sim_dir = analysis_dir + sim_dir + '/'
+    print_string = f'  file  {file_id} / {n_total_files}.  '
+
+    ps_file_name = ps_sim_dir + f'flux_ps_{file_indx:03}.h5'
+    file = h5.File( ps_file_name, 'r' )
+    current_z = file.attrs['current_z']
+    k_vals = file['k_vals'][...] 
+    ps_mean = file['ps_mean'][...]
+    file.close()
+
+    analysis_file_name = analysis_sim_dir + f'{file_indx}_analysis.h5'
+    file = h5.File( analysis_file_name, 'r' )
+    sim_z = file.attrs['current_z'][0]
+    lya_statistics = file['lya_statistics']
+    ps_data = lya_statistics['power_spectrum']
+    sim_k_vals  = ps_data['k_vals'][...]
+    sim_ps_mean = ps_data['p(k)'][...]
+    indices = sim_ps_mean > 0 
+    sim_k_vals  = sim_k_vals[indices]
+    sim_ps_mean = sim_ps_mean[indices]
+    file.close()
+
+    k_diff  = np.abs( k_vals - sim_k_vals ) / sim_k_vals
+    ps_diff = np.abs( ps_mean - sim_ps_mean ) / sim_ps_mean
+    print( f'file_id: {file_id} k_diff: {k_diff.mean():.3e},  ps_diff: {ps_diff.mean():.3e}' ) 
+
+
+
