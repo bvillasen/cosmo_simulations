@@ -205,7 +205,7 @@ for file_id in local_indices:
   ps_sim_dir = ps_dir + sim_dir + '/'
   print_string = f'  file  {file_id} / {n_total_files}.  '
 
-  if resample_to_data is not None: ps_file_name = ps_sim_dir + f'flux_ps_resample_{resample_to_data}_{file_indx:03}.h5' 
+  if resample_to_data is not None: ps_file_name = ps_sim_dir + f'flux_ps_resample_{resample_to_data}_native_{file_indx:03}.h5' 
   else:ps_file_name = ps_sim_dir + f'flux_ps_{file_indx:03}.h5'
 
   ps_file_exists = False
@@ -237,14 +237,16 @@ for file_id in local_indices:
       log_ps_interp = np.interp( log_k_boera, log_k, log_ps  )
       ps_interp = 10**log_ps_interp
       ps_interpolated.append( ps_interp )
+    # Redefine the skewers P(k) and ps_mean from the interpolated
     skewers_ps = np.array( ps_interpolated )
+    ps_mean = skewers_ps.mean( axis=0 )
 
-#   file = h5.File( ps_file_name, 'w' )
-#   file.attrs['current_z'] = current_z
-#   file.create_dataset( 'k_vals', data=data_ps['k_vals'] )
-#   file.create_dataset( 'ps_mean', data=data_ps['mean'] )
-#   file.create_dataset( 'skewers_ps', data=data_ps['skewers_ps'] )
-#   file.close()
+  file = h5.File( ps_file_name, 'w' )
+  file.attrs['current_z'] = current_z
+  file.create_dataset( 'k_vals', data=data_ps['k_vals'] )
+  file.create_dataset( 'ps_mean', data=data_ps['mean'] )
+  file.create_dataset( 'skewers_ps', data=data_ps['skewers_ps'] )
+  file.close()
 
   break
 
