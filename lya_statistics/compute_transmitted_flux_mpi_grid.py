@@ -237,7 +237,7 @@ for file_id in local_indices:
       log_ps_interp = np.interp( log_k_boera, log_k, log_ps  )
       ps_interp = 10**log_ps_interp
       ps_interpolated.append( ps_interp )
-    skewer_ps = np.array( ps_interpolated )
+    skewers_ps = np.array( ps_interpolated )
 
 #   file = h5.File( ps_file_name, 'w' )
 #   file.attrs['current_z'] = current_z
