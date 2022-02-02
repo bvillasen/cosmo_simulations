@@ -14,7 +14,7 @@ def get_skewer_flux_fft_amplitude( vel_Hubble, delta_F ):
 
 
 
-def get_skewer_flux_power_spectrum( vel_Hubble, delta_F, d_log_k=None, n_bins=None, k_edges=None ):
+def get_skewer_flux_power_spectrum( vel_Hubble, delta_F, d_log_k=None, n_bins=None, k_edges=None, centers_type='mult_mean' ):
   n = len(vel_Hubble)
   dv = vel_Hubble[1] - vel_Hubble[0]
   vel_max = n * dv
@@ -51,7 +51,15 @@ def get_skewer_flux_power_spectrum( vel_Hubble, delta_F, d_log_k=None, n_bins=No
   power, bin_edges= np.histogram( k_vals, bins=intervals, weights=ft_amp2 )
   n_in_bin, bin_edges = np.histogram( k_vals, bins=intervals )
   n_in_bin = n_in_bin.astype('float')
-  bin_centers = np.sqrt(bin_edges[1:] * bin_edges[:-1])
+  if centers_type == 'mult_mean': bin_centers = np.sqrt(bin_edges[1:] * bin_edges[:-1])
+  elif centers_type == 'mean': bin_centers = 0.5*( bin_edges[1:] + bin_edges[:-1] )
+  elif centers_type == 'log_mean': 
+    log_edges = np.log10( bin_edges )
+    log_centers = 0.5*( log_edges[1:] + log_edges[:-1] )
+    bin_centers = 10**log_centers 
+  else: 
+    print('ERROR: Centers type for P(k) k-bins not understood')
+    return None
   indices = n_in_bin > 0
   bin_centers = bin_centers[indices]
   power = power[indices]
@@ -60,7 +68,7 @@ def get_skewer_flux_power_spectrum( vel_Hubble, delta_F, d_log_k=None, n_bins=No
   return bin_centers, power_avrg
 
 
-def Compute_Flux_Power_Spectrum( data_Flux, print_string='' ):
+def Compute_Flux_Power_Spectrum( data_Flux, print_string='', k_edges=None, centers_type='mult_mean' ):
   skewers_Flux = data_Flux['skewers_Flux']
   # Flux_mean = data_Flux['Flux_mean']
   Flux_mean = skewers_Flux.mean()
@@ -75,7 +83,7 @@ def Compute_Flux_Power_Spectrum( data_Flux, print_string='' ):
   for skewer_id in range(n_skewers):
     flux = skewers_Flux[skewer_id]
     delta_flux = flux / Flux_mean 
-    k_vals, flux_power_spectrum = get_skewer_flux_power_spectrum( vel_Hubble, delta_flux, d_log_k=d_log_k )
+    k_vals, flux_power_spectrum = get_skewer_flux_power_spectrum( vel_Hubble, delta_flux, d_log_k=d_log_k, k_edges=k_edges, centers_type=centers_type )
     flux_power_spectrum = flux_power_spectrum 
     skewers_power_spectrum.append( flux_power_spectrum )
     print_progress( skewer_id+1, n_skewers, start, extra_line=extra_line )
