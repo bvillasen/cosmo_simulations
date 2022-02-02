@@ -18,7 +18,7 @@ from load_tabulated_data import load_tabulated_data_boera
 
 ps_data_dir = root_dir + 'lya_statistics/data/'
 data_boera_dir = ps_data_dir + 'data_power_spectrum_boera_2019/'
-data_boera = load_tabulated_data_boera( data_boera_dir )
+data_boera = load_tabulated_data_boera( data_boera_dir, print_out = False )
 k_vals_boera = data_boera[0]['k_vals']
 
 k_vals_data = { 'boera':k_vals_boera }

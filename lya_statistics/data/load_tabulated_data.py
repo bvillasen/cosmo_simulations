@@ -75,7 +75,7 @@ def load_data_boss( data_filename ):
     data_out[i]['sigma_power_spectrum'] = power_error  
   return data_out
   
-def load_tabulated_data_boera( dir_data_boera, corrected=False ):
+def load_tabulated_data_boera( dir_data_boera, corrected=False, print_out=False ):
   z_vals = np.array([ 4.2, 4.6, 5.0 ])
 
   data_out = {}
@@ -83,6 +83,7 @@ def load_tabulated_data_boera( dir_data_boera, corrected=False ):
 
   for data_index in range(3):
     file_name = dir_data_boera + 'data_table_{0}.txt'.format( data_index )
+    if print_out: print( f'Loading File: {file_name}') 
     data  = np.loadtxt( file_name )
     k_vals = 10**data[:,0]
     power_vals = data[:,1]
@@ -93,7 +94,7 @@ def load_tabulated_data_boera( dir_data_boera, corrected=False ):
     data_out[data_index] = {}
     z = z_vals[data_index]
     file_name = dir_data_boera + f'Cov_Matrixz={z}.dat'
-    print( f'Loading File: {file_name}') 
+    if print_out: print( f'Loading File: {file_name}') 
     file = open( file_name, 'rb' )
     cov_matrix = np.load( file )
     nx, ny = cov_matrix.shape
