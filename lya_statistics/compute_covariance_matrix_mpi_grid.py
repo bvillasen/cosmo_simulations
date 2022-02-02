@@ -53,26 +53,34 @@ indices = np.arange( 0, len(sim_dirs), 1, dtype=int )
 indices_local = split_array_mpi( indices, rank, n_procs )
 print( f'rank{rank} indices_local: {indices_local} ')
 
+data_name = 'sampled_boera_native'
+
 for sim_id in indices_local:
   sim_dir = sim_dirs[sim_id]
 
   for file_indx in selected_file_indices:
     # Load the skewers power spectrum
-    ps_file_name = ps_dir + f'{sim_dir}/flux_ps_{file_indx:03}.h5'
+    # ps_file_name = ps_dir + f'{sim_dir}/flux_ps_{file_indx:03}.h5'
+    ps_file_name = ps_dir + f'{sim_dir}/flux_ps_{data_name}_{file_indx:03}.h5'
     ps_file = h5.File( ps_file_name, 'r' )
     current_z = ps_file.attrs['current_z']
     k_vals = ps_file['k_vals'][...]
     ps_mean = ps_file['ps_mean'][...]
     skewers_ps = ps_file['skewers_ps'][...]
     ps_file.close()
-
-
-    print( f'Resampling power spectrum' )
-    k_vals_resample = k_vals_boera
-    skewers_ps_resampled = np.array([ np.interp( k_vals_boera, k_vals, skewer_ps ) for skewer_ps in skewers_ps ])
-    k_vals = k_vals_resample
-    skewers_ps = skewers_ps_resampled
     
+    mean_ps = skewers_ps.mean( axis=0 )
+    mean_diff = np.abs( mean_ps - ps_mean) / ps_mean
+    if ( mean_diff > 1e-6 ).any(): 
+      print( 'ERROR: P(k) mean mismatch from file' )
+      exit(-1)
+    
+    # Interpolate P(k) to boera
+    # print( f'Resampling power spectrum' )
+    # k_vals_resample = k_vals_boera
+    # skewers_ps_resampled = np.array([ np.interp( k_vals_boera, k_vals, skewer_ps ) for skewer_ps in skewers_ps ])
+    # k_vals = k_vals_resample
+    # skewers_ps = skewers_ps_resampled
     
     data_covariance = {}
     if bootstrap:
@@ -87,13 +95,13 @@ for sim_id in indices_local:
     else:
       cov_matrix = compute_covariance_matrix( skewers_ps )
       sigma = np.sqrt( cov_matrix.diagonal() )
-      data_covariance = { 'k_vals':k_vals, 'covariance_matrix': cov_matrix, 'sigma':sigma }
+      data_covariance = { 'k_vals':k_vals, 'covariance_matrix': cov_matrix, 'sigma':sigma, 'current_z':current_z, 'ps_mean':ps_mean }
   
 
-    # if bootstrap:file_name = ps_dir + f'{sim_dir}/bootstrap_statistics_sampled_boera_{file_indx:03}.pkl'
-    # else: file_name = ps_dir + f'{sim_dir}/statistics_sampled_boera_{file_indx:03}.pkl'
-    if bootstrap:file_name = ps_dir + f'{sim_dir}/bootstrap_statistics_{file_indx:03}.pkl'
-    else: file_name = ps_dir + f'{sim_dir}/statistics_{file_indx:03}.pkl'
+    if bootstrap:file_name = ps_dir + f'{sim_dir}/bootstrap_statistics_{data_name}_{file_indx:03}.pkl'
+    else: file_name = ps_dir + f'{sim_dir}/statistics_{data_name}_{file_indx:03}.pkl'
+    # if bootstrap:file_name = ps_dir + f'{sim_dir}/bootstrap_statistics_{file_indx:03}.pkl'
+    # else: file_name = ps_dir + f'{sim_dir}/statistics_{file_indx:03}.pkl'
     Write_Pickle_Directory( data_covariance, file_name )
 
 

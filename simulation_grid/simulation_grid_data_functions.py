@@ -155,7 +155,7 @@ def Get_PS_Range( self, sim_id=0, kmin=None, kmax=None ):
 
 ####################################################################################################################
     
-def Load_Power_Spectum_Data( self, sim_id, indices, FPS_correction=None ):
+def Load_Power_Spectum_Data( self, sim_id, indices, FPS_correction=None, custom_data=None ):
   input_dir = self.Get_Analysis_Directory( sim_id )
   indices.sort()
   sim_data = {}
@@ -163,6 +163,30 @@ def Load_Power_Spectum_Data( self, sim_id, indices, FPS_correction=None ):
   data_ps_mean = []
   data_kvals = []
   data_kmin, data_kmax = [], [] 
+  
+  if custom_data is not None:
+    custom_dir = custom_data['root_dir']
+    custom_file_base_name = custom_data['file_base_name']
+    stats_file_base_name = custom_data['stats_base_name']
+    
+    sim_key = self.Grid[sim_id]['key']
+    custom_input_dir =  f'{custom_dir}/{sim_key}/' 
+    print( f'Loading custom P(k): {custom_input_dir}')
+    custom_ps_files = [ f for f in os.listdir(custom_input_dir) if custom_file_base_name in f ]
+    custom_file_indices = [ int( (f.split('_')[-1]).split('.')[0] ) for f in custom_ps_files  ]
+    custom_file_indices.sort()
+    for file_indx in custom_file_indices:
+      file_name = f'{custom_file_base_name}_{file_indx:03}.h5'
+      ps_file = h5.File( custom_input_dir + file_name, 'r' )
+      z = ps_file.attrs['current_z']
+      k_vals = ps_file['k_vals'][...]
+      ps_mean = ps_file['ps_mean'] 
+      ps_file.close()
+      
+      stats_file_name = f'{stats_file_base_name}_{file_indx:03}.pkl'
+      stats = Load_Pickle_Directory( custom_input_dir + stats_file_name )
+      print( stats.keys())
+    return
   
   if FPS_correction is not None:
     correction_z_vals = FPS_correction['z_vals'] 
@@ -210,7 +234,7 @@ def Load_Power_Spectum_Data( self, sim_id, indices, FPS_correction=None ):
     
 ####################################################################################################################
 
-def Load_Sim_Analysis_Data( self, sim_id, load_pd_fit=True, mcmc_fit_dir=None, load_thermal=False, files_to_load=None ):
+def Load_Sim_Analysis_Data( self, sim_id, load_pd_fit=True, mcmc_fit_dir=None, load_thermal=False, files_to_load=None, custom_data=None ):
   str = f' Loading Simulation Analysis: {sim_id}' 
   print_line_flush( str )
   
@@ -290,14 +314,19 @@ def Load_Sim_Analysis_Data( self, sim_id, load_pd_fit=True, mcmc_fit_dir=None, l
 
 ####################################################################################################################
 
-def Load_Analysis_Data( self, sim_ids=None, load_pd_fit=True, mcmc_fit_dir=None, load_thermal=False, FPS_correction=None, files_to_load=None  ):
+def Load_Analysis_Data( self, sim_ids=None, load_pd_fit=True, mcmc_fit_dir=None, load_thermal=False, FPS_correction=None, files_to_load=None, custom_data=None  ):
   if sim_ids == None:  
     sim_ids = self.Grid.keys()
     indx_0 = list( sim_ids )[0]
   else: indx_0 = sim_ids[0]
   
+  if custom_data is not None and 'P(k)' in custom_data:
+    custom_ps_data = custom_data['P(k)']
+    print( f' WARNING: Loading custom P(k) data: {custom_ps_data["root_dir"]}' )
+
+  
   for sim_id in sim_ids:
-    self.Load_Simulation_Analysis_Data( sim_id, load_pd_fit=load_pd_fit, mcmc_fit_dir=mcmc_fit_dir, load_thermal=load_thermal, files_to_load=files_to_load  )
+    self.Load_Simulation_Analysis_Data( sim_id, load_pd_fit=load_pd_fit, mcmc_fit_dir=mcmc_fit_dir, load_thermal=load_thermal, files_to_load=files_to_load, custom_data=custom_data  )
   
   indices = self.Grid[indx_0]['analysis']['ps_available_indices']
   available_indices = []
@@ -310,6 +339,6 @@ def Load_Analysis_Data( self, sim_ids=None, load_pd_fit=True, mcmc_fit_dir=None,
   if FPS_correction is not None:
     print( '\nWARNING: Applying correction factor to FPS. ')
   for sim_id in sim_ids:
-    self.Load_Simulation_Power_Spectum_Data( sim_id, available_indices, FPS_correction=FPS_correction )
+    self.Load_Simulation_Power_Spectum_Data( sim_id, available_indices, FPS_correction=FPS_correction, custom_data=custom_ps_data )
   print('\n')
 
