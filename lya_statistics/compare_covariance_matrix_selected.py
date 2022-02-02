@@ -34,9 +34,9 @@ ps_dir = grid_dir + 'flux_power_spectrum/'
 analysis_dir = grid_dir + 'analysis_files/'
 
 selected_file_indices = [ 25, 29, 33 ] # redshits 5.0, 4.6 and 4.2
-file_indx = selected_file_indices[2]
+file_indx = selected_file_indices[1]
 
-output_dir = grid_dir + f'figures/covariance_matrix/snap_{file_indx}/'
+output_dir = grid_dir + f'figures/covariance_matrix/sampled_boera/snap_{file_indx}/'
 create_directory( output_dir )
 
 sim_dirs = [ d for d in os.listdir(ps_dir) if d[0]=='S' ]
@@ -50,8 +50,8 @@ SG = Simulation_Grid( parameters=Grid_Parameters, sim_params=sim_params, job_par
 
 params = [ 'wdm_mass', 'scale_H_ion', 'scale_H_Eheat', 'deltaZ_H' ]
 
-param_to_plot = 'wdm_mass'
-param_to_plot = 'scale_H_ion'
+# param_to_plot = 'wdm_mass'
+# param_to_plot = 'scale_H_ion'
 # param_to_plot = 'scale_H_Eheat'
 # param_to_plot = 'deltaZ_H'
 
@@ -66,10 +66,10 @@ for param_to_plot in params:
   sim_data_all = {}
   for sim_id in selected_sims:
     sim_dir = sim_dirs[sim_id]
-    # if bootstrap:  file_name = ps_dir + f'{sim_dir}/bootstrap_statistics_sampled_boera_{file_indx:03}.pkl'
-    # else: file_name = ps_dir + f'{sim_dir}/statistics_sampled_boera_{file_indx:03}.pkl'
-    if bootstrap:  file_name = ps_dir + f'{sim_dir}/bootstrap_statistics_{file_indx:03}.pkl'
-    else: file_name = ps_dir + f'{sim_dir}/statistics_{file_indx:03}.pkl'
+    if bootstrap:  file_name = ps_dir + f'{sim_dir}/bootstrap_statistics_sampled_boera_{file_indx:03}.pkl'
+    else: file_name = ps_dir + f'{sim_dir}/statistics_sampled_boera_{file_indx:03}.pkl'
+    # if bootstrap:  file_name = ps_dir + f'{sim_dir}/bootstrap_statistics_{file_indx:03}.pkl'
+    # else: file_name = ps_dir + f'{sim_dir}/statistics_{file_indx:03}.pkl'
     stats_data = Load_Pickle_Directory( file_name )
     if bootstrap: stats_data = stats_data[bootstrap_indx]
     sim_data_all[sim_id] = stats_data
@@ -146,8 +146,10 @@ for param_to_plot in params:
       if i == nrows-1:  ax.set_xlabel( r'$\log_{10} \,k\,\,\, [\mathregular{s/km}]$  ', fontsize=label_size, color= text_color )
       if j == 0: ax.set_ylabel( r'$\log_{10} \,k\,\,\, [\mathregular{s/km}]$  ', fontsize=label_size, color= text_color )
 
-      ax.set_xticks([ -2.5, -2, -1.5, -1, -0.5])
-      ax.set_yticks([ -2.5, -2, -1.5, -1, -0.5])
+      # ax.set_xticks([ -2.5, -2, -1.5, -1, -0.5])
+      # ax.set_yticks([ -2.5, -2, -1.5, -1, -0.5])
+      ax.set_xticks([ -2, -1.5, -1 ])
+      ax.set_yticks([ -2, -1.5, -1 ])
       # ax.set_xticks([])
       # ax.set_yticks([])
 

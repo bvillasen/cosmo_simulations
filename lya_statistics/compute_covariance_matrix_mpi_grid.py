@@ -67,11 +67,11 @@ for sim_id in indices_local:
     ps_file.close()
 
 
-    # print( f'Resampling power spectrum' )
-    # k_vals_resample = k_vals_boera
-    # skewers_ps_resampled = np.array([ np.interp( k_vals_boera, k_vals, skewer_ps ) for skewer_ps in skewers_ps ])
-    # k_vals = k_vals_resample
-    # skewers_ps = skewers_ps_resampled
+    print( f'Resampling power spectrum' )
+    k_vals_resample = k_vals_boera
+    skewers_ps_resampled = np.array([ np.interp( k_vals_boera, k_vals, skewer_ps ) for skewer_ps in skewers_ps ])
+    k_vals = k_vals_resample
+    skewers_ps = skewers_ps_resampled
     
     
     data_covariance = {}
