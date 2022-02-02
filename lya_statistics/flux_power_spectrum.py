@@ -56,6 +56,7 @@ def get_skewer_flux_power_spectrum( vel_Hubble, delta_F, d_log_k=None, n_bins=No
   elif centers_type == 'mean': bin_centers = 0.5*( bin_edges[1:] + bin_edges[:-1] )
   elif centers_type == 'log_mean': 
     log_edges = np.log10( bin_edges )
+    print( log_edges )
     log_centers = 0.5*( log_edges[1:] + log_edges[:-1] )
     bin_centers = 10**log_centers 
   else: 
