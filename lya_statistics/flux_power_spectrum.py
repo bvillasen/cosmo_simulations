@@ -57,7 +57,6 @@ def get_skewer_flux_power_spectrum( vel_Hubble, delta_F, d_log_k=None, n_bins=No
   elif centers_type == 'log_mean': 
     log_edges = np.log10( bin_edges )
     log_centers = 0.5*( log_edges[1:] + log_edges[:-1] )
-    print( log_centers )
     bin_centers = 10**log_centers 
   else: 
     print('ERROR: Centers type for P(k) k-bins not understood')
