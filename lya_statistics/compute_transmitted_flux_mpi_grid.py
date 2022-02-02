@@ -181,6 +181,7 @@ if resample_to_data is not None:
     n_k = len( k_vals )
     log_k_edges = np.zeros( n_k+1 )
     # log_k_edges[0] = log_k[0] - 0.5*delta_log_k
+    # For this box size there are no modes in the first k-bin, for this reason I extend the fist bin and then I interpolate 
     log_k_edges[0] = log_k[0] - delta_log_k
     log_k_edges[1:] = log_k + 0.5*delta_log_k 
     k_edges = 10**log_k_edges
@@ -222,6 +223,22 @@ for file_id in local_indices:
 
 
   data_ps = Compute_Flux_Power_Spectrum( data_Flux, print_string=print_string, k_edges=k_edges, centers_type='log_mean' )
+  k_vals = data_ps['k_vals']
+  skewers_ps = data_ps['skewers_ps']
+  ps_mean = data_ps['mean']
+  
+  if resample_to_data == 'boera':
+    # Now we interpolate to match the k-bins from Boera
+    ps_interpolated = []
+    log_k_boera = np.log10( k_vals_boera )
+    log_k = np.log10( k_vals )
+    for skewer_ps in skewers_ps:
+      log_ps = np.log10( skewer_ps )
+      log_ps_interp = np.interp( log_k_boera, log_k, log_ps  )
+      ps_interp = 10**log_ps_interp
+      ps_interpolated.append( ps_interp )
+    skewer_ps = np.array( ps_interpolated )
+
 #   file = h5.File( ps_file_name, 'w' )
 #   file.attrs['current_z'] = current_z
 #   file.create_dataset( 'k_vals', data=data_ps['k_vals'] )
