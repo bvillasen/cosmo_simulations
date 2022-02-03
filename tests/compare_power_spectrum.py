@@ -80,7 +80,7 @@ fig.clf()
 gs = plt.GridSpec(full_lenght*nrows, ncols)
 gs.update(hspace=0., wspace=0.18, )
 
-delta = 0.005
+delta = 0.1
 
 for i in range(nrows):
   for j in range(ncols):
