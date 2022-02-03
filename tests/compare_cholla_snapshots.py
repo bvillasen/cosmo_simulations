@@ -84,4 +84,4 @@ for n_snapshot in snapshots_local:
     diff_max = diff_vals.max()
     diff[field].append( diff_max )
     
-    print( f'n: {n_snapshot}  z: {z}  Diff {data_type} {field} min: {diff_vals.min()}   max: {diff_vals.max()}   Mean: {diff_vals.mean()}')
+    print( f'n: {n_snapshot:03}  z: {z:.2f}  Diff {data_type} {field} min: {diff_vals.min():.3e}   max: {diff_vals.max():.3e}   Mean: {diff_vals.mean()}:.3e')
