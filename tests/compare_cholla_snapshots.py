@@ -28,19 +28,23 @@ Lbox = 50000.0    #kpc/h
 n_cells = 1024
 n_cells = 256
 
-snapshots = np.arange( 0, 200, 1, dtype=int )
+snapshots = np.arange( 0, 170, 1, dtype=int )
 snapshots_local = split_array_mpi( snapshots, rank, n_procs )
 print( f'rank: {rank}  snapshots_local:{snapshots_local}' )
 
-sim_dir = data_dir + f'cosmo_sims/{n_cells}_50Mpc_adiabatic/'
-input_dir_0 = sim_dir + 'snapshot_files_caar_0/'
-input_dir_1 = sim_dir + 'snapshot_files_merge/'
-output_dir  = sim_dir + 'figures/'
+# sim_dir = data_dir + f'cosmo_sims/{n_cells}_50Mpc_adiabatic/'
+# input_dir_0 = sim_dir + 'snapshot_files_caar_0/'
+# input_dir_1 = sim_dir + 'snapshot_files_merge/'
+
+sim_dir = data_dir + f'cosmo_sims/{n_cells}_50Mpc/'
+input_dir_0 = sim_dir + 'snapshot_files_cosmo/'
+input_dir_1 = sim_dir + 'snapshot_files_merge_grackle/'
 
 
 # input_dir_0 = data_dir + 'cosmo_sims/1024_50Mpc_adiabatic/snapshot_files_caar/'
 # input_dir_1 = data_dir + 'cosmo_sims/1024_50Mpc_adiabatic/sim_cosmo/snapshot_files/'
-# output_dir  = data_dir + 'cosmo_sims/1024_50Mpc_adiabatic/figures/'
+
+output_dir  = sim_dir + 'figures/'
 if rank ==0: create_directory( output_dir ) 
 if rank ==0: print( f'Input 0: {input_dir_0}')
 if rank ==0: print( f'Input 1: {input_dir_1}')
