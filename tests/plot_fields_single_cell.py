@@ -38,6 +38,7 @@ fields = [ 'density', 'temperature', 'HI_density', 'HII_density', 'HeI_density',
 x_H  = 0.75984603480 + 1.53965115054e-4
 x_He = 0.23999999997 
 
+id_x, id_y, id_z = 1, 1, 1 
 
 data_all = {}
 for sim_id,input_dir in enumerate(input_dirs):
@@ -48,14 +49,14 @@ for sim_id,input_dir in enumerate(input_dirs):
     if 'z_vals' not in data_sim: data_sim['z_vals'] = []
     data_sim['z_vals'].append(z)
     
-    dens = data['density'][0,0,0]
+    dens = data['density'][id_x, id_y, id_z ]
     H_dens  = x_H * dens
     He_dens = x_He * dens
-    HI_dens = data['HI_density'][0,0,0]
-    HII_dens = data['HII_density'][0,0,0]
-    HeI_dens = data['HeI_density'][0,0,0]
-    HeII_dens = data['HeII_density'][0,0,0]
-    HeIII_dens = data['HeIII_density'][0,0,0]
+    HI_dens = data['HI_density'][id_x, id_y, id_z ]
+    HII_dens = data['HII_density'][id_x, id_y, id_z ]
+    HeI_dens = data['HeI_density'][id_x, id_y, id_z ]
+    HeII_dens = data['HeII_density'][id_x, id_y, id_z ]
+    HeIII_dens = data['HeIII_density'][id_x, id_y, id_z ]
     x_HI = HI_dens / H_dens
     x_HII = HII_dens / H_dens
     x_HeI = HeI_dens / He_dens
@@ -153,7 +154,7 @@ for field_id, field in enumerate(fields_to_plot):
   if field_id == nrows-1: ax.set_xlabel( r'$z$', fontsize=label_size )
   
 
-figure_name = output_dir + 'single_cell_comparison_new.png'
+figure_name = output_dir + 'single_cell_comparison_merge_summit.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
 
