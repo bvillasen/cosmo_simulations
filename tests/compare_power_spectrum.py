@@ -80,6 +80,7 @@ fig.clf()
 gs = plt.GridSpec(full_lenght*nrows, ncols)
 gs.update(hspace=0., wspace=0.18, )
 
+delta = 0.01
 
 for i in range(nrows):
   for j in range(ncols):
@@ -119,7 +120,7 @@ for i in range(nrows):
 
     ax2.axhline( y=0, c='C0')
     ax2.plot( k_vals, diff, ls='--', c='C1', label='Cholla' )
-    ax2.set_ylim( -0.1, 0.1 )
+    ax2.set_ylim( -delta, delta )
     ax2.tick_params(axis='both', which='major', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major  )
     ax2.tick_params(axis='both', which='minor', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor  )
     ax2.set_ylabel( r'$\Delta P\,(k) / P\, (k)$', fontsize=label_size )
