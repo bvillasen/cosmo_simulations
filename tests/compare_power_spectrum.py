@@ -13,7 +13,7 @@ from spectra_functions import Compute_Skewers_Transmitted_Flux
 
 sim_dir = data_dir + 'cosmo_sims/256_50Mpc/'
 input_dir_0 = sim_dir + 'analysis_files_cosmo/'
-input_dir_1 = sim_dir + 'analysis_files_merge_grackle/'
+input_dir_1 = sim_dir + 'analysis_files_gpu/'
 output_dir = sim_dir + 'figures/'
 create_directory( output_dir ) 
 
@@ -127,7 +127,7 @@ for i in range(nrows):
     ax2.set_xlabel( r'$k \,\, [\mathrm{s \, km^{-1}}]$', fontsize=label_size )
     ax2.set_xscale('log') 
 
-figure_name = output_dir + f'ps_comparison.png'
+figure_name = output_dir + f'ps_comparison_gpu.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
 
