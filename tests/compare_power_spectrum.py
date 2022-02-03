@@ -11,9 +11,9 @@ from tools import *
 from load_data import Load_Skewers_File
 from spectra_functions import Compute_Skewers_Transmitted_Flux
 
-sim_dir = data_dir + 'cosmo_sims/1024_50Mpc/'
-input_dir_0 = sim_dir + 'analysis_files_grackle/'
-input_dir_1 = sim_dir + 'analysis_files_cholla/'
+sim_dir = data_dir + 'cosmo_sims/256_50Mpc/'
+input_dir_0 = sim_dir + 'analysis_files_cosmo/'
+input_dir_1 = sim_dir + 'analysis_files_merge_grackle/'
 output_dir = sim_dir + 'figures/'
 create_directory( output_dir ) 
 
