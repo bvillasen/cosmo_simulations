@@ -26,14 +26,15 @@ matplotlib.rcParams['mathtext.rm'] = 'serif'
 
 Lbox = 50000.0    #kpc/h
 n_cells = 1024
+n_cells = 256
 
-snapshots = np.arange( 0, 60, 1, dtype=int )
+snapshots = np.arange( 0, 200, 1, dtype=int )
 snapshots_local = split_array_mpi( snapshots, rank, n_procs )
 print( f'rank: {rank}  snapshots_local:{snapshots_local}' )
 
-sim_dir = data_dir + f'cosmo_sims/{n_cells}_50Mpc_dmo/'
-input_dir_0 = sim_dir + 'snapshot_files_cpu_0/'
-input_dir_1 = sim_dir + 'snapshot_files_cpu/'
+sim_dir = data_dir + f'cosmo_sims/{n_cells}1024_50Mpc_adiabatic/'
+input_dir_0 = sim_dir + 'snapshot_files_caar_0/'
+input_dir_1 = sim_dir + 'snapshot_files_cosmo/'
 output_dir  = sim_dir + 'figures/'
 
 
@@ -44,8 +45,8 @@ create_directory( output_dir )
 print( f'Input 0: {input_dir_0}')
 print( f'Input 1: {input_dir_1}')
 
-# data_type = 'hydro'
-data_type = 'particles'
+data_type = 'hydro'
+# data_type = 'particles'
 precision = np.float64
 box_size = [ Lbox, Lbox, Lbox ]
 grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid

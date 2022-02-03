@@ -37,7 +37,7 @@ data_ps_sets = [ 'Boera' ]
 # error_type = 'sigma'
 error_type = 'covmatrix'
 
-independent_redshift = True
+independent_redshift = False
 use_inv_wdm = True
 
 fit_name = ''
@@ -81,60 +81,60 @@ FPS_resolution_correction = None #Instead we apply a systematic uncertanty to th
 if use_inv_wdm: Grid_Parameters = Invert_wdm_masses( Grid_Parameters )
 
 #Load custom power spectrum measurement
-custom_ps_data = { 'root_dir': root_dir + 'flux_power_spectrum', 'file_base_name':'flux_ps_resample_boera_native', 'stats_base_name':'statistics_sampled_boera_native' }
+custom_ps_data = { 'root_dir': root_dir + 'flux_power_spectrum', 'file_base_name':'flux_ps_resample_boera_native', 'stats_base_name':'statistics_resample_boera_native' }
 custom_data = { 'P(k)': custom_ps_data } 
 
-sim_ids = [0]
-# sim_ids = None
+# sim_ids = [0]
+sim_ids = None
 SG = Simulation_Grid( parameters=Grid_Parameters, sim_params=sim_params, job_params=job_params, dir=root_dir )
 SG.Load_Grid_Analysis_Data( sim_ids=sim_ids, load_pd_fit=True, mcmc_fit_dir='fit_mcmc_delta_0_1.0', FPS_correction=FPS_resolution_correction, custom_data=custom_data )
-# 
-# kmax = 0.2
-# ps_range = SG.Get_Power_Spectrum_Range( kmax=kmax )
-# sim_ids = SG.sim_ids
-# 
-# #Define the redshift range for the fit 
-# z_min, z_max = 4.2, 5.0
-# 
-# if independent_redshift:
-#   z_vals = [ 4.2, 4.6, 5.0 ]
-#   z_val = z_vals[z_indx]
-#   z_min = z_val - 0.05
-#   z_max = z_val + 0.05
-# 
-# # Use P(k) instead of Delta_P(k)
-# no_use_delta_p = True 
-# 
-# data_systematic_uncertainties = None
-# ps_parameters = { 'range':ps_range, 'data_dir':ps_data_dir, 'data_sets':data_ps_sets  }
-# comparable_data = Get_Comparable_Composite( fields_to_fit, z_min, z_max, ps_parameters=ps_parameters, log_ps=False, systematic_uncertainties=data_systematic_uncertainties, no_use_delta_p=no_use_delta_p, load_covariance_matrix=load_covariance_matrix   )
-# comparable_grid = Get_Comparable_Composite_from_Grid( fields_to_fit, comparable_data, SG, log_ps=False, no_use_delta_p=no_use_delta_p )
-# Plot_Comparable_Data( fields_to_fit, comparable_data, comparable_grid, output_dir, log_ps=False  )
-# 
-# params = SG.parameters
-# stats_file   = output_dir + 'fit_mcmc.pkl'
-# samples_file = output_dir + 'samples_mcmc.pkl'
-# 
-# nIter = 5000000 // 2
-# nBurn = nIter // 10
-# nThin = 1
-# model, params_mcmc = get_mcmc_model( comparable_data, comparable_grid, fields_to_fit, 'mean', SG, error_type=error_type )
-# MDL = pymc.MCMC( model )  
-# MDL.sample( iter=nIter, burn=nBurn, thin=nThin )
-# stats = MDL.stats()
-# param_stats = {}
-# for p_id in params.keys():
-#   p_name = params[p_id]['name']
-#   p_stats = stats[p_name]
-#   params[p_id]['mean'] = p_stats['mean']
-#   params[p_id]['sigma'] = p_stats['standard deviation']
-# Plot_MCMC_Stats( stats, MDL, params_mcmc,  stats_file, output_dir, plot_corner=False, plot_model=False )
-# param_samples = Write_MCMC_Results( stats, MDL, params_mcmc,  stats_file, samples_file,  output_dir  )
-# 
-# 
-# data_labels = [ '' ]
-# corner_labels = { 'scale_He':r'$\beta_{\mathrm{He}}$', 'scale_H':r'$\beta_{\mathrm{H}}$', 'deltaZ_He':r'$\Delta z_{\mathrm{He}}$', 'deltaZ_H':r'$\Delta z_{\mathrm{H}}$',
-#                   'scale_H_ion': r'$\beta_{\mathrm{H}}^{\mathrm{ion}}$', 'scale_He_ion': r'$\beta_{\mathrm{He}}^{\mathrm{ion}}$', 'scale_He_Eheat': r'$\alpha E_{\mathrm{He}}$', 'scale_H_Eheat': r'$\alpha E_{\mathrm{H}}$',
-#                   'wdm_mass':r'$m_{\mathrm{WDM}}$  [keV]', 'inv_wdm_mass':r'$m_{\mathrm{WDM}}^{-1}$  [keV$^{-1}$]'       }
-# Plot_Corner( param_samples, data_labels, corner_labels, output_dir,n_bins_1D=40, n_bins_2D=40, lower_mask_factor=500, multiple=False  )  
-# 
+
+kmax = 0.2
+ps_range = SG.Get_Power_Spectrum_Range( kmax=kmax )
+sim_ids = SG.sim_ids
+
+#Define the redshift range for the fit 
+z_min, z_max = 4.2, 5.0
+
+if independent_redshift:
+  z_vals = [ 4.2, 4.6, 5.0 ]
+  z_val = z_vals[z_indx]
+  z_min = z_val - 0.05
+  z_max = z_val + 0.05
+
+# Use P(k) instead of Delta_P(k)
+no_use_delta_p = True 
+
+data_systematic_uncertainties = None
+ps_parameters = { 'range':ps_range, 'data_dir':ps_data_dir, 'data_sets':data_ps_sets  }
+comparable_data = Get_Comparable_Composite( fields_to_fit, z_min, z_max, ps_parameters=ps_parameters, log_ps=False, systematic_uncertainties=data_systematic_uncertainties, no_use_delta_p=no_use_delta_p, load_covariance_matrix=load_covariance_matrix   )
+comparable_grid = Get_Comparable_Composite_from_Grid( fields_to_fit, comparable_data, SG, log_ps=False, no_use_delta_p=no_use_delta_p )
+Plot_Comparable_Data( fields_to_fit, comparable_data, comparable_grid, output_dir, log_ps=False  )
+
+params = SG.parameters
+stats_file   = output_dir + 'fit_mcmc.pkl'
+samples_file = output_dir + 'samples_mcmc.pkl'
+
+nIter = 5000000 
+nBurn = nIter // 10
+nThin = 1
+model, params_mcmc = get_mcmc_model( comparable_data, comparable_grid, fields_to_fit, 'mean', SG, error_type=error_type )
+MDL = pymc.MCMC( model )  
+MDL.sample( iter=nIter, burn=nBurn, thin=nThin )
+stats = MDL.stats()
+param_stats = {}
+for p_id in params.keys():
+  p_name = params[p_id]['name']
+  p_stats = stats[p_name]
+  params[p_id]['mean'] = p_stats['mean']
+  params[p_id]['sigma'] = p_stats['standard deviation']
+Plot_MCMC_Stats( stats, MDL, params_mcmc,  stats_file, output_dir, plot_corner=False, plot_model=False )
+param_samples = Write_MCMC_Results( stats, MDL, params_mcmc,  stats_file, samples_file,  output_dir  )
+
+
+data_labels = [ '' ]
+corner_labels = { 'scale_He':r'$\beta_{\mathrm{He}}$', 'scale_H':r'$\beta_{\mathrm{H}}$', 'deltaZ_He':r'$\Delta z_{\mathrm{He}}$', 'deltaZ_H':r'$\Delta z_{\mathrm{H}}$',
+                  'scale_H_ion': r'$\beta_{\mathrm{H}}^{\mathrm{ion}}$', 'scale_He_ion': r'$\beta_{\mathrm{He}}^{\mathrm{ion}}$', 'scale_He_Eheat': r'$\alpha E_{\mathrm{He}}$', 'scale_H_Eheat': r'$\alpha E_{\mathrm{H}}$',
+                  'wdm_mass':r'$m_{\mathrm{WDM}}$  [keV]', 'inv_wdm_mass':r'$m_{\mathrm{WDM}}^{-1}$  [keV$^{-1}$]'       }
+Plot_Corner( param_samples, data_labels, corner_labels, output_dir,n_bins_1D=40, n_bins_2D=40, lower_mask_factor=500, multiple=False  )  
+

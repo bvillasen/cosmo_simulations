@@ -53,7 +53,7 @@ indices = np.arange( 0, len(sim_dirs), 1, dtype=int )
 indices_local = split_array_mpi( indices, rank, n_procs )
 print( f'rank{rank} indices_local: {indices_local} ')
 
-data_name = 'sampled_boera_native'
+data_name = 'resample_boera_native'
 
 for sim_id in indices_local:
   sim_dir = sim_dirs[sim_id]
