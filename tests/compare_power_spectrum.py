@@ -17,7 +17,7 @@ from spectra_functions import Compute_Skewers_Transmitted_Flux
 
 sim_dir = data_dir + 'cosmo_sims/1024_50Mpc/'
 input_dir_0 = sim_dir + 'analysis_files_grackle/'
-input_dir_1 = sim_dir + 'analysis_files_cpu/'
+input_dir_1 = sim_dir + 'analysis_files_gpu/'
 
 output_dir = sim_dir + 'figures/'
 create_directory( output_dir ) 
