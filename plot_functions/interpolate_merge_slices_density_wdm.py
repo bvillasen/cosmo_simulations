@@ -46,6 +46,7 @@ m_vals = inv_mass
 m_start = m_vals[0]
 m_end = m_vals[-1]
 delta_m = ( m_end - m_start ) / image_heigth
+pixel_m = []
 
 print( 'Merging slices' )
 y_offset = -200
@@ -58,7 +59,7 @@ for indx in range( image_heigth ):
   m_l = m_vals[id_l]
   m_r = m_vals[id_r]
   alpha = ( m - m_l ) / ( m_r - m_l )
-
+  pixel_m.appen( m )
   # print( f'indx: {indx} id_l: {id_l}  id_r: {id_r}  m: {m:.2f}  m_l: {m_l:.2f}  m_r: {m_r:.2f}  alpha: {alpha}' )
   # time.sleep(0.01)
 
@@ -69,6 +70,7 @@ for indx in range( image_heigth ):
   print_progress( indx+1, image_heigth, time_start )
 
 # image_data = np.flip( image)
+pixel_m = np.array(pixel_m)
 
 print('')
 
@@ -76,12 +78,14 @@ outfile_name = output_dir + f'interpolated_slice_wdm_extended_new.h5'
 outfile = h5.File( outfile_name, 'w' )
 outfile.create_dataset( 'slice', data=image_data )
 outfile.create_dataset( 'pixel_z', data=pixel_z )
+outfile.create_dataset( 'pixel_m', data=pixel_m )
 outfile.close()
 print( f'Saved File: {outfile_name}' )
 
 
-outfile_name = output_dir + f'pixel_z.h5'
+outfile_name = output_dir + f'pixel_data.h5'
 outfile = h5.File( outfile_name, 'w' )
 outfile.create_dataset( 'pixel_z', data=pixel_z )
+outfile.create_dataset( 'pixel_m', data=pixel_m )
 outfile.close()
 print( f'Saved File: {outfile_name}' )
