@@ -48,7 +48,7 @@ m_end = m_vals[-1]
 delta_m = ( m_end - m_start ) / image_heigth
 
 print( 'Merging slices' )
-y_offset = -160
+y_offset = -200
 time_start = time.time()
 for indx in range( image_heigth ):
   slice_indx = (indx + y_offset) % ny
@@ -72,7 +72,7 @@ for indx in range( image_heigth ):
 
 print('')
 
-outfile_name = output_dir + f'interpolated_slice_wdm_extended.h5'
+outfile_name = output_dir + f'interpolated_slice_wdm_extended_new.h5'
 outfile = h5.File( outfile_name, 'w' )
 outfile.create_dataset( 'slice', data=image_data )
 outfile.create_dataset( 'pixel_z', data=pixel_z )
