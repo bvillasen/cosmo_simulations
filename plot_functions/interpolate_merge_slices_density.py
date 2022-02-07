@@ -8,8 +8,8 @@ sys.path.append( root_dir + 'tools')
 from tools import *
 
 m_wdm = 0.25
-input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m{m_wdm:.2f}kev/slices_gas_density/'
-# input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_cdm/slices_gas_density/'
+# input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m{m_wdm:.2f}kev/slices_gas_density/'
+input_dir  = data_dir + f'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_cdm/slices_gas_density/'
 output_dir = data_dir + 'render_images/wdm_slice/slices/'
 create_directory( output_dir )
 
@@ -111,8 +111,8 @@ for indx in range( image_width ):
 print('')
 
 
-outfile_name = output_dir + f'interpolated_slice_mwdm{m_wdm:.2f}_start{slice_start}_ndepth{slice_depth}.h5'
-# outfile_name = output_dir + f'interpolated_slice_cdm_start{slice_start}_ndepth{slice_depth}.h5'
+# outfile_name = output_dir + f'interpolated_slice_mwdm{m_wdm:.2f}_start{slice_start}_ndepth{slice_depth}.h5'
+outfile_name = output_dir + f'interpolated_slice_cdm_start{slice_start}_ndepth{slice_depth}.h5'
 outfile = h5.File( outfile_name, 'w' )
 outfile.create_dataset( 'slice', data=image_data )
 outfile.create_dataset( 'pixel_z', data=pixel_z )
