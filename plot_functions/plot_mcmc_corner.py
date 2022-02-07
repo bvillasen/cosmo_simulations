@@ -15,7 +15,7 @@ from stats_functions import get_HPI_2D
 def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2D=30, 
     ticks=None, lower_mask_factor=50, multiple=False, system='Shamrock', show_label=True, 
     HL_vals=None, show_best_fit=False, limits=None, param_values=None, black_background=False,
-    bins=None,  ):
+    bins=None, legend_loc=0, figure_name='corner.png' ):
   
   
 
@@ -196,7 +196,7 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
           
         
         if add_data_label and show_label:
-          leg = ax.legend( loc=3, frameon=False, fontsize=legend_font_size)
+          leg = ax.legend( loc=legend_loc, frameon=False, fontsize=legend_font_size)
           for text in leg.get_texts():
             plt.setp(text, color = text_color)
             
@@ -298,7 +298,7 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
   if black_background:
     output_dir += 'black_background/'  
   
-  figure_name = output_dir + 'corner.png'
+  figure_name = output_dir + figure_name
   fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
   print( f'Saved Figure: {figure_name}' )
 

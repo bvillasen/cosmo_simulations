@@ -44,7 +44,7 @@ analysis_dir = grid_dir + 'analysis_files/'
 
 selected_file_indices = [ 25, 29, 33 ] # redshits 5.0, 4.6 and 4.2
 
-bootstrap = False
+bootstrap = True
 
 
 sim_dirs = [ d for d in os.listdir(ps_dir) if d[0]=='S' ]
@@ -85,12 +85,14 @@ for sim_id in indices_local:
     data_covariance = {}
     if bootstrap:
       n_iterations = 10000
-      samples = [ 50, 100, 500, 1000 ]
-      for data_id, n_in_sample in enumerate(samples):
-        bootstrap_samples = bootstrap_sample_mean( n_iterations, n_in_sample, skewers_ps, print_out )
-        cov_matrix = compute_covariance_matrix( bootstrap_samples )
-        sigma = np.sqrt( cov_matrix.diagonal() )
-        data_covariance[data_id] = { 'n_in_sample':n_in_sample, 'k_vals':k_vals, 'bootstrap_samples':bootstrap_samples, 'covariance_matrix': cov_matrix, 'sigma':sigma }
+      # samples = [ 50, 100, 500, 1000 ]
+      # samples = [ 50, 100, 500, 1000 ]
+      n_in_sample = 10000
+      # for data_id, n_in_sample in enumerate(samples):
+      bootstrap_samples = bootstrap_sample_mean( n_iterations, n_in_sample, skewers_ps, print_out )
+      cov_matrix = compute_covariance_matrix( bootstrap_samples )
+      sigma = np.sqrt( cov_matrix.diagonal() )
+      data_covariance = { 'n_in_sample':n_in_sample, 'k_vals':k_vals, 'bootstrap_samples':bootstrap_samples, 'covariance_matrix': cov_matrix, 'sigma':sigma, 'current_z':current_z, 'ps_mean':ps_mean }
     
     else:
       cov_matrix = compute_covariance_matrix( skewers_ps )
