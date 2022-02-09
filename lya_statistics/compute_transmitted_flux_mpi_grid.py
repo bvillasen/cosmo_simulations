@@ -241,6 +241,9 @@ for file_id in local_indices:
     # Redefine the skewers P(k) and ps_mean from the interpolated
     skewers_ps = np.array( ps_interpolated )
     ps_mean = skewers_ps.mean( axis=0 )
+    data_ps['k_vals'] = k_vals_boera
+    data_ps['ps_mean'] = ps_mean
+    data_ps['skewer_ps'] = skewers_ps
 
   file = h5.File( ps_file_name, 'w' )
   file.attrs['current_z'] = current_z

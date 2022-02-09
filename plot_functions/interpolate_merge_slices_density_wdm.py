@@ -39,7 +39,7 @@ for file_name in file_names:
 nz, ny, nx = slice_shape
 image_width = nx
 image_depth = nz
-image_heigth =  2048 + 256 + 128 + 128
+image_heigth =  2048 + 256 + 128 + 128 + 128 + 128
 image_data = np.zeros( (image_depth, image_heigth, image_width ), dtype=np.float32 )
 
 m_vals = inv_mass
@@ -49,7 +49,7 @@ delta_m = ( m_end - m_start ) / image_heigth
 pixel_m = []
 
 print( 'Merging slices' )
-y_offset = -200
+y_offset = -300
 time_start = time.time()
 for indx in range( image_heigth ):
   slice_indx = (indx + y_offset) % ny
@@ -59,7 +59,7 @@ for indx in range( image_heigth ):
   m_l = m_vals[id_l]
   m_r = m_vals[id_r]
   alpha = ( m - m_l ) / ( m_r - m_l )
-  pixel_m.appen( m )
+  pixel_m.append( m )
   # print( f'indx: {indx} id_l: {id_l}  id_r: {id_r}  m: {m:.2f}  m_l: {m_l:.2f}  m_r: {m_r:.2f}  alpha: {alpha}' )
   # time.sleep(0.01)
 
