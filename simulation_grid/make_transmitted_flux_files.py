@@ -28,9 +28,16 @@ for axis in [ 'x', 'y', 'z' ]:
   vel_Hubble_axis = skewers_data['vel_Hubble'][...]
   if vel_Hubble is None: vel_Hubble = vel_Hubble_axis
   v_diff = np.abs( vel_Hubble - vel_Hubble_axis).sum()
-  print( f'Vel Hubble diff: {v_diff}')
+  if v_diff > 1e-6: 
+    print( 'ERROR: Mismatch in vel_Hubble')
+    exit(-1)
   los_flux_axis = skewers_data['los_transmitted_flux_HI'][...]
   flux_all.append( los_flux_axis )
+flux_all = np.concatenate( flux_all, axis=0 )
+f_diff = np.abs( F_mean - flux_all.mean()) / F_mean
+if f_diff > 1e-6:
+  print( f'ERROR: Mismatch in F_mean ')
+  exit(-1)
 
 file_name = '/data/groups/comp-astro/bruno/cosmo_sims/sim_grid/1024_wdmgrid_nsim600/transmitted_flux/S000_A0_B0_C0_D0/lya_flux_033.h5'
 file_0 = h5.File( file_name, 'r' )
