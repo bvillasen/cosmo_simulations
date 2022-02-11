@@ -9,7 +9,7 @@ sys.path.extend(subDirectories)
 from tools import *
 
 grid_dir = data_dir + 'cosmo_sims/sim_grid/grid_thermal/1024_P19m_np4_nsim400/'
-fulx_dir = grid_dir + 'transmitted_flux/'
+flux_dir = grid_dir + 'transmitted_flux/'
 create_directory( flux_dir )
 
 sim_dirs = [ dir for dir in os.listdir(grid_dir) if os.path.isdir(grid_dir+dir) and dir[0]=='S' ]
