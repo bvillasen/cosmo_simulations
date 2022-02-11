@@ -9,6 +9,9 @@ sys.path.extend(subDirectories)
 from tools import *
 
 grid_dir = data_dir + 'cosmo_sims/sim_grid/grid_thermal/1024_P19m_np4_nsim400/'
+fulx_dir = grid_dir + 'transmitted_flux/'
+create_directory( flux_dir )
+
 sim_dirs = [ dir for dir in os.listdir(grid_dir) if os.path.isdir(grid_dir+dir) and dir[0]=='S' ]
 sim_dirs.sort()
 
@@ -38,6 +41,17 @@ f_diff = np.abs( F_mean - flux_all.mean()) / F_mean
 if f_diff > 1e-6:
   print( f'ERROR: Mismatch in F_mean ')
   exit(-1)
+
+file.close()
+
+output_dir = flux_dir + f'{sim_dir}/'
+create_directory( output_dir )
+
+out_file_name = output_dir + f'lya_flux_{file_indx:03}.h5'
+out_file = h5.File( out_file_name, 'r' )
+
+out_file.close()
+print( f'Saved File: {out_file_name}' )
 
 file_name = '/data/groups/comp-astro/bruno/cosmo_sims/sim_grid/1024_wdmgrid_nsim600/transmitted_flux/S000_A0_B0_C0_D0/lya_flux_033.h5'
 file_0 = h5.File( file_name, 'r' )
