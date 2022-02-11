@@ -234,25 +234,25 @@ for file_id in local_indices:
   k_vals = data_ps['k_vals']
   skewers_ps = data_ps['skewers_ps']
   ps_mean = data_ps['mean']
-  print( np.log10( k_vals ))
 
-  # if resample_to_data == 'boera':
-  #   # Now we interpolate to match the k-bins from Boera
-  #   ps_interpolated = []
-  #   log_k_boera = np.log10( k_vals_boera )
-  #   log_k = np.log10( k_vals )
-  #   for skewer_ps in skewers_ps:
-  #     log_ps = np.log10( skewer_ps )
-  #     log_ps_interp = np.interp( log_k_boera, log_k, log_ps  )
-  #     ps_interp = 10**log_ps_interp
-  #     ps_interpolated.append( ps_interp )
-  #   # Redefine the skewers P(k) and ps_mean from the interpolated
-  #   skewers_ps = np.array( ps_interpolated )
-  #   ps_mean = skewers_ps.mean( axis=0 )
-  #   data_ps['k_vals'] = k_vals_boera
-  #   data_ps['ps_mean'] = ps_mean
-  #   data_ps['skewer_ps'] = skewers_ps
+  if resample_to_data == 'boera' and not extended_k_bins:
+    # Now we interpolate to match the k-bins from Boera
+    ps_interpolated = []
+    log_k_boera = np.log10( k_vals_boera )
+    log_k = np.log10( k_vals )
+    for skewer_ps in skewers_ps:
+      log_ps = np.log10( skewer_ps )
+      log_ps_interp = np.interp( log_k_boera, log_k, log_ps  )
+      ps_interp = 10**log_ps_interp
+      ps_interpolated.append( ps_interp )
+    # Redefine the skewers P(k) and ps_mean from the interpolated
+    skewers_ps = np.array( ps_interpolated )
+    ps_mean = skewers_ps.mean( axis=0 )
+    data_ps['k_vals'] = k_vals_boera
+    data_ps['ps_mean'] = ps_mean
+    data_ps['skewer_ps'] = skewers_ps
 
+  # print( np.log10( data_ps['k_vals'] ))
   file = h5.File( ps_file_name, 'w' )
   file.attrs['current_z'] = current_z
   file.create_dataset( 'k_vals', data=data_ps['k_vals'] )
