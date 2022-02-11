@@ -15,12 +15,13 @@ create_directory( flux_dir )
 sim_dirs = [ dir for dir in os.listdir(grid_dir) if os.path.isdir(grid_dir+dir) and dir[0]=='S' ]
 sim_dirs.sort()
 
-file_indx = 55
+file_indx = 15
 sim_dir = sim_dirs[0]
-print(f'Dir: {sim_dir}')
+print(f'\nDir: {sim_dir}')
 file_name = grid_dir + sim_dir + f'/analysis_files/{file_indx}_analysis.h5'
 file = h5.File( file_name, 'r' )
 current_z = file.attrs['current_z'][0]
+print( f' z: {current_z}')
 F_mean = file['lya_statistics'].attrs['Flux_mean_HI'][0]
 k_vals = file['lya_statistics']['power_spectrum']['k_vals'][...]
 ps_mean = file['lya_statistics']['power_spectrum']['p(k)'][...]
