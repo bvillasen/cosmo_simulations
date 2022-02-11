@@ -189,7 +189,7 @@ if resample_to_data is not None:
     log_k_edges[1:] = log_k + 0.5*delta_log_k
     if extended_k_bins:
       if rank == 0: print( 'Extending k bins')
-      log_k_edges = np.arange( log_k_min, log_k_max*1.001, delta_log_k )
+      log_k_edges = np.arange( log_k_min, log_k_max+delta_log_k, delta_log_k )
     k_edges = 10**log_k_edges
     if rank == 0: print( f'log k_vals: { log_k }' )
     if rank == 0: print( f'delta log k_vals: { delta_log_k }' )
