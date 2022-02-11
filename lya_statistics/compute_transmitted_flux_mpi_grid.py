@@ -195,112 +195,115 @@ if resample_to_data is not None:
     if rank == 0: print( f'delta log k_vals: { delta_log_k }' )
     if rank == 0: print( f'log k_edges: { log_k_edges }' )
 
-# 
-# time.sleep( 2 )
-# if use_mpi: comm.Barrier()
-# if rank == 0: print('')
-# 
-# 
-# for file_id in local_indices:
-#   if not compute_ps: continue
-# 
-#   file_data = skewers_files_data[file_id]
-#   sim_dir = file_data['sim_dir']
-#   file_indx = file_data['file_indx']
-#   flux_dir = transmitted_flux_dir + sim_dir + '/'
-#   ps_sim_dir = ps_dir + sim_dir + '/'
-#   print_string = f'  file  {file_id} / {n_total_files}.  '
-# 
-#   if resample_to_data is not None: ps_file_name = ps_sim_dir + f'flux_ps_resample_{resample_to_data}_native_{file_indx:03}.h5' 
-#   else:ps_file_name = ps_sim_dir + f'flux_ps_{file_indx:03}.h5'
-# 
-#   ps_file_exists = False
-#   if os.path.isfile( ps_file_name ):  ps_file_exists = True
-#   if ps_file_exists: continue
-# 
-#   flux_file_name = flux_dir + f'lya_flux_{file_indx:03}.h5'      
-#   file = h5.File( flux_file_name, 'r' )
-#   current_z = file.attrs['current_z']
-#   Flux_mean = file.attrs['Flux_mean']
-#   vel_Hubble   = file['vel_Hubble'][...]
-#   skewers_Flux = file['skewers_Flux'][...]
-#   file.close()
-#   data_Flux = { 'vel_Hubble':vel_Hubble, 'skewers_Flux':skewers_Flux }
-# 
-# 
-#   data_ps = Compute_Flux_Power_Spectrum( data_Flux, print_string=print_string, k_edges=k_edges, centers_type='log_mean' )
-#   k_vals = data_ps['k_vals']
-#   skewers_ps = data_ps['skewers_ps']
-#   ps_mean = data_ps['mean']
-# 
-#   if resample_to_data == 'boera':
-#     # Now we interpolate to match the k-bins from Boera
-#     ps_interpolated = []
-#     log_k_boera = np.log10( k_vals_boera )
-#     log_k = np.log10( k_vals )
-#     for skewer_ps in skewers_ps:
-#       log_ps = np.log10( skewer_ps )
-#       log_ps_interp = np.interp( log_k_boera, log_k, log_ps  )
-#       ps_interp = 10**log_ps_interp
-#       ps_interpolated.append( ps_interp )
-#     # Redefine the skewers P(k) and ps_mean from the interpolated
-#     skewers_ps = np.array( ps_interpolated )
-#     ps_mean = skewers_ps.mean( axis=0 )
-#     data_ps['k_vals'] = k_vals_boera
-#     data_ps['ps_mean'] = ps_mean
-#     data_ps['skewer_ps'] = skewers_ps
-# 
-#   file = h5.File( ps_file_name, 'w' )
-#   file.attrs['current_z'] = current_z
-#   file.create_dataset( 'k_vals', data=data_ps['k_vals'] )
-#   file.create_dataset( 'ps_mean', data=data_ps['mean'] )
-#   file.create_dataset( 'skewers_ps', data=data_ps['skewers_ps'] )
-#   file.close()
-#   # print( f'Saved File: {ps_file_name}' )
-# 
-#   # break
-# 
-# 
-# 
-# if use_mpi: comm.Barrier()
-# if rank != 0: exit()
-# if not compute_ps or not compare_ps_to_sim: exit()
-# 
-# 
-# # Now compare the Power Spectrum to the one computed in-the-fly
-# if compare_power_spectrum:
-#   print( 'Comparing flux power spectrum')
-#   for file_id in file_indices:
-# 
-#     file_data = skewers_files_data[file_id]
-#     sim_dir = file_data['sim_dir']
-#     file_indx = file_data['file_indx']
-#     ps_sim_dir = ps_dir + sim_dir + '/'
-#     analysis_sim_dir = analysis_dir + sim_dir + '/'
-#     print_string = f'  file  {file_id} / {n_total_files}.  '
-# 
-#     ps_file_name = ps_sim_dir + f'flux_ps_{file_indx:03}.h5'
-#     file = h5.File( ps_file_name, 'r' )
-#     current_z = file.attrs['current_z']
-#     k_vals = file['k_vals'][...] 
-#     ps_mean = file['ps_mean'][...]
-#     file.close()
-# 
-#     analysis_file_name = analysis_sim_dir + f'{file_indx}_analysis.h5'
-#     file = h5.File( analysis_file_name, 'r' )
-#     sim_z = file.attrs['current_z'][0]
-#     lya_statistics = file['lya_statistics']
-#     ps_data = lya_statistics['power_spectrum']
-#     sim_k_vals  = ps_data['k_vals'][...]
-#     sim_ps_mean = ps_data['p(k)'][...]
-#     indices = sim_ps_mean > 0 
-#     sim_k_vals  = sim_k_vals[indices]
-#     sim_ps_mean = sim_ps_mean[indices]
-#     file.close()
-# 
-#     k_diff  = np.abs( k_vals - sim_k_vals ) / sim_k_vals
-#     ps_diff = np.abs( ps_mean - sim_ps_mean ) / sim_ps_mean
-#     print( f'file_id: {file_id} k_diff: {k_diff.mean():.3e},  ps_diff: {ps_diff.mean():.3e}' ) 
-# 
-# 
-# 
+
+time.sleep( 2 )
+if use_mpi: comm.Barrier()
+if rank == 0: print('')
+
+
+for file_id in local_indices:
+  if not compute_ps: continue
+
+  file_data = skewers_files_data[file_id]
+  sim_dir = file_data['sim_dir']
+  file_indx = file_data['file_indx']
+  flux_dir = transmitted_flux_dir + sim_dir + '/'
+  ps_sim_dir = ps_dir + sim_dir + '/'
+  print_string = f'  file  {file_id} / {n_total_files}.  '
+
+  if resample_to_data is not None: 
+    if extended_k_bins: ps_file_name = ps_sim_dir + f'flux_ps_sampled_{resample_to_data}_extended_{file_indx:03}.h5'
+    else: ps_file_name = ps_sim_dir + f'flux_ps_sampled_{resample_to_data}_native_{file_indx:03}.h5' 
+  else:ps_file_name = ps_sim_dir + f'flux_ps_{file_indx:03}.h5'
+
+  ps_file_exists = False
+  if os.path.isfile( ps_file_name ):  ps_file_exists = True
+  if ps_file_exists: continue
+
+  flux_file_name = flux_dir + f'lya_flux_{file_indx:03}.h5'      
+  file = h5.File( flux_file_name, 'r' )
+  current_z = file.attrs['current_z']
+  Flux_mean = file.attrs['Flux_mean']
+  vel_Hubble   = file['vel_Hubble'][...]
+  skewers_Flux = file['skewers_Flux'][...]
+  file.close()
+  data_Flux = { 'vel_Hubble':vel_Hubble, 'skewers_Flux':skewers_Flux }
+
+
+  data_ps = Compute_Flux_Power_Spectrum( data_Flux, print_string=print_string, k_edges=k_edges, centers_type='log_mean' )
+  k_vals = data_ps['k_vals']
+  skewers_ps = data_ps['skewers_ps']
+  ps_mean = data_ps['mean']
+  print( np.log10( k_vals ))
+
+  # if resample_to_data == 'boera':
+  #   # Now we interpolate to match the k-bins from Boera
+  #   ps_interpolated = []
+  #   log_k_boera = np.log10( k_vals_boera )
+  #   log_k = np.log10( k_vals )
+  #   for skewer_ps in skewers_ps:
+  #     log_ps = np.log10( skewer_ps )
+  #     log_ps_interp = np.interp( log_k_boera, log_k, log_ps  )
+  #     ps_interp = 10**log_ps_interp
+  #     ps_interpolated.append( ps_interp )
+  #   # Redefine the skewers P(k) and ps_mean from the interpolated
+  #   skewers_ps = np.array( ps_interpolated )
+  #   ps_mean = skewers_ps.mean( axis=0 )
+  #   data_ps['k_vals'] = k_vals_boera
+  #   data_ps['ps_mean'] = ps_mean
+  #   data_ps['skewer_ps'] = skewers_ps
+
+  file = h5.File( ps_file_name, 'w' )
+  file.attrs['current_z'] = current_z
+  file.create_dataset( 'k_vals', data=data_ps['k_vals'] )
+  file.create_dataset( 'ps_mean', data=data_ps['mean'] )
+  file.create_dataset( 'skewers_ps', data=data_ps['skewers_ps'] )
+  file.close()
+  # print( f'Saved File: {ps_file_name}' )
+
+  break
+
+
+
+if use_mpi: comm.Barrier()
+if rank != 0: exit()
+if not compute_ps or not compare_ps_to_sim: exit()
+
+
+# Now compare the Power Spectrum to the one computed in-the-fly
+if compare_power_spectrum:
+  print( 'Comparing flux power spectrum')
+  for file_id in file_indices:
+
+    file_data = skewers_files_data[file_id]
+    sim_dir = file_data['sim_dir']
+    file_indx = file_data['file_indx']
+    ps_sim_dir = ps_dir + sim_dir + '/'
+    analysis_sim_dir = analysis_dir + sim_dir + '/'
+    print_string = f'  file  {file_id} / {n_total_files}.  '
+
+    ps_file_name = ps_sim_dir + f'flux_ps_{file_indx:03}.h5'
+    file = h5.File( ps_file_name, 'r' )
+    current_z = file.attrs['current_z']
+    k_vals = file['k_vals'][...] 
+    ps_mean = file['ps_mean'][...]
+    file.close()
+
+    analysis_file_name = analysis_sim_dir + f'{file_indx}_analysis.h5'
+    file = h5.File( analysis_file_name, 'r' )
+    sim_z = file.attrs['current_z'][0]
+    lya_statistics = file['lya_statistics']
+    ps_data = lya_statistics['power_spectrum']
+    sim_k_vals  = ps_data['k_vals'][...]
+    sim_ps_mean = ps_data['p(k)'][...]
+    indices = sim_ps_mean > 0 
+    sim_k_vals  = sim_k_vals[indices]
+    sim_ps_mean = sim_ps_mean[indices]
+    file.close()
+
+    k_diff  = np.abs( k_vals - sim_k_vals ) / sim_k_vals
+    ps_diff = np.abs( ps_mean - sim_ps_mean ) / sim_ps_mean
+    print( f'file_id: {file_id} k_diff: {k_diff.mean():.3e},  ps_diff: {ps_diff.mean():.3e}' ) 
+
+
+
