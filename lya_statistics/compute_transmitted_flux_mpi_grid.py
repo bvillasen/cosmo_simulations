@@ -252,7 +252,7 @@ for file_id in local_indices:
     data_ps['ps_mean'] = ps_mean
     data_ps['skewer_ps'] = skewers_ps
 
-  # print( np.log10( data_ps['k_vals'] ))
+  print( np.log10( data_ps['k_vals'] ))
   file = h5.File( ps_file_name, 'w' )
   file.attrs['current_z'] = current_z
   file.create_dataset( 'k_vals', data=data_ps['k_vals'] )
