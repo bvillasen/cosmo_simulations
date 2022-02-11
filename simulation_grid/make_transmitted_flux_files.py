@@ -9,4 +9,4 @@ sys.path.extend(subDirectories)
 from tools import *
 
 grid_dir = data_dir + 'cosmo_sims/sim_grid/grid_thermal/1024_P19m_np4_nsim400/'
-sim_dirs = [ dir for dir is os.listdir(grid_dir) if os.path.isdir(dir) and dir[0]=='S' ]
+sim_dirs = [ dir for dir in os.listdir(grid_dir) if os.path.isdir(dir) and dir[0]=='S' ]
