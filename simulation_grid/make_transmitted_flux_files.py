@@ -22,6 +22,8 @@ file_name = grid_dir + sim_dir + f'/analysis_files/{file_indx}_analysis.h5'
 file = h5.File( file_name, 'r' )
 current_z = file.attrs['current_z'][0]
 F_mean = file['lya_statistics'].attrs['Flux_mean_HI'][0]
+k_vals = file['lya_statistics']['power_spectrum']['k_vals'][...]
+ps_mean = file['lya_statistics']['power_spectrum']['p(k)'][...]
 vel_Hubble = None
 flux_all = []
 for axis in [ 'x', 'y', 'z' ]:
@@ -53,6 +55,11 @@ out_file.attrs['current_z'] = current_z
 out_file.attrs['Flux_mean'] = F_mean
 out_file.create_dataset( 'vel_Hubble', data=vel_Hubble )
 out_file.create_dataset( 'skewers_fflux', data=flux_all )
+
+ps_group = out_file.create_group( 'power_spectrum' )
+ps_group.create_dataset( 'k_vals', data=k_vals )
+ps_group.create_dataset( 'ps_mean', data=ps_mean )
+
 out_file.close()
 print( f'Saved File: {out_file_name}' )
 
