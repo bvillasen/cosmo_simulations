@@ -173,7 +173,7 @@ if rank == 0: print('')
 
 # Now compute the flux power spectrum
 k_vals = None
-log_k_min, log_k_max = -2.75, 0.45
+log_k_min, log_k_max = -2.75, -0.45
 extended_k_bins = True
 if resample_to_data is not None:
   if rank == 0: print( f'Resampling P(k) k_vals: {resample_to_data}')
