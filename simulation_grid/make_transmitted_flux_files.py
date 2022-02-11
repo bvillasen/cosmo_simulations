@@ -20,7 +20,7 @@ print(f'\nDir: {sim_dir}')
 output_dir = flux_dir + f'{sim_dir}/'
 create_directory( output_dir )
 
-file_indx = 15
+file_indx = 25
 
 file_name = grid_dir + sim_dir + f'/analysis_files/{file_indx}_analysis.h5'
 file = h5.File( file_name, 'r' )
