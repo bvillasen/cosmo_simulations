@@ -49,8 +49,8 @@ create_directory( output_dir )
 
 out_file_name = output_dir + f'lya_flux_{file_indx:03}.h5'
 out_file = h5.File( out_file_name, 'r' )
-out_file.attrs.['current_z'] = current_z
-out_file.attrs.['Flux_mean'] = F_mean
+out_file.attrs['current_z'] = current_z
+out_file.attrs['Flux_mean'] = F_mean
 out_file.close()
 print( f'Saved File: {out_file_name}' )
 
