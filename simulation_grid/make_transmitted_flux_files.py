@@ -20,12 +20,17 @@ file = h5.File( file_name, 'r' )
 current_z = file.attrs['current_z'][0]
 F_mean = file['lya_statistics'].attrs['Flux_mean_HI'][0]
 vel_Hubble = None
-axis = 'x'
-key = f'skewers_{axis}'
-skewers_data = file['lya_statistics'][key]
-vel_Hubble_axis = skewers_data['vel_Hubble'][...]
-los_flux_axis = skewers_data['los_transmitted_flux_HI'][...]
-
+flux_all = []
+for axis in [ 'x', 'y', 'z' ]:
+  key = f'skewers_{axis}'
+  print ( f' Loading {key}' )
+  skewers_data = file['lya_statistics'][key]
+  vel_Hubble_axis = skewers_data['vel_Hubble'][...]
+  if vel_Hubble is None: vel_Hubble = vel_Hubble_axis
+  v_diff = np.abs( vel_Hubble - vel_Hubble_axis).sum()
+  print( f'Vel Hubble diff: {v_diff}')
+  los_flux_axis = skewers_data['los_transmitted_flux_HI'][...]
+  flux_all.append( los_flux_axis )
 
 file_name = '/data/groups/comp-astro/bruno/cosmo_sims/sim_grid/1024_wdmgrid_nsim600/transmitted_flux/S000_A0_B0_C0_D0/lya_flux_033.h5'
 file_0 = h5.File( file_name, 'r' )
