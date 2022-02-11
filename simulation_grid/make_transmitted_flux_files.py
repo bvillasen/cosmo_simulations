@@ -15,5 +15,5 @@ sim_dirs.sort()
 file_indx = 56
 sim_dir = sim_dirs[0]
 print(f'Dir: {sim_dir}')
-file_name = grid_dir + sim_dir + f'analysis_files/{file_indx}_analysis.h5'
+file_name = grid_dir + sim_dir + f'/analysis_files/{file_indx}_analysis.h5'
 file = h5.File( file_name, 'r' )
