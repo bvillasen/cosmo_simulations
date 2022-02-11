@@ -18,6 +18,13 @@ print(f'Dir: {sim_dir}')
 file_name = grid_dir + sim_dir + f'/analysis_files/{file_indx}_analysis.h5'
 file = h5.File( file_name, 'r' )
 current_z = file.attrs['current_z'][0]
+vel_Hubble = None
+axis = 'x'
+key = f'skewers_{axis}'
+skewers_data = file['lya_statistics'][key]
+vel_Hubble_axis = skewers_data['vel_Hubble'][...]
+los_flux_axis = skewers_data['los_transmitted_flux_HI'][...]
+
 
 file_name = '/data/groups/comp-astro/bruno/cosmo_sims/sim_grid/1024_wdmgrid_nsim600/transmitted_flux/S000_A0_B0_C0_D0/lya_flux_033.h5'
 file_0 = h5.File( file_name, 'r' )
