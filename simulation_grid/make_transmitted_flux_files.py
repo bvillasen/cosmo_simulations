@@ -17,3 +17,7 @@ sim_dir = sim_dirs[0]
 print(f'Dir: {sim_dir}')
 file_name = grid_dir + sim_dir + f'/analysis_files/{file_indx}_analysis.h5'
 file = h5.File( file_name, 'r' )
+current_z = file.attrs['current_z'][0]
+
+file_name = '/data/groups/comp-astro/bruno/cosmo_sims/sim_grid/1024_wdmgrid_nsim600/transmitted_flux/S000_A0_B0_C0_D0/lya_flux_033.h5'
+file_0 = h5.File( file_name, 'r' )
