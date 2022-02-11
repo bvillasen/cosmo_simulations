@@ -39,12 +39,12 @@ data_ps_sets = [ 'Boera' ]
 # error_type = 'sigma'
 error_type = 'covmatrix'
 
-selected_parameters = {}
-selected_parameters[0] = [ 3.0, 5.0 ]
-selected_parameters[1] = [ 1.0, 1.4 ]
-selected_parameters[2] = [ 0.5, 0.9 ]
-selected_parameters[3] = [ -0.5, 0.5 ]
-selected_combinations = Get_Parameters_Combination( selected_parameters )
+# selected_parameters = {}
+# selected_parameters[0] = [ 3.0, 5.0 ]
+# selected_parameters[1] = [ 1.0, 1.4 ]
+# selected_parameters[2] = [ 0.5, 0.9 ]
+# selected_parameters[3] = [ -0.5, 0.5 ]
+# selected_combinations = Get_Parameters_Combination( selected_parameters )
 
 # SG = Simulation_Grid( parameters=Grid_Parameters, sim_params=sim_params, job_params=job_params, dir=root_dir )
 # 
@@ -56,6 +56,22 @@ selected_combinations = Get_Parameters_Combination( selected_parameters )
 #   selected_sim_ids.append( selected_sim_id )
 
 selected_sim_ids = [168, 170, 171, 173, 183, 185, 186, 188, 318, 320, 321, 323, 333, 335, 336, 338]
+# selected_sim_id = selected_sim_ids[rank]
+
+# SG = Simulation_Grid( parameters=Grid_Parameters, sim_params=sim_params, job_params=job_params, dir=root_dir )
+# selected_parameters = {}
+# selected_parameters['scale_H_ion'] =  1.0 
+# selected_parameters['scale_H_Eheat'] =  0.9 
+# selected_parameters['deltaZ_H'] =  0.0 
+# wdm_masses = [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 8.0, 10000 ]
+# selected_sim_ids = []
+# for m_wdm in wdm_masses:
+#   selected_parameters['wdm_mass'] = m_wdm
+#   selected_sim_id = SG.Select_Simulations( selected_parameters )[0]
+#   selected_sim_ids.append( selected_sim_id )
+# print( selected_sim_ids )
+
+selected_sim_ids = [22, 97, 172, 247, 322, 397, 472, 547]
 selected_sim_id = selected_sim_ids[rank]
 
 independent_redshift = False
@@ -77,9 +93,14 @@ print(f'Data Label: {data_label} {fit_name}')
 extra_label = None
 if extra_label is not None: fit_name += f'_{extra_label}'
 
+use_bootstrap = True
 
-mcmc_dir = root_dir + 'fit_mcmc/'
+mcmc_dir = root_dir + 'fit_mcmc/closest_to_best_fit'
+# mcmc_dir = root_dir + 'fit_mcmc/wdm_masses'
+if use_bootstrap: mcmc_dir += '_bootstrap'
+mcmc_dir += '/'
 if rank == 0: create_directory( mcmc_dir )
+if use_mpi: comm.Barrier()
 output_dir = mcmc_dir + f'fit_results_{fields_to_fit}_{fit_name}_covfromsim_{selected_sim_id:03}/'
 create_directory( output_dir )
 if independent_redshift: 
@@ -103,6 +124,7 @@ if use_inv_wdm: Grid_Parameters = Invert_wdm_masses( Grid_Parameters )
 
 #Load custom power spectrum measurement
 custom_ps_data = { 'root_dir': root_dir + 'flux_power_spectrum', 'file_base_name':'flux_ps_resample_boera_native', 'stats_base_name':'statistics_resample_boera_native' }
+if use_bootstrap: custom_ps_data = { 'root_dir': root_dir + 'flux_power_spectrum', 'file_base_name':'flux_ps_resample_boera_native', 'stats_base_name':'bootstrap_statistics_resample_boera_native' }
 custom_data = { 'P(k)': custom_ps_data } 
 
 sim_ids = None
@@ -124,7 +146,6 @@ if independent_redshift:
   z_max = z_val + 0.05
 
 # Load the covariance matrix from the selected sim
-custom_ps_data['stats_base_name'] = 'bootstrap_statistics_resample_boera_native'
 sim_key = SG.Grid[selected_sim_id]['key']
 ps_sim_dir = f"{custom_ps_data['root_dir']}/{sim_key}/"
 stats_files = [ f for f in os.listdir(ps_sim_dir) if custom_ps_data['stats_base_name'] in f ]
@@ -179,38 +200,38 @@ for data_id in ps_data_all:
 
 plot_cov_matrices_data_sim( cov_matrices, output_dir, plot_normalized=True )
 plot_cov_matrices_data_sim( cov_matrices, output_dir, plot_normalized=False )
-# 
-# cov_matrix_merge = Merge_Matrices( cov_matrices['rescaled'])
-# # Replace the dta covariance matrix by the rescaled simulated covariance
-# comparable_data[fields_to_fit]['cov_matrix'] = cov_matrix_merge
-# 
-# comparable_grid = Get_Comparable_Composite_from_Grid( fields_to_fit, comparable_data, SG, log_ps=False, no_use_delta_p=no_use_delta_p )
-# Plot_Comparable_Data( fields_to_fit, comparable_data, comparable_grid, output_dir, log_ps=False  )
-# 
-# params = SG.parameters
-# stats_file   = output_dir + 'fit_mcmc.pkl'
-# samples_file = output_dir + 'samples_mcmc.pkl'
-# 
-# nIter = 5000000 
-# nBurn = nIter // 10
-# nThin = 1
-# model, params_mcmc = get_mcmc_model( comparable_data, comparable_grid, fields_to_fit, 'mean', SG, error_type=error_type )
-# MDL = pymc.MCMC( model )  
-# MDL.sample( iter=nIter, burn=nBurn, thin=nThin )
-# stats = MDL.stats()
-# param_stats = {}
-# for p_id in params.keys():
-#   p_name = params[p_id]['name']
-#   p_stats = stats[p_name]
-#   params[p_id]['mean'] = p_stats['mean']
-#   params[p_id]['sigma'] = p_stats['standard deviation']
-# Plot_MCMC_Stats( stats, MDL, params_mcmc,  stats_file, output_dir, plot_corner=False, plot_model=False )
-# param_samples = Write_MCMC_Results( stats, MDL, params_mcmc,  stats_file, samples_file,  output_dir  )
-# 
-# 
-# data_labels = [ '' ]
-# corner_labels = { 'scale_He':r'$\beta_{\mathrm{He}}$', 'scale_H':r'$\beta_{\mathrm{H}}$', 'deltaZ_He':r'$\Delta z_{\mathrm{He}}$', 'deltaZ_H':r'$\Delta z_{\mathrm{H}}$',
-#                   'scale_H_ion': r'$\beta_{\mathrm{H}}^{\mathrm{ion}}$', 'scale_He_ion': r'$\beta_{\mathrm{He}}^{\mathrm{ion}}$', 'scale_He_Eheat': r'$\alpha E_{\mathrm{He}}$', 'scale_H_Eheat': r'$\alpha E_{\mathrm{H}}$',
-#                   'wdm_mass':r'$m_{\mathrm{WDM}}$  [keV]', 'inv_wdm_mass':r'$m_{\mathrm{WDM}}^{-1}$  [keV$^{-1}$]'       }
-# Plot_Corner( param_samples, data_labels, corner_labels, output_dir,n_bins_1D=40, n_bins_2D=40, lower_mask_factor=500, multiple=False  )  
-# 
+
+cov_matrix_merge = Merge_Matrices( cov_matrices['rescaled'])
+# Replace the dta covariance matrix by the rescaled simulated covariance
+comparable_data[fields_to_fit]['cov_matrix'] = cov_matrix_merge
+
+comparable_grid = Get_Comparable_Composite_from_Grid( fields_to_fit, comparable_data, SG, log_ps=False, no_use_delta_p=no_use_delta_p )
+Plot_Comparable_Data( fields_to_fit, comparable_data, comparable_grid, output_dir, log_ps=False  )
+
+params = SG.parameters
+stats_file   = output_dir + 'fit_mcmc.pkl'
+samples_file = output_dir + 'samples_mcmc.pkl'
+
+nIter = 5000000 
+nBurn = nIter // 10
+nThin = 1
+model, params_mcmc = get_mcmc_model( comparable_data, comparable_grid, fields_to_fit, 'mean', SG, error_type=error_type )
+MDL = pymc.MCMC( model )  
+MDL.sample( iter=nIter, burn=nBurn, thin=nThin )
+stats = MDL.stats()
+param_stats = {}
+for p_id in params.keys():
+  p_name = params[p_id]['name']
+  p_stats = stats[p_name]
+  params[p_id]['mean'] = p_stats['mean']
+  params[p_id]['sigma'] = p_stats['standard deviation']
+Plot_MCMC_Stats( stats, MDL, params_mcmc,  stats_file, output_dir, plot_corner=False, plot_model=False )
+param_samples = Write_MCMC_Results( stats, MDL, params_mcmc,  stats_file, samples_file,  output_dir  )
+
+
+data_labels = [ '' ]
+corner_labels = { 'scale_He':r'$\beta_{\mathrm{He}}$', 'scale_H':r'$\beta_{\mathrm{H}}$', 'deltaZ_He':r'$\Delta z_{\mathrm{He}}$', 'deltaZ_H':r'$\Delta z_{\mathrm{H}}$',
+                  'scale_H_ion': r'$\beta_{\mathrm{H}}^{\mathrm{ion}}$', 'scale_He_ion': r'$\beta_{\mathrm{He}}^{\mathrm{ion}}$', 'scale_He_Eheat': r'$\alpha E_{\mathrm{He}}$', 'scale_H_Eheat': r'$\alpha E_{\mathrm{H}}$',
+                  'wdm_mass':r'$m_{\mathrm{WDM}}$  [keV]', 'inv_wdm_mass':r'$m_{\mathrm{WDM}}^{-1}$  [keV$^{-1}$]'       }
+Plot_Corner( param_samples, data_labels, corner_labels, output_dir,n_bins_1D=40, n_bins_2D=40, lower_mask_factor=500, multiple=False  )  
+

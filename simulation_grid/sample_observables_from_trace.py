@@ -25,7 +25,7 @@ else:
 
 z_indx = rank
 
-independent_redshift = False
+independent_redshift = True
 
 # Directories 
 ps_data_dir = base_dir + '/lya_statistics/data/'
@@ -35,9 +35,8 @@ ps_data_dir = base_dir + '/lya_statistics/data/'
 # data_name = 'fit_results_P(k)+_Viel'
 # data_name = 'fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_NOT_CORRECTED'
 # data_name = 'fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_systematic'
-data_name = 'fit_results_P(k)+_Boera'
-data_name = 'fit_results_P(k)+_Boera_covMatrix'
-data_name = 'fit_results_P(k)+_Boera_covMatrix_zeros'
+# data_name = 'fit_results_P(k)+_Boera_sigma'
+data_name = 'fit_results_P(k)+_Boera_covmatrix'
 
 if independent_redshift: data_name += f'/fit_redshift/redshift_{z_indx}'
 mcmc_dir = root_dir + 'fit_mcmc/'
@@ -56,11 +55,15 @@ use_inv_wdm = True
 # Change wdm_mass to inv_wdm_mass
 if use_inv_wdm: Grid_Parameters = Invert_wdm_masses( Grid_Parameters )
 
+#Load custom power spectrum measurement
+custom_ps_data = { 'root_dir': root_dir + 'flux_power_spectrum', 'file_base_name':'flux_ps_resample_boera_native', 'stats_base_name':'statistics_resample_boera_native' }
+custom_data = { 'P(k)': custom_ps_data } 
+
 # sim_ids = range(10)
 sim_ids = None
 files_to_load = range( 36 )
 SG = Simulation_Grid( parameters=Grid_Parameters, sim_params=sim_params, job_params=job_params, dir=root_dir )
-SG.Load_Grid_Analysis_Data( sim_ids=sim_ids, load_pd_fit=True, mcmc_fit_dir='fit_mcmc_delta_0_1.0', FPS_correction=FPS_resolution_correction, load_thermal=load_global_properties, files_to_load=files_to_load )
+SG.Load_Grid_Analysis_Data( sim_ids=sim_ids, load_pd_fit=True, mcmc_fit_dir='fit_mcmc_delta_0_1.0', FPS_correction=FPS_resolution_correction, load_thermal=load_global_properties, files_to_load=files_to_load, custom_data=custom_data )
 params = SG.parameters
 
 kmax = 0.2
@@ -119,8 +122,8 @@ Write_Pickle_Directory( samples_ps, file_name )
 
 # Obtain distribution of the other fields
 file_name = output_dir + 'samples_fields.pkl' 
-field_list = ['T0', 'gamma', 'tau', 'tau_HeII']
-# field_list = ['T0', 'tau']
+# field_list = ['T0', 'gamma', 'tau', 'tau_HeII']
+field_list = ['T0', 'tau']
 if load_global_properties: fields_list.append( 'z_ion_H' )
 samples_fields = Sample_Fields_from_Trace( field_list, param_samples, data_grid, SG, hpi_sum=hpi_sum, n_samples=n_samples, params_HL=params_HL, output_trace=True)
 Write_Pickle_Directory( samples_fields, file_name )

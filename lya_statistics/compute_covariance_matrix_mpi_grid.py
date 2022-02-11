@@ -86,7 +86,6 @@ for sim_id in indices_local:
     if bootstrap:
       n_iterations = 10000
       # samples = [ 50, 100, 500, 1000 ]
-      # samples = [ 50, 100, 500, 1000 ]
       n_in_sample = 10000
       # for data_id, n_in_sample in enumerate(samples):
       bootstrap_samples = bootstrap_sample_mean( n_iterations, n_in_sample, skewers_ps, print_out )

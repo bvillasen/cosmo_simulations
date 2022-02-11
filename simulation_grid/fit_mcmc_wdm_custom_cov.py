@@ -37,7 +37,7 @@ data_ps_sets = [ 'Boera' ]
 # error_type = 'sigma'
 error_type = 'covmatrix'
 
-independent_redshift = False
+independent_redshift = True
 use_inv_wdm = True
 
 fit_name = ''

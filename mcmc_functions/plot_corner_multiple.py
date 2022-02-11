@@ -23,11 +23,11 @@ fit_names = [ 'fit_results_P(k)+_Boera_sigma', 'fit_results_P(k)+_Boera_covmatri
 data_labels = [ r'Sigma', r'Covariance Matrix' ]
 
 extra_name = None
-# extra_name = 'fit_redshift/redshift_2/'
+extra_name = 'fit_redshift/redshift_2/'
 
-figure_name = 'corner_all.png'
+figure_name = 'corner_r2.png'
 
-output_dir = data_dir + f'cosmo_sims/sim_grid/1024_wdmgrid_nsim600/figures/fit_new/'
+output_dir = data_dir + f'cosmo_sims/sim_grid/1024_wdmgrid_nsim600/figures/fit_covariance_matrix/'
 create_directory( output_dir )
 
 samples_all = {}
