@@ -42,7 +42,7 @@ if f_diff > 1e-6:
   print( f'ERROR: Mismatch in F_mean ')
   exit(-1)
 
-file.close()
+# file.close()
 
 output_dir = flux_dir + f'{sim_dir}/'
 create_directory( output_dir )
@@ -51,6 +51,8 @@ out_file_name = output_dir + f'lya_flux_{file_indx:03}.h5'
 out_file = h5.File( out_file_name, 'w' )
 out_file.attrs['current_z'] = current_z
 out_file.attrs['Flux_mean'] = F_mean
+out_file.create_dataset( 'vel_Hubble', data=vel_Hubble )
+out_file.create_dataset( 'skewers_fflux', data=flux_all )
 out_file.close()
 print( f'Saved File: {out_file_name}' )
 
