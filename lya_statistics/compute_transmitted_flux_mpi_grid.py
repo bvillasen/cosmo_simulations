@@ -173,6 +173,8 @@ if rank == 0: print('')
 
 # Now compute the flux power spectrum
 k_vals = None
+log_k_min, log_k_max = -2.75, 0.45
+extended_k_bins = True
 if resample_to_data is not None:
   if rank == 0: print( f'Resampling P(k) k_vals: {resample_to_data}')
   k_vals = k_vals_data[resample_to_data]
@@ -184,7 +186,10 @@ if resample_to_data is not None:
     # log_k_edges[0] = log_k[0] - 0.5*delta_log_k
     # For this box size there are no modes in the first k-bin, for this reason I extend the fist bin and then I interpolate 
     log_k_edges[0] = log_k[0] - delta_log_k
-    log_k_edges[1:] = log_k + 0.5*delta_log_k 
+    log_k_edges[1:] = log_k + 0.5*delta_log_k
+    if extended_k_bins:
+      if rank == 0: print( 'Extending k bins')
+       log_k_edges = np.arange( log_k_min, log_k_max, delta_log_k )
     k_edges = 10**log_k_edges
     if rank == 0: print( f'log k_vals: { log_k }' )
     if rank == 0: print( f'delta log k_vals: { delta_log_k }' )
