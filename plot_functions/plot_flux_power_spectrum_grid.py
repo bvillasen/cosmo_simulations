@@ -194,8 +194,9 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
   # c_irsic = pylab.cm.Purples(.7)
   
   c_boss = dark_blue
-  if c_boera is None: c_boera = dark_green
-  c_boera = 'C3'
+  # if c_boera is None: c_boera = dark_green
+  if c_boera is None: c_boera = ocean_blue
+  # c_boera = 'C2'
   
   c_boera_c = 'C4'
   
@@ -516,7 +517,7 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
       if indx_i == 2: y_min, y_max = 5e-2, 3
 
     if scales == 'small_highz':
-      x_min, x_max = 4e-3, 2.1e-1
+      x_min, x_max = 4.5e-3, 2.4e-1
       if indx_i == 0: y_min, y_max = 5e-3, 1e0
       
     if scales == 'small_highz_extended':

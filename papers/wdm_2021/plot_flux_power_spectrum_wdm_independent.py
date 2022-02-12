@@ -35,15 +35,18 @@ HL_key = 'Highest_Likelihood'
 print( f'HL key: {HL_key}')
 
 line_colors = [ 'C0', 'C1', 'C2' ]
+
+z_indices = [ 0, 1 , 2]
  
 data_all = {} 
 for data_id, data_name in enumerate(data_names):
-  input_dir = base_dir + f'{grid_name}/fit_mcmc/{data_name}/observable_samples/'
-  file_name = input_dir + 'samples_power_spectrum.pkl'
-  data = Load_Pickle_Directory( file_name )
+  data_dir = base_dir + f'{grid_name}/fit_mcmc/{data_name}/'
   data_sim = {}
-  for snap_id in data:
-    data_snap = data[snap_id]
+  for z_indx in z_indices:
+    input_dir = data_dir + f'fit_redshift/redshift_{z_indx}/observable_samples/'
+    file_name = input_dir + 'samples_power_spectrum.pkl'
+    data = Load_Pickle_Directory( file_name, print_out=True )
+    data_snap = data[z_indx]
     z = data_snap['z']
     k_vals = data_snap['k_vals']
     ps_mean = data_snap['mean'] 
@@ -51,12 +54,14 @@ for data_id, data_name in enumerate(data_names):
     ps_max = data_snap['max'] 
     ps_h = data_snap['higher']
     ps_l = data_snap['lower']
-    data_sim[snap_id] = { 'z':z, 'k_vals':k_vals, 'Highest_Likelihood':ps_HL, 'mean':ps_mean, 'max':ps_max, 'higher':ps_h, 'lower':ps_l } 
+    data_sim[z_indx] = { 'z':z, 'k_vals':k_vals, 'Highest_Likelihood':ps_HL, 'mean':ps_mean, 'max':ps_max, 'higher':ps_h, 'lower':ps_l } 
   data_sim['z_vals'] = np.array([ data_sim[i]['z'] for i in data_sim ])
   data_all[data_id] = data_sim
   data_all[data_id]['label'] = data_labels[data_id]
   data_all[data_id]['line_color'] = line_colors[data_id]
 
-fig_name = f'flux_ps_wdm_{HL_key}.png'
+data_all[0]['line_color'] = ocean_green
+
+fig_name = f'flux_ps_wdm_{HL_key}_independent_redshift.png'
 Plot_Power_Spectrum_Grid( output_dir, ps_samples=data_all, fig_name=fig_name, scales='small_highz', line_colors=None, sim_data_sets=None, plot_boeraC=False, HL_key=HL_key, ps_data_dir=ps_data_dir )
 

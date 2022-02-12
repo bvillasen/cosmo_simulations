@@ -28,6 +28,7 @@ elif grid_name == '1024_wdmgrid_nsim200_deltaZ_0p0':   from parameters_wdmgrid_n
 elif grid_name == '1024_wdmgrid_nsim200_deltaZ_0p5':   from parameters_wdmgrid_nsim200 import param_wdm_UVB_Rates as Grid_Parameters
 elif grid_name == '1024_wdmgrid_nsim200_deltaZ_n0p5':  from parameters_wdmgrid_nsim200 import param_wdm_UVB_Rates as Grid_Parameters
 elif grid_name == '1024_wdmgrid_nsim600':  from parameters_wdmgrid_nsim600 import param_wdm_UVB_Rates as Grid_Parameters
+elif grid_name == '1024_wdmgrid_cdm':  from parameters_wdmgrid_cdm import param_wdm_UVB_Rates as Grid_Parameters
 else:
   print( f'Unknokwn grid name: {grid_name}' )
   exit(-1)

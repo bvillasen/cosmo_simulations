@@ -164,6 +164,7 @@ def Load_Power_Spectum_Data( self, sim_id, indices, FPS_correction=None, custom_
   data_kvals = []
   data_kmin, data_kmax = [], [] 
   data_cov_matrices = []
+  # print( f'Loading power spectrum sim_id: {sim_id}'  )
   
   if custom_data is not None:
     custom_dir = custom_data['root_dir']
@@ -184,33 +185,35 @@ def Load_Power_Spectum_Data( self, sim_id, indices, FPS_correction=None, custom_
       ps_mean = ps_file['ps_mean'][...]
       ps_file.close()
       
-      stats_file_name = f'{stats_file_base_name}_{file_indx:03}.pkl'
-      stats = Load_Pickle_Directory( custom_input_dir + stats_file_name, print_out=False )
-      stats_z = stats['current_z']
-      if np.abs( stats_z - z ) > 1e-10: print( 'ERROR: Redshift mismatch from stats and ps file')
-      ps_sigma = stats['sigma']
-      cov_matrix = stats['covariance_matrix']
-      sigma_diff = np.abs( ( np.sqrt( cov_matrix.diagonal() ) - ps_sigma ) / ps_sigma )
-      if ( sigma_diff > 1e-10 ).any(): print( 'ERROR: Sigma and covariance diagonal mismatch')
-      stats_k = stats['k_vals']
-      k_diff = np.abs( stats_k - k_vals ) / k_vals
-      if ( sigma_diff > 1e-10 ).any(): print( 'ERROR: K vals mismatch from stats and P(k) file')
-      stats_ps = stats['ps_mean']
-      ps_diff = np.abs( stats_ps - ps_mean ) / ps_mean
-      if ( sigma_diff > 1e-10 ).any(): print( 'ERROR: P(k) mean mismatch from stats and P(k) file')
+      if stats_file_base_name is not None:
+        stats_file_name = f'{stats_file_base_name}_{file_indx:03}.pkl'
+        stats = Load_Pickle_Directory( custom_input_dir + stats_file_name, print_out=False )
+        stats_z = stats['current_z']
+        if np.abs( stats_z - z ) > 1e-10: print( 'ERROR: Redshift mismatch from stats and ps file')
+        ps_sigma = stats['sigma']
+        cov_matrix = stats['covariance_matrix']
+        sigma_diff = np.abs( ( np.sqrt( cov_matrix.diagonal() ) - ps_sigma ) / ps_sigma )
+        if ( sigma_diff > 1e-10 ).any(): print( 'ERROR: Sigma and covariance diagonal mismatch')
+        stats_k = stats['k_vals']
+        k_diff = np.abs( stats_k - k_vals ) / k_vals
+        if ( sigma_diff > 1e-10 ).any(): print( 'ERROR: K vals mismatch from stats and P(k) file')
+        stats_ps = stats['ps_mean']
+        ps_diff = np.abs( stats_ps - ps_mean ) / ps_mean
+        if ( sigma_diff > 1e-10 ).any(): print( 'ERROR: P(k) mean mismatch from stats and P(k) file')
+        dsata_cov_matrices.append( cov_matrix)
+    
       z_vals.append(z)
       data_kvals.append( k_vals )
       data_ps_mean.append( ps_mean )
       data_kmin.append( k_vals.min() )
       data_kmax.append( k_vals.max() )
-      data_cov_matrices.append( cov_matrix)
     z_vals = np.array( z_vals )
     data_kmin, data_kmax = np.array( data_kmin ), np.array( data_kmax )
-    data_ps = { 'z':z_vals, 'k_min':data_kmin, 'k_max':data_kmax, 'k_vals':data_kvals, 'ps_mean':data_ps_mean, 'covariance_matrix':data_cov_matrices }
+    data_ps = { 'z':z_vals, 'k_min':data_kmin, 'k_max':data_kmax, 'k_vals':data_kvals, 'ps_mean':data_ps_mean }
+    if stats_file_base_name is not None: data_ps['covariance_matrix'] = data_cov_matrices 
     self.Grid[sim_id]['analysis']['power_spectrum'] = data_ps
     return
       
-  
   if FPS_correction is not None:
     correction_z_vals = FPS_correction['z_vals'] 
   
@@ -345,7 +348,7 @@ def Load_Analysis_Data( self, sim_ids=None, load_pd_fit=True, mcmc_fit_dir=None,
   
   if custom_data is not None and 'P(k)' in custom_data:
     custom_ps_data = custom_data['P(k)']
-    print( f' WARNING: Loading custom P(k) data: {custom_ps_data["root_dir"]}' )
+    print( f' WARNING: Loading custom P(k) data: \n  Dir: {custom_ps_data["root_dir"]} \n  file_base_name: {custom_ps_data["file_base_name"]}' )
 
   
   for sim_id in sim_ids:

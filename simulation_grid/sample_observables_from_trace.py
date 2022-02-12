@@ -56,7 +56,7 @@ use_inv_wdm = True
 if use_inv_wdm: Grid_Parameters = Invert_wdm_masses( Grid_Parameters )
 
 #Load custom power spectrum measurement
-custom_ps_data = { 'root_dir': root_dir + 'flux_power_spectrum', 'file_base_name':'flux_ps_resample_boera_native', 'stats_base_name':'statistics_resample_boera_native' }
+custom_ps_data = { 'root_dir': root_dir + 'flux_power_spectrum', 'file_base_name':'flux_ps_sampled_boera_extended', 'stats_base_name':None }
 custom_data = { 'P(k)': custom_ps_data } 
 
 # sim_ids = range(10)
@@ -113,6 +113,7 @@ print( f'Rank: {rank}  HL:{params_HL} ' )
 
 hpi_sum = 0.95
 n_samples = None
+# n_samples = 4500000 // 10
 
 # Obtain distribution of the power spectrum
 file_name = output_dir + 'samples_power_spectrum.pkl'

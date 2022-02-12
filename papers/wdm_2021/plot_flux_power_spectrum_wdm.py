@@ -46,6 +46,7 @@ for data_id, data_name in enumerate(data_names):
     data_snap = data[snap_id]
     z = data_snap['z']
     k_vals = data_snap['k_vals']
+    print( np.log10( k_vals))
     ps_mean = data_snap['mean'] 
     ps_HL = data_snap['Highest_Likelihood'] 
     ps_max = data_snap['max'] 
@@ -56,6 +57,8 @@ for data_id, data_name in enumerate(data_names):
   data_all[data_id] = data_sim
   data_all[data_id]['label'] = data_labels[data_id]
   data_all[data_id]['line_color'] = line_colors[data_id]
+  
+data_all[0]['line_color'] = ocean_green
 
 fig_name = f'flux_ps_wdm_{HL_key}.png'
 Plot_Power_Spectrum_Grid( output_dir, ps_samples=data_all, fig_name=fig_name, scales='small_highz', line_colors=None, sim_data_sets=None, plot_boeraC=False, HL_key=HL_key, ps_data_dir=ps_data_dir )
