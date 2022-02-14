@@ -43,6 +43,8 @@ set OMP_NUM_THREADS=10
 mpirun -N {n_mpi_tasks} --map-by ppr:{n_tasks_per_node}:node {command} {command_params} 
 """
 
+print(submit_str)
+
 if work_directory[-1] != '/': work_directory += '/'
 file_name = 'submit_job_lux'
 file_name = work_directory + file_name
