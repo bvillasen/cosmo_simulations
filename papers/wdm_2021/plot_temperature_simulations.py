@@ -20,7 +20,7 @@ sim_names.append('1024_50Mpc_cdm')
 
 n_files = 56
 sim_data_all = {}
-for sim_id, sim_name in sim_names:
+for sim_id, sim_name in enumerate(sim_names):
   sim_name = '1024_50Mpc_cdm'
   input_dir = base_dir + f'{sim_name}/analysis_files/'
 
