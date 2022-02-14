@@ -44,7 +44,7 @@ for sim_id, sim_name in enumerate(sim_names):
     T0 = fit_data['T0']['mean']
     z_vals.append(z)
     T0_vals.append(T0)
-  sim_data_all[sim_id] = {'z':z_vals, 'T0':T0_vals, label:sim_labels[sim_id] }
+  sim_data_all[sim_id] = {'z':z_vals, 'T0':T0_vals, 'label':sim_labels[sim_id] }
 
 import matplotlib
 matplotlib.rcParams['font.sans-serif'] = "Helvetica"
