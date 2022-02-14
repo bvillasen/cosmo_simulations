@@ -15,7 +15,7 @@ grid_names = [ grid_name ]
 data_name = 'fit_results_P(k)+_Boera_covmatrix'
 data_labels = [ '' ]
 
-output_dir = data_dir + f'papers_figures/wdm/'
+output_dir = data_dir + f'figures/wdm/'
 create_directory( output_dir )
 
 samples_all = {}

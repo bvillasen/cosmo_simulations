@@ -24,7 +24,7 @@ from matrix_functions import Merge_Matrices
 ps_data_dir = cosmo_dir + 'lya_statistics/data/'
 data_name = 'fit_results_P(k)+_Boera'
 base_dir = data_dir + 'cosmo_sims/sim_grid/'
-output_dir = data_dir + 'cosmo_sims/papers_figures/wdm/'
+output_dir = data_dir + 'figures/wdm/'
 create_directory( output_dir )
 
 dir_data_boera = ps_data_dir + 'data_power_spectrum_boera_2019/'
@@ -241,7 +241,7 @@ M_vals = [ M_0, M_1 ]
 pos_x = 0.5
 for data_id in data_all:
   txt = r'$\chi^2=\Delta^{T} \mathbf{C}^{-1} \Delta=$' + f'{M_vals[data_id]:.1f}'
-  pos_y = 0.169 - 0.06*data_id
+  pos_y = 0.178 - 0.06*data_id
   ax1.text(pos_x, pos_y, txt, horizontalalignment='center',  verticalalignment='center', transform=ax1.transAxes, fontsize=13, color=sim_colors[data_id]) 
   
 fig.align_ylabels()
