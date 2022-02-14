@@ -44,7 +44,7 @@ for sim_id, sim_name in enumerate(sim_names):
     T0 = fit_data['T0']['mean']
     z_vals.append(z)
     T0_vals.append(T0)
-  sim_data_all[sim_id] = {'z':z_vals, 'T0':T0_vals }
+  sim_data_all[sim_id] = {'z':z_vals, 'T0':T0_vals, label=sim_labels[sim_id] }
 
 import matplotlib
 matplotlib.rcParams['font.sans-serif'] = "Helvetica"
@@ -74,6 +74,15 @@ text_color  = 'black'
   
 fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(8*ncols,6*nrows))
 
+
+for sim_id in sim_data_all:
+  sim_data = sim_data_all[sim_id]
+  z = sim_data['z']
+  T0 = sim_data['T0']
+  labels = sim_data['label']
+  ax.plot( z, T0, label=label)
+
+ax.legend( frameon=False)
 
 
 
