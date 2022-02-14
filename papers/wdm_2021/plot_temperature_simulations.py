@@ -79,7 +79,7 @@ for sim_id in sim_data_all:
   sim_data = sim_data_all[sim_id]
   z = sim_data['z']
   T0 = sim_data['T0']
-  labels = sim_data['label']
+  label = sim_data['label']
   ax.plot( z, T0, label=label)
 
 ax.legend( frameon=False)
