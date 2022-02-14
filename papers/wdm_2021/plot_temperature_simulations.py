@@ -36,7 +36,7 @@ for sim_id, sim_name in enumerate(sim_names):
     file_name = input_dir + f'fit_mcmc_delta_0_1.0/fit_{n_file}.pkl'
     fit_data = Load_Pickle_Directory( file_name, 'r' )
     T0 = fit_data['T0']['mean']
-    z_vals.appens(z)
+    z_vals.append(z)
     T0_vals.append(T0)
   sim_data_all[sim_id] = {'z':z_vals, 'T0':T0_vals }
 
