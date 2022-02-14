@@ -70,7 +70,7 @@ line_width = 0.6
 border_width = 1.5
 
 text_color  = 'black'
-if black_background:  text_color = 'white'
+
   
 fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(8*ncols,6*nrows))
 
