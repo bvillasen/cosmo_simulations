@@ -21,3 +21,6 @@ input_dir = grid_dir + f'fit_mcmc/{fit_name}/temperature_evolution'
 
 files = [ f for f in os.listdir(input_dir) if f[0] == 's' ]
 files.sort()
+n_files = len(files)
+
+selected_files = np.random.randint( 0, n_files, 10)
