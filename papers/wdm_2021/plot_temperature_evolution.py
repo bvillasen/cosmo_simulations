@@ -18,6 +18,8 @@ from figure_functions import *
 grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim600/'
 fit_name = 'fit_results_P(k)+_Boera_covmatrix'
 input_dir = grid_dir + f'fit_mcmc/{fit_name}/temperature_evolution/'
+output_dir = data_dir + f'figures/wdm/'
+create_directory( output_dir )
 
 files = [ f for f in os.listdir(input_dir) if f[0] == 's' ]
 files.sort()
