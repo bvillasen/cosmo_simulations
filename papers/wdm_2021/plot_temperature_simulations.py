@@ -85,7 +85,7 @@ for sim_id in sim_data_all:
 ax.legend( frameon=False)
 
 
-ax.set_xlims( 2, 8 )
+ax.set_xlim( 2, 8 )
 # ax.set_xlims( 2, 8 )
 
 
