@@ -12,7 +12,7 @@ from tools import *
 base_dir = data_dir + 'cosmo_sims/rescaled_P19/wdm/'
 
 wdm_masses = [ 0.25, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0 ]
-
+sim_names = []
 for m_wdm in wdm_masses:
   sim_names.append( f'1024_50Mpc_wdm_m{m_wdm}kev')
 sim_names.append('1024_50Mpc_cdm')
