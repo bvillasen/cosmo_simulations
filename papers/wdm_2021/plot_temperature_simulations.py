@@ -9,7 +9,7 @@ from tools import *
 
 
 
-base_dir = data_dir + 'rescaled_P19/wdm/'
+base_dir = data_dir + 'cosmo_sims/rescaled_P19/wdm/'
 
 n_files = 56
 
