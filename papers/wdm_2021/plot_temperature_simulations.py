@@ -24,7 +24,7 @@ for n_file in range(n_files):
   z = file.attrs['current_z'][0]
   file.close()
   
-  file_name = input_dir + f'analysis_files/fit_mcmc_delta_0_1.0/fit_{n_file}.pkl'
+  file_name = input_dir + f'fit_mcmc_delta_0_1.0/fit_{n_file}.pkl'
   fit_data = Load_Pickle_Directory( file_name, 'r' )
   
   
