@@ -240,7 +240,7 @@ ax1 = plt.subplot(gs[0:main_length, 0])
 M_vals = [ M_0, M_1 ]
 pos_x = 0.5
 for data_id in data_all:
-  txt = r'$\Delta^{T} \mathbf{C}^{-1} \Delta=$' + f'{M_vals[data_id]:.1f}'
+  txt = r'$\chi^2=\Delta^{T} \mathbf{C}^{-1} \Delta=$' + f'{M_vals[data_id]:.1f}'
   pos_y = 0.169 - 0.06*data_id
   ax1.text(pos_x, pos_y, txt, horizontalalignment='center',  verticalalignment='center', transform=ax1.transAxes, fontsize=13, color=sim_colors[data_id]) 
   
