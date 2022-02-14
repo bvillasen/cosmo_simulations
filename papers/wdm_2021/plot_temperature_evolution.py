@@ -24,6 +24,7 @@ create_directory( output_dir )
 files = [ f for f in os.listdir(input_dir) if f[0] == 's' ]
 files.sort()
 n_files = len(files)
+print( f'N files: {n_files}')
 
 selected_files = np.random.randint( 0, n_files, 10)
 
