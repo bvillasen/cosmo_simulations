@@ -21,6 +21,12 @@ for n_file in range(n_files):
   file_name = input_dir + f'{n_file}_analysis.h5'
   print( f'Loading File: {file_name}' )
   file = h5.File( file_name, 'r')
+  z = file.attrs['current_z'][0]
+  file.close()
+  
+  file_name = input_dir + f'analysis_files/fit_mcmc_delta_0_1.0/fit_{n_file}.pkl'
+  fit_data = Load_Pickle_Directory( file_name, 'r' )
+  
   
   
   break 
