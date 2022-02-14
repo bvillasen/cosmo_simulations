@@ -1,6 +1,5 @@
 import os, sys
 import numpy as np
-import pymc
 root_dir = os.path.dirname(os.getcwd()) + '/'
 subDirectories = [x[0] for x in os.walk(root_dir)]
 sys.path.extend(subDirectories)
@@ -167,6 +166,7 @@ def get_mcmc_model( comparable_data, comparable_grid, fields_to_fit, sub_field, 
 ############################################################################################################
 
 def mcmc_model_4D( comparable_data, comparable_grid, field, sub_field, SG, error_type='sigma' ):
+  import pymc
   print( '\nRunning MCMC Sampler')
   parameters = SG.parameters
   param_ids = parameters.keys()
@@ -206,6 +206,7 @@ def mcmc_model_4D( comparable_data, comparable_grid, field, sub_field, SG, error
 
 
 def mcmc_model_3D( comparable_data, comparable_grid, field, sub_field, SG, error_type='sigma'):
+  import pymc
   print( '\nRunning MCMC Sampler')
   parameters = SG.parameters
   param_ids = parameters.keys()

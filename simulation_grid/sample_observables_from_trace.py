@@ -25,7 +25,7 @@ else:
 
 z_indx = rank
 
-independent_redshift = True
+independent_redshift = False
 
 # Directories 
 ps_data_dir = base_dir + '/lya_statistics/data/'

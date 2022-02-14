@@ -8,14 +8,14 @@ sys.path.extend(subDirectories)
 from tools import * 
 from colors import *
 from figure_functions import *
-from stats_functions import get_HPI_2D
+from stats_functions import get_HPI_2D, get_highest_probability_interval
 
 
 
 def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2D=30, 
     ticks=None, lower_mask_factor=50, multiple=False, system='Shamrock', show_label=True, 
     HL_vals=None, show_best_fit=False, limits=None, param_values=None, black_background=False,
-    bins=None, legend_loc=0, figure_name='corner.png' ):
+    bins=None, legend_loc=0, figure_name='corner.png', show_param_values=False ):
   
   
 
@@ -57,13 +57,19 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
   color_map_2 = palettable.cmocean.sequential.Tempo_20
   color_map_3 = palettable.cmocean.sequential.Dense_20
   color_map_4 = palettable.cmocean.sequential.Algae_20
-  color_map_list = [ color_map_0, color_map_2, color_map_1, color_map_4 ]
+  color_map_5 = palettable.scientific.sequential.Devon_20_r
+  color_map_6 = palettable.scientific.sequential.Davos_20_r
+  color_map_7 = palettable.scientific.sequential.LaPaz_20_r
+  color_map_7 = palettable.scientific.sequential.Oslo_20_r
+  # color_map_list = [ color_map_0, color_map_2, color_map_1, color_map_4 ]
+  color_map_list = [ color_map_7 ]
   
   text_color = 'black'
   
+  hl_line_color = 'black'
   hl_color = 'gray' 
   hl_line_width = 2.5 
-  hl_alpha = 0.8
+  hl_alpha = 1.0
   
   marker_color = 'white'
   
@@ -82,6 +88,7 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
   fig, ax_l = plt.subplots(nrows=n_param, ncols=n_param, figsize=(fig_size*n_param,fig_size*n_param),  sharex=sharex )
   fig.subplots_adjust( wspace=space, hspace=space )
 
+  distribution_data = {}
   for j in range( n_param ):
     for i in range( n_param ):
       
@@ -116,7 +123,7 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
         x_label = labels[samples[i]['name']]  
         ax.set_xlabel( x_label, fontsize=label_size, color=text_color )
         
-
+      
       if i == j: plot_type = '1D'
       if i < j:  plot_type = '2D'
       
@@ -144,21 +151,35 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
           # hist = hist / hist.sum()
           bin_centers = ( bin_edges[:-1] + bin_edges[1:] ) / 2.
           bin_width = bin_centers[0] - bin_centers[1]  
-          bin_centers_interp = np.linspace( bin_centers[0], bin_centers[-1], 10000 )
+          bin_centers_interp = np.linspace( bin_centers[0], bin_centers[-1], 100000 )
           f_interp  = interp.interp1d( bin_centers, hist,  kind='cubic' )
           data_label = data_labels[data_id]
           if add_data_label: label = f'{data_label}' 
           else: label = ''
-          ax.plot( bin_centers_interp, f_interp(bin_centers_interp),   color=line_color, linewidth=hist_1D_line_width, label=label  )
+          ax.plot( bin_centers_interp, f_interp(bin_centers_interp),   color=line_color, linewidth=hist_1D_line_width, label=label, zorder=3  )
           # ax.plot( bin_centers, hist,   color=line_color, linewidth=hist_1D_line_width  ), 
           # ax.step( bin_centers, hist, where='mid',  color=line_color, linewidth=hist_1D_line_width  )
+          distribution = hist/hist.sum()
           if HL_vals is not None:
-            print(HL_vals)
+            # print(HL_vals)
             hl_val = HL_vals[j]
             # print( f_interp(hl_val), f_interp(bin_centers_interp).max())
             # ax.axvline( x=hl_val, ymin=0, ymax=f_interp(hl_val)[0], ls='--', lw=hl_line_width, color=hl_color, alpha=hl_alpha )
-            ax.plot( [hl_val, hl_val], [-1*f_interp(hl_val), f_interp(hl_val)], ls='--', lw=hl_line_width, color=hl_color, alpha=hl_alpha )
-        
+            ax.plot( [hl_val, hl_val], [-1*f_interp(hl_val), f_interp(hl_val)], ls='--', lw=hl_line_width, color=hl_line_color, alpha=hl_alpha, zorder=2 )
+            fill_sum = 0.68
+            v_l, v_r, v_max,  sum = get_highest_probability_interval( bin_centers, distribution, fill_sum, log=False, n_interpolate=10000)
+            vals_simgna = np.linspace( v_l, v_r, 1000 )
+            sigma_l = hl_val - v_l
+            sigma_r = v_r - hl_val
+            ax.fill_between( vals_simgna, f_interp(vals_simgna), color=hl_color, alpha=0.5, zorder=1)
+            fill_sum = 0.95
+            v_l, v_r, v_max,  sum = get_highest_probability_interval( bin_centers, distribution, fill_sum, log=False, n_interpolate=10000)
+            vals_simgna = np.linspace( v_l, v_r, 1000 )
+            two_sigma_l = hl_val - v_l
+            two_sigma_r = v_r - hl_val
+            ax.fill_between( vals_simgna, f_interp(vals_simgna), color=hl_color, alpha=0.3, zorder=1)
+            distribution_data[j] = {'HL':hl_val, 'sigma_l':sigma_l, 'sigma_r':sigma_r, 'two_sigma_l':two_sigma_l, 'two_sigma_r':two_sigma_r, }
+            
           def identity( x ):
             return x
           secax = ax.secondary_xaxis('top', functions=(identity, identity))    
@@ -234,8 +255,21 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
         if j > i: ax.set_ylim( y_lims[0], y_lims[1] )
         if j == i: ax.set_ylim(-1,None)
 
+  
+  if show_param_values:
+    text_x = 0.6
+    text_y = 0.855 
+    delta_y = 0.05
+    print( distribution_data )
+    for param_id in samples:
+      param_data = samples[param_id]
+      name = param_data['name']
+      label = labels[name]
+      text = label + f' = {distribution_data[param_id]["HL"]:.2f}' #+ '^{+' + f'{distribution[param_id]["sigma_r"]}' +'}_{-' +  f'{distribution[param_id]["sigma_l"]}'  + '}'  
+      plt.text( text_x, text_y, r'${0}$'.format(text), transform=fig.transFigure, fontsize=26, color=text_color )
+      text_y -= delta_y
       
-        
+      
   if param_values is not None:
     offset_y_add = 0.02
     font_add = 4
@@ -299,7 +333,7 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
     output_dir += 'black_background/'  
   
   figure_name = output_dir + figure_name
-  fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
+  fig.savefig( figure_name, bbox_inches='tight', dpi=400, facecolor=fig.get_facecolor() )
   print( f'Saved Figure: {figure_name}' )
 
 

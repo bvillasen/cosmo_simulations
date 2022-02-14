@@ -109,8 +109,10 @@ def get_highest_probability_interval( bin_centers, distribution, fill_sum, log=F
     elif distribution[id_l] > distribution[id_r]: id_l -= 1
     elif distribution[id_l] == distribution[id_r]: 
       id_l -= 1
-      id_r += 1
-    if id_l < 0 or id_r > n-1: break 
+      # id_r += 1
+    if id_l < 0 or id_r > n-1: 
+      print( f'ERROR: HPI')
+      break 
   if log: bin_centers = 10**bin_centers
   v_l, v_r, v_max = bin_centers[id_l], bin_centers[id_r], bin_centers[id_max]
   return v_l, v_r, v_max,  distribution[id_l:id_r].sum() 

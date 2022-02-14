@@ -34,8 +34,8 @@ fields_to_fit = 'P(k)+'
 data_ps_sets = [ 'Boera' ]
 # data_ps_sets = [ 'BoeraC' ]
 
-# error_type = 'sigma'
-error_type = 'covmatrix'
+error_type = 'sigma'
+# error_type = 'covmatrix'
 
 independent_redshift = True
 use_inv_wdm = True
@@ -81,7 +81,8 @@ FPS_resolution_correction = None #Instead we apply a systematic uncertanty to th
 if use_inv_wdm: Grid_Parameters = Invert_wdm_masses( Grid_Parameters )
 
 #Load custom power spectrum measurement
-custom_ps_data = { 'root_dir': root_dir + 'flux_power_spectrum', 'file_base_name':'flux_ps_resample_boera_native', 'stats_base_name':'statistics_resample_boera_native' }
+# custom_ps_data = { 'root_dir': root_dir + 'flux_power_spectrum', 'file_base_name':'flux_ps_resample_boera_native', 'stats_base_name':'statistics_resample_boera_native' }
+custom_ps_data = { 'root_dir': root_dir + 'flux_power_spectrum', 'file_base_name':'flux_ps_sampled_boera_extended', 'stats_base_name':None }
 custom_data = { 'P(k)': custom_ps_data } 
 
 # sim_ids = [0]
