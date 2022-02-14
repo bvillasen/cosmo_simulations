@@ -14,7 +14,7 @@ time = '24:00:00'
 command = 'python'
 
 job_dir = home_dir + 'thermal_IGM/'
-command_params = f'run_thermal_wdm_chain.py'
+command_params = 'run_termal_wdm_chain.py'
 
 # job_dir = home_dir + 'cosmo_simulations/lya_statistics/'
 # command_params = f'compute_transmitted_flux_mpi_grid.py {data_dir}cosmo_sims/sim_grid/1024_wdmgrid_nsim200_deltaZ_n0p5'
