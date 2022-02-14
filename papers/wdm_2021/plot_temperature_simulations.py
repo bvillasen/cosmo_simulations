@@ -41,7 +41,7 @@ for sim_id, sim_name in enumerate(sim_names):
 
     file_name = input_dir + f'fit_mcmc_delta_0_1.0/fit_{n_file}.pkl'
     fit_data = Load_Pickle_Directory( file_name, 'r' )
-    T0 = fit_data['T0']['mean']
+    T0 = 10**fit_data['T0']['mean']
     z_vals.append(z)
     T0_vals.append(T0)
   sim_data_all[sim_id] = {'z':z_vals, 'T0':T0_vals, 'label':sim_labels[sim_id] }
@@ -85,7 +85,8 @@ for sim_id in sim_data_all:
 ax.legend( frameon=False)
 
 
-
+ax.set_xlims( 2, 8 )
+# ax.set_xlims( 2, 8 )
 
 
 figure_name = output_dir + 'temperature_wdm_simulations.png'
