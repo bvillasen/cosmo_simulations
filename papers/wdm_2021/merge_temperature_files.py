@@ -32,7 +32,7 @@ if rank == 0: create_directory( output_dir )
 files = [ f for f in os.listdir(input_dir) if f[0] == 's' ]
 files.sort()
 n_files = len(files)
-print( f'N files: {n_files}')
+if rank == 0:print( f'N files: {n_files}')
 
 ids_global = range(n_files)
 ids_local = split_array_mpi( ids_global, rank, n_procs )
@@ -41,30 +41,27 @@ print( f'proc_id: {rank}  n_local: {n_local}' )
 selected_files = ids_local
 n_samples = len( selected_files )
 
-# n_samples = 1000000 // 20
-# selected_files = np.random.randint(0,n_files-1, n_samples)
-# print( f'N samples: {n_samples}')
 
-
-z_vals = None
-T0_vals = []
-time_start = time.time()
-for sim_id,file_id in enumerate(selected_files):
-  file_name = input_dir + f'solution_{file_id}.h5'
-  file = h5.File( file_name, 'r' )
-  if z_vals is None: z_vals = file['z'][...]
-  T0 = file['temperature'][...]
-  file.close()
-  T0_vals.append( T0 )
-  if sim_id %100 == 0: print_progress( sim_id, n_samples, time_start )
-print('\n')
-T0_vals = np.array( T0_vals )
-
-out_file_name = output_dir + f'samples_T0_evolution_id_{rank}.h5'
-out_file = h5.File( out_file_name, 'w' )
-out_file.create_dataset('selected_files', data=selected_files )
-out_file.create_dataset( 'z', data=z_vals )
-out_file.create_dataset( 'T0', data=T0_vals )
-out_file.close()
-print( f'Saved File: {out_file_name}' )
-
+# 
+# z_vals = None
+# T0_vals = []
+# time_start = time.time()
+# for sim_id,file_id in enumerate(selected_files):
+#   file_name = input_dir + f'solution_{file_id}.h5'
+#   file = h5.File( file_name, 'r' )
+#   if z_vals is None: z_vals = file['z'][...]
+#   T0 = file['temperature'][...]
+#   file.close()
+#   T0_vals.append( T0 )
+#   if sim_id %100 == 0: print_progress( sim_id, n_samples, time_start )
+# print('\n')
+# T0_vals = np.array( T0_vals )
+# 
+# out_file_name = output_dir + f'samples_T0_evolution_id_{rank}.h5'
+# out_file = h5.File( out_file_name, 'w' )
+# out_file.create_dataset('selected_files', data=selected_files )
+# out_file.create_dataset( 'z', data=z_vals )
+# out_file.create_dataset( 'T0', data=T0_vals )
+# out_file.close()
+# print( f'Saved File: {out_file_name}' )
+# 
