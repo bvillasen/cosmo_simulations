@@ -34,7 +34,7 @@ files.sort()
 n_files = len(files)
 if rank == 0:print( f'N files: {n_files}')
 
-ids_global = range(n_files)
+ids_global = np.arange(0, n_files, 1, dtype=int)
 ids_local = split_array_mpi( ids_global, rank, n_procs )
 n_local = len( ids_local )
 print( f'proc_id: {rank}  n_local: {n_local}' )
