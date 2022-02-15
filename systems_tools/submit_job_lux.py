@@ -22,7 +22,7 @@ command_params = 'run_termal_wdm_chain.py'
 # partition = 'comp-astro'
 partition = 'gpuq'
 work_directory = '/home/brvillas/jobs/'
-output = work_directory + 'run_output'
+output = work_directory + 'run_output_cdm'
 create_directory( work_directory )
 
 submit_str = f"""#!/bin/bash          
