@@ -42,6 +42,7 @@ for sim_id,file_id in enumerate(selected_files):
   T0 = file['temperature'][...]
   file.close()
   T0_vals.append( T0 )
+print('\n')
 T0_vals = np.array( T0_vals )
 
 out_file_name = output_dir + 'samples_T0_evolution.h5'
