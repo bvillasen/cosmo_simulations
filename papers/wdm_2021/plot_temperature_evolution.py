@@ -18,7 +18,8 @@ from figure_functions import *
 grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim600/'
 fit_name = 'fit_results_P(k)+_Boera_covmatrix'
 input_dir = grid_dir + f'fit_mcmc/{fit_name}/temperature_evolution/'
-output_dir = data_dir + f'figures/wdm/'
+output_dir = input_dir = grid_dir + f'fit_mcmc/{fit_name}/'
+# output_dir = data_dir + f'figures/wdm/'
 create_directory( output_dir )
 
 files = [ f for f in os.listdir(input_dir) if f[0] == 's' ]
@@ -43,7 +44,15 @@ for sim_id,file_id in enumerate(selected_files):
   #   print('ERROR: Larage z difference')
   #   break
   T0_vals.append( T0 )
+  if sim_id > 10000: break
 T0_vals = np.array( T0_vals )
+
+out_file_name = output_dir + 'samples_T0_evolution.h5'
+out_file = h5.File( out_file_name, 'w' )
+out_file.create_dataset( 'z', data=z_vals )
+out_file.create_dataset( 'T0', data=T0_vals )
+out_file.close()
+print( f'Saved File: {out_file_name}' )
 
 # 
 # 
