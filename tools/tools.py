@@ -93,8 +93,8 @@ def print_progress( i, n, time_start, extra_line="" ):
   import time
   time_now = time.time()
   time = time_now - time_start
-  if 1 == 0: i = 1
-  remaining = time * ( n - i ) / i
+  if i == 0: remaining = time *  n
+  else: remaining = time * ( n - i ) / i
 
   hrs = remaining // 3600
   min = (remaining - hrs*3600) // 60
