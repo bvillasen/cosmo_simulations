@@ -34,7 +34,7 @@ for sim_id,file_id in enumerate(selected_files):
   # print( f'Loading File: {file_name}' )
   if sim_id %100 == 0: print( f'Loading {sim_id} / {n_files}' )
   file = h5.File( file_name, 'r' )
-  if z_vals == None: z_vals = file['z'][...]
+  if z_vals is None: z_vals = file['z'][...]
   T0 = file['temperature'][...]
   file.close()
   # if z_vals is None: z_vals = z
