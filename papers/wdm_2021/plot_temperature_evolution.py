@@ -26,17 +26,24 @@ files.sort()
 n_files = len(files)
 print( f'N files: {n_files}')
 
-# selected_files = np.random.randint( 0, n_files, 10)
-# 
-# data_all = {}
-# for sim_id,file_id in enumerate(selected_files):
-#   file_name = input_dir + f'solution_{file_id}.h5'
-#   print( f'Loading File: {file_name}' )
-#   file = h5.File( file_name, 'r' )
-#   z = file['z'][...]
-#   T0 = file['temperature'][...]
-#   file.close()
-#   data_all[sim_id] = { 'z':z, 'T0':T0 }
+selected_files = range(n_files)
+z_vals = None
+T0_vals = []
+for sim_id,file_id in enumerate(selected_files):
+  file_name = input_dir + f'solution_{file_id}.h5'
+  print( f'Loading File: {file_name}' )
+  file = h5.File( file_name, 'r' )
+  z = file['z'][...]
+  T0 = file['temperature'][...]
+  file.close()
+  if z_vals is None: z_vals = z
+  z_diff = np.abs( z_vals - z ).sum()
+  if z_diff > 1e-6: 
+    print('ERROR: Larage z difference')
+    break
+  T0_vals.append( T0 )
+T0_vals = np.array( T0_vals )
+
 # 
 # 
 # nrows = 1
