@@ -36,7 +36,7 @@ T0_vals = []
 time_start = time.time()
 for sim_id,file_id in enumerate(selected_files):
   file_name = input_dir + f'solution_{file_id}.h5'
-  if sim_id %100 == 0: print_progress( sim_id+1, n_samples, time_start )
+  if sim_id %100 == 0: print_progress( sim_id, n_samples, time_start )
   file = h5.File( file_name, 'r' )
   if z_vals is None: z_vals = file['z'][...]
   T0 = file['temperature'][...]
