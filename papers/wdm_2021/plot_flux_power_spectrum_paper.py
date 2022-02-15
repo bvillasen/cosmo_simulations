@@ -74,12 +74,15 @@ mint_green = '#81B29A'
 dark_blue = '#4f6a8f'
 dark_purple = '#443850'
 data_label = 'Boera et al. (2019)'
-data_color =  purples[6]
+data_color =  ocean_green
+data_color =  'dodgerblue'
 
-sim_colors = [ 'seagreen', 'slateblue' ]
-sim_colors = [ 'seagreen', 'royalblue' ]
+# sim_colors = [ 'seagreen', 'slateblue' ]
+# sim_colors = [ 'seagreen', 'royalblue' ]
+
 sim_colors = [ 'dodgerblue', yellows[3] ]
-# sim_colors = [ 'slateblue', 'seagreen' ]
+
+sim_colors = [ 'midnightblue', 'orange' ]
 
 import matplotlib
 import matplotlib.font_manager
@@ -241,7 +244,7 @@ M_vals = [ M_0, M_1 ]
 pos_x = 0.5
 for data_id in data_all:
   txt = r'$\chi^2=\Delta^{T} \mathbf{C}^{-1} \Delta=$' + f'{M_vals[data_id]:.1f}'
-  pos_y = 0.178 - 0.06*data_id
+  pos_y = 0.175 - 0.06*data_id
   ax1.text(pos_x, pos_y, txt, horizontalalignment='center',  verticalalignment='center', transform=ax1.transAxes, fontsize=13, color=sim_colors[data_id]) 
   
 fig.align_ylabels()

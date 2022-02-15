@@ -6,7 +6,7 @@ sys.path.append( root_dir + 'tools' )
 from tools import *
 
 
-job_name  = 'thermal' 
+job_name  = 'thermal_cdm' 
 n_mpi_tasks = 320
 n_nodes = 8
 n_tasks_per_node = 40
@@ -19,7 +19,8 @@ command_params = 'run_termal_wdm_chain.py'
 # job_dir = home_dir + 'cosmo_simulations/lya_statistics/'
 # command_params = f'compute_transmitted_flux_mpi_grid.py {data_dir}cosmo_sims/sim_grid/1024_wdmgrid_nsim200_deltaZ_n0p5'
 
-partition = 'comp-astro'
+# partition = 'comp-astro'
+partition = 'gpuq'
 work_directory = '/home/brvillas/jobs/'
 output = work_directory + 'run_output'
 create_directory( work_directory )
