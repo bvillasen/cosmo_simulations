@@ -29,9 +29,10 @@ input_dir = grid_dir + f'fit_mcmc/{fit_name}/temperature_evolution/'
 output_dir = grid_dir + f'fit_mcmc/{fit_name}/temperature_evolution/merged_files/'
 if rank == 0: create_directory( output_dir )
 
-files = [ f for f in os.listdir(input_dir) if f[0] == 's' ]
-files.sort()
-n_files = len(files)
+# files = [ f for f in os.listdir(input_dir) if f[0] == 's' ]
+# files.sort()
+# n_files = len(files)
+n_files = 4500000
 if rank == 0:print( f'N files: {n_files}')
 
 ids_global = np.arange(0, n_files, 1, dtype=int)
