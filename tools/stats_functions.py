@@ -1,5 +1,6 @@
 import numpy as np
 from tools import print_line_flush
+from scipy import interpolate as interp 
 
 
 
@@ -77,14 +78,17 @@ def compute_distribution( values, n_bins=None, log=False, edges=None, normalize_
   return distribution, centers
 
 
-def get_highest_probability_interval( bin_centers, distribution, fill_sum, log=False, n_interpolate=None):
+def get_highest_probability_interval( bin_centers, distribution, fill_sum, log=False, n_interpolate=None, print_eval=False):
   if log: bin_centers = np.log10( bin_centers )
   # print( f'Original {bin_centers}')
 
   min, max = bin_centers.min(), bin_centers.max()
   if n_interpolate: 
     bin_centers_interp = np.linspace( min, max, n_interpolate )
-    distribution = np.interp( bin_centers_interp, bin_centers, distribution )
+    # distribution = np.interp( bin_centers_interp, bin_centers, distribution )
+    f_interp  = interp.interp1d( bin_centers, distribution,  kind='cubic' )
+    distribution_interp = f_interp(bin_centers_interp)
+    distribution = distribution_interp
     bin_centers = bin_centers_interp
     # print( f'interpolated {bin_centers}')
   distribution = distribution / distribution.sum()
@@ -115,4 +119,6 @@ def get_highest_probability_interval( bin_centers, distribution, fill_sum, log=F
       break 
   if log: bin_centers = 10**bin_centers
   v_l, v_r, v_max = bin_centers[id_l], bin_centers[id_r], bin_centers[id_max]
-  return v_l, v_r, v_max,  distribution[id_l:id_r].sum() 
+  sum_interval = distribution[id_l:id_r].sum() 
+  if print_eval: print( f'Eval f(l): {f_interp(v_l)}  f(r): {f_interp(v_r)}  sum: {sum_interval}')
+  return v_l, v_r, v_max,  sum_interval 

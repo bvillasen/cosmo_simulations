@@ -56,4 +56,4 @@ limits = {0:( 0, 0.45 ), 1:( 0.8, 1.5 ), 2:( 0.4, 1.15 ), 3:( -0.5, 0.5 )}
 
 Plot_Corner( samples_all['param'], data_labels, corner_labels, output_dir, n_bins_1D=40, n_bins_2D=40, 
              lower_mask_factor=500, multiple=True, show_label=True, HL_vals=params_HL, ticks=ticks, 
-             limits=limits, param_values=None, black_background=False, figure_name='corner_wdm.png', show_param_values=False)
+             limits=limits, param_values=None, black_background=False, figure_name='corner_wdm_thin.png', show_param_values=False)
