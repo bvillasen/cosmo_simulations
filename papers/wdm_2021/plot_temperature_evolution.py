@@ -28,8 +28,9 @@ n_files = len(files)
 print( f'N files: {n_files}')
 
 # selected_files = range(n_files)
-n_samples = 10000
+n_samples = 1000000
 selected_files = np.random.randint(0,n_files-1, n_samples)
+print( f'N samples: {n_samples}')
 
 z_vals = None
 T0_vals = []
