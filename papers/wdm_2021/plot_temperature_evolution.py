@@ -27,7 +27,10 @@ files.sort()
 n_files = len(files)
 print( f'N files: {n_files}')
 
-selected_files = range(n_files)
+# selected_files = range(n_files)
+n_samples = 10000
+selected_files = np.random.randint(0,n_files-1, n_samples)
+
 z_vals = None
 T0_vals = []
 time_start = time.time()
@@ -50,6 +53,7 @@ T0_vals = np.array( T0_vals )
 
 out_file_name = output_dir + 'samples_T0_evolution.h5'
 out_file = h5.File( out_file_name, 'w' )
+out_file.create_dataset('selected_files', data=selected_files )
 out_file.create_dataset( 'z', data=z_vals )
 out_file.create_dataset( 'T0', data=T0_vals )
 out_file.close()
