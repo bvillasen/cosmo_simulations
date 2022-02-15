@@ -60,7 +60,7 @@ for sim_id,file_id in enumerate(selected_files):
 print('\n')
 T0_vals = np.array( T0_vals )
 
-out_file_name = output_dir + f'samples_T0_evolution_n{n_samples}.h5'
+out_file_name = output_dir + f'samples_T0_evolution_id_{rank}.h5'
 out_file = h5.File( out_file_name, 'w' )
 out_file.create_dataset('selected_files', data=selected_files )
 out_file.create_dataset( 'z', data=z_vals )
