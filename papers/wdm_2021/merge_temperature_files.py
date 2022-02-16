@@ -22,8 +22,8 @@ else:
   rank = 0
   n_procs = 1
 
-grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim600/'
-# grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_cdm/'
+# grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim600/'
+grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_cdm/'
 fit_name = 'fit_results_P(k)+_Boera_covmatrix'
 input_dir = grid_dir + f'fit_mcmc/{fit_name}/temperature_evolution/'
 output_dir = grid_dir + f'fit_mcmc/{fit_name}/temperature_evolution/merged_files/'
