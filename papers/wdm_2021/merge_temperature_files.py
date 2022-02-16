@@ -44,26 +44,52 @@ n_samples = len( selected_files )
 
 comm.Barrier()
 
-
-z_vals = None
-T0_vals = []
-time_start = time.time()
-for sim_id,file_id in enumerate(selected_files):
-  file_name = input_dir + f'solution_{file_id}.h5'
-  file = h5.File( file_name, 'r' )
-  if z_vals is None: z_vals = file['z'][...]
-  T0 = file['temperature'][...]
-  file.close()
-  T0_vals.append( T0 )
-  if sim_id %100 == 0: print_progress( sim_id, n_samples, time_start )
-print('\n')
-T0_vals = np.array( T0_vals )
-
 out_file_name = output_dir + f'samples_T0_evolution_id_{rank}.h5'
-out_file = h5.File( out_file_name, 'w' )
-out_file.create_dataset('selected_files', data=selected_files )
-out_file.create_dataset( 'z', data=z_vals )
-out_file.create_dataset( 'T0', data=T0_vals )
-out_file.close()
-print( f'Saved File: {out_file_name}' )
+file_exits = os.path.isfile(out_file_name)
 
+if not file_exits:
+  
+  z_vals = None
+  T0_vals = []
+  time_start = time.time()
+  for sim_id,file_id in enumerate(selected_files):
+    file_name = input_dir + f'solution_{file_id}.h5'
+    file = h5.File( file_name, 'r' )
+    if z_vals is None: z_vals = file['z'][...]
+    T0 = file['temperature'][...]
+    file.close()
+    T0_vals.append( T0 )
+    if sim_id %100 == 0: print_progress( sim_id, n_samples, time_start )
+  print('\n')
+  T0_vals = np.array( T0_vals )
+
+  out_file = h5.File( out_file_name, 'w' )
+  out_file.create_dataset('selected_files', data=selected_files )
+  out_file.create_dataset( 'z', data=z_vals )
+  out_file.create_dataset( 'T0', data=T0_vals )
+  out_file.close()
+  print( f'Saved File: {out_file_name}' )
+
+comm.Barrier()
+if rank != 0: exit(0) 
+
+T0_vals_all = []
+for file_id in range(n_procs):  
+  in_file_name = output_dir + + f'samples_T0_evolution_id_{file_id}.h5'
+  in_file = h5.File( in_file_name, 'r')
+  z_vals = in_file['z'][...]
+  selected_files = in_file['selected_files'][...]
+  T0 = in_file['T0'][...]
+  in_file.close()
+  T0_vals_all.apend(T0)
+  selected_files_all.append( selected_files )
+  
+selected_files_all = np.concatenate( selected_files_all ).sort()
+n_files = len( selected_files_all )
+files_ids = np.arange( 0, n_files, 1, dtype=int)
+file_diff = np.abs( files_ids - selected_files_all).sum()
+print( f'file_diff: {file_diff}' ) 
+T0_vals_all = np.concatenate( T0_vals_all, axis=0 )
+print( f'T0 shape: {T0_vals_all.shape}')
+  
+output_dir = grid_dir + f'fit_mcmc/{fit_name}/'
