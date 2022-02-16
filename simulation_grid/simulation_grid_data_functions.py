@@ -346,10 +346,11 @@ def Load_Analysis_Data( self, sim_ids=None, load_pd_fit=True, mcmc_fit_dir=None,
     indx_0 = list( sim_ids )[0]
   else: indx_0 = sim_ids[0]
   
+  custom_ps_data = None
   if custom_data is not None and 'P(k)' in custom_data:
     custom_ps_data = custom_data['P(k)']
     print( f' WARNING: Loading custom P(k) data: \n  Dir: {custom_ps_data["root_dir"]} \n  file_base_name: {custom_ps_data["file_base_name"]}' )
-
+  
   
   for sim_id in sim_ids:
     self.Load_Simulation_Analysis_Data( sim_id, load_pd_fit=load_pd_fit, mcmc_fit_dir=mcmc_fit_dir, load_thermal=load_thermal, files_to_load=files_to_load, custom_data=custom_data  )
@@ -362,9 +363,12 @@ def Load_Analysis_Data( self, sim_ids=None, load_pd_fit=True, mcmc_fit_dir=None,
       if n not in self.Grid[sim_id]['analysis']['ps_available_indices']: available = False
     if available: available_indices.append( n )
   
+  print('')
   if FPS_correction is not None:
-    print( '\nWARNING: Applying correction factor to FPS. ')
+    print( ' WARNING: Applying correction factor to FPS. ')
   for sim_id in sim_ids:
+    print_line_flush( f' Loading Flux Power Spectrum: {sim_id} ')
+    
     self.Load_Simulation_Power_Spectum_Data( sim_id, available_indices, FPS_correction=FPS_correction, custom_data=custom_ps_data )
   print('\n')
 
