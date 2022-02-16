@@ -75,7 +75,7 @@ if rank != 0: exit(0)
 
 T0_vals_all = []
 for file_id in range(n_procs):  
-  in_file_name = output_dir + + f'samples_T0_evolution_id_{file_id}.h5'
+  in_file_name = output_dir + f'samples_T0_evolution_id_{file_id}.h5'
   in_file = h5.File( in_file_name, 'r')
   z_vals = in_file['z'][...]
   selected_files = in_file['selected_files'][...]
