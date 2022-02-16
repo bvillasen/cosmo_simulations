@@ -96,3 +96,8 @@ T0_vals_all = np.concatenate( T0_vals_all, axis=0 )
 print( f'T0 shape: {T0_vals_all.shape}')
   
 output_dir = grid_dir + f'fit_mcmc/{fit_name}/'
+out_file_name = output_dir + f'samples_T0_evolution.h5'
+out_file = h5.File( out_file_name, 'w' )
+out_file.create_dataset( 'z', data=z_vals )
+out_file.create_dataset( 'T0', data=T0_vals_all )
+out_file.close()
