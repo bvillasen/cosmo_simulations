@@ -86,7 +86,8 @@ for file_id in range(n_procs):
   T0_vals_all.append(T0)
   selected_files_all.append( selected_files )
   
-selected_files_all = np.concatenate( selected_files_all ).sort()
+selected_files_all = np.concatenate( selected_files_all )
+selected_files_all.sort()
 n_files = len( selected_files_all )
 files_ids = np.arange( 0, n_files, 1, dtype=int)
 file_diff = np.abs( files_ids - selected_files_all).sum()
