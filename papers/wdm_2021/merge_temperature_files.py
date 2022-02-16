@@ -76,12 +76,13 @@ if rank != 0: exit(0)
 T0_vals_all = []
 for file_id in range(n_procs):  
   in_file_name = output_dir + f'samples_T0_evolution_id_{file_id}.h5'
+  print( f'Loading File: {in_file_name}' )
   in_file = h5.File( in_file_name, 'r')
   z_vals = in_file['z'][...]
   selected_files = in_file['selected_files'][...]
   T0 = in_file['T0'][...]
   in_file.close()
-  T0_vals_all.apend(T0)
+  T0_vals_all.append(T0)
   selected_files_all.append( selected_files )
   
 selected_files_all = np.concatenate( selected_files_all ).sort()
