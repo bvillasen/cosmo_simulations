@@ -15,7 +15,7 @@ from internal_energy import get_internal_energy
 from load_enzo_ics_file import Load_File_Attrs, Load_Gas_Field, Load_Particles_Field
 
 
-hydro, particles = False, False
+ics_hydro, ics_particles = False, False
 args = sys.argv
 n_args = len(args)
 if n_args == 1:
