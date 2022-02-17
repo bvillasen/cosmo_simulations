@@ -26,8 +26,8 @@ SG.Create_Grid_Directory_Structure()
 # Select the type of initial conditions: 'cdm' or 'wdm'
 # SG.Create_All_Parameter_Files( ics_type='cdm' )
 
-# wdm_mass = None
-wdm_mass = 10000
+wdm_mass = None
+# wdm_mass = 10000
 z_start = 100
 n_file_start = 0
 SG.Create_All_Parameter_Files( ics_type='wdm', wdm_mass=wdm_mass, verbose=False, z_start=z_start, n_file_start=n_file_start )
