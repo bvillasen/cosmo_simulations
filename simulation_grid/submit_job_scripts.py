@@ -27,6 +27,7 @@ def Create_Submit_Job_Script_Summit( job_params, save_file=True, file_name='subm
 #BSUB -o log_output.txt
 #BSUB -e log_error.txt
 #BSUB -alloc_flags "smt4"
+#BSUB -q debug
 
 module load xl cuda fftw hdf5
 
