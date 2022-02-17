@@ -32,12 +32,12 @@ n_points = 1024
 n_boxes  = 16
 L_Mpc = int( Lbox / 1000)
 
-input_dir = data_dir + f'cosmo_sims/ics/enzo/{n_points}_{L_Mpc}Mpc_dmo/'
-output_dir = data_dir + f'cosmo_sims/ics/{n_points}_{L_Mpc}Mpc_dmo/'
+# input_dir = data_dir + f'cosmo_sims/ics/enzo/{n_points}_{L_Mpc}Mpc_dmo/'
+# output_dir = data_dir + f'cosmo_sims/ics/{n_points}_{L_Mpc}Mpc_dmo/'
 
-# m_wdm = 0.25
-# input_dir = data_dir + f'cosmo_sims/ics/enzo/wdm/{n_points}_hydro_{L_Mpc}Mpc_wdm_m{m_wdm:.2f}kev/raw/'
-# output_dir = data_dir + f'cosmo_sims/ics/wdm/{n_points}_{L_Mpc}Mpc_wdm_m{m_wdm:.2f}kev/'
+m_wdm = 12.0
+input_dir = data_dir + f'cosmo_sims/ics/enzo/wdm/{n_points}_hydro_{L_Mpc}Mpc_wdm_m{m_wdm:.2f}kev/raw/'
+output_dir = data_dir + f'cosmo_sims/ics/wdm/{n_points}_{L_Mpc}Mpc_wdm_m{m_wdm:.2f}kev/'
 
 # input_dir = data_dir + f'cosmo_sims/ics/enzo/wdm/{n_points}_hydro_{L_Mpc}Mpc_cdm/raw/'
 # output_dir = data_dir + f'cosmo_sims/ics/wdm/{n_points}_{L_Mpc}Mpc_cdm/'
