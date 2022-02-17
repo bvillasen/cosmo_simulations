@@ -97,6 +97,7 @@ if n_boxes == 16: proc_grid = [ 4, 2, 2 ]
 if n_boxes == 32: proc_grid = [ 4, 4, 2 ]
 if n_boxes == 64: proc_grid = [ 4, 4, 4 ]
 if n_boxes == 128: proc_grid = [ 8, 4, 4 ]
+if n_boxes == 512: proc_grid = [ 8, 8, 8 ]
 
 n_snapshot = 0
 box_size = [ Lbox, Lbox, Lbox ]
