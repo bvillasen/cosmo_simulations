@@ -22,9 +22,9 @@ if n_args == 1:
   print( 'Missing type: hydro or particles')
   exit(-1)
 
-type = args[1]
-if type == 'hydro': hydro = True
-if type == 'particles': particles = True
+types = args[1:]
+if 'hydro' in types:     hydro = True
+if 'particles' in types: particles = True
 
 # Box Size
 Lbox = 50000.0    #kpc/h
