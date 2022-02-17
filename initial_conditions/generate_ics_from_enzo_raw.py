@@ -23,13 +23,14 @@ if n_args == 1:
   exit(-1)
 
 types = args[1:]
-if 'hydro' in types:     hydro = True
-if 'particles' in types: particles = True
+if 'hydro' in types:     ics_hydro = True
+if 'particles' in types: ics_particles = True
+
 
 # Box Size
-Lbox = 50000.0    #kpc/h
+Lbox = 25000.0    #kpc/h
 n_points = 1024
-n_boxes  = 16
+n_boxes  = 128
 L_Mpc = int( Lbox / 1000)
 
 # input_dir = data_dir + f'cosmo_sims/ics/enzo/{n_points}_{L_Mpc}Mpc_dmo/'
@@ -50,13 +51,13 @@ print(f'Input Dir: {input_dir}' )
 print(f'Output Dir: {output_dir}' )
 
 temperature = 231.44931976   #k
-file_attrs = Load_File_Attrs( input_dir, Lbox=Lbox, type=type )
+file_attrs = Load_File_Attrs( input_dir, Lbox=Lbox, type=types[0] )
 
 data_ics = { 'dm':{}, 'gas':{} }
 data_ics['current_a'] = file_attrs['a_start']
 data_ics['current_z'] = file_attrs['z_start']
 
-if type == 'hydro':
+if ics_hydro:
   gas_density = Load_Gas_Field( 'density', input_dir, attrs=file_attrs )
   gas_vel_x = Load_Gas_Field( 'vel_x', input_dir, attrs=file_attrs )
   gas_vel_y = Load_Gas_Field( 'vel_y', input_dir, attrs=file_attrs )
@@ -72,7 +73,7 @@ if type == 'hydro':
   data_ics['gas']['Energy'] = gas_E
 
 
-if type == 'particles':
+if ics_particles:
   p_pos_x = Load_Particles_Field( 'pos_x', input_dir, attrs=file_attrs )
   p_pos_y = Load_Particles_Field( 'pos_y', input_dir, attrs=file_attrs )
   p_pos_z = Load_Particles_Field( 'pos_z', input_dir, attrs=file_attrs )
@@ -101,7 +102,7 @@ n_snapshot = 0
 box_size = [ Lbox, Lbox, Lbox ]
 grid_size = [ n_points, n_points, n_points ]
 output_base_name = '{0}_particles.h5'.format( n_snapshot )
-if particles: generate_ics_particles(data_ics, output_dir, output_base_name, proc_grid, box_size, grid_size)
+if ics_particles: generate_ics_particles(data_ics, output_dir, output_base_name, proc_grid, box_size, grid_size)
 
 output_base_name = '{0}.h5'.format( n_snapshot )
-if hydro: expand_data_grid_to_cholla( proc_grid, data_ics['gas'], output_dir, output_base_name )
+if ics_hydro: expand_data_grid_to_cholla( proc_grid, data_ics['gas'], output_dir, output_base_name )
