@@ -109,7 +109,8 @@ job_params['partition'] = 'gpu'
 # job_params['partition'] = 'comp-astro'
 
 # job_params['summit_project'] = 'CSC434'
-job_params['summit_project'] = 'AST169'
+# job_params['summit_project'] = 'AST169'
+job_params['summit_project'] = 'AST175'
 
 if system == 'Lux':
   job_params['n_tasks_per_node'] = 2
