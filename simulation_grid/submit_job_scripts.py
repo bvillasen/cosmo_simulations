@@ -32,7 +32,7 @@ module load xl cuda fftw hdf5
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/ccs/home/bvilasen/code/grackle/lib
 
-export CHOLLA_HOME=/gpfs/alpine/ast75/scratch/bvilasen/cosmo_sims/cholla_execs
+export CHOLLA_HOME=/gpfs/alpine/ast175/scratch/bvilasen/cosmo_sims/cholla_execs
 export WORK_DIR={sim_directory}
 cd {sim_directory}
 
