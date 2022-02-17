@@ -16,8 +16,9 @@ n_points = 1024
 # grid_name = f'{n_points}_wdmgrid_nsim200_deltaZ_0p0'
 # grid_name = f'{n_points}_wdmgrid_nsim200_deltaZ_0p5'
 # grid_name = f'{n_points}_wdmgrid_nsim200_deltaZ_n0p5'
-grid_name = f'{n_points}_wdmgrid_nsim600'
+# grid_name = f'{n_points}_wdmgrid_nsim600'
 # grid_name = f'{n_points}_wdmgrid_cdm'
+grid_name = f'{n_points}1024_wdmgrid_large_mwdm'
 
 
 if system == 'Lux':
@@ -33,8 +34,8 @@ if system == 'Shamrock':
   n_gpus     = 8
   
 if system == 'Summit':
-  root_dir   = f'/gpfs/alpine/ast169/scratch/bvilasen/cosmo_sims/sim_grid/{grid_name}/'
-  ics_dir    = f'/gpfs/alpine/ast169/scratch/bvilasen/cosmo_sims/ics/'
+  root_dir   = f'/gpfs/alpine/ast175/scratch/bvilasen/cosmo_sims/sim_grid/{grid_name}/'
+  ics_dir    = f'/gpfs/alpine/ast175/scratch/bvilasen/cosmo_sims/ics/'
   cholla_dir = f'/ccs/home/bvilasen/cholla/'  
   n_gpus     = 128 
 
