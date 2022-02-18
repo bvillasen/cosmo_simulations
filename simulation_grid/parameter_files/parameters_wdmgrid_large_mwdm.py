@@ -6,7 +6,7 @@ param_wdm_UVB_Rates = {}
 param_wdm_UVB_Rates[0] = {}
 param_wdm_UVB_Rates[0]['key']    = 'A'
 param_wdm_UVB_Rates[0]['name']   = 'wdm_mass'
-param_wdm_UVB_Rates[0]['values'] = [ 12.0, 20.0, 40.0, 100.0 ]
+param_wdm_UVB_Rates[0]['values'] = [ 12.0, 20.0, 40.0, 80.0 ]
 
 param_wdm_UVB_Rates[1] = {}
 param_wdm_UVB_Rates[1]['key']    = 'B'
