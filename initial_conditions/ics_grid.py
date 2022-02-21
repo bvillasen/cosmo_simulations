@@ -97,7 +97,7 @@ def Merge_Hydro_Fileds( field_list, proc_grid, output_dir, output_base_name='h5'
 
 
 
-def expand_data_grid_to_cholla( proc_grid, inputData, outputDir, outputBaseName ):
+def expand_data_grid_to_cholla( proc_grid, inputData, outputDir, outputBaseName, write_complete_fieds=True ):
   nProc_z, nProc_y, nProc_x = proc_grid
   nProc = nProc_x * nProc_y * nProc_z
 
@@ -108,19 +108,44 @@ def expand_data_grid_to_cholla( proc_grid, inputData, outputDir, outputBaseName 
   n_step = 0
 
   print( '\nGenerating ICs: Grid' )
-  outFiles = {}
-  for pId in range( nProc ):
-    outFileName = '{0}.{1}'.format(outputBaseName, pId)
-    if nProc == 1: outFileName = outputBaseName
-    outFiles[pId] = h5.File( outputDir + outFileName, 'w' )
-    outFiles[pId].attrs['gamma'] = gamma
-    outFiles[pId].attrs['t'] = t
-    outFiles[pId].attrs['dt'] = dt
-    outFiles[pId].attrs['n_step'] = n_step
-
   fields = list(inputData.keys())
-  for field in fields:
-    data = inputData[field]
+
+  if write_complete_fieds:
+    outFiles = {}
+    for pId in range( nProc ):
+      outFileName = '{0}.{1}'.format(outputBaseName, pId)
+      if nProc == 1: outFileName = outputBaseName
+      outFiles[pId] = h5.File( outputDir + outFileName, 'w' )
+      outFiles[pId].attrs['gamma'] = gamma
+      outFiles[pId].attrs['t'] = t
+      outFiles[pId].attrs['dt'] = dt
+      outFiles[pId].attrs['n_step'] = n_step
+      
+    for field in fields:
+      data = inputData[field]
+      nz_total, ny_total, nx_total = data.shape
+      nz, ny, nx = nz_total//nProc_z, ny_total//nProc_y, nx_total//nProc_x
+      
+      count = 1
+      for pz in range( nProc_z ):
+        zStr, zEnd = pz*nz, (pz+1)*nz
+        for py in range( nProc_y ):
+          yStr, yEnd = py*ny, (py+1)*ny
+          for px in range( nProc_x ):
+            xStr, xEnd = px*nx, (px+1)*nx
+            pId = pz + py*nProc_z + px*nProc_z*nProc_y
+            data_local = data[zStr:zEnd, yStr:yEnd, xStr:xEnd ]
+            print_line_flush( f'Writing field: {field}  total:{data.shape}  local:{data_local.shape}  file: {count} / {nProc}    ' )
+            # print(f' File: {pId}  {data_local.shape}' )
+            outFiles[pId].create_dataset( field , data=data_local.astype(np.float64) )
+            count += 1
+      print('')        
+    for pId in range( nProc ):
+      outFiles[pId].close()
+  
+  else:
+    #Get the size of the field
+    data = inputData['density']
     nz_total, ny_total, nx_total = data.shape
     nz, ny, nx = nz_total//nProc_z, ny_total//nProc_y, nx_total//nProc_x
     
@@ -132,14 +157,22 @@ def expand_data_grid_to_cholla( proc_grid, inputData, outputDir, outputBaseName 
         for px in range( nProc_x ):
           xStr, xEnd = px*nx, (px+1)*nx
           pId = pz + py*nProc_z + px*nProc_z*nProc_y
-          data_local = data[zStr:zEnd, yStr:yEnd, xStr:xEnd ]
-          print_line_flush( f'Writing field: {field}  total:{data.shape}  local:{data_local.shape}  file: {count} / {nProc}    ' )
-          # print(f' File: {pId}  {data_local.shape}' )
-          outFiles[pId].create_dataset( field , data=data_local.astype(np.float64) )
-          count += 1
-    print('')        
-  for pId in range( nProc ):
-    outFiles[pId].close()
+          
+          outFileName = '{0}.{1}'.format(outputBaseName, pId)
+          if nProc == 1: outFileName = outputBaseName
+          outFile = h5.File( outputDir + outFileName, 'w' )
+          outFile.attrs['gamma'] = gamma
+          outFile.attrs['t'] = t
+          outFile.attrs['dt'] = dt
+          outFile.attrs['n_step'] = n_step
+          for field in fields:
+            data = inputData[field]
+            data_local = data[zStr:zEnd, yStr:yEnd, xStr:xEnd ]
+            print_line_flush( f'Writing file: {count} / {nProc}   field: {field}   total:{data.shape}  local:{data_local.shape}' )
+            outFile.create_dataset( field , data=data_local.astype(np.float64) )
+          out_file.close()
+          print('')
+    
 
   print('Files Saved: {0}'.format(outputDir))
   return 0
