@@ -168,9 +168,10 @@ def expand_data_grid_to_cholla( proc_grid, inputData, outputDir, outputBaseName,
           for field in fields:
             data = inputData[field]
             data_local = data[zStr:zEnd, yStr:yEnd, xStr:xEnd ]
-            print_line_flush( f'Writing file: {count} / {nProc}  total:{data.shape}  local:{data_local.shape}   field: {field}' )
+            print_line_flush( f'Writing file: {count} / {nProc}  total:{data.shape}  local:{data_local.shape}   field: {field}       ' )
             outFile.create_dataset( field , data=data_local.astype(np.float64) )
           outFile.close()
+          count += 1
           print('')
     
 
