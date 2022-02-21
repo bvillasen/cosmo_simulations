@@ -68,7 +68,9 @@ if ics_hydro:
   gas_vel_x = Load_Gas_Field( 'vel_x', input_dir, attrs=file_attrs )
   gas_vel_y = Load_Gas_Field( 'vel_y', input_dir, attrs=file_attrs )
   gas_vel_z = Load_Gas_Field( 'vel_z', input_dir, attrs=file_attrs )
+  print( 'Computing GasEnergy')
   gas_U = get_internal_energy( temperature ) * gas_density
+  print( 'Computing Energy')
   gas_E = 0.5*gas_density*( gas_vel_x*gas_vel_x + gas_vel_y*gas_vel_y + gas_vel_z*gas_vel_z ) + gas_U
 
   data_ics['gas']['density'] = gas_density
