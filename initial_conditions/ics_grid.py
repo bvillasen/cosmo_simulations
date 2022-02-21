@@ -97,7 +97,7 @@ def Merge_Hydro_Fileds( field_list, proc_grid, output_dir, output_base_name='h5'
 
 
 
-def expand_data_grid_to_cholla( proc_grid, inputData, outputDir, outputBaseName, write_complete_fieds=True ):
+def expand_data_grid_to_cholla( proc_grid, inputData, outputDir, outputBaseName, loop_complete_files=True ):
   nProc_z, nProc_y, nProc_x = proc_grid
   nProc = nProc_x * nProc_y * nProc_z
 
@@ -110,7 +110,7 @@ def expand_data_grid_to_cholla( proc_grid, inputData, outputDir, outputBaseName,
   print( '\nGenerating ICs: Grid' )
   fields = list(inputData.keys())
 
-  if write_complete_fieds:
+  if not loop_complete_files:
     outFiles = {}
     for pId in range( nProc ):
       outFileName = '{0}.{1}'.format(outputBaseName, pId)
@@ -143,7 +143,7 @@ def expand_data_grid_to_cholla( proc_grid, inputData, outputDir, outputBaseName,
     for pId in range( nProc ):
       outFiles[pId].close()
   
-  else:
+  if loop_complete_files:
     #Get the size of the field
     data = inputData['density']
     nz_total, ny_total, nx_total = data.shape

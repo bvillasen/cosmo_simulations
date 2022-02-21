@@ -113,4 +113,4 @@ output_base_name = '{0}_particles.h5'.format( n_snapshot )
 if ics_particles: generate_ics_particles(data_ics, output_dir, output_base_name, proc_grid, box_size, grid_size)
 
 output_base_name = '{0}.h5'.format( n_snapshot )
-if ics_hydro: expand_data_grid_to_cholla( proc_grid, data_ics['gas'], output_dir, output_base_name, write_complete_fieds=False )
+if ics_hydro: expand_data_grid_to_cholla( proc_grid, data_ics['gas'], output_dir, output_base_name, loop_complete_files=True )
