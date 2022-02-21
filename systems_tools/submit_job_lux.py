@@ -7,20 +7,20 @@ from tools import *
 
 
 job_name  = 'thermal_cdm' 
-n_mpi_tasks = 320
-n_nodes = 8
+n_mpi_tasks = 240
+n_nodes = 6
 n_tasks_per_node = 40
 time = '24:00:00'
 command = 'python'
 
-job_dir = home_dir + 'thermal_IGM/'
-command_params = 'run_termal_wdm_chain.py'
+# job_dir = home_dir + 'thermal_IGM/'
+# command_params = 'run_termal_wdm_chain.py'
 
-# job_dir = home_dir + 'cosmo_simulations/lya_statistics/'
-# command_params = f'compute_transmitted_flux_mpi_grid.py {data_dir}cosmo_sims/sim_grid/1024_wdmgrid_nsim200_deltaZ_n0p5'
+job_dir = home_dir + 'cosmo_simulations/lya_statistics/'
+command_params = f'compute_transmitted_flux_mpi_grid.py {data_dir}cosmo_sims/sim_grid/1024_wdmgrid_large_mwdm'
 
-# partition = 'comp-astro'
-partition = 'gpuq'
+partition = 'comp-astro'
+# partition = 'gpuq'
 work_directory = '/home/brvillas/jobs/'
 output = work_directory + 'run_output_cdm'
 create_directory( work_directory )
