@@ -31,7 +31,7 @@ grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
 data_type = 'hydro'
 fields = [ 'density' ]
 
-snapshots = np.arange( 0, 1, 1, dtype=int )
+snapshots = np.arange( 0, 6, 1, dtype=int )
 
 cmap = 'jet'
 
