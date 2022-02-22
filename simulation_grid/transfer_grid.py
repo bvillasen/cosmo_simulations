@@ -1,7 +1,7 @@
 import sys, os, time
 import numpy
 from filecmp import dircmp
-from shutil import copyfile, copytree, move
+from shutil import copyfile, copytree, move, rmtree
 base_dir = os.path.dirname(os.getcwd()) + '/'
 subDirectories = [x[0] for x in os.walk(base_dir)]
 sys.path.extend(subDirectories)
@@ -90,7 +90,7 @@ for dst_id in dst_ids_to_transfer:
       dst_result = copytree( src_dir, dst_dir )
     else:
       print( f'WARNING: Deleting non-empty directorty: {dst_dir} ')
-      os.rmdir( dst_dir )
+      rmtree( dst_dir )
       dst_result = copytree( src_dir, dst_dir )
     
     dir_comparison = dircmp( src_dir, dst_dir )
