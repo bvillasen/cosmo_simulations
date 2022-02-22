@@ -63,9 +63,11 @@ for n_snapshot in snapshots:
   
   
   ax.imshow( slice,  cmap=cmap )
-  ax.text(0.1, 0.93, r'$t=${0:.2f}'.format(t), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
+  ax.text(0.15, 0.93, r'$t=${0:.2f}'.format(t), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
   
-  plt.box(False)
+  # plt.box(False)
+  ax.set_xticks([])
+  ax.set_yticks([])
   
   
   figure_name = output_dir + f'slice_{n_snapshot}.png' 
