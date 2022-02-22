@@ -88,6 +88,11 @@ for dst_id in dst_ids_to_transfer:
     if len( dst_content ) == 0: 
       os.rmdir( dst_dir )
       dst_result = copytree( src_dir, dst_dir )
+    else:
+      print( f'WARNING: Deleting non-empty directorty: {dst_dir} ')
+      os.rmdir( dst_dir )
+      dst_result = copytree( src_dir, dst_dir )
+    
     dir_comparison = dircmp( src_dir, dst_dir )
     # comparison_result = dir_comparison.report()
     diff_files = dir_comparison.diff_files
