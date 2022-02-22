@@ -22,7 +22,7 @@ n_samples_line = 50
 input_dir = args[0]
 fit_dir = input_dir + f'fit_mcmc_delta_{delta_min}_{delta_max}/'
 
-skiping_files = False
+skiping_files = True
 
 use_mpi = True
 if use_mpi:
