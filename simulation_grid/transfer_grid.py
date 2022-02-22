@@ -46,8 +46,8 @@ directories_to_copy = [ 'analysis_files', 'simulation_files', 'flux_power_spectr
 # directories_to_move = [ 'snapshot_files' ]
 directories_to_move = []
 
-# sim_files_to_copy = [ 'run_output.log' ]
-sim_files_to_copy = [  ]
+sim_files_to_copy = [ 'run_output.log' ]
+# sim_files_to_copy = [  ]
 
 n_transferred = 0
 for dst_id in dst_ids_to_transfer:
