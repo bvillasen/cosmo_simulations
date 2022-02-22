@@ -34,10 +34,10 @@ fields_to_fit = 'P(k)+'
 data_ps_sets = [ 'Boera' ]
 # data_ps_sets = [ 'BoeraC' ]
 
-error_type = 'sigma'
-# error_type = 'covmatrix'
+# error_type = 'sigma'
+error_type = 'covmatrix'
 
-independent_redshift = True
+independent_redshift = False
 use_inv_wdm = True
 
 fit_name = ''
