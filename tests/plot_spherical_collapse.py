@@ -63,7 +63,7 @@ for n_snapshot in snapshots:
   
   
   ax.imshow( slice,  cmap=cmap )
-  ax_l.text(0.1, 0.93, r'$t=${0:.2f}'.format(t), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
+  ax.text(0.1, 0.93, r'$t=${0:.2f}'.format(t), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
   
   plt.box(False)
   
