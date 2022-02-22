@@ -37,7 +37,7 @@ snapshots = np.arange( 0, 5, 1, dtype=int )
 for n_snapshot in snapshots:
 
   slices = {} 
-  data = load_snapshot_data_distributed( data_type, fields, n_snapshot, input_dir_0, box_size, grid_size, precision, subgrid=None, show_progess=True )
+  data = load_snapshot_data_distributed( data_type, fields, n_snapshot, input_dir, box_size, grid_size, precision, subgrid=None, show_progess=True )
   
   for field in fields:
     slices[field] = data[n_cells//2,:,:]
