@@ -33,6 +33,7 @@ fields = [ 'density' ]
 
 snapshots = np.arange( 0, 1, 1, dtype=int )
 
+cmap = 'jet'
 
 for n_snapshot in snapshots:
 
@@ -40,65 +41,37 @@ for n_snapshot in snapshots:
   t = data['t']
   slice =  data['density'][n_cells//2,:,:]
     
-  # 
-  # label_size = 16
-  # figure_text_size = 16
-  # tick_label_size_major = 15
-  # tick_label_size_minor = 13
-  # tick_size_major = 5
-  # tick_size_minor = 3
-  # tick_width_major = 1.5
-  # tick_width_minor = 1
-  # text_color = 'white'
-  # legend_font_size = 14
-  # 
-  # ncols, nrows = 3, n_fields
-  # figure_width = 6
-  # figure_height = 6
-  # fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(ncols*figure_width, nrows*figure_height))
-  # plt.subplots_adjust( hspace = 0.02, wspace=0.02 )
-  # 
-  # 
-  # cmaps = [ 'viridis' ]
-  # 
-  # for field_id, field in enumerate(fields):
-  #   slice_0 = slices[field][0]
-  #   slice_1 = slices[field][1]
-  #   diff = ( slice_1 - slice_0 ) / slice_0
-  #   if absolute_difference: diff = np.abs( diff )
-  #   delta_min, delta_max = diff.min(), diff.max()
-  # 
-  #   slice_0 = np.log10( slice_0 )
-  #   slice_1 = np.log10( slice_1 )
-  #   vmin, vmax = min( slice_0.min(), slice_1.min() ), max( slice_0.max(), slice_1.max() )
-  # 
-  #   cmap = cmaps[field_id]
-  #   ax_l[0].imshow( slice_0, vmin=vmin, vmax=vmax, cmap=cmap )
-  #   ax_l[1].imshow( slice_1, vmin=vmin, vmax=vmax, cmap=cmap )
-  #   im=ax_l[2].imshow( diff, vmin=delta_min, vmax=delta_max, cmap='bwr' )
-  # 
-  #   ax = ax_l[2]
-  #   cax = ax.inset_axes([1.04, 0.1, 0.05, 0.8], transform=ax.transAxes)
-  #   fig.colorbar(im, ax=ax, cax=cax)
-  # 
-  #   ax_l[0].text(0.1, 0.93, r'$z=${0:.1f}'.format(z_0), horizontalalignment='center',  verticalalignment='center', transform=ax_l[0].transAxes, fontsize=figure_text_size, color=text_color) 
-  # 
-  #   for i in range(3):
-  #     ax_l[i].set_xticks([])
-  #     ax_l[i].set_yticks([])
-  # 
-  #   ax_l[0].set_ylabel( field, fontsize=label_size )
-  #   if field_id == 0: 
-  #     ax_l[0].set_title( '', fontsize=label_size )
-  #     ax_l[1].set_title( '', fontsize=label_size )
-  #     ax_l[2].set_title( 'Fractional Difference', fontsize=label_size )
-  # 
-  # 
-  # figure_name = output_dir + f'slices_comparison_{n_snapshot}.png' 
-  # if absolute_difference: figure_name = output_dir + f'slices_comparison_absolute_{n_snapshot}.png'
-  # fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
-  # print( f'Saved Figure: {figure_name}' )
-  # 
-  # 
-  # 
-  # 
+  
+  label_size = 16
+  figure_text_size = 16
+  tick_label_size_major = 15
+  tick_label_size_minor = 13
+  tick_size_major = 5
+  tick_size_minor = 3
+  tick_width_major = 1.5
+  tick_width_minor = 1
+  text_color = 'white'
+  legend_font_size = 14
+  
+  ncols, nrows = 1, 1
+  figure_width = 6
+  figure_height = 6
+  fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(ncols*figure_width, nrows*figure_height))
+  plt.subplots_adjust( hspace = 0.02, wspace=0.02 )
+  
+  
+  
+  
+  ax.imshow( slice,  cmap=cmap )
+  ax_l[0].text(0.1, 0.93, r'$t=${0:.2f}'.format(t), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
+  
+  plt.box(False)
+  
+  
+  figure_name = output_dir + f'slice_{n_snapshot}.png' 
+  fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
+  print( f'Saved Figure: {figure_name}' )
+  
+  
+  
+  
