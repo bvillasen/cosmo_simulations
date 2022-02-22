@@ -25,7 +25,6 @@ Lbox = 1.0
 n_cells = 256
 box_size = [ Lbox, Lbox, Lbox ]
 grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
-subgrid = [ [slice_start, slice_start+slice_depth], [0, n_cells], [0, n_cells]]
 
 
 
@@ -38,7 +37,7 @@ snapshots = np.arange( 0, 5, 1, dtype=int )
 for n_snapshot in snapshots:
 
   slices = {} 
-  data = load_snapshot_data_distributed( data_type, fields, n_snapshot, input_dir_0, box_size, grid_size, precision, subgrid=subgrid, show_progess=True )
+  data = load_snapshot_data_distributed( data_type, fields, n_snapshot, input_dir_0, box_size, grid_size, precision, subgrid=None, show_progess=True )
   
   for field in fields:
     slices[field] = data[n_cells//2,:,:]
