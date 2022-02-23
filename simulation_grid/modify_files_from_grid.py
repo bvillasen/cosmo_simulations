@@ -8,7 +8,7 @@ sys.path.extend(subDirectories)
 from tools import *
 from transfer_grid_functions import *
 
-grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim900/'
+grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_large_mwdm/'
 dirs_in_grid = [ d for d in os.listdir(grid_dir) if os.path.isdir(grid_dir+d) ]
 
 base_dir = grid_dir + 'simulation_files/'
@@ -21,6 +21,6 @@ for sim_dir in sim_dirs:
     for file in files:
       file_name = src_dir + file
       print( f'Deleting file: {file_name}' )
-      os.remove(file_name)
+      # os.remove(file_name)
 
 
