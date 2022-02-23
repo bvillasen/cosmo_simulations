@@ -18,7 +18,9 @@ for sim_dir in sim_dirs:
   src_dir = base_dir + f'{sim_dir}/original/'
   files = [ f for f in os.listdir(src_dir) if os.path.isfile(src_dir+f) and f.find('core')==0 ]
   if len(files) > 0:
-    print( f'{sim_dir}  {files}' )
+    for file in files:
+      file_name = src_dir + file
+      print( f'Deleting file: {file_name}' )
 
 
 
