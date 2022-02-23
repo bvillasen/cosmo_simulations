@@ -16,7 +16,7 @@ sim_dirs = [ d for d in os.listdir(base_dir) if os.path.isdir(base_dir+d) ]
 
 for sim_dir in sim_dirs:
   src_dir = base_dir + f'{sim_dir}/original/'
-  files = [ f for f in os.listdir(src_dir) if os.path.isfile(base_dir+d) and f.find('core')==0 ]
+  files = [ f for f in os.listdir(src_dir) if os.path.isfile(src_dir+f) and f.find('core')==0 ]
   if len(files) > 0:
     print( f'{sim_dir}  {files}' )
 
