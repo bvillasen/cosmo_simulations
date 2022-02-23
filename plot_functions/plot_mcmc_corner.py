@@ -156,7 +156,7 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
           data_label = data_labels[data_id]
           if add_data_label: label = f'{data_label}' 
           else: label = ''
-          ax.plot( bin_centers_interp, f_interp(bin_centers_interp),   color=line_color, linewidth=hist_1D_line_width/5, label=label, zorder=3  )
+          ax.plot( bin_centers_interp, f_interp(bin_centers_interp),   color=line_color, linewidth=hist_1D_line_width, label=label, zorder=3  )
           # ax.plot( bin_centers, hist,   color=line_color, linewidth=hist_1D_line_width  ), 
           # ax.step( bin_centers, hist, where='mid',  color=line_color, linewidth=hist_1D_line_width  )
           distribution = hist/hist.sum()

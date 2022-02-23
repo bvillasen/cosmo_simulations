@@ -32,13 +32,25 @@ for data_id,grid_name in enumerate(grid_names):
 
   print( f'Loading File: {samples_file}')
   param_samples = pickle.load( open( samples_file, 'rb' ) )
-  samples_all['param'][data_id] = param_samples
+  
+  # Select CDM from the chain
+  chain_inv_wdm_mass = param_samples[0]['trace']
+  indices = chain_inv_wdm_mass <= 0.05
+  n_selected = indices.sum()
+  print( f'Selected CDM samples: {n_selected}')
+  
+  chain_selected = {} 
+  for p_id in range(3):
+    chain_selected[p_id] = { 'name':param_samples[p_id+1]['name'], 'trace':param_samples[p_id+1]['trace'][indices] }
+  
+  samples_all['param'][data_id] = chain_selected
 
   # # Get the Highest_Likelihood parameter values 
   params_HL = Get_Highest_Likelihood_Params( param_samples, n_bins=20 )
-  # params_HL = None
+  params_HL_selected = np.array([params_HL[pid+1] for pid in range(3) ])
+  params_HL = params_HL_selected
+  params_HL = None
   
-  params_HL[2] = 0.78
 
   stats = pickle.load( open( stats_file, 'rb' ) )
 
@@ -51,9 +63,9 @@ for data_id,grid_name in enumerate(grid_names):
 corner_labels = { 'inv_wdm_mass':r'$m_{\mathrm{WDM}}^{-1}$  [keV$^{-1}$]', 'scale_H_ion': r'$\beta$',
                   'scale_H_Eheat': r'$\alpha_{\mathrm{E}}$', 'deltaZ_H':r'$\Delta z$' }
 
-ticks = {0:[0., 0.1, 0.2, 0.3, 0.4], 1:[0.4, 0.6, 0.8, 1.0, 1.2, 01.4], 2:[ 0.6, 0.8, 1.0, 1.2,], 3:[ -0.5, -0.25, 0, 0.25, 0.5,]}
-limits = {0:( 0, 0.45 ), 1:( 0.8, 1.5 ), 2:( 0.4, 1.15 ), 3:( -0.5, 0.5 )}
+ticks = {0:[0.4, 0.6, 0.8, 1.0, 1.2, 01.4], 1:[ 0.6, 0.8, 1.0, 1.2,], 2:[ -0.5, -0.25, 0, 0.25, 0.5,]}
+limits = {0:( 0.8, 1.5 ), 1:( 0.4, 1.15 ), 2:( -0.5, 0.5 )}
 
 Plot_Corner( samples_all['param'], data_labels, corner_labels, output_dir, n_bins_1D=20, n_bins_2D=25, 
              lower_mask_factor=500, multiple=True, show_label=True, HL_vals=params_HL, ticks=ticks, 
-             limits=limits, param_values=None, black_background=False, figure_name='corner_wdm_nsim900.png', show_param_values=False)
+             limits=limits, param_values=None, black_background=False, figure_name='corner_cdm_slice.png', show_param_values=False)
