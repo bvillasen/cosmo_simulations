@@ -11,7 +11,7 @@ param_wdm_UVB_Rates[0]['values'] = [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 8.0, 12.0, 20
 param_wdm_UVB_Rates[1] = {}
 param_wdm_UVB_Rates[1]['key']    = 'B'
 param_wdm_UVB_Rates[1]['name']   = 'scale_H_ion'
-param_wdm_UVB_Rates[1]['values'] = [ 0.6, 0.8, 1.0, 1.2, 1.4, 1.8, 2.2 ]
+param_wdm_UVB_Rates[1]['values'] = [ 0.6, 0.8, 1.0, 1.2, 1.4, 1.8 ]
 
 param_wdm_UVB_Rates[2] = {}
 param_wdm_UVB_Rates[2]['key']    = 'C'
