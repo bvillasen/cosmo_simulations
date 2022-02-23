@@ -21,6 +21,6 @@ for sim_dir in sim_dirs:
     for file in files:
       file_name = src_dir + file
       print( f'Deleting file: {file_name}' )
-      # os.remove(file_name)
+      os.remove(file_name)
 
 
