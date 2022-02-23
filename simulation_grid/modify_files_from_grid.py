@@ -9,6 +9,6 @@ from tools import *
 from transfer_grid_functions import *
 
 grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim900/'
-dirs_in_grid = [ d for d in os.listdir(grid_dir) if os.path.isdir(d) ]
+dirs_in_grid = [ d for d in os.listdir(grid_dir) if os.path.isdir(grid_dir+d) ]
 
 
