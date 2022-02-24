@@ -16,11 +16,11 @@ n_points = 1024
 # grid_name = f'{n_points}_wdmgrid_nsim200_deltaZ_0p0'
 # grid_name = f'{n_points}_wdmgrid_nsim200_deltaZ_0p5'
 # grid_name = f'{n_points}_wdmgrid_nsim200_deltaZ_n0p5'
-# grid_name = f'{n_points}_wdmgrid_nsim600'
+grid_name = f'{n_points}_wdmgrid_nsim600'
 # grid_name = f'{n_points}_wdmgrid_cdm'
 # grid_name = f'{n_points}_wdmgrid_large_mwdm'
 # grid_name = f'{n_points}_wdmgrid_nsim900'
-grid_name = f'{n_points}_wdmgrid_extended_beta'
+# grid_name = f'{n_points}_wdmgrid_extended_beta'
 
 if system == 'Lux':
   root_dir   = f'/data/groups/comp-astro/bruno/cosmo_sims/sim_grid/{grid_name}/'

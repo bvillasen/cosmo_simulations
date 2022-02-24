@@ -36,6 +36,10 @@ def Find_Parameter_Value_Near_IDs( param_id, param_value, parameters, clip_param
   p_val_id_l, p_val_id_r = 0, 0
   diff_l, diff_r = -np.inf, np.inf
   for v_id, p_val in enumerate(grid_param_values):
+    if are_floats_equal( param_value, p_val ): 
+      p_val_id_l = v_id 
+      p_val_id_r = v_id + 1
+      break
     diff = p_val - param_value
     if diff > 0 and diff < diff_r: p_val_id_r, diff_r = v_id, diff
     if diff < 0 and diff > diff_l: p_val_id_l, diff_l = v_id, diff  
@@ -52,6 +56,7 @@ def Get_Simulation_ID_From_Coordinates( sim_coords, SG ):
     p_key = parameters[param_id]['key']
     key += f'_{p_key}{sim_coords[param_id]}'
   key = key[1:]
+  # print(key)
   sim_id = SG.coords[key]
   return sim_id
 
@@ -66,6 +71,7 @@ def Get_Value_From_Simulation( sim_coords, data_to_interpolate, field, sub_field
 
 def Get_Parameter_Grid( param_values, parameters, clip_params=False ):
   parameter_grid = {}
+  print( 'Finding nearest neighbours')
   for p_id, p_val in enumerate(param_values):
     parameter_grid[p_id] = {}
     # print( f' Param_id:{p_id}   value:{p_val}' )
@@ -74,6 +80,7 @@ def Get_Parameter_Grid( param_values, parameters, clip_params=False ):
     parameter_grid[p_id]['v_id_r'] = v_id_r
     parameter_grid[p_id]['v_l'] = parameters[p_id]['values'][v_id_l]
     parameter_grid[p_id]['v_r'] = parameters[p_id]['values'][v_id_r]
+    print( f"p_id: {p_id}  value: {p_val}   v_l:{parameters[p_id]['values'][v_id_l]}  v_r:{parameters[p_id]['values'][v_id_r]}" )
   return parameter_grid
   
 
@@ -103,9 +110,20 @@ def Interpolate_4D( p0, p1, p2, p3, data_to_interpolate, field, sub_field, SG, c
     if p_val < p_val_l or p_val > p_val_r:
       print( ' ERROR: Parameter outside left and right values')
       exit()
-  if p_val_l == p_val_r: delta = 0.5
-  else: delta = ( p_val - p_val_l ) / ( p_val_r - p_val_l )  
+  if p_val_l == p_val_r: 
+    delta = 0.5
+    print( f'WARNING:  Both neighbours parameters are equal  v_l:{p_val_l}  v_r:{p_val_r}')
+
+  else: delta = ( p_val - p_val_l ) / ( p_val_r - p_val_l )
+  if delta < 0:
+    print( f'ERROR:  Negative delta when interpolating p_val:{p_val} v_l:{p_val_l}  v_r:{p_val_r}  delta:{delta}')
+    exit(-1)
+  if delta > 1:
+    print( f'ERROR: delta > 1 when interpolating p_val:{p_val} v_l:{p_val_l}  v_r:{p_val_r}  delta:{delta}')
+    exit(-1) 
+     
   if param_id == 0:
+    #This is the base case of the recursion
     value_l = Get_Value_From_Simulation( sim_coords_l, data_to_interpolate, field, sub_field, SG, interp_log=interp_log )
     value_r = Get_Value_From_Simulation( sim_coords_r, data_to_interpolate, field, sub_field, SG, interp_log=interp_log )
     value_interp = delta*value_r + (1-delta)*value_l 
@@ -135,6 +153,8 @@ def Interpolate_3D( p0, p1, p2, data_to_interpolate, field, sub_field, SG, clip_
   sim_coords_l[param_id] = v_id_l
   sim_coords_r[param_id] = v_id_r
   p_val = param_values[param_id]
+  # print( f'p_id:{param_id} coords_l: {sim_coords_l}' )
+  # print( f'p_id:{param_id} coords_r: {sim_coords_r}' )
   
   if clip_params:
     if p_val < p_val_l: p_val = p_val_l
@@ -143,9 +163,19 @@ def Interpolate_3D( p0, p1, p2, data_to_interpolate, field, sub_field, SG, clip_
     if p_val < p_val_l or p_val > p_val_r:
       print( ' ERROR: Parameter outside left and right values')
       exit()
-  if p_val_l == p_val_r: delta = 0.5
+  if p_val_l == p_val_r: 
+    delta = 0.5
+    print( f'WARNING:  Both neighbours parameters are equal  v_l:{p_val_l}  v_r:{p_val_r}')
   else: delta = ( p_val - p_val_l ) / ( p_val_r - p_val_l )  
+  if delta < 0:
+    print( f'ERROR:  Negative delta when interpolating p_val:{p_val} v_l:{p_val_l}  v_r:{p_val_r}  delta:{delta}')
+    exit(-1)
+  if delta > 1:
+    print( f'ERROR: delta > 1 when interpolating p_val:{p_val} v_l:{p_val_l}  v_r:{p_val_r}  delta:{delta}')
+    exit(-1)
+
   if param_id == 0:
+    #This is the base case of the recursion
     value_l = Get_Value_From_Simulation( sim_coords_l, data_to_interpolate, field, sub_field, SG )
     value_r = Get_Value_From_Simulation( sim_coords_r, data_to_interpolate, field, sub_field, SG )
     value_interp = delta*value_r + (1-delta)*value_l 
@@ -156,8 +186,19 @@ def Interpolate_3D( p0, p1, p2, data_to_interpolate, field, sub_field, SG, clip_
   value_interp = delta*value_r + (1-delta)*value_l
   return value_interp
 
-
-
+def Interpolate_multi_dimensional_from_grid( interp_param, comparable_grid, field, sub_field, SG ):
+  n_param = len(interp_param)
+  if n_param == 3:
+    p0, p1, p2 = interp_param
+    interpolation = Interpolate_3D( p0, p1, p2, comparable_grid, field, sub_field, SG )
+  elif n_param == 4:
+    p0, p1, p2, p3 = interp_param
+    interpolation = Interpolate_4D( p0, p1, p2, p3, comparable_grid, field, sub_field, SG )
+  else:
+    print( f'ERROR: interpolation for n_dim={n_param} is not supported')
+    interpolation = None
+  return interpolation  
+     
 def interp_line_cubic( x, x_interp, y ):
   func = interp.interp1d( x, y, kind='cubic' )
   return func(x_interp)

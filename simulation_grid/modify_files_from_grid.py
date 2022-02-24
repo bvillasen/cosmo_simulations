@@ -8,7 +8,7 @@ sys.path.extend(subDirectories)
 from tools import *
 from transfer_grid_functions import *
 
-grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_large_mwdm/'
+grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_extended_beta/'
 dirs_in_grid = [ d for d in os.listdir(grid_dir) if os.path.isdir(grid_dir+d) ]
 
 base_dir = grid_dir + 'simulation_files/'

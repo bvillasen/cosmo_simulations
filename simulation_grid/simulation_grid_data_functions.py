@@ -260,7 +260,7 @@ def Load_Power_Spectum_Data( self, sim_id, indices, FPS_correction=None, custom_
     
 ####################################################################################################################
 
-def Load_Sim_Analysis_Data( self, sim_id, load_pd_fit=True, mcmc_fit_dir=None, load_thermal=False, files_to_load=None, custom_data=None ):
+def Load_Sim_Analysis_Data( self, sim_id, load_pd_fit=True, mcmc_fit_dir=None, load_thermal=False, files_to_load=None, custom_data=None, load_phase_diagram=False ):
   str = f' Loading Simulation Analysis: {sim_id}' 
   print_line_flush( str )
   
@@ -288,7 +288,7 @@ def Load_Sim_Analysis_Data( self, sim_id, load_pd_fit=True, mcmc_fit_dir=None, l
   
   for n_file in indices:
     n_file = int(n_file)
-    data = load_analysis_data( n_file, input_dir, phase_diagram=False, lya_statistics=True, load_skewer=False, load_fit=load_pd_fit, mcmc_fit_dir=mcmc_fit_dir )
+    data = load_analysis_data( n_file, input_dir, phase_diagram=load_phase_diagram, lya_statistics=True, load_skewer=False, load_fit=load_pd_fit, mcmc_fit_dir=mcmc_fit_dir )
     z = data['cosmology']['current_z']
     if load_pd_fit:
       T0 =    data['phase_diagram']['fit']['T0']
@@ -340,7 +340,7 @@ def Load_Sim_Analysis_Data( self, sim_id, load_pd_fit=True, mcmc_fit_dir=None, l
 
 ####################################################################################################################
 
-def Load_Analysis_Data( self, sim_ids=None, load_pd_fit=True, mcmc_fit_dir=None, load_thermal=False, FPS_correction=None, files_to_load=None, custom_data=None  ):
+def Load_Analysis_Data( self, sim_ids=None, load_pd_fit=True, mcmc_fit_dir=None, load_thermal=False, FPS_correction=None, files_to_load=None, custom_data=None, load_phase_diagram=False  ):
   if sim_ids == None:  
     sim_ids = self.Grid.keys()
     indx_0 = list( sim_ids )[0]
@@ -353,7 +353,7 @@ def Load_Analysis_Data( self, sim_ids=None, load_pd_fit=True, mcmc_fit_dir=None,
   
   
   for sim_id in sim_ids:
-    self.Load_Simulation_Analysis_Data( sim_id, load_pd_fit=load_pd_fit, mcmc_fit_dir=mcmc_fit_dir, load_thermal=load_thermal, files_to_load=files_to_load, custom_data=custom_data  )
+    self.Load_Simulation_Analysis_Data( sim_id, load_pd_fit=load_pd_fit, mcmc_fit_dir=mcmc_fit_dir, load_thermal=load_thermal, files_to_load=files_to_load, custom_data=custom_data, load_phase_diagram=load_phase_diagram  )
   
   indices = self.Grid[indx_0]['analysis']['ps_available_indices']
   available_indices = []

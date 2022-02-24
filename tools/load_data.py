@@ -37,7 +37,7 @@ def Load_Skewers_File_old( n_file, input_dir, chem_type = 'HI', axis_list = [ 'x
   return data_out
   
 
-def load_analysis_data( n_file, input_dir, phase_diagram=True, lya_statistics=True, load_skewer=False, load_fit=False, load_flux_Pk=True, mcmc_fit_dir=None):
+def load_analysis_data( n_file, input_dir, phase_diagram=False, lya_statistics=True, load_skewer=False, load_fit=False, load_flux_Pk=True, mcmc_fit_dir=None):
   file_name = input_dir + f'{n_file}_analysis.h5'
   file = h5.File( file_name, 'r' ) 
 
