@@ -17,7 +17,7 @@ time.sleep(1)
 grid_header = 'Base UVB Rates are the V21 rates (modified P19)'
 constant_UVB_parameters = None
 # constant_UVB_parameters = { 'deltaZ_H':-0.5 }
-# constant_UVB_parameters = { 'wdm_mass':10000 } 
+constant_UVB_parameters = { 'wdm_mass':10000 } 
 
 SG = Simulation_Grid( parameters=Grid_Parameters, sim_params=sim_params, constant_params=constant_UVB_parameters, 
                       job_params=job_params, dir=root_dir, grid_header=grid_header )
@@ -26,8 +26,8 @@ SG.Create_Grid_Directory_Structure()
 # Select the type of initial conditions: 'cdm' or 'wdm'
 # SG.Create_All_Parameter_Files( ics_type='cdm' )
 
-wdm_mass = None
-# wdm_mass = 10000
+# wdm_mass = None
+wdm_mass = 10000
 z_start = 100
 n_file_start = 0
 SG.Create_All_Parameter_Files( ics_type='wdm', wdm_mass=wdm_mass, verbose=False, z_start=z_start, n_file_start=n_file_start )
