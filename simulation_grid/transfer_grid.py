@@ -22,8 +22,8 @@ sim_grid_dir = data_dir + 'cosmo_sims/sim_grid/'
 # src_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim200_deltaZ_n0p5/'
 # dst_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim600/'
 
-src_grid_dir = sim_grid_dir + '1024_wdmgrid_nsim900/'
-dst_grid_dir = sim_grid_dir + '1024_wdmgrid_extended_beta/'
+src_grid_dir = sim_grid_dir + '1024_wdmgrid_extended_beta/'
+dst_grid_dir = sim_grid_dir + '1024_wdmgrid_cdm_extended_beta/'
 
 # constant_params = { 'wdm_mass': wdm_mass }
 constant_params = None
