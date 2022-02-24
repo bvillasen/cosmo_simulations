@@ -22,7 +22,7 @@ command_params = f'compute_transmitted_flux_mpi_grid.py {data_dir}cosmo_sims/sim
 partition = 'comp-astro'
 # partition = 'gpuq'
 work_directory = '/home/brvillas/jobs/'
-output = work_directory + 'run_output_cdm'
+output = work_directory + 'run_output_extended_beta.log'
 create_directory( work_directory )
 
 submit_str = f"""#!/bin/bash          
@@ -32,7 +32,7 @@ submit_str = f"""#!/bin/bash
 #SBATCH --nodes={n_nodes}               
 #SBATCH --ntasks-per-node={n_tasks_per_node}     
 #SBATCH --time={time}          
-#SBATCH --output={output}.log   
+#SBATCH --output={output}  
 
 module load hdf5/1.10.6
 module load cuda10.2/10.2
