@@ -90,12 +90,13 @@ def Fit_Simulation_Phase_Diagram_MPI( self, sim_id, n_mpi=30,  n_nodes=1  ):
     files = [f for f in os.listdir(fit_dir) if os.path.isfile(fit_dir+f)]
     n_files = len(files)
     print( f'  Skipping {sim_key}:  n_analysis: {n_analysis_files}  n_fit: {n_files}')
-  # run_file = root_dir + '/phase_diagram/fit_phase_diagram_mpi.py'
-  # parameters = input_dir
-  # n_per_node = n_mpi // n_nodes + 1
-  # command = f'mpirun -n {n_mpi} --map-by ppr:{n_per_node}:node --oversubscribe python {run_file} {parameters}'
-  # print( f' Submitting: {command}' )
-  # os.system( command )
+    return None
+  run_file = root_dir + '/phase_diagram/fit_phase_diagram_mpi.py'
+  parameters = input_dir
+  n_per_node = n_mpi // n_nodes + 1
+  command = f'mpirun -n {n_mpi} --map-by ppr:{n_per_node}:node --oversubscribe python {run_file} {parameters}'
+  print( f' Submitting: {command}' )
+  os.system( command )
 
 def Delete_grid_core_files( self ):
  sim_ids = self.sim_ids
