@@ -92,7 +92,9 @@ if rank == 0:
     for file_indx in file_indices:
       file_name = f'{skewers_dir}{sim_dir}/{file_indx}_skewers.h5'
       is_file = os.path.isfile( file_name )
-      if not is_file: print(f'ERROR: File not found {file_name}' )
+      if not is_file: 
+        print(f'WARNING: File not found {file_name}' )
+        continue
       skewers_files_data[file_id] = { 'sim_id': sim_id, 'sim_dir':sim_dir, 'file_indx':file_indx, 'file_name':file_name }
       file_id += 1
   
