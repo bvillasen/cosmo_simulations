@@ -17,7 +17,7 @@ command = 'python'
 # command_params = 'run_termal_wdm_chain.py'
 
 job_dir = home_dir + 'cosmo_simulations/lya_statistics/'
-command_params = f'compute_transmitted_flux_mpi_grid.py {data_dir}cosmo_sims/sim_grid/1024_wdmgrid_large_mwdm'
+command_params = f'compute_transmitted_flux_mpi_grid.py {data_dir}cosmo_sims/sim_grid/1024_wdmgrid_extended_beta'
 
 partition = 'comp-astro'
 # partition = 'gpuq'
