@@ -79,14 +79,23 @@ def Fit_Grid_Phase_Diagram_MPI( self, n_mpi=30, n_nodes=1 ):
 
 def Fit_Simulation_Phase_Diagram_MPI( self, sim_id, n_mpi=30,  n_nodes=1  ):
   print( f' Fitting Simulation: {sim_id}')
+  fit_is_done = False
   sim_key = self.Grid[sim_id]['key']
   input_dir = self.analysis_dir + sim_key + '/'
-  run_file = root_dir + '/phase_diagram/fit_phase_diagram_mpi.py'
-  parameters = input_dir
-  n_per_node = n_mpi // n_nodes + 1
-  command = f'mpirun -n {n_mpi} --map-by ppr:{n_per_node}:node --oversubscribe python {run_file} {parameters}'
-  print( f' Submitting: {command}' )
-  os.system( command )
+  analysis_files = [f for f in os.listdir(input_dir) if os.path.isfile(input_dir+f)]
+  n_analysis_files = len(analysis_files)
+  found_dirs = [d for d in os.listdir(input_dir) if os.path.isdir(input_dir+d)]
+  if len(found_dirs) == 1:
+    fit_dir = input_dir + found_dirs[0] + '/'
+    files = [f for f in os.listdir(fit_dir) if os.path.isfile(fit_dir+f)]
+    n_files = len(files)
+    print( f'  Skipping {sim_key}:  n_analysis: {n_analysis_files}  n_fit: {n_files}')
+  # run_file = root_dir + '/phase_diagram/fit_phase_diagram_mpi.py'
+  # parameters = input_dir
+  # n_per_node = n_mpi // n_nodes + 1
+  # command = f'mpirun -n {n_mpi} --map-by ppr:{n_per_node}:node --oversubscribe python {run_file} {parameters}'
+  # print( f' Submitting: {command}' )
+  # os.system( command )
 
 def Delete_grid_core_files( self ):
  sim_ids = self.sim_ids
