@@ -44,8 +44,8 @@ print( f'N to transfer: {n_to_transfer} ' )
 # directories_to_copy = [ 'analysis_files', 'simulation_files', 'flux_power_spectrum' ] 
 # directories_to_copy = [ 'analysis_files'  ] 
 # directories_to_copy = [ 'simulation_files' ]
-
 directories_to_copy = [ 'analysis_files', 'flux_power_spectrum' ]
+
 
 # directories_to_move = [ 'snapshot_files' ]
 directories_to_move = []
