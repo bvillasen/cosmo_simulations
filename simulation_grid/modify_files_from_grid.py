@@ -26,4 +26,4 @@ for sim_dir in sim_dirs:
 print(f'Files to delete: {files_to_delete}' )
 print( f'N to delete: {len(files_to_delete)}' )      
 for file_name in files_to_delete:
-  os.remove(file_name)
+  # os.remove(file_name)
