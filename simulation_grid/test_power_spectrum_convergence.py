@@ -59,12 +59,12 @@ comparable_grid = Get_Comparable_Composite_from_Grid( fields_to_fit, comparable_
 param_names = [ 'inv_wdm_mass', 'scale_H_ion', 'scale_H_Eheat', 'deltaZ_H' ]
 default_params = { 'inv_wdm_mass':0.0, 'scale_H_ion':1.0, 'scale_H_Eheat':0.9, 'deltaZ_H':0.0 }
 
-
-param_to_change = 0
-param_change_name = SG.parameters[param_to_change]['name']
-param_change_vals = SG.parameters[param_to_change]['values']
-pk_data = { 'param_change_name':param_change_name, 'param_change_vals':param_change_vals, 'default_params':default_params, 'pk_samples':{}}
-
+# 
+# param_to_change = 0
+# param_change_name = SG.parameters[param_to_change]['name']
+# param_change_vals = SG.parameters[param_to_change]['values']
+# pk_data = { 'param_change_name':param_change_name, 'param_change_vals':param_change_vals, 'default_params':default_params, 'pk_samples':{}}
+# 
 # for data_id, p_change_val in enumerate(param_change_vals):
 #   selected_parameters = {}
 #   # Fill wit the default values
@@ -102,3 +102,22 @@ for data_id, p_change_val in enumerate(param_change_vals):
 
 file_name = output_dir + 'pk_interpolated.pkl'
 Write_Pickle_Directory( pk_data, file_name )
+
+
+# 
+# param_to_change = 2
+# param_change_name = SG.parameters[param_to_change]['name']
+# param_change_vals = [0.6, 0.8, 1.0, 1.2, 1.4, 1.6 ]
+# pk_data = { 'param_change_name':param_change_name, 'param_change_vals':param_change_vals, 'default_params':default_params, 'pk_samples':{}}
+# for data_id, p_change_val in enumerate(param_change_vals):
+#   selected_parameters = {}
+#   # Fill wit the default values
+#   for p_name in param_names: selected_parameters[p_name] = default_params[p_name]
+#   # Change the parameter to vary
+#   selected_parameters[param_change_name] = p_change_val
+#   param_vals = [ selected_parameters[p_name] for p_name in param_names ]
+#   pk_interpolated = Interpolate_multi_dimensional_from_grid( param_vals, comparable_grid, fields_to_fit, 'mean', SG )  
+#   pk_data['pk_samples'][data_id] = {'interpolated':pk_interpolated }
+# 
+# file_name = output_dir + f'pk_{param_change_name}_interpolated.pkl'
+# Write_Pickle_Directory( pk_data, file_name )
