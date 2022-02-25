@@ -64,19 +64,41 @@ param_to_change = 0
 param_change_name = SG.parameters[param_to_change]['name']
 param_change_vals = SG.parameters[param_to_change]['values']
 pk_data = { 'param_change_name':param_change_name, 'param_change_vals':param_change_vals, 'default_params':default_params, 'pk_samples':{}}
+
+# for data_id, p_change_val in enumerate(param_change_vals):
+#   selected_parameters = {}
+#   # Fill wit the default values
+#   for p_name in param_names: selected_parameters[p_name] = default_params[p_name]
+#   # Change the parameter to vary
+#   selected_parameters[param_change_name] = p_change_val
+#   selected_sim_id = SG.Select_Simulations( selected_parameters )[0]
+#   pk_from_sim = comparable_grid[selected_sim_id][fields_to_fit]['mean']
+#   param_vals = [ selected_parameters[p_name] for p_name in param_names ]
+#   pk_interpolated = Interpolate_multi_dimensional_from_grid( param_vals, comparable_grid, fields_to_fit, 'mean', SG )  
+#   print( pk_from_sim/pk_interpolated)
+#   pk_data['pk_samples'][data_id] = {'simulation':pk_from_sim, 'interpolated':pk_interpolated }
+# 
+# file_name = output_dir + 'pk_from_simulations.pkl'
+# Write_Pickle_Directory( pk_data, file_name )
+
+
+
+
+default_params = { 'inv_wdm_mass':0.0, 'scale_H_ion':0.9, 'scale_H_Eheat':1.0, 'deltaZ_H':0.25 }
+
+param_to_change = 0
+param_change_name = SG.parameters[param_to_change]['name']
+param_change_vals = 1/np.array([ 1.5, 2.5, 3.5, 5.5, 7.0, 10.0, 15.0, 1000000 ])
+pk_data = { 'param_change_name':param_change_name, 'param_change_vals':param_change_vals, 'default_params':default_params, 'pk_samples':{}}
 for data_id, p_change_val in enumerate(param_change_vals):
   selected_parameters = {}
   # Fill wit the default values
   for p_name in param_names: selected_parameters[p_name] = default_params[p_name]
   # Change the parameter to vary
   selected_parameters[param_change_name] = p_change_val
-  selected_sim_id = SG.Select_Simulations( selected_parameters )[0]
-  pk_from_sim = comparable_grid[selected_sim_id][fields_to_fit]['mean']
   param_vals = [ selected_parameters[p_name] for p_name in param_names ]
   pk_interpolated = Interpolate_multi_dimensional_from_grid( param_vals, comparable_grid, fields_to_fit, 'mean', SG )  
-  print( pk_from_sim/pk_interpolated)
-  pk_data['pk_samples'][data_id] = {'simulation':pk_from_sim, 'interpolated':pk_interpolated }
+  pk_data['pk_samples'][data_id] = {'interpolated':pk_interpolated }
 
-
-file_name = output_dir + 'pk_from_simulations.pkl'
+file_name = output_dir + 'pk_interpolated.pkl'
 Write_Pickle_Directory( pk_data, file_name )
