@@ -78,5 +78,5 @@ for data_id, p_change_val in enumerate(param_change_vals):
   pk_data['pk_samples'][data_id] = {'simulation':pk_from_sim, 'interpolated':pk_interpolated }
 
 
-file_name = 'pk_from_simulations.pkl'
+file_name = output_dir + 'pk_from_simulations.pkl'
 Write_Pickle_Directory( pk_data, file_name )
