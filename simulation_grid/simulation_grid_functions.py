@@ -88,9 +88,9 @@ def Fit_Simulation_Phase_Diagram_MPI( self, sim_id, n_mpi=30,  n_nodes=1  ):
   if len(found_dirs) == 1:
     fit_dir = input_dir + found_dirs[0] + '/'
     fit_files = [f for f in os.listdir(fit_dir) if os.path.isfile(fit_dir+f)]
-    n_fit_files = len(files)
+    n_fit_files = len(fit_files)
     if n_fit_files == n_analysis_files: 
-      print( f'  Skipping {sim_key}:  n_analysis: {n_analysis_files}  n_fit: {n_files}')
+      print( f'  Skipping {sim_key}:  n_analysis: {n_analysis_files}  n_fit: {n_fit_files}')
       return None
   run_file = root_dir + '/phase_diagram/fit_phase_diagram_mpi.py'
   parameters = input_dir
