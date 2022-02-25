@@ -24,7 +24,6 @@ if use_mpi:
 else:
   rank = 0
   n_procs = 1
-  
 
 # Directories 
 ps_data_dir = base_dir + '/lya_statistics/data/'
@@ -34,11 +33,9 @@ fields_to_fit = 'P(k)+'
 data_ps_sets = [ 'Boera' ]
 # data_ps_sets = [ 'BoeraC' ]
 
-# error_type = 'sigma'
-error_type = 'covmatrix'
+use_inv_wdm = True
 
 independent_redshift = False
-use_inv_wdm = True
 
 fit_name = ''
 data_label  = ''
@@ -47,15 +44,11 @@ for data_set in data_ps_sets:
   data_label += data_set + ' + '
 fit_name = fit_name[:-1] 
 data_label = data_label[:-3]
-
-fit_name += f'_{error_type}'
-
 print(f'Data Label: {data_label} {fit_name}')
 
 # extra_label = 'sigmaResCosmo_'
 extra_label = None
 if extra_label is not None: fit_name += f'_{extra_label}'
-
 
 mcmc_dir = root_dir + 'fit_mcmc/'
 if rank == 0: create_directory( mcmc_dir )
@@ -69,8 +62,6 @@ if independent_redshift:
   if use_mpi: comm.Barrier()
   create_directory( output_dir )
 
-load_covariance_matrix = False
-if error_type == 'covmatrix': load_covariance_matrix = True 
 
 # Apply the resolution correction to the P(k) fronm the simulations
 # FPS_correction_file_name = ps_data_dir + 'FPS_resolution_correction_1024_50Mpc_delta.pkl'
@@ -80,15 +71,10 @@ FPS_resolution_correction = None #Instead we apply a systematic uncertanty to th
 # Change wdm_mass to inv_wdm_mass
 if use_inv_wdm: Grid_Parameters = Invert_wdm_masses( Grid_Parameters )
 
-#Load custom power spectrum measurement
-# custom_ps_data = { 'root_dir': root_dir + 'flux_power_spectrum', 'file_base_name':'flux_ps_resample_boera_native', 'stats_base_name':'statistics_resample_boera_native' }
-custom_ps_data = { 'root_dir': root_dir + 'flux_power_spectrum', 'file_base_name':'flux_ps_sampled_boera_extended', 'stats_base_name':None }
-custom_data = { 'P(k)': custom_ps_data } 
-
 # sim_ids = [0]
 sim_ids = None
 SG = Simulation_Grid( parameters=Grid_Parameters, sim_params=sim_params, job_params=job_params, dir=root_dir )
-SG.Load_Grid_Analysis_Data( sim_ids=sim_ids, load_pd_fit=True, mcmc_fit_dir='fit_mcmc_delta_0_1.0', FPS_correction=FPS_resolution_correction, custom_data=custom_data )
+SG.Load_Grid_Analysis_Data( sim_ids=sim_ids, load_pd_fit=True, mcmc_fit_dir='fit_mcmc_delta_0_1.0', FPS_correction=FPS_resolution_correction, load_thermal=False )
 
 kmax = 0.2
 ps_range = SG.Get_Power_Spectrum_Range( kmax=kmax )
@@ -106,9 +92,12 @@ if independent_redshift:
 # Use P(k) instead of Delta_P(k)
 no_use_delta_p = True 
 
+# data_systematic_uncertainties = { 'all':{}, 'P(k)':{} }
+# data_systematic_uncertainties['all']['cosmological'] = { 'fractional':0.10 } #Fractional systematic error due to cosmological parameter uncertanty
+# data_systematic_uncertainties['P(k)']['resolution'] = { 'file_name': FPS_correction_file_name, 'type':'delta'  }  #Systematic error due to resolution
 data_systematic_uncertainties = None
 ps_parameters = { 'range':ps_range, 'data_dir':ps_data_dir, 'data_sets':data_ps_sets  }
-comparable_data = Get_Comparable_Composite( fields_to_fit, z_min, z_max, ps_parameters=ps_parameters, log_ps=False, systematic_uncertainties=data_systematic_uncertainties, no_use_delta_p=no_use_delta_p, load_covariance_matrix=load_covariance_matrix   )
+comparable_data = Get_Comparable_Composite( fields_to_fit, z_min, z_max, ps_parameters=ps_parameters, log_ps=False, systematic_uncertainties=data_systematic_uncertainties, no_use_delta_p=no_use_delta_p   )
 comparable_grid = Get_Comparable_Composite_from_Grid( fields_to_fit, comparable_data, SG, log_ps=False, no_use_delta_p=no_use_delta_p )
 Plot_Comparable_Data( fields_to_fit, comparable_data, comparable_grid, output_dir, log_ps=False  )
 
@@ -116,10 +105,10 @@ params = SG.parameters
 stats_file   = output_dir + 'fit_mcmc.pkl'
 samples_file = output_dir + 'samples_mcmc.pkl'
 
-nIter = 5000000 * 2
-nBurn = nIter // 10
+nIter = 5000000 
+nBurn = nIter / 10
 nThin = 1
-model, params_mcmc = get_mcmc_model( comparable_data, comparable_grid, fields_to_fit, 'mean', SG, error_type=error_type )
+model, params_mcmc = get_mcmc_model( comparable_data, comparable_grid, fields_to_fit, 'mean', SG )
 MDL = pymc.MCMC( model )  
 MDL.sample( iter=nIter, burn=nBurn, thin=nThin )
 stats = MDL.stats()
