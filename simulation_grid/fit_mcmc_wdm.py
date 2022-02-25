@@ -49,6 +49,7 @@ fit_name = fit_name[:-1]
 data_label = data_label[:-3]
 
 fit_name += f'_{error_type}'
+fit_name += '_doubleIter'
 
 print(f'Data Label: {data_label} {fit_name}')
 
@@ -116,7 +117,7 @@ params = SG.parameters
 stats_file   = output_dir + 'fit_mcmc.pkl'
 samples_file = output_dir + 'samples_mcmc.pkl'
 
-nIter = 5000000 
+nIter = 5000000 * 2
 nBurn = nIter // 10
 nThin = 1
 model, params_mcmc = get_mcmc_model( comparable_data, comparable_grid, fields_to_fit, 'mean', SG, error_type=error_type )
