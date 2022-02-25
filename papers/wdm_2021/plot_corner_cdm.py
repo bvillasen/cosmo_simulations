@@ -9,7 +9,7 @@ from tools import *
 from plot_mcmc_corner import Plot_Corner
 from mcmc_sampling_functions import Get_Highest_Likelihood_Params
 
-grid_name = '1024_wdmgrid_cdm'
+grid_name = '1024_wdmgrid_cdm_extended_beta'
 grid_names = [ grid_name ]
 
 data_name = 'fit_results_P(k)+_Boera_covmatrix'
@@ -56,4 +56,4 @@ limits = { 0:( 0.85, 1.2 ), 1:( 0.7, 1.25 ), 2:( -0.5, 0.5 )}
 
 Plot_Corner( samples_all['param'], data_labels, corner_labels, output_dir, n_bins_1D=40, n_bins_2D=40, 
              lower_mask_factor=500, multiple=True, show_label=True, HL_vals=params_HL, ticks=ticks, 
-             limits=limits, param_values=None, black_background=False, figure_name='corner_cdm.png', show_param_values=True)
+             limits=limits, param_values=None, black_background=False, figure_name='corner_cdm_extended_beta.png', show_param_values=False)

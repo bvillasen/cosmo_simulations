@@ -165,6 +165,7 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
             hl_val = HL_vals[j]
             # print( f_interp(hl_val), f_interp(bin_centers_interp).max())
             # ax.axvline( x=hl_val, ymin=0, ymax=f_interp(hl_val)[0], ls='--', lw=hl_line_width, color=hl_color, alpha=hl_alpha )
+            print( hl_val, bin_centers_interp.min(), bin_centers_interp.max())
             ax.plot( [hl_val, hl_val], [-1*f_interp(hl_val), f_interp(hl_val)], ls='--', lw=hl_line_width, color=hl_line_color, alpha=hl_alpha, zorder=2 )
             fill_sum = 0.68
             v_l, v_r, v_max,  sum = get_highest_probability_interval( bin_centers, distribution, fill_sum, log=False, n_interpolate=100000, print_eval=False)
