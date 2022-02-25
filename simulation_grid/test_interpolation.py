@@ -23,6 +23,10 @@ create_directory( output_dir )
 fields_to_fit = 'P(k)+'
 data_ps_sets = [ 'Boera' ]
 
+use_inv_wdm = True
+# Change wdm_mass to inv_wdm_mass
+if use_inv_wdm: Grid_Parameters = Invert_wdm_masses( Grid_Parameters )
+
 #Load custom power spectrum measurement
 custom_ps_data = { 'root_dir': root_dir + 'flux_power_spectrum', 'file_base_name':'flux_ps_sampled_boera_extended', 'stats_base_name':None }
 custom_data = { 'P(k)': custom_ps_data } 
@@ -49,7 +53,7 @@ comparable_data = Get_Comparable_Composite( fields_to_fit, z_min, z_max, ps_para
 comparable_grid = Get_Comparable_Composite_from_Grid( fields_to_fit, comparable_data, SG, log_ps=False, no_use_delta_p=no_use_delta_p )
 Plot_Comparable_Data( fields_to_fit, comparable_data, comparable_grid, output_dir, log_ps=False  )
 
-
-param_vals = [7.0, 0.6, 0.1, 0.0]
+# wdm_masses = [ 1.0, 0.9, 0.6, 0.5, 0.4, 1./3,  ]
+param_vals = [0.49, 0.61, 0.2, 0.1]
 
 interpolation = Interpolate_multi_dimensional_from_grid( param_vals, comparable_grid, fields_to_fit, 'mean', SG ) 
