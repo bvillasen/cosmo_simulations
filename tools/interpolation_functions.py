@@ -71,7 +71,7 @@ def Get_Value_From_Simulation( sim_coords, data_to_interpolate, field, sub_field
 
 def Get_Parameter_Grid( param_values, parameters, clip_params=False ):
   parameter_grid = {}
-  print( 'Finding nearest neighbours')
+  # print( 'Finding nearest neighbours')
   for p_id, p_val in enumerate(param_values):
     parameter_grid[p_id] = {}
     # print( f' Param_id:{p_id}   value:{p_val}' )
@@ -80,7 +80,7 @@ def Get_Parameter_Grid( param_values, parameters, clip_params=False ):
     parameter_grid[p_id]['v_id_r'] = v_id_r
     parameter_grid[p_id]['v_l'] = parameters[p_id]['values'][v_id_l]
     parameter_grid[p_id]['v_r'] = parameters[p_id]['values'][v_id_r]
-    print( f"p_id: {p_id}  value: {p_val}   v_l:{parameters[p_id]['values'][v_id_l]}  v_r:{parameters[p_id]['values'][v_id_r]}" )
+    # print( f"p_id: {p_id}  value: {p_val}   v_l:{parameters[p_id]['values'][v_id_l]}  v_r:{parameters[p_id]['values'][v_id_r]}" )
   return parameter_grid
   
 
