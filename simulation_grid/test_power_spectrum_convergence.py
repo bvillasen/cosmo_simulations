@@ -97,6 +97,7 @@ for data_id, p_change_val in enumerate(param_change_vals):
   # Change the parameter to vary
   selected_parameters[param_change_name] = p_change_val
   param_vals = [ selected_parameters[p_name] for p_name in param_names ]
+  print( f'Interppolate to: {param_vals}')
   pk_interpolated = Interpolate_multi_dimensional_from_grid( param_vals, comparable_grid, fields_to_fit, 'mean', SG )  
   pk_data['pk_samples'][data_id] = {'interpolated':pk_interpolated }
 
