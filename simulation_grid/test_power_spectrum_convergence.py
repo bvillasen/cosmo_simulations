@@ -88,7 +88,7 @@ default_params = { 'inv_wdm_mass':0.0, 'scale_H_ion':0.9, 'scale_H_Eheat':1.0, '
 
 param_to_change = 0
 param_change_name = SG.parameters[param_to_change]['name']
-param_change_vals = 1/np.array([ 1.5, 2.5, 3.5, 5.5, 7.0, 10.0, 15.0, 1000000 ])
+param_change_vals = 1/np.array([ 1.5, 2.5, 3.5, 5.5, 7.0, 10.0, 15.0, 30.0, 50.0, 1000000 ])
 pk_data = { 'param_change_name':param_change_name, 'param_change_vals':param_change_vals, 'default_params':default_params, 'pk_samples':{}}
 for data_id, p_change_val in enumerate(param_change_vals):
   selected_parameters = {}
