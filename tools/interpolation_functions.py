@@ -108,7 +108,7 @@ def Interpolate_4D( p0, p1, p2, p3, data_to_interpolate, field, sub_field, SG, c
     if p_val > p_val_r: p_val = p_val_r
   else:      
     if p_val < p_val_l or p_val > p_val_r:
-      print( ' ERROR: Parameter outside left and right values')
+      print( f' ERROR: Parameter outside left and right values: p_val:{p_val}  val_l:{p_val_l}  val_r:{p_val_r}')
       exit()
   if p_val_l == p_val_r: 
     delta = 0.5
