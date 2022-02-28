@@ -25,17 +25,17 @@ matplotlib.rcParams['mathtext.fontset'] = 'cm'
 matplotlib.rcParams['mathtext.rm'] = 'serif'
 
 Lbox = 50000.0    #kpc/h
-n_cells = 1024
+# n_cells = 1024
 n_cells = 256
 
-snapshots = np.arange( 0, 200, 1, dtype=int )
+snapshots = np.arange( 0, 1, 1, dtype=int )
 # snapshots = np.arange( 0, 170, 1, dtype=int )
 snapshots_local = split_array_mpi( snapshots, rank, n_procs )
 print( f'rank: {rank}  snapshots_local:{snapshots_local}' )
 
-sim_dir = data_dir + f'cosmo_sims/{n_cells}_50Mpc_adiabatic/'
-input_dir_0 = sim_dir + 'snapshot_files_caar_0/'
-input_dir_1 = sim_dir + 'snapshot_files_gpu/'
+sim_dir = data_dir + f'cosmo_sims/{n_cells}_50Mpc/'
+input_dir_0 = sim_dir + 'snapshot_files_8/'
+input_dir_1 = sim_dir + 'snapshot_files/'
 
 # sim_dir = data_dir + f'cosmo_sims/{n_cells}_50Mpc/'
 # input_dir_0 = sim_dir + 'snapshot_files_cosmo/'
