@@ -42,11 +42,11 @@ if 'particles' in types: ics_particles = True
 # Box Size
 Lbox = 50000.0    #kpc/h
 n_points = 256
-n_boxes  = 8
+n_boxes  = 1
 L_Mpc = int( Lbox / 1000)
 
-# input_dir = data_dir + f'cosmo_sims/ics/enzo/{n_points}_{L_Mpc}Mpc_dmo/'
-# output_dir = data_dir + f'cosmo_sims/ics/{n_points}_{L_Mpc}Mpc_dmo/'
+input_dir = data_dir + f'cosmo_sims/ics/enzo/{n_points}_{L_Mpc}Mpc/raw/'
+output_dir = data_dir + f'cosmo_sims/ics/{n_points}_{L_Mpc}Mpc/'
 
 # m_wdm = 0.4
 # input_dir = data_dir + f'cosmo_sims/ics/enzo/wdm/{n_points}_hydro_{L_Mpc}Mpc_wdm_m{m_wdm:.1f}kev/raw/'
@@ -55,8 +55,8 @@ L_Mpc = int( Lbox / 1000)
 # input_dir = data_dir + f'cosmo_sims/ics/enzo/wdm/{n_points}_hydro_{L_Mpc}Mpc_cdm/raw/'
 # output_dir = data_dir + f'cosmo_sims/ics/wdm/{n_points}_{L_Mpc}Mpc_cdm/'
 
-input_dir  = data_dir + 'cosmo_sims/test_ics/ics_music/256_50Mpc/raw/'
-output_dir = data_dir + 'cosmo_sims/test_ics/ics_music/256_50Mpc/raw/'
+# input_dir  = data_dir + 'cosmo_sims/test_ics/ics_music/256_50Mpc/raw/'
+# output_dir = data_dir + 'cosmo_sims/test_ics/ics_music/256_50Mpc/raw/'
 
 create_directory( output_dir )
 output_dir += f'ics_{n_boxes}_z100/'
