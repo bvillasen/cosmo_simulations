@@ -31,6 +31,8 @@ if system == 'xps':      home_dir = '/home/bruno/'
 if system == 'Mac_mini': home_dir = '/Users/bruno/'
 if system == 'MacBook':  home_dir = '/Users/bruno/'
 
+projects_dir = home_dir + 'Desktop/Dropbox/data/projects/'
+
 
 
 

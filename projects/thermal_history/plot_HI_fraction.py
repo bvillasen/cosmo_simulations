@@ -24,8 +24,10 @@ if system == 'xps': prop = matplotlib.font_manager.FontProperties( fname=os.path
 if system == 'Lux':      prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/brvillas/fonts', "Helvetica.ttf"),        size=legendsize)
 if system == 'Shamrock': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=legendsize)
 
-input_dir = data_dir + 'tau_electron/'
-output_dir = data_dir + 'cosmo_sims/figures/paper_thermal_history/'
+# input_dir = data_dir + 'tau_electron/'
+# output_dir = data_dir + 'cosmo_sims/figures/paper_thermal_history/'
+input_dir = projects_dir + 'thermal_history/'
+output_dir = data_dir + 'figures/thermal_history/'
 if black_background: output_dir += 'black_background/'
 create_directory( output_dir )
 
