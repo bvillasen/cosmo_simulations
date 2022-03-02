@@ -13,7 +13,7 @@ outfile_name = output_dir + f'outputs_cosmo_z_{z_start}_{z_end}_{n_snaps}.txt'
 np.savetxt( outfile_name, a_vals )
 print( f'Saved File: {outfile_name}' )
 
-z_vals = np.array([ 10.0, 9.0, 8.0, 7.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0, 0.0 ])
+z_vals = np.array([ 100., 60., 20., 10.0, 9.0, 8.0, 7.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0, 0.0 ])
 a_vals = 1./(z_vals + 1)
 outfile_name = output_dir + f'outputs_cosmo_testing.txt'
 np.savetxt( outfile_name, a_vals )

@@ -10,7 +10,7 @@ sys.path.extend(subDirectories)
 from load_data import load_snapshot_data_distributed
 from tools import *
 
-use_mpi = True
+use_mpi = False
 if use_mpi:
   from mpi4py import MPI
   comm = MPI.COMM_WORLD
@@ -28,14 +28,14 @@ Lbox = 50000.0    #kpc/h
 # n_cells = 1024
 n_cells = 256
 
-snapshots = np.arange( 0, 1, 1, dtype=int )
+snapshots = np.arange( 0, 14, 1, dtype=int )
 # snapshots = np.arange( 0, 170, 1, dtype=int )
 snapshots_local = split_array_mpi( snapshots, rank, n_procs )
 print( f'rank: {rank}  snapshots_local:{snapshots_local}' )
 
 sim_dir = data_dir + f'cosmo_sims/{n_cells}_50Mpc/'
-input_dir_0 = sim_dir + 'snapshot_files_8/'
-input_dir_1 = sim_dir + 'snapshot_files/'
+input_dir_0 = sim_dir + 'snapshot_files_hydro_8/'
+input_dir_1 = sim_dir + 'snapshot_files_hydro_1/'
 
 # sim_dir = data_dir + f'cosmo_sims/{n_cells}_50Mpc/'
 # input_dir_0 = sim_dir + 'snapshot_files_cosmo/'
@@ -50,8 +50,8 @@ if rank ==0: create_directory( output_dir )
 if rank ==0: print( f'Input 0: {input_dir_0}')
 if rank ==0: print( f'Input 1: {input_dir_1}')
 
-data_type = 'hydro'
-# data_type = 'particles'
+# data_type = 'hydro'
+data_type = 'particles'
 precision = np.float64
 box_size = [ Lbox, Lbox, Lbox ]
 grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
@@ -59,13 +59,14 @@ grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
 
 
 # fields = [ 'density', 'momentum_x', 'momentum_y', 'momentum_z', 'GasEnergy', 'Energy'  ]
+# fields = [ 'density', 'grav_potential' ]
 fields = [ 'density' ]
 diff = {}
 
 
 v_min = 1e-10
 for n_snapshot in snapshots_local:
-
+  print('')
   data_0 = load_snapshot_data_distributed( data_type, fields, n_snapshot, input_dir_0, box_size, grid_size,  precision, show_progess=False )
   data_1 = load_snapshot_data_distributed( data_type, fields, n_snapshot, input_dir_1, box_size, grid_size,  precision, show_progess=False )
   z_0 = data_0['Current_z']
@@ -89,4 +90,8 @@ for n_snapshot in snapshots_local:
     diff_max = diff_vals.max()
     diff[field].append( diff_max )
     
-    print( f'n: {n_snapshot:03}  z: {z:.2f}  Diff {data_type} {field} min: {diff_vals.min():.3e}   max: {diff_vals.max():.3e}   Mean: {diff_vals.mean():.3e}')
+    id_max = np.where( diff_vals == diff_max )
+    
+    print( f'n: {n_snapshot:03}  z: {z:.2f}  Diff {data_type} {field} min: {diff_vals.min():.3e}   max: {diff_vals.max():.3e}   Mean: {diff_vals.mean():.3e} ')
+    # print( f'n: {n_snapshot:03}  z: {z:.2f}  Diff {data_type} {field} min: {diff_vals.min():.3e}   max: {diff_vals.max():.3e}   Mean: {diff_vals.mean():.3e}   id_diff_max:{id_max}')
+

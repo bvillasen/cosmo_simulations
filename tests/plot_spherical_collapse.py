@@ -15,9 +15,11 @@ import matplotlib
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
 matplotlib.rcParams['mathtext.rm'] = 'serif'
 
-sim_dir = '/gpfs/alpine/csc380/proj-shared/cholla/spherical_collapse/'
-input_dir = sim_dir + 'snapshot_files/'
-output_dir  = sim_dir + 'figures/'
+# sim_dir = '/gpfs/alpine/csc380/proj-shared/cholla/spherical_collapse/'
+n_files = 8
+sim_dir = data_dir + 'sphere_collapse/'
+input_dir = sim_dir + f'snapshot_files_{n_files}/'
+output_dir  = sim_dir + f'figures/n_mpi_{n_files}_offcenter/'
 create_directory( output_dir ) 
 
 precision = np.float64
@@ -31,7 +33,7 @@ grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
 data_type = 'hydro'
 fields = [ 'density' ]
 
-snapshots = np.arange( 0, 6, 1, dtype=int )
+snapshots = np.arange( 0, 28, 1, dtype=int )
 
 cmap = 'jet'
 

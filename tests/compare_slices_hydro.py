@@ -10,7 +10,7 @@ sys.path.extend(subDirectories)
 from load_data import load_snapshot_data_distributed
 from tools import *
 
-use_mpi = True
+use_mpi = False
 if use_mpi:
   from mpi4py import MPI
   comm = MPI.COMM_WORLD
@@ -24,17 +24,17 @@ import matplotlib
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
 matplotlib.rcParams['mathtext.rm'] = 'serif'
 
-sim_dir = data_dir + 'cosmo_sims/1024_50Mpc_adiabatic/'
-input_dir_0 = sim_dir + 'snapshot_files_caar_0/'
-input_dir_1 = sim_dir + 'snapshot_files_caar/'
+sim_dir = data_dir + 'cosmo_sims/256_50Mpc/'
+input_dir_0 = sim_dir + 'snapshot_files_hydro_8/'
+input_dir_1 = sim_dir + 'snapshot_files_hydro_1/'
 output_dir  = sim_dir + 'figures/slices_full/'
 if rank == 0: create_directory( output_dir ) 
 
-slice_start, slice_depth = 0, 1024
+slice_start, slice_depth = 64, 128
 
 precision = np.float64
 Lbox = 50000.0    #kpc/h
-n_cells = 1024
+n_cells = 256
 box_size = [ Lbox, Lbox, Lbox ]
 grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
 subgrid = [ [slice_start, slice_start+slice_depth], [0, n_cells], [0, n_cells]]
@@ -44,9 +44,10 @@ absolute_difference = True
 data_type = 'hydro'
 
 fields = [ 'density' ]
+fields = [ 'grav_potential' ]
 diff = {}
 
-snapshots = np.arange( 0, 60, 1, dtype=int )
+snapshots = np.arange( 0, 1, 1, dtype=int )
 snapshots_local = split_array_mpi( snapshots, rank, n_procs )
 print( f'rank: {rank}  snapshots_local:{snapshots_local}' )
 
@@ -96,8 +97,8 @@ for n_snapshot in snapshots_local:
     if absolute_difference: diff = np.abs( diff )
     delta_min, delta_max = diff.min(), diff.max()
     
-    slice_0 = np.log10( slice_0 )
-    slice_1 = np.log10( slice_1 )
+    # slice_0 = np.log10( slice_0 )
+    # slice_1 = np.log10( slice_1 )
     vmin, vmax = min( slice_0.min(), slice_1.min() ), max( slice_0.max(), slice_1.max() )
     
     cmap = cmaps[field_id]
