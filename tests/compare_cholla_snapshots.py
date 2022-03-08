@@ -28,14 +28,14 @@ Lbox = 50000.0    #kpc/h
 # n_cells = 1024
 n_cells = 256
 
-snapshots = np.arange( 0, 14, 1, dtype=int )
+snapshots = np.arange( 1, 12, 1, dtype=int )
 # snapshots = np.arange( 0, 170, 1, dtype=int )
 snapshots_local = split_array_mpi( snapshots, rank, n_procs )
 print( f'rank: {rank}  snapshots_local:{snapshots_local}' )
 
 sim_dir = data_dir + f'cosmo_sims/{n_cells}_50Mpc/'
-input_dir_0 = sim_dir + 'snapshot_files_hydro_8/'
-input_dir_1 = sim_dir + 'snapshot_files_hydro_1/'
+input_dir_0 = sim_dir + 'snapshot_files_hydro_8_cpu/'
+input_dir_1 = sim_dir + 'snapshot_files_hydro_8_cpu_new/'
 
 # sim_dir = data_dir + f'cosmo_sims/{n_cells}_50Mpc/'
 # input_dir_0 = sim_dir + 'snapshot_files_cosmo/'
@@ -50,8 +50,8 @@ if rank ==0: create_directory( output_dir )
 if rank ==0: print( f'Input 0: {input_dir_0}')
 if rank ==0: print( f'Input 1: {input_dir_1}')
 
-# data_type = 'hydro'
-data_type = 'particles'
+data_type = 'hydro'
+# data_type = 'particles'
 precision = np.float64
 box_size = [ Lbox, Lbox, Lbox ]
 grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid

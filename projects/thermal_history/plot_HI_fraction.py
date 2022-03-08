@@ -15,7 +15,7 @@ from figure_functions import *
 from colors import *
 from data_HI_fraction import *
 
-black_background = True
+black_background = False
 
 legendsize = 11.5
 if system == 'Tornado': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"),  size=legendsize)
@@ -40,7 +40,7 @@ data_colors = [ light_orange, purple, dark_blue, green, cyan, 'C1', 'C3', 'C5', 
 
 
 file_name = input_dir + 'best_fit_ionization.txt'
-z, xHII, xHII_l, xHII_h, ne, ne_l, ne_h = np.loadtxt( file_name ).T
+z, xHII, xHII_h, xHII_l, ne, ne_l, ne_h = np.loadtxt( file_name ).T
 xHI = 1 - xHII
 xHI_l = 1 - xHII_h
 xHI_h = 1 - xHII_l
@@ -214,7 +214,7 @@ ax1.tick_params(axis='both', which='minor', direction='in', color=text_color, la
 ax0.yaxis.set_label_coords(-0.07,0.3)
 
 
-leg = ax1.legend(loc=4, frameon=False, fontsize=22, prop=prop, ncol=2 )
+leg = ax1.legend(loc=4, frameon=False, fontsize=11, prop=prop, ncol=2 )
 # leg = ax0.legend(loc=4, frameon=False, fontsize=22, prop=prop, ncol=1 )
 [ text.set_color(text_color) for text in leg.get_texts() ] 
 
