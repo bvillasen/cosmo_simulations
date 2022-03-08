@@ -12,7 +12,7 @@ subDirectories = [x[0] for x in os.walk(cosmo_dir)]
 sys.path.extend(subDirectories)
 sys.path.append( cosmo_dir + 'lya_statistics/data' )
 from tools import *
-from load_tabulated_data import load_tabulated_data_boera
+from load_tabulated_data import load_data_boera
 
 ps_data_dir = cosmo_dir + 'lya_statistics/data/'
 input_dir  = data_dir + 'figures/wdm/pk_convergence/'
@@ -20,7 +20,7 @@ output_dir = data_dir + 'figures/wdm/pk_convergence/'
 create_directory( output_dir )
 
 dir_data_boera = ps_data_dir + 'data_power_spectrum_boera_2019/'
-data_boera = load_tabulated_data_boera( dir_data_boera )
+data_boera = load_data_boera( dir_data_boera )
 k_vals = data_boera[0]['k_vals'] 
 
 file_name = input_dir + 'pk_from_simulations.pkl'

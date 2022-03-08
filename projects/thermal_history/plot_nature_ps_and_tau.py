@@ -12,7 +12,7 @@ subDirectories = [x[0] for x in os.walk(root_dir)]
 sys.path.extend(subDirectories)
 from colors import *
 from tools import *
-from load_tabulated_data import load_power_spectrum_table, load_data_irsic, load_tabulated_data_boera, load_tabulated_data_viel, load_data_boss
+from load_tabulated_data import load_power_spectrum_table, load_data_irsic, load_data_boera, load_tabulated_data_viel, load_data_boss
 from data_optical_depth_HeII import data_tau_HeII_Worserc_2019
 
 
@@ -48,7 +48,7 @@ data_filename = ps_data_dir + 'data_power_spectrum_walther_2019/data_table.txt'
 data_walther = load_power_spectrum_table( data_filename )
 
 dir_data_boera = ps_data_dir + 'data_power_spectrum_boera_2019/'
-data_boera = load_tabulated_data_boera( dir_data_boera )
+data_boera = load_data_boera( dir_data_boera )
 
 data_dir_viel = ps_data_dir + 'data_power_spectrum_viel_2013/'
 data_viel = load_tabulated_data_viel( data_dir_viel)

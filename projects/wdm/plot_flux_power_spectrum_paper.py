@@ -17,7 +17,7 @@ from data_optical_depth import *
 from colors import * 
 from stats_functions import compute_distribution, get_highest_probability_interval
 from plot_flux_power_spectrum_grid import Plot_Power_Spectrum_Grid
-from load_tabulated_data import load_tabulated_data_boera
+from load_tabulated_data import load_data_boera
 from matrix_functions import Merge_Matrices
 
 
@@ -28,7 +28,7 @@ output_dir = data_dir + 'figures/wdm/'
 create_directory( output_dir )
 
 dir_data_boera = ps_data_dir + 'data_power_spectrum_boera_2019/'
-data_boera = load_tabulated_data_boera( dir_data_boera )
+data_boera = load_data_boera( dir_data_boera )
 
 error_type = 'covmatrix'
 grid_names = [ '1024_wdmgrid_nsim600', '1024_wdmgrid_cdm' ] 

@@ -9,7 +9,7 @@ sys.path.extend(subDirectories)
 from tools import *
 from colors import *
 from stats_functions import compute_distribution, get_highest_probability_interval
-from load_tabulated_data import load_power_spectrum_table, load_data_irsic, load_tabulated_data_boera, load_tabulated_data_viel, load_data_boss
+from load_tabulated_data import load_power_spectrum_table, load_data_irsic, load_data_boera, load_tabulated_data_viel, load_data_boss
 
 output_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/early_reionization/'
 create_directory( output_dir ) 
@@ -22,7 +22,7 @@ data_boss = load_data_boss( data_filename )
 data_boss['label'] = 'eBOSS (2019)'
 
 dir_data_boera = ps_data_dir + 'data_power_spectrum_boera_2019/'
-data_boera = load_tabulated_data_boera( dir_data_boera )
+data_boera = load_data_boera( dir_data_boera )
 data_boera['label'] = 'Boera et al. (2019)'
 
 dir_irsic = ps_data_dir + 'data_power_spectrum_irsic_2017/'

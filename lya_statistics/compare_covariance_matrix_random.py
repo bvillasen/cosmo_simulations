@@ -8,12 +8,12 @@ subDirectories = [x[0] for x in os.walk(root_dir)]
 sys.path.extend(subDirectories)
 from tools import *
 from stats_functions import bootstrap_sample_mean, compute_covariance_matrix
-from load_tabulated_data import load_tabulated_data_boera 
+from load_tabulated_data import load_data_boera 
 from matrix_functions import Normalize_Covariance_Matrix
 
 ps_data_dir = root_dir + 'lya_statistics/data/'
 data_boera_dir = ps_data_dir + 'data_power_spectrum_boera_2019/'
-data_boera = load_tabulated_data_boera( data_boera_dir )
+data_boera = load_data_boera( data_boera_dir )
 k_vals_boera = data_boera[0]['k_vals']
 
 # grid_dir = args[1]

@@ -16,7 +16,7 @@ from data_optical_depth import *
 from colors import * 
 from stats_functions import compute_distribution, get_highest_probability_interval
 from plot_flux_power_spectrum_grid import Plot_Power_Spectrum_Grid
-from load_tabulated_data import load_tabulated_data_boera 
+from load_tabulated_data import load_data_boera 
 from matrix_functions import Normalize_Covariance_Matrix
 
 import matplotlib
@@ -29,7 +29,7 @@ matplotlib.rcParams['mathtext.rm'] = 'serif'
 
 ps_data_dir = cosmo_dir + 'lya_statistics/data/'
 data_boera_dir = ps_data_dir + 'data_power_spectrum_boera_2019/'
-data_boera = load_tabulated_data_boera( data_boera_dir )
+data_boera = load_data_boera( data_boera_dir )
 data_z_b = data_boera['z_vals']
 
 base_dir = data_dir + 'cosmo_sims/sim_grid/'

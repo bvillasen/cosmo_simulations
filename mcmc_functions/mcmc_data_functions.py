@@ -7,7 +7,7 @@ root_dir = os.path.dirname(os.getcwd()) + '/'
 subDirectories = [x[0] for x in os.walk(root_dir)]
 sys.path.extend(subDirectories)
 from tools import *
-from load_tabulated_data import load_power_spectrum_table, load_tabulated_data_boera, load_tabulated_data_viel, load_data_boss, load_data_irsic
+from load_tabulated_data import load_power_spectrum_table, load_data_boera, load_tabulated_data_viel, load_data_boss, load_data_irsic
 from data_optical_depth_HeII import data_tau_HeII_Worserc_2019
 from data_thermal_history import data_thermal_history_Gaikwad_2020a, data_thermal_history_Gaikwad_2020b
 from data_optical_depth import *
@@ -309,8 +309,8 @@ def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_rang
   data_walther = load_power_spectrum_table( data_filename )
 
   dir_data_boera = ps_data_dir + 'data_power_spectrum_boera_2019/'
-  data_boera = load_tabulated_data_boera( dir_data_boera, corrected=False )
-  data_boera_c = load_tabulated_data_boera( dir_data_boera, corrected=True )
+  data_boera = load_data_boera( dir_data_boera, corrected=False )
+  data_boera_c = load_data_boera( dir_data_boera, corrected=True )
   
 
   data_dir_viel = ps_data_dir + 'data_power_spectrum_viel_2013/'

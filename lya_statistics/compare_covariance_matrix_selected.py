@@ -11,12 +11,12 @@ from load_grid_parameters import Grid_Parameters
 from simulation_grid import Simulation_Grid
 from simulation_parameters import *
 from stats_functions import bootstrap_sample_mean, compute_covariance_matrix
-from load_tabulated_data import load_tabulated_data_boera 
+from load_tabulated_data import load_data_boera 
 from matrix_functions import Normalize_Covariance_Matrix
 
 ps_data_dir = base_dir + 'lya_statistics/data/'
 data_boera_dir = ps_data_dir + 'data_power_spectrum_boera_2019/'
-data_boera = load_tabulated_data_boera( data_boera_dir )
+data_boera = load_data_boera( data_boera_dir )
 k_vals_boera = data_boera[0]['k_vals']
 
 

@@ -16,7 +16,7 @@ from data_optical_depth import *
 from colors import * 
 from stats_functions import compute_distribution, get_highest_probability_interval
 from plot_flux_power_spectrum_grid import Plot_Power_Spectrum_Grid
-from load_tabulated_data import load_tabulated_data_boera
+from load_tabulated_data import load_data_boera
 
 
 
@@ -52,7 +52,7 @@ for model_id in range(n_models):
 
 ps_data_dir= 'data/'
 dir_data_boera = ps_data_dir + 'data_power_spectrum_boera_2019/'
-data_boera = load_tabulated_data_boera( dir_data_boera )
+data_boera = load_data_boera( dir_data_boera )
 
 
 from figure_functions import *

@@ -7,7 +7,7 @@ subDirectories = [x[0] for x in os.walk(base_dir)]
 sys.path.extend(subDirectories)
 from tools import *
 from colors import *
-from load_tabulated_data import load_power_spectrum_table, load_data_irsic, load_tabulated_data_boera, load_tabulated_data_viel, load_data_boss
+from load_tabulated_data import load_power_spectrum_table, load_data_irsic, load_data_boera, load_tabulated_data_viel, load_data_boss
 
 ps_data_dir = base_dir + 'lya_statistics/data/'
 
@@ -17,9 +17,9 @@ data_boss = load_data_boss( data_filename )
 data_boss['label'] = 'eBOSS (2019)'
 
 dir_data_boera = ps_data_dir + 'data_power_spectrum_boera_2019/'
-data_boera = load_tabulated_data_boera( dir_data_boera )
+data_boera = load_data_boera( dir_data_boera )
 data_boera['label'] = 'Boera et al. (2019)'
-data_boera_c = load_tabulated_data_boera( dir_data_boera, corrected=True )
+data_boera_c = load_data_boera( dir_data_boera, corrected=True )
 data_boera_c['label'] = 'Boera et al. (2019) Corrected'
 
 dir_irsic = ps_data_dir + 'data_power_spectrum_irsic_2017/'

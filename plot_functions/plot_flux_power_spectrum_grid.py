@@ -12,7 +12,7 @@ root_dir = os.path.dirname(os.getcwd()) + '/'
 subDirectories = [x[0] for x in os.walk(root_dir)]
 sys.path.extend(subDirectories)
 from tools import *
-from load_tabulated_data import load_power_spectrum_table, load_data_irsic, load_tabulated_data_boera, load_tabulated_data_viel, load_data_boss, load_data_gaikwad
+from load_tabulated_data import load_power_spectrum_table, load_data_irsic, load_data_boera, load_tabulated_data_viel, load_data_boss, load_data_gaikwad
 from colors import *
 from figure_functions import * 
 
@@ -67,9 +67,9 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
   data_z_w = data_walther['z_vals']
 
   dir_data_boera = ps_data_dir + 'data_power_spectrum_boera_2019/'
-  data_boera = load_tabulated_data_boera( dir_data_boera )
+  data_boera = load_data_boera( dir_data_boera )
   data_z_b = data_boera['z_vals']
-  data_boera_c = load_tabulated_data_boera( dir_data_boera, corrected=True )
+  data_boera_c = load_data_boera( dir_data_boera, corrected=True )
   data_z_bc = data_boera_c['z_vals']
 
   data_dir_viel = ps_data_dir + 'data_power_spectrum_viel_2013/'

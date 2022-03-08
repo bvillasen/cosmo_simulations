@@ -10,11 +10,11 @@ from tools import *
 from load_grid_parameters import Grid_Parameters
 from simulation_grid import Simulation_Grid
 from simulation_parameters import *
-from load_tabulated_data import load_tabulated_data_boera 
+from load_tabulated_data import load_data_boera 
 
 ps_data_dir = base_dir + 'lya_statistics/data/'
 data_boera_dir = ps_data_dir + 'data_power_spectrum_boera_2019/'
-data_boera = load_tabulated_data_boera( data_boera_dir )
+data_boera = load_data_boera( data_boera_dir )
 z_vals_boera = data_boera['z_vals'] 
 
 
