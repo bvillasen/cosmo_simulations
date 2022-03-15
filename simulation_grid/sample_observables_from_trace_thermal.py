@@ -13,27 +13,14 @@ from simulation_grid_data_functions import Get_Data_Grid_Composite
 from mcmc_sampling_functions import Get_Highest_Likelihood_Params, Get_1D_Likelihood_max, Get_Params_mean,Sample_Fields_from_Trace, Sample_Power_Spectrum_from_Trace
 
 
-use_mpi = True
-if use_mpi:
-  from mpi4py import MPI
-  comm = MPI.COMM_WORLD
-  rank = comm.Get_rank()
-  n_procs = comm.Get_size()
-else:
-  rank = 0
-  n_procs = 1
-
-z_indx = rank
-
-independent_redshift = False
 
 # Directories 
 ps_data_dir = base_dir + '/lya_statistics/data/'
 
-# data_name = 'fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_covariance_systematic_diagonalOnly_rescale_offDiagonal_0.4'
-data_name = 'fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_systematic'
+# data_name = 'fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_systematic'
+# data_name = 'fit_results_covariance_systematic'
+data_name = 'fit_results_simulated_HM12_systematic'
 
-if independent_redshift: data_name += f'/fit_redshift/redshift_{z_indx}'
 mcmc_dir = root_dir + 'fit_mcmc/'
 input_dir = mcmc_dir + f'{data_name}/' 
 output_dir = input_dir + 'observable_samples/'
@@ -42,9 +29,9 @@ create_directory( output_dir )
 
 load_global_properties = False
 
-correction_file_name = ps_data_dir + 'FPS_resolution_correction_1024_50Mpc.pkl'
-FPS_resolution_correction = Load_Pickle_Directory( correction_file_name ) 
-# FPS_resolution_correction = None
+# correction_file_name = ps_data_dir + 'FPS_resolution_correction_1024_50Mpc.pkl'
+# FPS_resolution_correction = Load_Pickle_Directory( correction_file_name ) 
+FPS_resolution_correction = None
 
 # sim_ids = range(10)
 sim_ids = None
@@ -63,7 +50,6 @@ fields_to_sample = ['P(k)', 'T0', 'gamma', 'tau', 'tau_HeII', ]
 if load_global_properties: fields_to_sample.append( 'z_ion_H' )
 data_grid, data_grid_power_spectrum = Get_Data_Grid_Composite(  fields_to_sample, SG, z_vals=z_vals, z_fields_min=z_fields_min, sim_ids=sim_ids, load_uvb_rates=False  )
 
-
 stats_file = input_dir + 'fit_mcmc.pkl'
 samples_file = input_dir + 'samples_mcmc.pkl'
 print( f'Loading File: {stats_file}')
@@ -75,7 +61,6 @@ for p_id in params.keys():
   params[p_id]['sigma'] = p_stats['standard deviation']
 print( f'Loading File: {samples_file}')
 param_samples = pickle.load( open( samples_file, 'rb' ) )
-
 
 Write_Pickle_Directory( params, output_dir + 'params.pkl' )
 Write_Pickle_Directory( stats, output_dir + 'fit_mcmc.pkl' )
@@ -90,16 +75,14 @@ n_bins = 10
 params_HL = Get_Highest_Likelihood_Params( param_samples, n_bins=n_bins )
 
 params_HL = { 'Highest_Likelihood':params_HL, 'max':params_max, 'mean':params_mean }
-if use_mpi: comm.Barrier()
-print( f'Rank: {rank}  HL:{params_HL} ' )
-
+print( f'HL:{params_HL} ' )
 
 hpi_sum = 0.95
 n_samples = None
 
 # Obtain distribution of the power spectrum
 file_name = output_dir + 'samples_power_spectrum.pkl'
-if FPS_resolution_correction is not None: file_name = output_dir + 'samples_power_spectrum_corrected.pkl'
+if FPS_resolution_correction is not None: file_name = output_dir + 'samples_power_spectrum.pkl'
 samples_ps = Sample_Power_Spectrum_from_Trace( param_samples, data_grid_power_spectrum, SG, hpi_sum=hpi_sum, n_samples=n_samples, params_HL=params_HL, output_trace=True )
 Write_Pickle_Directory( samples_ps, file_name )
 
@@ -108,6 +91,4 @@ file_name = output_dir + 'samples_fields.pkl'
 field_list = ['T0', 'gamma', 'tau', 'tau_HeII']
 samples_fields = Sample_Fields_from_Trace( field_list, param_samples, data_grid, SG, hpi_sum=hpi_sum, n_samples=n_samples, params_HL=params_HL, output_trace=True)
 Write_Pickle_Directory( samples_fields, file_name )
-
-
 

@@ -83,6 +83,12 @@ def get_highest_probability_interval( bin_centers, distribution, fill_sum, log=F
   # print( f'Original {bin_centers}')
 
   min, max = bin_centers.min(), bin_centers.max()
+  if np.abs( min - max ) < 1e-6:  
+    print( 'WARNING: 1D HPI: All samples have the same value')
+    return min, max, max,  1.0
+  if np.any(bin_centers[1:] == bin_centers[:-1]): 
+    print( f'WARNING: 1D HPI: duplicate in bin_centers {bin_centers}')
+    exit(-1)
   if n_interpolate: 
     bin_centers_interp = np.linspace( min, max, n_interpolate )
     # distribution = np.interp( bin_centers_interp, bin_centers, distribution )

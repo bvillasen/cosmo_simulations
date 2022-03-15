@@ -13,10 +13,10 @@ ps_data_dir = 'lya_statistics/data/'
  
 root_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/'
 mcmc_dir = root_dir + 'fit_mcmc/'
-output_dir = data_dir + f'figures/thermal_history/paper/'
+output_dir = data_dir + f'cosmo_sims/figures/paper_thermal_history/'
 create_directory( output_dir )
 
-data_boss_irsic_boera = 'fit_results_covariance_systematic'
+data_boss_irsic_boera = 'fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_systematic'
 
 
 data_sets = [ data_boss_irsic_boera ]
@@ -66,8 +66,8 @@ for p_id, p_name in enumerate(p_names):
   param_values[p_name]['delta_h'] = delta_h
   param_values[p_name]['delta_l'] = delta_l
   
-ticks = {0:[0.3, 0.40, 0.5,  0.6], 1:[0.75, 0.8,  0.85, 0.9], 2:[ .1, 0.2, 0.3, 0.4, ], 3:[ -0.4, -0.2, 0.0, 0.20]}
+ticks = {0:[0.3, 0.40, 0.5,  0.6], 1:[0.74, 0.76,  0.78, 0.8], 2:[ .15, 0.25, 0.35, 0.45, ], 3:[ 0.00, 0.05, 0.10, 0.15, 0.20]}
 # ticks = None
 
-limits = {0:( 0.26, 0.69 ), 1:( 0.75, 0.9 ), 2:( 0.05, 0.45 ), 3:( -0.5, 0.21 )}
-Plot_Corner( samples_all['param'], data_labels, corner_labels, output_dir, n_bins_1D=40, n_bins_2D=40, lower_mask_factor=500, multiple=True, show_label=True, HL_vals=params_HL, ticks=ticks, limits=limits, param_values=param_values, black_background=False)
+limits = {0:( 0.26, 0.69 ), 1:( 0.73, 0.8 ), 2:( 0.1, 0.5 ), 3:( -0.05, 0.21 )}
+Plot_Corner( samples_all['param'], data_labels, corner_labels, output_dir, n_bins_1D=40, n_bins_2D=40, lower_mask_factor=500, multiple=True, show_label=True, HL_vals=params_HL, ticks=ticks, limits=limits, param_values=param_values, black_background=True )

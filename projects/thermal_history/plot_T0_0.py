@@ -18,7 +18,7 @@ from colors import *
 grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/'
 mcmc_dir = grid_dir + 'fit_mcmc/'
 
-data_boss_irsic_boera = 'fit_results_covariance_systematic'
+data_boss_irsic_boera = 'fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_covariance_systematic'
 
 black_background = False
 

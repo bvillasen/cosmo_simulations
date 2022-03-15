@@ -28,7 +28,7 @@ colors_lines = [ 'C0', 'C1' ]
 colors_lines = [ 'k']
 
 def Plot_T0_gamma_evolution( output_dir, data_sets=None, data_sets_gamma=None, time_axis=None, points_T0=None, 
-  label='', fig_name='fig_T0_evolution', black_background=False, interpolate_lines=False, n_samples_interp=10000, plot_interval=False,
+  label='', fig_name='fig_T0_evolution', black_background=False, interpolate_lines=False, n_samples_interp=200, plot_interval=False,
   T0_min = None, z_max=None ):
   
   
@@ -125,10 +125,11 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, data_sets_gamma=None, t
           #   low[14] *= 1.005
           #   low[13] *= 1.002
           
-            high[12] *= 1.006
-            high[13] *= 1.003
-            high[14] *= 0.995
-            low[12] *= 0.993
+            high[14] *= 1.006
+            high[15] *= 1.005
+            high[16] *= 1.003
+            # high[14] *= 0.995
+            # low[12] *= 0.993
           #   high[14] *= 0.995
           #   low[14] *= 1.005
           #   low[13] *= 1.002
@@ -245,13 +246,17 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, data_sets_gamma=None, t
           high = data_set['high'] + 1
           low  = data_set['low']  + 1
           if data_id == 0:
-            # high[12] *= 1.005
-            # low[12] *= 0.995
-            # high[11] *= 1.008
-            # low[11] *= 0.992
-            # high[13] *= 0.995
-            # low[13] *= 1.005
-            delta = 0.005  
+            low[14] *= 0.99
+            low[13] *= 0.99
+            low[12] *= 0.99
+            low[11] *= 0.99
+            high[11] *= 1.01
+        #   # high[12] *= 1.005
+          #   # low[12] *= 0.995
+          #   # high[11] *= 1.008
+          #   # low[11] *= 0.992
+          #   # high[13] *= 0.995
+        #   delta = 0.005  
             # for index in [ 10, 11, 12, 13 ]:
             #   high[index] = gamma_0[index] * (1+delta)
             #   low[index] = gamma_0[index] * (1-delta)
@@ -334,7 +339,7 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, data_sets_gamma=None, t
   
 
 
-def Plot_T0_evolution( output_dir, data_sets=None, time_axis=None, system='Shamrock', label='', fig_name='fig_T0_evolution', black_background=False, interpolate_lines=False, n_samples_interp=10000, plot_interval=False, annotate_heating_epochs=False  ):
+def Plot_T0_evolution( output_dir, data_sets=None, time_axis=None, system='Shamrock', label='', fig_name='fig_T0_evolution', black_background=False, interpolate_lines=False, n_samples_interp=10, plot_interval=False, annotate_heating_epochs=False  ):
   
   text_color  = 'black'
   

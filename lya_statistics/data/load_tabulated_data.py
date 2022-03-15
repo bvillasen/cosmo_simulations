@@ -69,8 +69,8 @@ def load_data_irsic( data_irsic_dir, print_out=True ):
     sigma_2 = data_z[:,4]
     power = power_1
     power[z>3.7]  = power_2[z>3.7]
-    # power_error = np.sqrt( sigma_1**2 + sigma_2**2 )
-    power_error = sigma_1
+    power_error = np.sqrt( sigma_1**2 + sigma_2**2 )
+    # power_error = sigma_1
     local_cov_matrix = full_cov_matrix[i*n_k_local:(i+1)*n_k_local,i*n_k_local:(i+1)*n_k_local] 
     data_out[i] = {}
     data_out[i]['z'] = z
@@ -112,8 +112,60 @@ def load_data_irsic_old( data_filename ):
     data_out[i]['sigma_power_spectrum'] = power_error  
   return data_out
 
+def load_data_boss(data_boss_dir, print_out=True):
+  file_name = data_boss_dir + 'Pk1D_data.dat'
+  if print_out : print(f'Loading File: {file_name}')
+  table = np.loadtxt( file_name )
+  file_name = data_boss_dir + 'Pk1D_cor.dat'
+  if print_out : print(f'Loading File: {file_name}')
+  cov_table = np.loadtxt( file_name )
+  z_vals_all =  np.round(table[:,0], decimals=1 )
+  z_vals = np.array(list(set(list(z_vals_all))))
+  z_vals.sort()
+  n_redshift = len( z_vals )
+  if cov_table.shape[0] // n_redshift != cov_table.shape[1]:
+    print('ERROR: Wrong covariace matrix shape')
+    exit(-1)
+  n_samples = cov_table.shape[1]
+  cov_matrices = []
+  for i in range(n_redshift):
+    cov_matrices.append( cov_table[i*n_samples:(i+1)*n_samples,:])
+  data_out = {}
+  data_out['z_vals'] = z_vals
+  k_vals_all = None
+  for z_id,z in enumerate(z_vals):
+    indices = np.where(z_vals_all==z)[0]
+    data_z =  table[indices]
+    k_vals = data_z[:,1]
+    if k_vals_all is None: k_vals_all = k_vals
+    k_diff = np.abs( k_vals_all - k_vals ).sum()
+    if k_diff > 1e-10:
+      print('ERROR: Not the same k_vals for all redshifts')
+      exit(-1)
+    power = data_z[:,2]
+    power_sigma = data_z[:,3]
+    cov_matrix = cov_matrices[z_id]
+    # Rescale the covariace to sigma
+    for i in range(n_samples):
+      for j in range(n_samples):
+        cov_matrix[i,j] *= power_sigma[i] * power_sigma[j] 
+    diagonal = cov_matrix.diagonal()
+    diff = ( np.sqrt(diagonal) - power_sigma ) / power_sigma
+    if diff.sum() > 1e-12:
+      print( f'ERROR: BOSS covariance matrix built failure')
+      exit(-1)
+    data_out[z_id] = {}
+    data_out[z_id]['z'] = z
+    data_out[z_id]['k_vals'] = k_vals
+    data_out[z_id]['delta_power'] = power * k_vals / np.pi 
+    data_out[z_id]['delta_power_error'] = power_sigma * k_vals / np.pi 
+    data_out[z_id]['power_spectrum'] = power  
+    data_out[z_id]['sigma_power_spectrum'] = power_sigma 
+    data_out[z_id]['covariance_matrix'] = cov_matrix 
+  data_out['k_vals'] = k_vals_all
+  return data_out
 
-def load_data_boss( data_filename ):
+def load_data_boss_old( data_filename ):
   table = np.loadtxt( data_filename )
   z_vals_all =  np.round(table[:,0], decimals=1 )
   z_vals = np.array(list(set(list(z_vals_all))))

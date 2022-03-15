@@ -188,9 +188,9 @@ def mcmc_model_4D( comparable_data, comparable_grid, field, sub_field, SG, error
     return mean_interp
   mean  = comparable_data[field]['mean']
   sigma = comparable_data[field]['sigma']
-  if error_type == 'covmatrix':
+  if error_type == 'covariance_matrix':
     print( 'WARNING: Using covariance matrix for the likelihood calculation')
-    cov_matrix = comparable_data[field]['cov_matrix']
+    cov_matrix = comparable_data[field]['covariance_matrix']
     precision_matrix = np.linalg.inv( cov_matrix )
     densObsrv = pymc.MvNormal( field, mu=mcmc_model_4D, tau=precision_matrix, value=mean, observed=True)
   elif error_type == 'sigma':

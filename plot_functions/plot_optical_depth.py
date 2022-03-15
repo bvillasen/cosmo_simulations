@@ -72,8 +72,8 @@ def Plot_tau_HI( output_dir,  points_tau=None, samples_tau_HI=None, labels='', b
       if 'lw' in samples: lw = samples['lw']
       ax.plot( z, tau, color=color_line, zorder=1, label=label, ls=ls, lw=lw )
       if 'high' in samples and 'low' in samples:
-        high = samples['high']
-        low  = samples['low']
+        high = samples['high'] * 1.01
+        low  = samples['low'] * 0.99
         ax.fill_between( z, high, low, color=color_line, alpha=0.6 )
         
   if points_tau is not None:
@@ -181,7 +181,7 @@ def Plot_tau_HI( output_dir,  points_tau=None, samples_tau_HI=None, labels='', b
   ax.set_ylim( .1, 12 )
   ax.set_yscale('log')
 
-  leg = ax.legend(loc=2, frameon=False, fontsize=22, prop=prop)
+  leg = ax.legend(loc=2, frameon=False, fontsize=12 )
   for text in leg.get_texts():
     plt.setp(text, color = text_color)
 

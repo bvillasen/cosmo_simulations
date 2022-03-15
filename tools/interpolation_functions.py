@@ -8,7 +8,38 @@ from scipy.signal import savgol_filter
 def are_floats_equal( a, b, epsilon=1e-10 ):
   if np.abs( a - b ) < epsilon: return True
   else: return False
-    
+
+# def Find_Parameter_Value_Near_IDs( param_id, param_value, parameters, clip_params=False ):
+#   param_name = parameters[param_id]['name']    
+#   grid_param_values = np.array(parameters[param_id]['values'])
+#   param_min = grid_param_values.min() 
+#   param_max = grid_param_values.max()
+#   n_param_values = len( grid_param_values )
+#   # print( f' Param_id:{param_id}   value:{param_value}' )
+#   if n_param_values == 1:
+#     p_val_id_l,  p_val_id_r = 0, 0
+#     return p_val_id_l, p_val_id_r  
+#   if clip_params:
+#     if param_value < param_min: param_value = param_min
+#     if param_value > param_max: param_value = param_max
+#   else:  
+#     if param_value < param_min or param_value > param_max:
+#       print( f'ERROR: Paramneter Value outside {param_name} Range: [ {param_min} , {param_max} ] value:{param_value}')
+#       exit(-1)
+#   if are_floats_equal( param_value, param_min ):
+#     p_val_id_l,  p_val_id_r = 0, 1
+#     return p_val_id_l, p_val_id_r
+#   if are_floats_equal( param_value, param_max ):
+#     p_val_id_l,  p_val_id_r = n_param_values-2, n_param_values-1
+#     return p_val_id_l, p_val_id_r
+#   p_val_id_l, p_val_id_r = 0, 0
+#   diff_l, diff_r = -np.inf, np.inf
+#   for v_id, p_val in enumerate(grid_param_values):
+#     diff = p_val - param_value
+#     if diff > 0 and diff < diff_r: p_val_id_r, diff_r = v_id, diff
+#     if diff < 0 and diff > diff_l: p_val_id_l, diff_l = v_id, diff  
+#   if p_val_id_l == p_val_id_r: print('ERROR: Same values for left and right')
+#   return p_val_id_l, p_val_id_r    
 
 def Find_Parameter_Value_Near_IDs( param_id, param_value, parameters, clip_params=False ):
   param_name = parameters[param_id]['name']    
@@ -210,6 +241,13 @@ def Interpolate_multi_dimensional_from_grid( interp_param, comparable_grid, fiel
     print( f'ERROR: interpolation for n_dim={n_param} is not supported')
     interpolation = None
   return interpolation  
+
+def interpolate_1d_linear( x_interp, x, y, log_y=False ):
+  if log_y: y = np.log10(y)
+  y_interp = np.interp( x_interp, x, y )
+  if log_y: y_interp = 10**y_interp
+  return y_interp
+
      
 def interp_line_cubic( x, x_interp, y ):
   func = interp.interp1d( x, y, kind='cubic' )

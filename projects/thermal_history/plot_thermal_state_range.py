@@ -19,7 +19,7 @@ from figure_functions import *
  
 root_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/'
 input_dir = root_dir + 'properties/'
-output_dir = data_dir + 'cosmo_sims/figures/paper_thermal_history/'
+output_dir = data_dir + 'figures/thermal_history/paper/'
 create_directory( output_dir ) 
 
 data_sets = Load_Pickle_Directory( input_dir+'T0_grid.pkl' )
@@ -44,15 +44,15 @@ data_name = data_boss_irsic_boera
 print(f'Loading Dataset: {data_name}' )
 input_dir = mcmc_dir + f'{data_name}/observable_samples/' 
 
-# Obtain distribution of all the fields
-file_name = input_dir + 'samples_fields.pkl'
-samples_fields = Load_Pickle_Directory( file_name )
-samples_T0 = samples_fields['T0']
+# # Obtain distribution of all the fields
+# file_name = input_dir + 'samples_fields.pkl'
+# samples_fields = Load_Pickle_Directory( file_name )
+# samples_T0 = samples_fields['T0']
 
-data_T0 = { 'z': samples_T0['z'], 'T0':samples_T0['Highest_Likelihood'], 'high':samples_T0['higher'], 'low':samples_T0['lower'] }
-data_to_plot = { 0: data_T0 }
-data_to_plot[0]['label'] = 'This Work'
-data_to_plot[0]['color'] = 'k'
+# data_T0 = { 'z': samples_T0['z'], 'T0':samples_T0['Highest_Likelihood'], 'high':samples_T0['higher'], 'low':samples_T0['lower'] }
+# data_to_plot = { 0: data_T0 }
+# data_to_plot[0]['label'] = 'This Work'
+# data_to_plot[0]['color'] = 'k'
 
 
 
@@ -85,7 +85,7 @@ alpha = 0.5
 interpolate_lines = True
 n_samples_interp = 1000
 # 
-matplotlib.font_manager.findSystemFonts(fontpaths=['/home/bruno/Helvetica'], fontext='ttf')
+# matplotlib.font_manager.findSystemFonts(fontpaths=['/home/bruno/Helvetica'], fontext='ttf')
 matplotlib.rcParams['font.sans-serif'] = "Helvetica"
 matplotlib.rcParams['font.family'] = "sans-serif"
 matplotlib.rcParams['mathtext.fontset'] = 'cm'

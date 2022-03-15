@@ -13,12 +13,10 @@ sys.path.extend(subDirectories)
 from colors import *
 from tools import *
 from data_optical_depth_HeII import data_tau_HeII_Worserc_2019
-from interpolation_functions import interp_line
 
 
 
-# input_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/fit_mcmc/fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_systematic/'
-input_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/fit_mcmc/fit_results_covariance_systematic/'
+input_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/fit_mcmc/fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_systematic/'
 
 
 file_name = input_dir + f'observable_samples/samples_fields.pkl'
@@ -33,9 +31,9 @@ matplotlib.rcParams['font.sans-serif'] = "Helvetica"
 matplotlib.rcParams['font.family'] = "sans-serif"
 
 
-black_background = False
+black_background = True
 
-output_dir = data_dir + f'figures/thermal_history/paper/'
+output_dir = data_dir + f'cosmo_sims/figures/paper_thermal_history/'
 if black_background: output_dir += 'black_background/' 
 create_directory( output_dir )
 
@@ -70,12 +68,6 @@ z_vals = fields_sim_data['tau_HeII']['z']
 tau = fields_sim_data['tau_HeII']['Highest_Likelihood']
 tau_h = fields_sim_data['tau_HeII']['higher'] 
 tau_l = fields_sim_data['tau_HeII']['lower'] 
-
-z_interp  = z_vals
-tau = interp_line( z_vals, z_interp, tau )
-tau_h = interp_line( z_vals, z_interp, tau_h )
-tau_l = interp_line( z_vals, z_interp, tau_l )
-
 ax.plot( z_vals, tau, color=sim_color, zorder=1, label='This Work' )
 ax.fill_between( z_vals, tau_h, tau_l, color=sim_color, alpha=0.5, zorder=1 )  
 

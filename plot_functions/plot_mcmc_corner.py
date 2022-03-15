@@ -204,8 +204,8 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
           hist = hist.T 
           extent = [ trace_x.min(), trace_x.max(), trace_y.min(), trace_y.max() ]
           hist_2D = hist
-          level_95, indices_enclosed = get_HPI_2D( hist_2D, 0.95 )
-          level_68, indices_enclosed = get_HPI_2D( hist_2D, 0.68 )            
+          level_95, indices_enclosed = get_HPI_2D( hist_2D, 0.85 )
+          level_68, indices_enclosed = get_HPI_2D( hist_2D, 0.55 )            
           lower = hist_2D.max() / lower_mask_factor
           hist_2D_masked = np.ma.masked_where( hist_2D < lower, hist_2D )
           ax.imshow( hist_2D_masked[::-1], cmap=hist_2D_colormap, extent=extent, aspect='auto', interpolation='bilinear' )

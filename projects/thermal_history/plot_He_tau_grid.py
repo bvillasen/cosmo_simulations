@@ -16,10 +16,10 @@ from data_optical_depth_HeII import data_tau_HeII_Worserc_2019
 from interpolation_functions import smooth_line
 from interpolation_functions import interp_line
 
-black_background = True
+black_background = False
 
 input_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/properties/'
-output_dir = data_dir + f'cosmo_sims/figures/paper_thermal_history/'
+output_dir = data_dir + f'figures/thermal_history/paper/'
 if black_background: output_dir += 'black_background/' 
 create_directory( output_dir )
 
@@ -39,7 +39,8 @@ for i in range(n):
   tau_max.append( vmax )
   tau_min.append( vmin )
 
-input_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/fit_mcmc/fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_systematic/'
+# input_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/fit_mcmc/fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_systematic/'
+input_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/fit_mcmc/fit_results_covariance_systematic/'
 file_name = input_dir + f'observable_samples/samples_fields.pkl'
 fields_sim_data = Load_Pickle_Directory( file_name )
 

@@ -10,10 +10,10 @@ from mcmc_sampling_functions import Get_Highest_Likelihood_Params
 from plot_flux_power_spectrum_grid import Plot_Power_Spectrum_Grid
 from colors import *
 
-black_background = True
+black_background = False
 
 ps_data_dir =  base_dir + 'lya_statistics/data/'
-output_dir = data_dir + f'cosmo_sims/figures/paper_thermal_history/'
+output_dir = data_dir + f'figures/thermal_history/paper/'
 if black_background: output_dir += 'black_background/'
 create_directory( output_dir )
 root_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/'
@@ -21,7 +21,9 @@ mcmc_dir = root_dir + 'fit_mcmc/'
 
 # data_boss_irsic_boera_NC = 'fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_NOT_CORRECTED'
 # data_sets = [ data_boss_irsic_boera, data_boss_irsic_boera_NC ]
-data_boss_irsic_boera = 'fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_systematic'
+
+# data_boss_irsic_boera = 'fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_systematic'
+data_boss_irsic_boera = 'fit_results_covariance_systematic'
 data_sets = [ data_boss_irsic_boera ]
 
 samples_all = {}
@@ -91,7 +93,7 @@ for z_id in range(n_snapshots):
   new =  correction_ps_factor[indices] - 1
   correction_ps_factor[indices] = 1 + new * 1
   k_diff = np.abs( k_vals - correction_k_vals )
-  # print( f'{z} {correction_ps_factor}')
+  print( f'{z} {correction_ps_factor}')
   if k_diff.sum() > 1e-6:
      print(f'ERROR: Large k difference for FPS correction: {k_diff.sum()}.')
      exit(-1)

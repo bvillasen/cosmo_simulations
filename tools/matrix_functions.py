@@ -1,5 +1,19 @@
 import numpy as np
 
+def rescale_matrix( matrix, factor, type):
+  ni, nj = matrix.shape
+  for i in range(ni):
+    for j in range(nj):
+      if type == 'cross_only': 
+        if i == j: continue
+      elif type == 'diagonal_only': 
+        if i != j: continue
+      else: 
+        print( f'Rescale Matrix type {type} not implemented' )
+        return None
+      matrix[i,j] *= factor
+  return matrix 
+
 
 def Normalize_Covariance_Matrix( cov_matrix ):
   ny, nx = cov_matrix.shape

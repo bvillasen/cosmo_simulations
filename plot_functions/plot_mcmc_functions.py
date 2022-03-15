@@ -7,6 +7,7 @@ root_dir = os.path.dirname(os.getcwd())  + '/'
 subDirectories = [x[0] for x in os.walk(root_dir)]
 sys.path.extend(subDirectories)
 from tools import * 
+from matrix_functions import Normalize_Covariance_Matrix
 
 def Plot_MCMC_Stats( stats, MDL, params_mcmc,  stats_file, output_dir, plot_corner=True, plot_model=True,  ):
   cwd = os.getcwd()
@@ -28,7 +29,7 @@ def Plot_MCMC_Stats( stats, MDL, params_mcmc,  stats_file, output_dir, plot_corn
   os.chdir( cwd )  
 
 
-def Plot_Comparable_Data( field, comparable_data, comparable_grid, output_dir, log_ps=False  ):
+def Plot_Comparable_Data( field, comparable_data, comparable_grid, output_dir  ):
 
   nrows, ncols = 1, 1
   fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(20*ncols,5*nrows))
@@ -45,26 +46,52 @@ def Plot_Comparable_Data( field, comparable_data, comparable_grid, output_dir, l
     sim_mean = comparable_grid[sim_id][field]['mean']
     ax.scatter(x, sim_mean, s=1 )
 
-
-  if not log_ps: 
-    ax.set_yscale('log')
-  else:
-    ax.set_ylim( -5, -1)
+  ax.set_yscale('log')
   ax.legend( frameon=False )
 
   figure_name = output_dir + 'data_for_fit.png'
   fig.savefig( figure_name, bbox_inches='tight', dpi=500 )
   print( f'Saved Figure: {figure_name}' )
   
-  if 'cov_matrix' in comparable_data[field]:
-      
+  if 'covariance_matrix' in comparable_data[field]:
     nrows, ncols = 1, 1
-    fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(20*ncols,5*nrows))
-    
-    cov_matrix = comparable_data[field]['cov_matrix']
-    ax.imshow( cov_matrix, cmap='turbo' )
+    fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(10*ncols,10*nrows))
+    cov_matrix = comparable_data[field]['covariance_matrix']
+    im = ax.imshow( cov_matrix, cmap='turbo' )
+    cax = ax.inset_axes([1.04, 0.1, 0.05, 0.8], transform=ax.transAxes)
+    fig.colorbar(im, ax=ax, cax=cax)
     ax.set_aspect('equal')
-
     figure_name = output_dir + 'covariance_matrix.png'
     fig.savefig( figure_name, bbox_inches='tight', dpi=500 )
     print( f'Saved Figure: {figure_name}' )
+    
+    fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(10*ncols,10*nrows))
+    cov_matrix_norm = Normalize_Covariance_Matrix( cov_matrix )
+    im = ax.imshow( cov_matrix_norm, cmap='turbo' )
+    cax = ax.inset_axes([1.04, 0.1, 0.05, 0.8], transform=ax.transAxes)
+    fig.colorbar(im, ax=ax, cax=cax)
+    ax.set_aspect('equal')
+    figure_name = output_dir + 'covariance_matrix_normalized.png'
+    fig.savefig( figure_name, bbox_inches='tight', dpi=500 )
+    print( f'Saved Figure: {figure_name}' )
+    
+    fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(10*ncols,10*nrows))
+    cov_matrix_inv = np.linalg.inv( cov_matrix )
+    im = ax.imshow( cov_matrix_inv, cmap='turbo' )
+    cax = ax.inset_axes([1.04, 0.1, 0.05, 0.8], transform=ax.transAxes)
+    fig.colorbar(im, ax=ax, cax=cax)
+    ax.set_aspect('equal')
+    figure_name = output_dir + 'covariance_matrix_inverse.png'
+    fig.savefig( figure_name, bbox_inches='tight', dpi=500 )
+    print( f'Saved Figure: {figure_name}' )
+    
+    fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(10*ncols,10*nrows))
+    cov_matrix_norm = Normalize_Covariance_Matrix( cov_matrix_inv )
+    im = ax.imshow( cov_matrix_norm, cmap='turbo' )
+    cax = ax.inset_axes([1.04, 0.1, 0.05, 0.8], transform=ax.transAxes)
+    fig.colorbar(im, ax=ax, cax=cax)
+    ax.set_aspect('equal')
+    figure_name = output_dir + 'covariance_matrix_inverse_normalized.png'
+    fig.savefig( figure_name, bbox_inches='tight', dpi=500 )
+    print( f'Saved Figure: {figure_name}' )
+    

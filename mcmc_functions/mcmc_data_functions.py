@@ -11,7 +11,7 @@ from load_tabulated_data import load_power_spectrum_table, load_data_boera, load
 from data_optical_depth_HeII import data_tau_HeII_Worserc_2019
 from data_thermal_history import data_thermal_history_Gaikwad_2020a, data_thermal_history_Gaikwad_2020b
 from data_optical_depth import *
-from matrix_functions import Merge_Matrices
+from matrix_functions import Merge_Matrices, rescale_matrix
 
 
 
@@ -169,7 +169,7 @@ def Get_Comparable_Composite_from_Grid( fields, comparable_data, SG, log_ps=Fals
 
 ##################################################################################################################################
 
-def Get_Comparable_Tau_HeII( rescale_tau_HeII_sigma = 1.0, systematic_uncertainties=None ):
+def Get_Comparable_Tau_HeII( rescale_tau_HeII_sigma = 1.0, systematic_uncertainties=None, data_covariance=None, simulated_tau_HeII=None ):
   
   print( 'Loading HeII_tau Data')
 
@@ -189,6 +189,12 @@ def Get_Comparable_Tau_HeII( rescale_tau_HeII_sigma = 1.0, systematic_uncertaint
             
   comparable_z, comparable_tau, comparable_sigma = [], [], []
   data_set = data_tau_HeII_Worserc_2019
+  
+  if simulated_tau_HeII is not None:
+    data_set = simulated_tau_HeII
+    print('WARNING: Using simulated tau_HeII data')
+    time.sleep(3)
+  
   z   = data_set['z']
   tau = data_set['tau']
   sigma = data_set['tau_sigma'] 
@@ -211,6 +217,19 @@ def Get_Comparable_Tau_HeII( rescale_tau_HeII_sigma = 1.0, systematic_uncertaint
   comparable['z']     = z
   comparable['mean']  = tau
   comparable['sigma'] = sigma
+  if data_covariance is not None:
+    covariance_type = data_covariance['type']
+    if covariance_type == 'sigma':
+      n_samples = len(sigma)
+      print( f' WARNING: Building tau_HeII covariance matrix from sigma only. n_samples:{n_samples}')
+      cov_matrix = np.zeros( [n_samples, n_samples])
+      for i in range( n_samples):
+        cov_matrix[i,i] = sigma[i]**2
+      comparable['covariance_matrix'] = cov_matrix
+    else:
+      print( f'ERROR: Covariance type {covariance_type} not implemented')
+      exit(-1)  
+  
   return comparable
 
 ##################################################################################################################################
@@ -295,44 +314,54 @@ def Get_Comparable_T0_Gaikwad():
 
 ##################################################################################################################################
 
-def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_range, log_ps=False, systematic_uncertainties=None, print_systematic=False, no_use_delta_p=False, load_covariance_matrix=False, simulated_data_param=None ):
+def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_range, verbose=False, log_ps=False, systematic_uncertainties=None, print_systematic=False, 
+                                   no_use_delta_p=False,  simulated_data_param=None, data_covariance=None, simulated_data=None, simulated_ps=None ):
   print( f'Loading P(k) Data:' )
   dir_boss = ps_data_dir + 'data_power_spectrum_boss/'
-  data_filename = dir_boss + 'data_table.py'
-  data_boss = load_data_boss( data_filename )
+  data_boss = load_data_boss( dir_boss )
   
   dir_irsic = ps_data_dir + 'data_power_spectrum_irsic_2017/'
-  data_filename = dir_irsic + 'data_table.py'
-  data_irsic = load_data_irsic( data_filename )
+  data_irsic = load_data_irsic( dir_irsic, print_out=verbose )
 
   data_filename = ps_data_dir + 'data_power_spectrum_walther_2019/data_table.txt'
   data_walther = load_power_spectrum_table( data_filename )
 
   dir_data_boera = ps_data_dir + 'data_power_spectrum_boera_2019/'
-  data_boera = load_data_boera( dir_data_boera, corrected=False )
-  data_boera_c = load_data_boera( dir_data_boera, corrected=True )
+  data_boera = load_data_boera( dir_data_boera, corrected=False, print_out=verbose )
+  data_boera_c = load_data_boera( dir_data_boera, corrected=True, print_out=verbose )
   
-
   data_dir_viel = ps_data_dir + 'data_power_spectrum_viel_2013/'
   data_viel = load_tabulated_data_viel( data_dir_viel)
   
   data_dir = { 'Boss':data_boss, 'Walther':data_walther, 'Boera':data_boera, 'Viel':data_viel, 'Irsic':data_irsic, 'BoeraC':data_boera_c }
-
+  
+  if simulated_ps is not None:
+    data_dir_simulated = {}
+    for data_name in data_sets:
+      print( f'Using simulated data sampled as: {data_name}' )
+      data_dir_simulated[data_name] = simulated_ps[data_name]
+    print( 'WARNING: Using Simulated P(k) data')
+    time.sleep(3)
+    data_dir = data_dir_simulated
+      
+      
   if simulated_data_param is not None:
     data_file_name = simulated_data_param['data_file_name']
     simulated_data = Load_Pickle_Directory( data_file_name )
     data_dir['Simulated'] = simulated_data
-
+    
+  if data_covariance is not None:  print( ' WARNING: Loading Data Covariance Matrices')
+  
   data_kvals, data_ps, data_ps_sigma, data_indices, data_z  = [], [], [], [], []
-  log_data_ps, log_data_ps_sigma = [], []
+  covariance_matrices = []  
   sim_z, sim_kmin, sim_kmax = ps_range['z'], ps_range['k_min'], ps_range['k_max']
-  if load_covariance_matrix: cov_matrix_all = []
   systematic = None
   if systematic_uncertainties is not None:
     systematic = {}
     for apply_uncertanty in systematic_uncertainties:
       if apply_uncertanty in [ 'all', 'P(k)' ]:
         for uncertanty_name in systematic_uncertainties[apply_uncertanty]:
+          if uncertanty_name in ['modify_diagonal_only']: continue
           uncertanty_group = systematic_uncertainties[apply_uncertanty][uncertanty_name]
           if uncertanty_name == 'resolution':
             resolution_file_name = uncertanty_group['file_name']
@@ -352,11 +381,22 @@ def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_rang
   for data_index, data_name in enumerate(data_sets):
     print( f' Loading P(k) Data: {data_name}' )
     data_set = data_dir[data_name]
+    covariance_type = None
+    covariance_matrix_global = None
+    if data_covariance is not None and data_name in data_covariance['type']:
+      covariance_type = data_covariance['type'][data_name]
+      cross_elements_factor = data_covariance['factor'][data_name]
+      print( f' Loading Covariance Matrix: {covariance_type}  cross_elements_factor: {cross_elements_factor}')
+      if covariance_type == 'global':  covariance_matrix_global = data_set['full_covariance']
+       
+      
     keys = data_set.keys()
-    n_indices = len(keys) - 1
-    for index in range(n_indices):
+    cov_matrix_local = None
+    for index in keys:
+      if index in ['k_vals', 'z_vals', 'full_covariance']: continue
       data = data_set[index]
       z = data['z']
+      adjust_covariance_size = False
       if z >= z_min and z <= z_max:
         diff = np.abs( sim_z - z )
         id_min = np.where( diff == diff.min() )[0][0]
@@ -365,24 +405,36 @@ def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_rang
         kmax = sim_kmax[id_min]
         k_vals = data['k_vals']
         k_indices = np.where( (k_vals >= kmin) & (k_vals <= kmax) )
+        if len(k_indices[0]) != len(k_vals):
+          if verbose: print( f' WARNING: Not all k values are loaded n_k:{len(k_vals)}  n_loaded:{len(k_indices[0])}')
+          adjust_covariance_size = True
         k_vals = k_vals[k_indices]
         delta_ps = data['delta_power'][k_indices]
         delta_ps_sigma = data['delta_power_error'][k_indices]
+        if covariance_type == 'local' and not no_use_delta_p:
+          print('ERROR: Covariance Matrix only available when fitting P(k) not Delta(Kk')
+          exit(-1)
+          
         if no_use_delta_p:
           # Use P(k) instead of Delta_P(k)
-          print( 'WARNING: Using P(k) instead of Delta_P(k)' )
+          if verbose: print( f' Adjusting covariance matrix')
+          if verbose: print( 'WARNING: Using P(k) instead of Delta_P(k)' )
           delta_ps = delta_ps / k_vals * np.pi
           delta_ps_sigma = delta_ps_sigma / k_vals * np.pi
-        
-        if load_covariance_matrix:
-          cov_matrix = data['covariance_matrix'][k_indices]
-          ny, nx = cov_matrix.shape
-          if len(k_vals) != ny: 
-            print( 'ERROR: P(k) vector does not have the same size as covariance matrix')
-            exit(-1) 
-          
-        # log_delta_ps = np.log( delta_ps )
-        # log_delta_ps_sigma = 1/delta_ps * delta_ps_sigma
+          if covariance_type == 'local': 
+            cov_matrix_local = data['covariance_matrix']
+            if adjust_covariance_size:
+              n_samples = len(k_indices[0])
+              cov_matrix_adjusted = np.zeros([n_samples, n_samples])
+              for i in range(n_samples):
+                for j in range(n_samples):
+                  indx_i, indx_j = k_indices[0][i], k_indices[0][j]
+                  cov_matrix_adjusted[i,j] = cov_matrix_local[indx_i, indx_j]
+              cov_matrix_local = cov_matrix_adjusted
+            ny, nx = cov_matrix_local.shape
+            if len(k_vals) != ny: 
+              print( 'ERROR: P(k) vector does not have the same size as covariance matrix')
+              exit(-1) 
         
         # if data_name == 'Walther' and rescaled_walther:
         #   rescale_z = rescale_walter_alphas[index]['z']
@@ -426,37 +478,51 @@ def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_rang
           sigma_total = np.sqrt( sigma_total_squared )
           # print( (sigma_total - delta_ps_sigma) / delta_ps_sigma )    
           delta_ps_sigma = sigma_total 
-  
+          
+          
         ps_data[data_id] = {'z':z, 'k_vals':k_vals, 'delta_ps':delta_ps, 'delta_ps_sigma':delta_ps_sigma }
+    
         data_z.append( z )
         data_kvals.append( k_vals )
         data_ps.append( delta_ps )
         data_ps_sigma.append( delta_ps_sigma )
-        if load_covariance_matrix: 
-          ps_data[data_id]['cov_matrix'] = cov_matrix
-          cov_matrix_all.append( cov_matrix )
-        # log_data_ps.append( log_delta_ps )
-        # log_data_ps_sigma.append( log_delta_ps_sigma )
+
+        #Append covariance matrix
+        if cov_matrix_local is not None: 
+          cov_matrix_local = rescale_matrix( cov_matrix_local, cross_elements_factor, 'cross_only')
+          covariance_matrices.append(cov_matrix_local) 
+          ps_data[data_id]['cov_matrix'] = cov_matrix_local
+          
         data_id += 1
+    if covariance_matrix_global is not None: 
+      covariance_matrix_global = rescale_matrix( covariance_matrix_global, cross_elements_factor, 'cross_only')
+      covariance_matrices.append(covariance_matrix_global) 
+  
   k_vals_all         = np.concatenate( data_kvals )
   delta_ps_all       = np.concatenate( data_ps )
   delta_ps_sigma_all = np.concatenate( data_ps_sigma )
-  if load_covariance_matrix:
-    cov_matrix_all = Merge_Matrices( cov_matrix_all )
-  # log_delta_ps_all       = np.concatenate( log_data_ps )
-  # log_delta_ps_sigma_all = np.concatenate( log_data_ps_sigma )
   ps_data_out = {'P(k)':{}, 'separate':ps_data }
   ps_data_out['P(k)']['k_vals'] = k_vals_all
-  if log_ps:
-    print( 'Log P(k) not supported, need to implement uncertanty')
-    exit(-1)
-    # ps_data_out['P(k)']['mean']   = log_delta_ps_all
-    # ps_data_out['P(k)']['sigma']  = log_delta_ps_sigma_all
-  else:
-    ps_data_out['P(k)']['mean']   = delta_ps_all
-    ps_data_out['P(k)']['sigma']  = delta_ps_sigma_all
-    if load_covariance_matrix: ps_data_out['P(k)']['cov_matrix']  = cov_matrix_all
-
+  ps_data_out['P(k)']['mean']   = delta_ps_all
+  ps_data_out['P(k)']['sigma']  = delta_ps_sigma_all
+  if len(covariance_matrices) > 0:
+    print( f'Loaded {len(covariance_matrices)} covariance matrices')
+    cov_matrices_all = Merge_Matrices( covariance_matrices )
+    # Rescaale to reflect the systematic error added to sigma
+    n = cov_matrices_all.shape[0]
+    diagonal = cov_matrices_all.diagonal()
+    sigma = delta_ps_sigma_all
+    diagonal_only = False
+    if 'modify_diagonal_only' in systematic_uncertainties['P(k)']  and systematic_uncertainties['P(k)']['modify_diagonal_only']: 
+      diagonal_only = True
+      print( ' WARNING: Systematic uncertainties modyfy only the diagonal of the covariance matrix')
+    for i in range(n):
+      for j in range(n):
+        if diagonal_only and i != j: continue
+        sigma_0 = np.sqrt(diagonal[i] * diagonal[j])
+        sigma_1 = sigma[i] * sigma[j]
+        cov_matrices_all[i,j] *= sigma_1 / sigma_0
+    ps_data_out['P(k)']['covariance_matrix']  = cov_matrices_all
   n_data_points = len( k_vals_all )
   print( f' N data points: {n_data_points}' )
   return ps_data_out
@@ -464,7 +530,9 @@ def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_rang
 
 ##################################################################################################################################
 
-def Get_Comparable_Composite( fields, z_min, z_max, ps_parameters=None, tau_parameters=None, log_ps=False, z_reion=None, factor_sigma_tauHeII=1.0, systematic_uncertainties=None, no_use_delta_p=False, load_covariance_matrix=False, simulated_data_param=None  ):
+def Get_Comparable_Composite( fields, z_min, z_max, verbose=False, ps_parameters=None, tau_parameters=None, log_ps=False, 
+                              z_reion=None, factor_sigma_tauHeII=1.0, systematic_uncertainties=None, no_use_delta_p=False,  
+                              simulated_data_param=None, data_covariance=None, simulated_data=None  ):
   
   rescaled_walther = False
   rescale_walter_file = None
@@ -482,19 +550,23 @@ def Get_Comparable_Composite( fields, z_min, z_max, ps_parameters=None, tau_para
   fields_list = fields.split('+')
   mean_all, sigma_all = [], []
   comparable_all = {}
-  if load_covariance_matrix: cov_matrix_all = []
+  covariance_matrices = []
   for field in fields_list:
     append_comparable = False
     if field == 'P(k)':
-      comparable_ps = Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_ps_sets, ps_range, log_ps=log_ps, systematic_uncertainties=systematic_uncertainties, no_use_delta_p=no_use_delta_p, load_covariance_matrix=load_covariance_matrix, simulated_data_param=simulated_data_param  )
+      if data_covariance is not None and 'P(k)' in data_covariance: pk_data_covariance = data_covariance['P(k)']
+      else: pk_data_covariance = None
+      simulated_ps = None
+      if simulated_data is not None and 'P(k)' in simulated_data: simulated_ps = simulated_data['P(k)']
+      comparable_ps = Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_ps_sets, ps_range, verbose=verbose, log_ps=log_ps, systematic_uncertainties=systematic_uncertainties, no_use_delta_p=no_use_delta_p,  simulated_data_param=simulated_data_param, data_covariance=pk_data_covariance, simulated_ps=simulated_ps  )
       comparable_ps_all = comparable_ps['P(k)']
       comparable_ps_separate = comparable_ps['separate']
       comparable_all['P(k)'] = { 'all':comparable_ps_all, 'separate':comparable_ps_separate }
-      if load_covariance_matrix:
-        cov_matrix_all.append(comparable_ps_all['cov_matrix'])
       print('Added comparable P(k) separate')
       mean_all.append( comparable_ps_all['mean'] )
       sigma_all.append( comparable_ps_all['sigma'] )
+      if 'covariance_matrix' in comparable_ps_all: 
+        covariance_matrices.append(comparable_ps_all['covariance_matrix'])
     if field == 'T0':  
       comparable_field = Get_Comparable_T0_Gaikwad()
       append_comparable = True
@@ -502,7 +574,11 @@ def Get_Comparable_Composite( fields, z_min, z_max, ps_parameters=None, tau_para
       comparable_field = Get_Comparable_Tau( z_min, z_max, factor_sigma_tau_becker=factor_sigma_tau_becker, factor_sigma_tau_keating=factor_sigma_tau_keating )
       append_comparable = True
     if field == 'tau_HeII': 
-      comparable_field = Get_Comparable_Tau_HeII( rescale_tau_HeII_sigma=factor_sigma_tauHeII,  systematic_uncertainties=systematic_uncertainties)
+      tau_data_covariance = None
+      simulated_tau_HeII = None
+      if data_covariance is not None and 'tau_HeII' in data_covariance: tau_data_covariance = data_covariance['tau_HeII']
+      if simulated_data is not None and 'tau_HeII' in simulated_data: simulated_tau_HeII = simulated_data['tau_HeII']
+      comparable_field = Get_Comparable_Tau_HeII( rescale_tau_HeII_sigma=factor_sigma_tauHeII,  systematic_uncertainties=systematic_uncertainties, data_covariance=tau_data_covariance, simulated_tau_HeII=simulated_tau_HeII )
       append_comparable = True
     if field == 'z_ion_H':
       mean  = np.array([z_reion['z']])
@@ -514,9 +590,10 @@ def Get_Comparable_Composite( fields, z_min, z_max, ps_parameters=None, tau_para
       comparable_all[field] = comparable_field
       mean_all.append( comparable_field['mean'] )
       sigma_all.append( comparable_field['sigma'] )
+      if 'covariance_matrix' in comparable_field: covariance_matrices.append( comparable_field['covariance_matrix'])
   comparable_all[fields] = { 'mean':np.concatenate(mean_all), 'sigma':np.concatenate(sigma_all) }  
-  if load_covariance_matrix: 
-    cov_matrix_all = Merge_Matrices( cov_matrix_all )
-    comparable_all[fields]['cov_matrix'] = cov_matrix_all 
+  if len( covariance_matrices ) > 0:
+     cov_matrix_all = Merge_Matrices( covariance_matrices )
+     comparable_all[fields]['covariance_matrix'] = cov_matrix_all
   return comparable_all
   

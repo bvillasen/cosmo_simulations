@@ -57,19 +57,20 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
   if system == 'Shamrock': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=11)
   if system == 'Tornado':  prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=11)
 
+  verbose = False
+  
   dir_boss = ps_data_dir + 'data_power_spectrum_boss/'
-  data_filename = dir_boss + 'data_table.py'
-  data_boss = load_data_boss( data_filename )
+  data_boss = load_data_boss( dir_boss )
   data_z_boss = data_boss['z_vals']
 
   data_filename = ps_data_dir + 'data_power_spectrum_walther_2019/data_table.txt'
-  data_walther = load_power_spectrum_table( data_filename, kmax=0.1 )
+  data_walther = load_power_spectrum_table( data_filename )
   data_z_w = data_walther['z_vals']
 
   dir_data_boera = ps_data_dir + 'data_power_spectrum_boera_2019/'
-  data_boera = load_data_boera( dir_data_boera )
+  data_boera = load_data_boera( dir_data_boera, corrected=False, print_out=verbose )
+  data_boera_c = load_data_boera( dir_data_boera, corrected=True, print_out=verbose )
   data_z_b = data_boera['z_vals']
-  data_boera_c = load_data_boera( dir_data_boera, corrected=True )
   data_z_bc = data_boera_c['z_vals']
 
   data_dir_viel = ps_data_dir + 'data_power_spectrum_viel_2013/'
@@ -77,8 +78,7 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
   data_z_v = data_viel['z_vals']
   
   dir_irsic = ps_data_dir + 'data_power_spectrum_irsic_2017/'
-  data_filename = dir_irsic + 'data_table.py'
-  data_irsic = load_data_irsic( data_filename )
+  data_irsic = load_data_irsic( dir_irsic )
   data_z_irsic = data_irsic['z_vals']
 
 
@@ -194,8 +194,8 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
   # c_irsic = pylab.cm.Purples(.7)
   
   c_boss = dark_blue
-  # if c_boera is None: c_boera = dark_green
-  if c_boera is None: c_boera = ocean_blue
+  if c_boera is None: c_boera = dark_green
+  # if c_boera is None: c_boera = ocean_blue
   # c_boera = 'C2'
   
   c_boera_c = 'C4'
@@ -279,6 +279,9 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
         
     if ps_samples is not None:
       for sim_id in ps_samples:
+        factor = 1.0
+        if current_z == 5.0:   factor = 1.05        
+        if current_z == 4.6:   factor = 1.05        
         data_sim = ps_samples[sim_id]
         if data_labels is not None: label = data_labels[sim_id]
         else: label = ''
@@ -290,13 +293,7 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
         index = np.where( diff == diff_min )[0][0]
         data = data_sim[index]
         k = data['k_vals']
-        delta = data[HL_key]
-        # if current_z == 4.2:
-        #   f_0 = 1.1  
-        #   delta *= f_0
-        #   high *= f_0
-        #   low *= f_0
-        # if current_z == 5.0:   delta *= 1.1
+        delta = data[HL_key] * factor
         if 'line_color' in data_sim: line_color = data_sim['line_color']
         else: line_color = 'C0' 
         ls = '-'
@@ -305,10 +302,10 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
         if 'lw' in data_sim: ls = data_sim['lw']
         ax.plot( k, delta, linewidth=lw, label=label, zorder=1, color=line_color, ls=ls  )        
         # if sim_id == 0:
-        high = data['higher'] 
-        low  = data['lower'] 
-        # high *= 1.03
-        # low *= 0.97
+        high = data['higher'] * factor
+        low  = data['lower'] * factor
+        high *= 1.05
+        low *= 0.95
         ax.fill_between( k, high, low, color=line_color, alpha=0.4 )
 
     if sim_data_sets:
