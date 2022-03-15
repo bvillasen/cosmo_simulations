@@ -56,6 +56,7 @@ print(f'Changing dir: {work_directory}' )
 os.chdir( job_dir )
 if partition == 'comp-astro': partition_key = 'comp'
 if partition == 'gpuq':       partition_key = 'gpu'
+if partition == 'cpuq':       partition_key = 'cpu'
 exclude_nodes = []
 exclude_comand = '' 
 for node in exclude_nodes:
