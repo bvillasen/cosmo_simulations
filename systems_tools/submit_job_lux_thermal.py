@@ -16,8 +16,9 @@ command = 'python'
 job_dir = home_dir + 'thermal_IGM/'
 command_params = 'run_termal_thermal_history_chain.py'
 
-partition = 'comp-astro'
+# partition = 'comp-astro'
 # partition = 'gpuq'
+partition = 'cpuq'
 work_directory = '/home/brvillas/jobs/'
 output = work_directory + 'run_output_thermal.log'
 create_directory( work_directory )
