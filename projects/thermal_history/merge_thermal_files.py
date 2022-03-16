@@ -65,7 +65,7 @@ if not file_exits:
     
     T0_vals.append( T0 )
     x_HI_vals.append( x_HI )
-    x_HeII_vals.append( x_HeII )
+    # x_HeII_vals.append( x_HeII )
     n_e_vals.append( n_e )
     if sim_id %100 == 0: print_progress( sim_id, n_samples, time_start )
   print('\n')
