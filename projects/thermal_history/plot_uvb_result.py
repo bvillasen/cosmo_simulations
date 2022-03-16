@@ -10,9 +10,9 @@ from tools import *
 from uvb_functions import Extend_Rates_Redshift, Modify_Rates_From_Grackle_File, Load_Grackle_File, Copy_Grakle_UVB_Rates, Modify_UVB_Rates_sigmoid
 from colors import *
 
-black_background = True
+black_background = False
 
-output_dir = data_dir + 'cosmo_sims/figures/paper_thermal_history/'
+output_dir = data_dir + 'figures/thermal_history/paper/'
 if black_background: output_dir += 'black_background/'
 create_directory( output_dir ) 
 
@@ -23,12 +23,12 @@ param_vals[1] = [ 0.6, 0.73, 0.86, 1.0 ]
 param_vals[2] = [ -0.1, 0.2, 0.5, 0.8 ]
 param_vals[3] = [ -0.6, -0.4, -0.2, 0.0, 0.2 ]
 
-max_delta_z = 0.1
+max_delta_z = 0.2
 
 # Load the Original Rates
 grackle_file_name = base_dir + 'rates_uvb/data/CloudyData_UVB_Puchwein2019_cloudy.h5'
 rates_P19 = Load_Grackle_File( grackle_file_name )
-rates_P19_ext = Extend_Rates_Redshift( max_delta_z, rates_P19 )
+rates_P19_ext = Extend_Rates_Redshift( max_delta_z, rates_P19, log=True )
 input_rates = Copy_Grakle_UVB_Rates( rates_P19_ext )
 uvb_parameters = { 'scale_He':1, 'scale_H':0.78, 'deltaZ_He':0, 'deltaZ_H':0.05 }
 rates_P19m = Modify_Rates_From_Grackle_File( uvb_parameters,  rates_data=input_rates, extrapolate='spline' )
@@ -38,7 +38,7 @@ param_combinations = Get_Parameters_Combination( param_vals )
 rates_all = {}
 for id, p_vals in enumerate(param_combinations):
   rates_data = Copy_Grakle_UVB_Rates( rates_P19 )
-  rates_data = Extend_Rates_Redshift( max_delta_z, rates_data )
+  rates_data = Extend_Rates_Redshift( max_delta_z, rates_data, log=True )
   uvb_parameters = { 'scale_He':p_vals[0], 'scale_H':p_vals[1], 'deltaZ_He':p_vals[2], 'deltaZ_H':p_vals[3] }
   uvb_rates = Modify_Rates_From_Grackle_File( uvb_parameters,  rates_data=rates_data, extrapolate='spline' )
   rates_all[id] = uvb_rates
@@ -50,7 +50,7 @@ keys = { 'Chemistry':[ 'k24', 'k26', 'k25' ], 'Photoheating':[ 'piHI', 'piHeI', 
 
 # Obtain distribution of the UVBRates
 root_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/'
-data_name = 'fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_systematic'
+data_name = 'fit_results_covariance_systematic'
 input_dir = root_dir + f'fit_mcmc/{data_name}/observable_samples/'
 
 # file_name = input_dir + 'samples_uvb_rates_new.pkl' 
@@ -61,18 +61,18 @@ samples = Load_Pickle_Directory( file_name )
 
 
 param_vals = {}
-param_vals[0] = [ 0.36, 0.57 ]
-param_vals[1] = [ 0.75, 0.79 ]
-param_vals[2] = [ 0.21, 0.38 ]
-param_vals[3] = [ 0.02, 0.17 ]
+param_vals[0] = [ 0.38, 0.60 ]
+param_vals[1] = [ 0.77, 0.84 ]
+param_vals[2] = [ 0.18, 0.34 ]
+param_vals[3] = [ -0.33, 0.05 ]
 
   
 param_combinations = Get_Parameters_Combination( param_vals )  
 
 grackle_file_name = base_dir + 'rates_uvb/data/CloudyData_UVB_Puchwein2019_cloudy.h5'
 rates_P19 = Load_Grackle_File( grackle_file_name )
-max_delta_z = 0.02
-rates_P19 = Extend_Rates_Redshift( max_delta_z, rates_P19 )
+max_delta_z = 0.05
+rates_P19 = Extend_Rates_Redshift( max_delta_z, rates_P19, log=True )
 
 rates_all = {}
 for id, p_vals in enumerate(param_combinations):
@@ -102,7 +102,7 @@ for root_key in keys:
     rates_range[root_key][key] = { 'z':z, 'max': np.array(rates_max), 'min':np.array(rates_min) }
 
 
-params_HL = { 'scale_He':0.45, 'scale_H':0.77, 'deltaZ_He':0.31, 'deltaZ_H':0.1 }
+params_HL = { 'scale_He':0.47, 'scale_H':0.81, 'deltaZ_He':0.25, 'deltaZ_H':-0.09 }
 rates_data = Copy_Grakle_UVB_Rates( rates_P19 )
 rates_HL = Modify_Rates_From_Grackle_File( params_HL,  rates_data=rates_data, extrapolate='spline' )
 
@@ -219,17 +219,17 @@ for i in range(nrows):
     z   = rates_range[root_key][key]['z'] 
     max = rates_range[root_key][key]['max']
     min = rates_range[root_key][key]['min']
-    if key in [ 'k24', 'k26', 'piHI', 'piHeI']:
-      fit[173] *= 1.3  
-      # max[172] *= 1.4
-      max[173] *= 2.0
-      max[174] *= 1.5
-      min[172] *= 0.9
-      min[173] *= 0.9
-      min[174] *= 0.9
+    # if key in [ 'k24', 'k26', 'piHI', 'piHeI']:
+      # fit[173] *= 1.3  
+      # # max[172] *= 1.4
+      # max[173] *= 2.0
+      # max[174] *= 1.5
+      # min[172] *= 0.9
+      # min[173] *= 0.9
+      # min[174] *= 0.9
     label = 'This Work (Best-Fit)'
     ax.plot( z_fit, fit, color=color_fit, label=label, lw=2  )
-    ax.fill_between( z, max, min,  alpha=0.6, color=color_fit , lw=3.0,  zorder=2)
+    ax.fill_between( z, max, min,  alpha=0.5, color=color_fit , lw=3.0,  zorder=2)
     
     z_sig = rates_sigmoid['UVBRates']['z']
     rates_sig = rates_sigmoid['UVBRates'][root_key][key]

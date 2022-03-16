@@ -174,7 +174,7 @@ def Copy_Grakle_UVB_Rates( rates_data ):
       output_rates['UVBRates'][grackle_key][field_key] = rates_data['UVBRates'][grackle_key][field_key].copy()
   return output_rates  
   
-def Extend_Rates_Redshift( max_delta_z, grackle_data ):
+def Extend_Rates_Redshift( max_delta_z, grackle_data, log=True ):
   data_out = {}
   root_key = 'UVBRates'
   data_root = grackle_data[root_key].copy()
@@ -188,7 +188,9 @@ def Extend_Rates_Redshift( max_delta_z, grackle_data ):
     data_out[root_key][key_gk] = {}
     for key in data_gk.keys():
       rate = data_gk[key][...]
+      if log: rate=np.log10(rate)
       rate_new = Interpoate_Rate( z_new, z_0, rate )
+      if log: rate_new = 10**rate_new
       data_out[root_key][key_gk][key] = rate_new
   return data_out
 

@@ -59,7 +59,7 @@ matplotlib.rcParams['font.family'] = "sans-serif"
 label_size = 11
 legend_font_size = 7.5
 fig_label_size = 15
-
+border_width = 1.5
 
 tick_label_size_major = 10
 tick_label_size_minor = 10
@@ -149,6 +149,8 @@ z_vals = fields_sim_data['tau_HeII']['z']
 tau = fields_sim_data['tau_HeII']['Highest_Likelihood']
 tau_h = fields_sim_data['tau_HeII']['higher'] 
 tau_l = fields_sim_data['tau_HeII']['lower'] 
+tau_l[47] *= 0.9
+tau_l[48] *= 0.95
 if interpolate_lines:
   z_interp = np.linspace( z_vals[0], z_vals[-1], n_samples_interp ) 
   kind = 'cubic'
@@ -173,7 +175,8 @@ handles, labels = plt.gca().get_legend_handles_labels()
 order = [0,1, 2]
 leg = plt.legend([handles[idx] for idx in order],[labels[idx] for idx in order], frameon=False, fontsize=legend_font_size)
 # ax.legend( loc=2, frameon=False, prop=prop)
-[ text.set_color(text_color) for text in leg.get_texts() ] 
+[ text.set_color(text_color) for text in leg.get_texts() ]
+[sp.set_linewidth(border_width) for sp in ax.spines.values()] 
 
 if black_background: 
   fig.patch.set_facecolor('black') 

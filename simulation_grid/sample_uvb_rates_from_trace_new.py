@@ -13,7 +13,8 @@ from mcmc_sampling_functions import Get_Highest_Likelihood_Params, Get_1D_Likeli
 from uvb_functions import Load_Grackle_File, Modify_UVB_Rates, Extend_Rates_Redshift, Copy_Grakle_UVB_Rates
 from stats_functions import compute_distribution, get_highest_probability_interval
 
-data_name = 'fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_systematic'
+# data_name = 'fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_systematic'
+data_name = 'fit_results_covariance_systematic'
 
 ps_data_dir = 'lya_statistics/data/'
 mcmc_dir = root_dir + 'fit_mcmc/'
@@ -41,7 +42,7 @@ param_samples = pickle.load( open( samples_file, 'rb' ) )
 
 
 # Get the Highest_Likelihood parameter values 
-params_HL = Get_Highest_Likelihood_Params( param_samples, n_bins=30 )
+params_HL = Get_Highest_Likelihood_Params( param_samples, n_bins=10 )
 
 
 hpi_sum = 0.95
@@ -77,7 +78,7 @@ for sample_id in range(n_samples ):
     rates_samples[field].append(  rates_modified[field] )
   print_progress( sample_id+1, n_samples, start )
 print('')
- 
+
 if params_HL is not None:
   parameter_values_HL = {}
   for p_id in param_samples:
@@ -119,7 +120,7 @@ for field in field_list:
   samples_stats['Highest_Likelihood'] = rates_modified_HL[field]  
   samples_uvb_rates[field] = samples_stats
 
-    
+
 file_name = output_dir + 'samples_uvb_rates_notextended.pkl' 
 Write_Pickle_Directory( samples_uvb_rates, file_name )
 
