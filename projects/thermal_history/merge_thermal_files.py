@@ -56,12 +56,12 @@ if not file_exits:
     T0 = file['temperature'][...]
     n_H  = file['n_H'][...]
     n_HI = file['n_HI'][...]
-    n_He  = file['n_He'][...]
-    n_HeII = file['n_HeII'][...]
+    # n_He  = file['n_He'][...]
+    # n_HeII = file['n_HeII'][...]
     n_e  = file['n_e'][...]
     file.close()
     x_HI = n_HI / n_H
-    x_HeII = n_HeII / n_He
+    # x_HeII = n_HeII / n_He
     
     T0_vals.append( T0 )
     x_HI_vals.append( x_HI )
@@ -71,7 +71,7 @@ if not file_exits:
   print('\n')
   T0_vals = np.array( T0_vals )
   x_HI_vals = np.array( x_HI_vals )
-  x_HeII_vals = np.array( x_HeII_vals )
+  # x_HeII_vals = np.array( x_HeII_vals )
   n_e_vals = np.array( n_e_vals )
 
   out_file = h5.File( out_file_name, 'w' )
@@ -79,7 +79,7 @@ if not file_exits:
   out_file.create_dataset( 'z', data=z_vals )
   out_file.create_dataset( 'T0', data=T0_vals )
   out_file.create_dataset( 'x_HI', data=x_HI_vals )
-  out_file.create_dataset( 'x_HeII', data=x_HeII_vals )
+  # out_file.create_dataset( 'x_HeII', data=x_HeII_vals )
   out_file.create_dataset( 'n_e', data=n_e_vals )
   out_file.close()
   print( f'Saved File: {out_file_name}' )
@@ -90,7 +90,7 @@ if rank != 0: exit(0)
 selected_files_all = []
 T0_vals_all = []
 x_HI_vals_all = []
-x_HeII_vals_all = []
+# x_HeII_vals_all = []
 n_e_vals_all = []
 for file_id in range(n_procs):  
   in_file_name = output_dir + f'samples_T0_evolution_id_{file_id}.h5'
@@ -100,12 +100,12 @@ for file_id in range(n_procs):
   selected_files = in_file['selected_files'][...]
   T0 = in_file['T0'][...]
   x_HI = in_file['x_HI'][...]
-  x_HeII = in_file['x_HeII'][...]
+  # x_HeII = in_file['x_HeII'][...]
   n_e = in_file['n_e'][...]
   in_file.close()
   T0_vals_all.append(T0)
   x_HI_all.append(x_HI)
-  x_HeII_all.append(x_HeII)
+  # x_HeII_all.append(x_HeII)
   n_e_all.append(n_e)
   selected_files_all.append( selected_files )
   
@@ -121,7 +121,7 @@ x_HeII_vals_all = np.concatenate( x_HeII_vals_all, axis=0 )
 n_e_vals_all = np.concatenate( n_e_vals_all, axis=0 )
 print( f'T0 shape: {T0_vals_all.shape}')
 print( f'x_HI shape: {x_HI_vals_all.shape}')
-print( f'x_HeII shape: {x_HeII_vals_all.shape}')
+# print( f'x_HeII shape: {x_HeII_vals_all.shape}')
 print( f'n_e shape: {n_e_vals_all.shape}')
   
 output_dir = grid_dir + f'fit_mcmc/{fit_name}/'
@@ -130,7 +130,7 @@ out_file = h5.File( out_file_name, 'w' )
 out_file.create_dataset( 'z', data=z_vals )
 out_file.create_dataset( 'T0', data=T0_vals_all )
 out_file.create_dataset( 'x_HI', data=x_HI_vals_all )
-out_file.create_dataset( 'x_HeII', data=x_HeII_vals_all )
+# out_file.create_dataset( 'x_HeII', data=x_HeII_vals_all )
 out_file.create_dataset( 'n_e', data=n_e_vals_all )
 out_file.close()
 print( f'Saved File: {out_file_name}' )
