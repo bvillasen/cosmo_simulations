@@ -15,24 +15,25 @@ from constants_cosmo import Mpc
 from figure_functions import *
 from colors import *
 
-black_background = False
+black_background = True
 
-proj_dir = data_dir + 'projects/thermal_history/'
-input_dir = proj_dir + 'data/ionization_history/'
-output_dir = proj_dir + 'figures/'
+input_dir = data_dir + 'tau_electron/'
+output_dir = data_dir + 'cosmo_sims/figures/paper_thermal_history/'
 if black_background: output_dir += 'black_background/'
 create_directory( output_dir )
 
 
 z_integral = np.linspace( 0, 14, 100 )
 
+file_name = input_dir + 'tau_HL.pkl'
+tau_HL = Load_Pickle_Directory( file_name )
 
-file_name = input_dir + 'tau_electron_best_fit.pkl'
+file_name = input_dir + 'tau_range.pkl'
 tau_range = Load_Pickle_Directory( file_name )
 
 
-# file_name = input_dir + 'tau_modified_Gamma_sigmoid.pkl'
-# tau_sigmoid = Load_Pickle_Directory( file_name )
+file_name = input_dir + 'tau_modified_Gamma_sigmoid.pkl'
+tau_sigmoid = Load_Pickle_Directory( file_name )
 
 nrows = 1
 ncols = 1
@@ -57,14 +58,14 @@ lw = 2.5
 
 fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(8*ncols,6*nrows))
 
-tau = tau_range['HL']
-tau_h = tau_range['high']
-tau_l = tau_range['low']
+tau = tau_HL['HL']
+tau_h = tau_range['max']
+tau_l = tau_range['min']
 ax.plot( z_integral, tau, lw=3, c=color, label='This Work (Best-Fit)', zorder=4 )
 ax.fill_between( z_integral, tau_h, tau_l, color=color, alpha=0.6, zorder=4 )
 
-# tau = tau_sigmoid['HL']
-# ax.plot( z_integral, tau, ls='--', lw=lw, c='C0', label= r'Modified to Match HI $\tau_{\mathrm{eff}}$', zorder=5 )
+tau = tau_sigmoid['HL']
+ax.plot( z_integral, tau, ls='--', lw=lw, c='C0', label= r'Modified to Match HI $\tau_{\mathrm{eff}}$', zorder=5 )
 
 tau_planck = 0.0561 
 sigma_tau = 0.0071

@@ -13,7 +13,8 @@ from colors import *
 black_background = False
 
 ps_data_dir =  base_dir + 'lya_statistics/data/'
-output_dir = data_dir + f'figures/thermal_history/paper/'
+proj_dir = data_dir + 'projects/thermal_history/'
+output_dir = proj_dir + f'figures/'
 if black_background: output_dir += 'black_background/'
 create_directory( output_dir )
 root_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/'

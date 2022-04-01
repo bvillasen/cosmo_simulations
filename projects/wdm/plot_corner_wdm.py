@@ -15,7 +15,9 @@ grid_names = [ grid_name ]
 data_name = 'fit_results_P(k)+_Boera_covmatrix'
 data_labels = [ '' ]
 
-output_dir = data_dir + f'figures/wdm/'
+
+proj_dir = data_dir + 'projects/wdm/'
+output_dir = proj_dir + f'figures/'
 create_directory( output_dir )
 
 samples_all = {}
@@ -42,13 +44,31 @@ for data_id,grid_name in enumerate(grid_names):
 
   stats = pickle.load( open( stats_file, 'rb' ) )
 
+p_names = [ 'inv_wdm_mass', 'scale_H_ion', 'scale_H_Eheat', 'deltaZ_H' ]
 
-# corner_labels = { 'inv_wdm_mass':r'$m_{\mathrm{WDM}}^{-1}$  [keV$^{-1}$]', 'scale_H_ion': r'$\beta$',
-#                   'scale_H_Eheat': r'$\alpha_{\mathrm{E}}$', 'deltaZ_H':r'$\Delta z$' }
-# 
-# ticks = {0:[0., 0.1, 0.2, 0.3, 0.4], 1:[0.4, 0.6, 0.8, 1.0, 1.2, 01.4], 2:[ 0.6, 0.8, 1.0, 1.2,], 3:[ -0.5, -0.25, 0, 0.25, 0.5,]}
-# limits = {0:( 0, 0.45 ), 1:( 0.8, 1.5 ), 2:( 0.4, 1.15 ), 3:( -0.5, 0.5 )}
-# 
-# Plot_Corner( samples_all['param'], data_labels, corner_labels, output_dir, n_bins_1D=20, n_bins_2D=25, 
-#              lower_mask_factor=500, multiple=True, show_label=True, HL_vals=params_HL, ticks=ticks, 
-#              limits=limits, param_values=None, black_background=False, figure_name='corner_wdm_nsim1080.png', show_param_values=False)
+param_values = {}
+for p_id, p_name in enumerate(p_names):
+  param_values[p_name] = {}
+  val = params_HL[p_id]
+  p_stats = stats[p_name]
+  low = p_stats['quantiles'][2.5]
+  high = p_stats['quantiles'][97.5]
+  delta_l = val - low
+  delta_h = high - val
+  param_values[p_name]['value'] = val
+  param_values[p_name]['delta_h'] = delta_h
+  param_values[p_name]['delta_l'] = delta_l
+
+corner_labels = { 'inv_wdm_mass':r'$m_{\mathrm{WDM}}^{-1}$  [keV$^{-1}$]', 'scale_H_ion': r'$\beta$',
+                  'scale_H_Eheat': r'$\alpha_{\mathrm{E}}$', 'deltaZ_H':r'$\Delta z$' }
+
+param_labels = { 'inv_wdm_mass':r'$m_{\mathrm{WDM}}^{-1}$', 'scale_H_ion': r'$\beta$',
+                  'scale_H_Eheat': r'$\alpha_{\mathrm{E}}$', 'deltaZ_H':r'$\Delta z$' }
+
+ticks = {0:[0., 0.1, 0.2, 0.3, 0.4], 1:[0.4, 0.6, 0.8, 1.0, 1.2, 01.4], 2:[ 0.6, 0.8, 1.0, 1.2,], 3:[ -0.5, -0.25, 0, 0.25, 0.5,]}
+limits = {0:( 0, 0.45 ), 1:( 0.8, 1.5 ), 2:( 0.4, 1.15 ), 3:( -0.5, 0.5 )}
+
+Plot_Corner( samples_all['param'], data_labels, corner_labels, output_dir, n_bins_1D=20, n_bins_2D=25, 
+             lower_mask_factor=500, multiple=True, show_label=True, HL_vals=params_HL, ticks=ticks, 
+             limits=limits, param_values=param_values, black_background=False, figure_name='corner_wdm_nsim1080.png', 
+             param_names=p_names, param_labels=param_labels)

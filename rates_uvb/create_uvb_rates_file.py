@@ -21,12 +21,14 @@ max_delta_z = 0.1
 rates_data = Extend_Rates_Redshift( max_delta_z, grackle_data )
 input_rates = Copy_Grakle_UVB_Rates( rates_data )
 
+# Villasenor et al. 2021
 # parameter_values = { 'scale_He':  0.44,
 #                      'scale_H':   0.78,
 #                      'deltaZ_He': 0.27,
 #                      'deltaZ_H':  0.05 }
 # 
 
+# Villasenor et al. 2022 (revised from 2021)
 parameter_values = { 'scale_He':  0.47,
                      'scale_H':   0.81,
                      'deltaZ_He': 0.25,
@@ -59,7 +61,7 @@ output_rates = {
                'Chemistry':{ 'k24':rates_modified['photoionization_HI'],  'k26':rates_modified['photoionization_HeI'],  'k25':rates_modified['photoionization_HeII'] },
                'info':info } }
                 
-out_file_name = output_dir + 'UVB_rates_V21_revised.h5'
+out_file_name = output_dir + 'UVB_rates_V22.h5'
 Write_Rates_Grackle_File( out_file_name, output_rates )
 
 # Plot_UVB_Rates( output_dir, rates=output_rates['UVBRates'] )

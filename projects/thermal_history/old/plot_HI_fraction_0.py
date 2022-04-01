@@ -18,9 +18,16 @@ from data_HI_fraction import *
 black_background = False
 
 legendsize = 11.5
-proj_dir  = data_dir + 'projects/thermal_history/' 
-input_dir = proj_dir + 'data/ionization_history/'
-output_dir = proj_dir + 'figures/'
+if system == 'Tornado': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"),  size=legendsize)
+if system == 'Eagle': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"),    size=legendsize)
+if system == 'xps': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"),      size=legendsize)
+if system == 'Lux':      prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/brvillas/fonts', "Helvetica.ttf"),        size=legendsize)
+if system == 'Shamrock': prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=legendsize)
+
+# input_dir = data_dir + 'tau_electron/'
+# output_dir = data_dir + 'cosmo_sims/figures/paper_thermal_history/'
+input_dir = projects_dir + 'thermal_history/'
+output_dir = data_dir + 'figures/thermal_history/'
 if black_background: output_dir += 'black_background/'
 create_directory( output_dir )
 
@@ -32,16 +39,18 @@ data_sets = [ data_HI_fraction_Fan_2006, data_HI_fraction_Greig_2017, data_HI_fr
 data_colors = [ light_orange, purple, dark_blue, green, cyan, 'C1', 'C3', 'C5', 'C6', 'C7' ]
 
 
-file_name = input_dir + 'best_fit_ionization.pkl'
-data = Load_Pickle_Directory( file_name )
-z = data['z']
-xHI, xHI_l, xHI_h = data['x_HI']['HL'], data['x_HI']['low'], data['x_HI']['high'],  
+file_name = input_dir + 'best_fit_ionization.txt'
+z, xHII, xHII_h, xHII_l, ne, ne_l, ne_h = np.loadtxt( file_name ).T
+xHI = 1 - xHII
+xHI_l = 1 - xHII_h
+xHI_h = 1 - xHII_l
 
-# xHI_l[z_indices] = xHI[z_indices] * (1- delta )
+z_lim = 6.1
+z_indices = z <= z_lim
 
-
-
-
+delta = 0.10
+xHI_l[z_indices] = xHI[z_indices] * (1- delta )
+xHI_h[z_indices] = xHI[z_indices] * (1 + delta )
 
 # n_stride = 1
 # file_name = input_dir + 'solution_HL.h5'
@@ -80,8 +89,8 @@ xHI, xHI_l, xHI_h = data['x_HI']['HL'], data['x_HI']['low'], data['x_HI']['high'
 # xHI_max = frac_max * xHI
 # xHI_min = frac_min * xHI
 
-alpha = 3.5
-file_name = input_dir + f'solution_V22_modified_sigmoid_{alpha}.h5'
+
+file_name = input_dir + 'solution_modified_Gamma_sigmoid.h5'
 file = h5.File( file_name, 'r' )
 z_s = file['z'][...]
 n_HI = file['n_HI'][...]
@@ -89,9 +98,9 @@ n_H = file['n_H'][...]
 file.close()
 xHI_s = n_HI / n_H
 
-# z_lim = 6.1
-# z_indices = z_s >= z_lim
-# xHI_s[z_indices] = np.interp( z_s[z_indices], z[::-1], xHI[::-1] )
+z_lim = 6.1
+z_indices = z_s >= z_lim
+xHI_s[z_indices] = np.interp( z_s[z_indices], z[::-1], xHI[::-1] )
 
 nrows = 1
 ncols = 1

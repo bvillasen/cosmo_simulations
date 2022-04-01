@@ -18,8 +18,11 @@ from tools import *
 from cosmology import Cosmology
 from constants_cosmo import Myear
 
-input_dir  = data_dir + 'render_images/wdm_slice/images/'
-output_dir = data_dir + 'render_images/wdm_slice/images/composite/'
+black_background = False
+
+proj_dir = data_dir + 'projects/wdm/'
+input_dir  = proj_dir + 'figures/wdm_slice/images/'
+output_dir = proj_dir + 'figures/wdm_slice/images/composite/'
 create_directory( output_dir )
 
 
@@ -30,7 +33,7 @@ cosmo_z = cosmo.z_vals
 cosmo_t = cosmo.t_vals / Myear / 1000 #Gyear
 
 
-pixel_data = h5.File( input_dir + 'pixel_data.h5')
+pixel_data = h5.File( input_dir + 'pixel_data.h5', 'r')
 pixel_z_raw = pixel_data['pixel_z'][...]
 pixel_m_raw = pixel_data['pixel_m'][...]
 nz = len( pixel_z_raw )
@@ -90,6 +93,9 @@ tick_size_major, tick_size_minor = 5, 3
 tick_width_major, tick_width_minor = 1.5, 1
 border_width = 1.4
 
+if black_background:
+  text_color = 'white'
+  tick_color = 'white'
 
 # fig = plt.figure(figsize=(w,h))
 fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(w,h))
@@ -97,6 +103,12 @@ fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(w,h))
 colormap = palettable.scientific.sequential.Davos_20.mpl_colormap
 im = plt.imshow( mp_image, cmap=colormap, extent=(0, nx, ny, 0 ) )
 
+
+line_y = ny-150
+line_x = 250
+line_length = 400
+plt.text( line_x + 14, line_y-33, '30 cMpc', fontsize=14, color='white'  )
+plt.plot( [line_x, line_x+line_length], [line_y, line_y], lw=2.5, c='white')
 
 tick_labels = [ 0.3,  0.5, 1.0,  2.0,  4.0, 6.0, 'CDM' ] 
 tick_vals =   [ 2.5,  1.8, 1.3,  0.85, 0.5, 0.2, 0.001 ]
@@ -156,26 +168,33 @@ cax   = inset_axes(ax,
                    )
 cbar = fig.colorbar(im, cax=cax )
 [sp.set_linewidth(1.2) for sp in cbar.ax.spines.values()]
-cbar.ax.tick_params(axis='both', which='major', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major  )
-cbar.set_label( r'$\rho_\mathrm{gas}$   [$\mathregular{M}\!_\odot \mathregular{kpc}^{\mathregular{-3}}$]', fontsize=labelsize-2)
+cbar.ax.tick_params(axis='both', which='major', direction='in', color=tick_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major  )
+cbar.set_label( r'$\rho_\mathrm{gas}$   [$\mathregular{M}\!_\odot \mathregular{kpc}^{\mathregular{-3}}$]', fontsize=labelsize-2, color=text_color)
 cbar.ax.set_yticks( tick_vals, labels=tick_labels )
 # divider = make_axes_locatable(ax)
 # cax = divider.append_axes("right", size="5%", pad=0.05)
 # fig.colorbar(im, ax=ax, cax=cax )
-
 
 ax.tick_params(axis='both', which='major', direction='in', color=tick_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major  )
 ax.tick_params(axis='both', which='minor', direction='in', color=tick_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor  )
 axtop.tick_params(axis='x', which='major', direction='in', color=tick_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major  )
 axtop.tick_params(axis='x', which='minor', direction='in', color=tick_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor  )
 
-ax.set_xlabel( r'Redshift   $z$', fontsize=labelsize)
-ax.set_ylabel( r'$m_\mathrm{WDM}$   [keV]', fontsize=labelsize, labelpad=-5 )
-axtop.set_xlabel( 'Time after the Big Bang   [Gyr]', fontsize=labelsize - 2)
+ax.set_xlabel( r'Redshift   $z$', fontsize=labelsize, color=text_color)
+ax.set_ylabel( r'$m_\mathrm{WDM}$   [keV]', fontsize=labelsize, labelpad=-5, color=text_color )
+axtop.set_xlabel( 'Time after the Big Bang   [Gyr]', fontsize=labelsize - 2, color=text_color, labelpad=5)
 
 [sp.set_linewidth(border_width) for sp in ax.spines.values()]
 
+if black_background: 
+  fig.patch.set_facecolor('black') 
+  ax.set_facecolor('k')
+  [ spine.set_edgecolor(text_color) for spine in list(ax.spines.values()) ]
+  [ sp.set_edgecolor(text_color) for sp in cbar.ax.spines.values() ]
+  
+
 out_file_name = output_dir + f'slice_wdm_composite.png'
-plt.savefig( out_file_name, bbox_inches='tight', dpi=dpi )
+if black_background: out_file_name = output_dir + f'slice_wdm_composite_black.png'
+plt.savefig( out_file_name, bbox_inches='tight', dpi=dpi, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {out_file_name} ')
 

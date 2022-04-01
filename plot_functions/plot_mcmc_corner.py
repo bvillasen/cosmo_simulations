@@ -15,7 +15,8 @@ from stats_functions import get_HPI_2D, get_highest_probability_interval
 def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2D=30, 
     ticks=None, lower_mask_factor=50, multiple=False, system='Shamrock', show_label=True, 
     HL_vals=None, show_best_fit=False, limits=None, param_values=None, black_background=False,
-    bins=None, legend_loc=0, figure_name='corner.png', show_param_values=False ):
+    bins=None, legend_loc=0, figure_name='corner.png', show_param_values=False, param_names=None,
+    param_labels=None ):
   
   
 
@@ -281,20 +282,22 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
     text = '95% Confidence Interval:'  
     plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=22+font_add, color=text_color )
     
-    p_name = 'scale_H'
+    # p_name = 'scale_H'
+    p_name = param_names[0]
     p_vals = param_values[p_name]
     val = p_vals['value']
     delta_h = p_vals['delta_h']
     delta_l = p_vals['delta_l']  
-    label = labels[p_name][1:-1]
+    label = param_labels[p_name][1:-1]
     text_0 =  f'{label}' + ' \,\,= \mathregular{ ' + f'{val:.2f}' + '}^{+\mathregular{' + f'{delta_h:.2f}' + '}}_{-\mathregular{' +f'{delta_l:.2f}' + '}}'
     
-    p_name = 'scale_He'
+    # p_name = 'scale_He'
+    p_name = param_names[1]
     p_vals = param_values[p_name]
     val = p_vals['value']
     delta_h = p_vals['delta_h']
     delta_l = p_vals['delta_l']  
-    label = labels[p_name][1:-1]
+    label = param_labels[p_name][1:-1]
     text_1 =  f'{label}' + ' = \mathregular{ ' + f'{val:.2f}' + '}^{+\mathregular{' + f'{delta_h:.2f}' + '}}_{-\mathregular{' +f'{delta_l:.2f}' + '}}'
     
     # text_1 = r'$\beta_{\mathrm{He}}=\mathregular{0.44}^{+\mathregular{0.06}}_{-\mathregular{0.07}}$'
@@ -306,20 +309,22 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
       plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=25+font_add, color=text_color )
       text_y -= offset_y
     
-    p_name = 'deltaZ_H'
+    # p_name = 'deltaZ_H'
+    p_name = param_names[2]
     p_vals = param_values[p_name]
     val = p_vals['value']
     delta_h = p_vals['delta_h']
     delta_l = p_vals['delta_l']  
-    label = labels[p_name][1:-1]
+    label = param_labels[p_name][1:-1]
     text_0 =  f'{label}' + ' \,\,= \mathregular{ ' + f'{val:.2f}' + '}^{+\mathregular{' + f'{delta_h:.2f}' + '}}_{-\mathregular{' +f'{delta_l:.2f}' + '}}'
     
-    p_name = 'deltaZ_He'
+    # p_name = 'deltaZ_He'
+    p_name = param_names[3]
     p_vals = param_values[p_name]
     val = p_vals['value']
     delta_h = p_vals['delta_h']
     delta_l = p_vals['delta_l']  
-    label = labels[p_name][1:-1]
+    label = param_labels[p_name][1:-1]
     text_1 =  f'{label}' + ' = \mathregular{ ' + f'{val:.2f}' + '}^{+\mathregular{' + f'{delta_h:.2f}' + '}}_{-\mathregular{' +f'{delta_l:.2f}' + '}}'
     
     # text_lines = [ r'$\Delta z_{\mathrm{H}}\,\,=\mathregular{0.05}^{+\mathregular{0.03}}_{-\mathregular{0.03}}$', r'$\Delta z_{\mathrm{He}}=\mathregular{0.27}^{+\mathregular{0.06}}_{-\mathregular{0.06}}$', ]

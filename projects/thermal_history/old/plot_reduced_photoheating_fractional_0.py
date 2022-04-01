@@ -16,10 +16,10 @@ analysis_dir = root_dir + 'analysis_files/'
 output_dir = root_dir + 'figures/'
 create_directory( output_dir ) 
 
+project_name = 'reduced_heating'
 
-proj_dir = data_dir + 'projects/thermal_history/'
-root_dir   = proj_dir + f'data/reduced_heating'
-output_dir = proj_dir + f'figures/'
+root_dir   = data_dir + f'modified_uvb_rates/{project_name}/'
+output_dir = data_dir + f'modified_uvb_rates/{project_name}/figures/'
 create_directory( output_dir )
 
 n_models = 5
@@ -33,7 +33,7 @@ for model_id in range(n_models):
   z = file['z'][...][::-1]
   temperature = file['temperature'][...][::-1]
   
-  v_m = 0.96
+  v_m = 0.98
   z_l, z_m, z_r = 2.0, 3.0, 3.5
   ind_l = np.where( z<=z_l )[0].max()
   ind_m = np.where( z<=z_m )[0].max()
@@ -41,8 +41,6 @@ for model_id in range(n_models):
   
   temperature[ind_l:ind_m] *= np.linspace(1, v_m, ind_m-ind_l)
   temperature[ind_m:ind_r] *= np.linspace(v_m, 1, ind_r-ind_m)
-  
-  temperature *= 0.98
   
   file.close()
   data_all[model_id] = { 'temperature': {'z':z, 'T0':temperature} }
@@ -179,7 +177,7 @@ for model_id in data_all:
     ls = '--'
   l, = ax.plot( z, T0_frac, ls=ls, lw=lw, label=label, zorder=1  )
 
-ymin, ymax =  -.25, 0.05
+ymin, ymax =  -.2, 0.05
 ax.set_xlim(xmin, xmax)
 ax.set_ylim( ymin, ymax)
 ax.set_xlabel( r'Redshift  $z$', fontsize=label_size, color=text_color )
@@ -266,7 +264,7 @@ ax.set_yscale('log')
 ax.set_xlim(0.1, 10)
 ax.set_ylim(2e-16, 5e-12)
 ax.set_xlabel( r'Redshift  $z$', fontsize=label_size, color=text_color )
-label_y = 'HeI photoheating rate  $\mathcal{H}_{\mathrm{HeI}}$   [eV s$^{-1}$]'
+label_y = 'HI photoheating rate  $\mathcal{H}_{\mathrm{HI}}$   [eV s$^{-1}$]'
 ax.set_ylabel( label_y, fontsize=label_size, color=text_color, labelpad=labelpad )
 ax.tick_params(axis='both', which='major', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major  )
 ax.tick_params(axis='both', which='minor', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor  )
