@@ -5,8 +5,7 @@ import h5py as h5
 from tools import *
 from shutil import copyfile
 
-data_dir = '/data/groups/comp-astro/bruno/'
-input_dir  = data_dir + 'cosmo_sims/rescaled_P19/2048_50Mpc/slices_temperature/'
+input_dir  = data_dir + f'cosmo_sims/2048_50Mpc_V22/'
 output_dir = input_dir + 'selected_slices/'
 create_directory( output_dir )
 
