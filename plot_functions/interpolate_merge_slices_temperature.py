@@ -7,8 +7,7 @@ root_dir = os.path.dirname(os.getcwd()) + '/'
 sys.path.append( root_dir + 'tools')
 from tools import *
 
-data_dir = '/raid/bruno/data/'
-input_dir  = data_dir + 'cosmo_sims/rescaled_P19/2048_50Mpc/slices_temperature/'
+input_dir  = data_dir + 'cosmo_sims/2048_50Mpc_V22/slices_temperature/'
 output_dir = input_dir
 
 slice_width = 2048
