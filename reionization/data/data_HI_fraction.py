@@ -22,6 +22,9 @@ data_HI_fraction_Greig_2019 = { 'z':np.array([7.5]), 'xHI':np.array([.21]), 'sig
 
 data_HI_fraction_Hoag_2019 = { 'z':np.array([7.6]), 'xHI':np.array([.88]), 'sigma_h':np.array([.05]), 'sigma_l':np.array([.1]), 'label':'Hoag et al. (2019)'  }
 
+data_HI_fraction_Jung_2020 = { 'z':np.array([7.6]), 'xHI':np.array([.49]), 'sigma_h':np.array([.19]), 'sigma_l':np.array([.19]), 'label':'Jung et al. (2020)'  }
+
+
 data_HI_fraction_Mason_2018 = { 'z':np.array([7.0]), 'xHI':np.array([.59]), 'sigma_h':np.array([.11]), 'sigma_l':np.array([.15]), 'label':'Mason et al. (2018)'  }
 
 data_HI_fraction_Mason_2019 = { 'z':np.array([7.9]), 'xHI':np.array([.76]), 'sigma_h':np.array([.1]), 'sigma_l':np.array([.0]), 'label':'Mason et al. (2019)'  }

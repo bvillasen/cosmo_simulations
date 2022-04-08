@@ -25,11 +25,11 @@ if black_background: output_dir += 'black_background/'
 create_directory( output_dir )
 
 
-data_sets = [ data_HI_fraction_Fan_2006, data_HI_fraction_Greig_2017, data_HI_fraction_Hoag_2019, 
+data_sets = [ data_HI_fraction_Fan_2006, data_HI_fraction_Greig_2017, data_HI_fraction_Hoag_2019, data_HI_fraction_Jung_2020, 
               data_HI_fraction_Mason_2018, data_HI_fraction_Mason_2019, data_HI_fraction_McGreer_2011,
               data_HI_fraction_McGreer_2015, data_HI_fraction_Greig_2019, data_HI_fraction_Yang_2020, data_HI_fraction_Wang_2020]
               
-data_colors = [ light_orange, purple, dark_blue, green, cyan, 'C1', 'C3', 'C5', 'C6', 'C7' ]
+data_colors = [ light_orange, purple, dark_blue, 'darkviolet', green, cyan, 'C1', 'C3', 'C5', 'C6', 'C7' ]
 
 
 file_name = input_dir + 'best_fit_ionization.pkl'
@@ -80,14 +80,31 @@ xHI, xHI_l, xHI_h = data['x_HI']['HL'], data['x_HI']['low'], data['x_HI']['high'
 # xHI_max = frac_max * xHI
 # xHI_min = frac_min * xHI
 
-alpha = 3.5
-file_name = input_dir + f'solution_V22_modified_sigmoid_{alpha}.h5'
+# alpha = 3.5
+# file_name = input_dir + f'solution_V22_modified_sigmoid_{alpha}.h5'
+file_name = proj_dir + 'data/1024_50Mpc_modified_gamma_sigmoid/thermal_solution.h5'
 file = h5.File( file_name, 'r' )
 z_s = file['z'][...]
 n_HI = file['n_HI'][...]
 n_H = file['n_H'][...]
 file.close()
 xHI_s = n_HI / n_H
+
+z_s = z_s[::-1]
+xHI_s = xHI_s[::-1]
+
+z_l, z_r = 4.5, 6.1
+indices = ( z_s >= z_l ) * (z_s <= z_r )
+xHI_s[indices] *= 1.15
+
+z_l, z_r = 5.8, 6.2
+indices = ( z_s >= z_l ) * (z_s <= z_r )
+n = indices.sum()
+factor = np.linspace(0, 1, n)**2
+xHI_s[indices] = xHI[indices]*factor + xHI_s[indices]*(1-factor)  
+
+indices = z_s >= z_r
+xHI_s[indices] = xHI[indices] 
 
 # z_lim = 6.1
 # z_indices = z_s >= z_lim
@@ -131,7 +148,7 @@ c = color
 alpha = 0.5
 lw = 3
 ax0.plot( z, xHI, lw=lw, c=c, zorder=1, label='This Work (Best-Fit)' )
-ax1.plot( z, xHI, lw=lw, c=c, zorder=1, label='This Work (Best-Fit)' )
+ax1.plot( z, xHI, lw=lw, c=c, zorder=1, label='' )
 ax0.fill_between( z, xHI_h, xHI_l, color=c, alpha=alpha, zorder=1 )
 # ax0.fill_between( z, xHI_min, xHI_max, color=c, alpha=alpha, zorder=1 )
 
@@ -141,7 +158,7 @@ ax1.fill_between( z, xHI_h, xHI_l, color=c, alpha=alpha, zorder=1 )
 
 lw = 2
 ax0.plot( z_s, xHI_s, lw=lw, c='C0', ls='--', zorder=1, label= r'Modified to Match HI $\tau_{\mathrm{eff}}$' )
-ax1.plot( z_s, xHI_s, lw=lw, c='C0', ls='--', zorder=1, label= r'Modified to Match HI $\tau_{\mathrm{eff}}$' )
+ax1.plot( z_s, xHI_s, lw=lw, c='C0', ls='--', zorder=1, label= r'' )
 ax1.plot( z_s, xHI_s, lw=lw, c='C0', ls='--', zorder=1 )
 
 delta_z = 0.03
@@ -153,18 +170,18 @@ for data_id, data_set in enumerate( data_sets ):
   color = data_colors[data_id]
   yerr = [ sigma_l, sigma_h ]
   label = data_set['label']
-  if data_id in [8, 9]: z +=delta_z
-  if data_id in [4,]:
-    ax0.errorbar( z, xHI, yerr=yerr, fmt='o',  lolims=True, label=label, zorder=2, color=color )
+  if data_id in [9, 10]: z +=delta_z
+  if data_id in [5,]:
+    ax0.errorbar( z, xHI, yerr=yerr, fmt='o',  lolims=True, zorder=2, color=color )
     ax1.errorbar( z, xHI, yerr=yerr, fmt='o',  lolims=True, label=label, zorder=2, color=color )
     continue
-  if data_id in [5,6]:
-    ax0.errorbar( z, xHI, yerr=yerr, fmt='o',  uplims=True, label=label, zorder=2, color=color )
+  if data_id in [6,7]:
+    ax0.errorbar( z, xHI, yerr=yerr, fmt='o',  uplims=True, zorder=2, color=color )
     ax1.errorbar( z, xHI, yerr=yerr, fmt='o',  uplims=True, label=label, zorder=2, color=color )
     continue
   offset = 0
   if data_id == 0:offset = -1
-  ax0.errorbar( z, xHI+offset, yerr=yerr, fmt='o', label=label, zorder=2, color=color )
+  ax0.errorbar( z, xHI+offset, yerr=yerr, fmt='o',  zorder=2, color=color )
   ax1.errorbar( z, xHI, yerr=yerr, fmt='o', label=label, zorder=2, color=color )
   if data_id == 0:
     z_min = z[-2:]
@@ -206,7 +223,7 @@ ax0.yaxis.set_label_coords(-0.07,0.3)
 
 
 leg = ax1.legend(loc=4, frameon=False, fontsize=11, prop=prop, ncol=2 )
-# leg = ax0.legend(loc=4, frameon=False, fontsize=22, prop=prop, ncol=1 )
+leg = ax0.legend(loc=4, frameon=False, fontsize=11, prop=prop, ncol=1 )
 [ text.set_color(text_color) for text in leg.get_texts() ] 
 
 

@@ -14,8 +14,9 @@ sys.path.extend(subDirectories)
 from tools import *
 from constants_cosmo import Mpc
 
-input_dir = data_dir + 'tau_electron/'
-output_dir = data_dir + 'tau_electron/'
+proj_dir = data_dir + 'projects/thermal_history/'
+input_dir  = proj_dir + 'data/1024_50Mpc_modified_gamma_sigmoid/'
+output_dir = proj_dir + 'data/1024_50Mpc_modified_gamma_sigmoid/'
 create_directory( output_dir )
 
 sigma_thompson = 6.652458e-29 #m^2
@@ -25,10 +26,36 @@ H0 = 67.66 * 1e3 / Mpc
 Omega_L = 0.6889
 Omega_M = 0.3111
 
-
 tau_all = []
-
 z_integral = np.linspace( 0, 14, 100 )
+
+
+file_name = input_dir + f'thermal_solution.h5'
+# file_name = input_dir + f'solution_modified_Gamma_sigmoid.h5'
+print ( f'Loading File: {file_name}' )
+file = h5.File( file_name, 'r' )
+
+z = file['z'][...]
+ne = file['n_e'][...] * 1e6 #m^-3
+file.close()
+
+current_a = 1 / ( z + 1 )
+H = H0 * np.sqrt( Omega_M/current_a**3 + Omega_L )
+tau = ne * sigma_thompson / ( 1 + z ) * c / H
+
+tau_integral = []
+for zval in z_integral:
+  indices = z <= zval
+  tau_reion = integrals.simps( tau[indices][::-1], z[indices][::-1] )
+  tau_integral.append( tau_reion )
+tau_integral = np.array( tau_integral )
+
+tau_HL = { 'HL':tau_integral }
+
+# file_name = output_dir + 'tau_HL.pkl'
+file_name = output_dir + 'tau_electron.pkl'
+Write_Pickle_Directory( tau_HL, file_name )
+
 
 # for model_id in range(16):
 #   file_name = input_dir + f'solution_{model_id}.h5'
@@ -63,29 +90,3 @@ z_integral = np.linspace( 0, 14, 100 )
 # 
 # file_name = output_dir + 'tau_range.pkl'
 # Write_Pickle_Directory( tau_range, file_name )
-
-# file_name = input_dir + f'solution_HL.h5'
-file_name = input_dir + f'solution_modified_Gamma_sigmoid.h5'
-print ( f'Loading File: {file_name}' )
-file = h5.File( file_name, 'r' )
-
-z = file['z'][...]
-ne = file['n_e'][...] * 1e6 #m^-3
-file.close()
-
-current_a = 1 / ( z + 1 )
-H = H0 * np.sqrt( Omega_M/current_a**3 + Omega_L )
-tau = ne * sigma_thompson / ( 1 + z ) * c / H
-
-tau_integral = []
-for zval in z_integral:
-  indices = z <= zval
-  tau_reion = integrals.simps( tau[indices][::-1], z[indices][::-1] )
-  tau_integral.append( tau_reion )
-tau_integral = np.array( tau_integral )
-
-tau_HL = { 'HL':tau_integral }
-
-# file_name = output_dir + 'tau_HL.pkl'
-file_name = output_dir + 'tau_modified_Gamma_sigmoid.pkl'
-Write_Pickle_Directory( tau_HL, file_name )

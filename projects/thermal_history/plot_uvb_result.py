@@ -12,7 +12,8 @@ from colors import *
 
 black_background = False
 
-output_dir = data_dir + 'figures/thermal_history/paper/'
+proj_dir = data_dir + 'projects/thermal_history/'
+output_dir = proj_dir + 'figures/'
 if black_background: output_dir += 'black_background/'
 create_directory( output_dir ) 
 
@@ -113,6 +114,35 @@ alpha = 2.5
 input_rates = Copy_Grakle_UVB_Rates( rates_HL )
 rates_sigmoid = Modify_UVB_Rates_sigmoid( input_rates, z_range, alpha, x0 )
 
+# Load the Original Rates
+grackle_file_name =  base_dir + 'rates_uvb/data/CloudyData_UVB_Puchwein2019_cloudy.h5'
+grackle_data = Load_Grackle_File( grackle_file_name )
+max_delta_z = 0.1
+P19_rates = Extend_Rates_Redshift( max_delta_z, grackle_data )
+input_rates = Copy_Grakle_UVB_Rates( P19_rates )
+
+
+rates_data = {}
+# rates_data[0] = P19_rates
+
+
+parameter_values = { 'scale_He':  0.47,
+                     'scale_H':   0.81,
+                     'deltaZ_He': 0.25,
+                     'deltaZ_H':  -0.07 }
+
+input_rates = Copy_Grakle_UVB_Rates( P19_rates )
+modP19_rates = Modify_Rates_From_Grackle_File( parameter_values, rates_data=input_rates )
+
+
+
+x0 = 0
+z_range = ( 4.8, 5.9 )
+alpha =  3
+input_rates = Copy_Grakle_UVB_Rates( P19_rates )
+rates_sigmoid = Modify_UVB_Rates_sigmoid( input_rates, z_range, alpha, x0 )
+rates_modified = Modify_Rates_From_Grackle_File( parameter_values, rates_data=rates_sigmoid )
+  
 
 fit_all = { 'Chemistry':{}, 'Photoheating':{} }
 fit_all['Chemistry']['k24'] = samples['photoionization_HI']
@@ -231,10 +261,18 @@ for i in range(nrows):
     ax.plot( z_fit, fit, color=color_fit, label=label, lw=2  )
     ax.fill_between( z, max, min,  alpha=0.5, color=color_fit , lw=3.0,  zorder=2)
     
-    z_sig = rates_sigmoid['UVBRates']['z']
-    rates_sig = rates_sigmoid['UVBRates'][root_key][key]
-    rates_sig[173] *= 1.3  
-    # ax.plot( z_sig, rates_sig, '--', c=color_modified, lw=2.5, label= r'Modified to Match HI $\tau_{\mathrm{eff}}$', zorder=3)
+    # z_sig = rates_sigmoid['UVBRates']['z']
+    # rates_sig = rates_sigmoid['UVBRates'][root_key][key]
+    # rates_sig[173] *= 1.3  
+    z_sig = rates_modified['UVBRates']['z']
+    rates_sig = rates_modified['UVBRates'][root_key][key]
+    if key in [ 'k24', 'k26', 'piHI', 'piHeI']:
+      interval = [ 5.5, 6.2 ]
+      indices = select_interval( interval, z_sig )
+      n = len(indices)
+      factor = np.linspace( 1., 1.7, n)
+      rates_sig[indices] *= factor 
+    ax.plot( z_sig, rates_sig, '--', c=color_modified, lw=2.5, label= r'Modified to Match HI $\tau_{\mathrm{eff}}$', zorder=4)
     
     z_P19 = rates_P19['UVBRates']['z']
     rate_P19 = rates_P19['UVBRates'][root_key][key]

@@ -7,7 +7,7 @@ subDirectories = [x[0] for x in os.walk(base_dir)]
 sys.path.extend(subDirectories)
 from tools import *
 from mcmc_sampling_functions import Get_Highest_Likelihood_Params
-from plot_flux_power_spectrum_grid import Plot_Power_Spectrum_Grid
+from plot_flux_power_spectrum_grid import Plot_Power_Spectrum_Grid, Plot_Power_Spectrum_Grid_diff
 from colors import *
 
 black_background = False
@@ -119,5 +119,7 @@ ps_samples[0]['line_color'] = color
 data_labels = [ 'This Work', 'Original' ]
 # Plot_Power_Spectrum_Grid( output_dir, ps_samples=ps_samples, data_labels=data_labels, scales='large', ps_data_dir=ps_data_dir, show_middle=True )
 # Plot_Power_Spectrum_Grid( output_dir, ps_samples=ps_samples, data_labels=data_labels, scales='large_small', ps_data_dir=ps_data_dir, show_middle=True )
-Plot_Power_Spectrum_Grid( output_dir, ps_samples=ps_samples, data_labels=data_labels, scales='all', ps_data_dir=ps_data_dir, show_middle=False, black_background=black_background )
+Plot_Power_Spectrum_Grid_diff( output_dir, ps_samples=ps_samples, data_labels=data_labels, 
+                          scales='all_and_z2', ps_data_dir=ps_data_dir, show_middle=False, 
+                          black_background=black_background,)
 

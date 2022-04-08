@@ -36,6 +36,20 @@ projects_dir = home_dir + 'Desktop/Dropbox/projects/'
 
 
 
+def select_closest_index( val, vals ):
+  diff = np.abs( vals - val )
+  indxs = np.where( diff == diff.min() )[0]
+  if len(indxs) > 1: print( f'WARNING:L More than one closest indx found: val:{val}  closest:{vals[indxs]}')
+  indx = indxs[0]
+  return indx, vals[indx]
+  
+def select_interval( interval, x_vals ):
+  x_min, x_max = interval
+  indices = ( x_vals >= x_min ) * ( x_vals <= x_max )
+  indices = np.where( indices == True )[0]
+  return indices
+
+
 
 def Select_Indices( x_to_select, x_vals, tolerance=1e-3 ):
   indices = []

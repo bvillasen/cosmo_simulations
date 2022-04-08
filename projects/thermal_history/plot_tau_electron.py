@@ -25,14 +25,19 @@ create_directory( output_dir )
 
 
 z_integral = np.linspace( 0, 14, 100 )
+z_l = 4
+indices =  z_integral >= z_l
+n = indices.sum()
+factor = np.linspace(1, 0.994, n )**4
+
 
 
 file_name = input_dir + 'tau_electron_best_fit.pkl'
 tau_range = Load_Pickle_Directory( file_name )
 
 
-# file_name = input_dir + 'tau_modified_Gamma_sigmoid.pkl'
-# tau_sigmoid = Load_Pickle_Directory( file_name )
+file_name = input_dir + 'tau_electron_modified_sigmoid.pkl'
+tau_sigmoid = Load_Pickle_Directory( file_name )
 
 nrows = 1
 ncols = 1
@@ -61,10 +66,17 @@ tau = tau_range['HL']
 tau_h = tau_range['high']
 tau_l = tau_range['low']
 ax.plot( z_integral, tau, lw=3, c=color, label='This Work (Best-Fit)', zorder=4 )
-ax.fill_between( z_integral, tau_h, tau_l, color=color, alpha=0.6, zorder=4 )
+ax.fill_between( z_integral, tau_h, tau_l, color=color, alpha=0.5, zorder=4 )
 
-# tau = tau_sigmoid['HL']
-# ax.plot( z_integral, tau, ls='--', lw=lw, c='C0', label= r'Modified to Match HI $\tau_{\mathrm{eff}}$', zorder=5 )
+z = 4
+diff = np.abs( z_integral - z )
+indx = np.where( diff == diff.min() )
+norm = tau_range['HL'][indx] / tau_sigmoid['HL'][indx]
+
+tau = tau_sigmoid['HL']
+tau[indices] *= factor * norm
+
+ax.plot( z_integral, tau, ls='--', lw=lw, c='C0', label= r'Modified to Match HI $\tau_{\mathrm{eff}}$', zorder=5 )
 
 tau_planck = 0.0561 
 sigma_tau = 0.0071
