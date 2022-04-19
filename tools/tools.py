@@ -36,8 +36,9 @@ projects_dir = home_dir + 'Desktop/Dropbox/projects/'
 
 
 
-def select_closest_index( val, vals ):
+def select_closest_index( val, vals, tol=1e-3 ):
   diff = np.abs( vals - val )
+  if diff.min() > tol: return None, None
   indxs = np.where( diff == diff.min() )[0]
   if len(indxs) > 1: print( f'WARNING:L More than one closest indx found: val:{val}  closest:{vals[indxs]}')
   indx = indxs[0]

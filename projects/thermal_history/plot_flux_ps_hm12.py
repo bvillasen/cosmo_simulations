@@ -18,14 +18,14 @@ proj_dir = data_dir + 'projects/thermal_history/'
 output_dir = proj_dir + f'figures/'
 if black_background: output_dir += 'black_background/'
 create_directory( output_dir )
-root_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/'
+root_dir = proj_dir + 'data/sim_grid/1024_P19m_np4_nsim400/'
 mcmc_dir = root_dir + 'fit_mcmc/'
 
 # data_boss_irsic_boera_NC = 'fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_NOT_CORRECTED'
 # data_sets = [ data_boss_irsic_boera, data_boss_irsic_boera_NC ]
 
 # data_boss_irsic_boera = 'fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_systematic'
-data_boss_irsic_boera = 'fit_results_covariance_systematic'
+data_boss_irsic_boera = 'fit_results_simulated_HM12_systematic'
 data_sets = [ data_boss_irsic_boera ]
 
 samples_all = {}

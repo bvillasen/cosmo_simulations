@@ -76,7 +76,7 @@ if black_background: line_color = 'C0'
 
 
 data_to_plot[1] = { 'z':z_vals, 'tau':tau_vals }
-data_to_plot[1]['line_color'] = 'C0'
+data_to_plot[1]['line_color'] = 'dodgerblue'
 data_to_plot[1]['label'] = r'Modified to Match HI $\tau_{\mathrm{eff}}$'
 data_to_plot[1]['ls'] = '--'
 data_to_plot[1]['lw'] = 2.5

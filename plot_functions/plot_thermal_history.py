@@ -29,7 +29,7 @@ colors_lines = [ 'k']
 
 def Plot_T0_gamma_evolution( output_dir, data_sets=None, data_sets_gamma=None, time_axis=None, points_T0=None, 
   label='', fig_name='fig_T0_evolution', black_background=False, interpolate_lines=False, n_samples_interp=200, plot_interval=False,
-  T0_min = None, z_max=None ):
+  T0_min = None, z_max=None, show_data=True ):
   
   
   tick_size_major, tick_size_minor = 6, 4
@@ -72,8 +72,8 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, data_sets_gamma=None, t
     font_size = 18
     
   plot_gaikwad_a, plot_gaikwad_b, plot_boera = True, True, True
-  plot_hiss, plot_walther, plot_bolton = False, False, False
-  # plot_hiss, plot_walther, plot_bolton = True, True, True
+  # plot_hiss, plot_walther, plot_bolton = False, False, False
+  plot_hiss, plot_walther, plot_bolton = True, True, True
   
   fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(figure_width*ncols,6*nrows))
   plt.subplots_adjust( hspace = 0.1, wspace=0.15)
@@ -111,23 +111,26 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, data_sets_gamma=None, t
       if 'label' in data_set: label = data_set['label']
       else: label = ''
       color = f'C{data_id%10}'
-      if 'line_color' in data_set: color = data_set['line_color']  
-      ax.plot( z, T0,  zorder=1, label=label, alpha=alpha, lw=1.5, color=color )
+      if 'line_color' in data_set: color = data_set['line_color']
+      print(color)  
+      ax.plot( z, T0,  zorder=1, label=label, alpha=1, lw=1.5, color=color )
       if plot_interval:
         print( data_id )
         high = data_set['high'] / 1e4
         low  = data_set['low'] / 1e4
         if interpolate_lines:
-          if data_id == 0:
+          # if data_id == 0:
           #   high[12] *= 1.005
           #   low[12] *= 0.995
           #   high[14] *= 0.995
           #   low[14] *= 1.005
           #   low[13] *= 1.002
           
-            high[14] *= 1.006
-            high[15] *= 1.005
-            high[16] *= 1.003
+            # high[14] *= 1.007
+            # high[15] *= 1.008
+            # high[16] *= 1.004
+            
+            # high[17] *= 1.002
             # high[14] *= 0.995
             # low[12] *= 0.993
           #   high[14] *= 0.995
@@ -136,6 +139,17 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, data_sets_gamma=None, t
           high = interp_line_cubic( z0, z_interp, high )
           low  = interp_line_cubic( z0, z_interp, low )
         ax.fill_between( z, high, low, alpha=alpha, zorder=1, color=color )  
+        z_l = 5.0
+        indices_l = z <= z_l 
+        indices_r = z >= z_l
+        T_max_l = (T0[indices_l]).max()
+        T_max_l_low = (low[indices_l]).max()
+        T_max_r_low = (low[indices_r]).max()
+        T_max_l_high = (high[indices_l]).max()
+        T_max_r_high = (high[indices_r]).max()
+        T_max_r = (T0[indices_r]).max()
+        print( f'T0_l: {T_max_l}   {T_max_l_high}  {T_max_l_low}')
+        print( f'T0_r: {T_max_r}   {T_max_r_high}  {T_max_r_low}') 
   
   if points_T0 is not None:
     for data_id in points_T0:
@@ -151,56 +165,57 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, data_sets_gamma=None, t
       else: color = 'C0'
       ax.errorbar( z, mean, yerr=yerr, fmt='o', label=label, zorder=3, alpha=0.6, color=color )
   
-  if plot_gaikwad_a:    
-    data_set = data_thermal_history_Gaikwad_2020a
-    data_z = data_set['z']
-    data_mean = data_set['T0'] 
-    data_error =  np.array([ data_set['T0_sigma_minus'],  data_set['T0_sigma_plus'] ])
-    name = data_set['name']   
-    ax.errorbar( data_z, data_mean/1e4, yerr=data_error/1e4, label=name, fmt='o', color= color_data_1, zorder=3)
-    
-  if plot_gaikwad_b:
-    data_set = data_thermal_history_Gaikwad_2020b
-    data_z = data_set['z']
-    data_mean = data_set['T0'] 
-    data_error = np.array([ data_set['T0_sigma_minus'],  data_set['T0_sigma_plus'] ])
-    name = data_set['name']   
-    ax.errorbar( data_z, data_mean/1e4, yerr=data_error/1e4, label=name, fmt='o', color= color_data_0, zorder=3)
-    
-  if plot_boera:
-    data_set = data_thermal_history_Boera_2019
-    data_z = data_set['z']
-    data_mean = data_set['T0'] 
-    data_error = np.array([ data_set['T0_sigma_minus'], data_set['T0_sigma_plus'] ])
-    name = data_set['name']   
-    ax.errorbar( data_z, data_mean/1e4, yerr=data_error/1e4, label=name, fmt='o', color= color_data_2, zorder=2)
+  if show_data:
+    if plot_gaikwad_a:    
+      data_set = data_thermal_history_Gaikwad_2020a
+      data_z = data_set['z']
+      data_mean = data_set['T0'] 
+      data_error =  np.array([ data_set['T0_sigma_minus'],  data_set['T0_sigma_plus'] ])
+      name = data_set['name']   
+      ax.errorbar( data_z, data_mean/1e4, yerr=data_error/1e4, label=name, fmt='o', color= color_data_1, zorder=3)
+      
+    if plot_gaikwad_b:
+      data_set = data_thermal_history_Gaikwad_2020b
+      data_z = data_set['z']
+      data_mean = data_set['T0'] 
+      data_error = np.array([ data_set['T0_sigma_minus'],  data_set['T0_sigma_plus'] ])
+      name = data_set['name']   
+      ax.errorbar( data_z, data_mean/1e4, yerr=data_error/1e4, label=name, fmt='o', color= color_data_0, zorder=3)
+      
+    if plot_boera:
+      data_set = data_thermal_history_Boera_2019
+      data_z = data_set['z']
+      data_mean = data_set['T0'] 
+      data_error = np.array([ data_set['T0_sigma_minus'], data_set['T0_sigma_plus'] ])
+      name = data_set['name']   
+      ax.errorbar( data_z, data_mean/1e4, yerr=data_error/1e4, label=name, fmt='o', color= color_data_2, zorder=2)
 
-  if plot_hiss:
-    delta_z = 0.025
-    data_set = data_thermal_history_Hiss_2018
-    data_z = data_set['z']
-    data_mean = data_set['T0'] 
-    data_error = np.array([ data_set['T0_sigma_minus'], data_set['T0_sigma_plus'] ])
-    name = data_set['name']   
-    ax.errorbar( data_z+delta_z, data_mean/1e4, yerr=data_error/1e4, label=name, fmt='o', color= color_data_3, zorder=2)
+    if plot_hiss:
+      delta_z = 0.025
+      data_set = data_thermal_history_Hiss_2018
+      data_z = data_set['z']
+      data_mean = data_set['T0'] 
+      data_error = np.array([ data_set['T0_sigma_minus'], data_set['T0_sigma_plus'] ])
+      name = data_set['name']   
+      ax.errorbar( data_z+delta_z, data_mean/1e4, yerr=data_error/1e4, label=name, fmt='o', color= color_data_3, zorder=2)
 
-  if plot_walther:
-    delta_z = -0.025
-    data_set = data_thermal_history_Walther_2019
-    data_z = data_set['z']
-    data_mean = data_set['T0'] 
-    data_error = np.array([ data_set['T0_sigma_minus'], data_set['T0_sigma_plus'] ])
-    name = data_set['name']   
-    ax.errorbar( data_z+delta_z, data_mean/1e4, yerr=data_error/1e4, label=name, fmt='o', color= color_data_4, zorder=2)
+    if plot_walther:
+      delta_z = -0.025
+      data_set = data_thermal_history_Walther_2019
+      data_z = data_set['z']
+      data_mean = data_set['T0'] 
+      data_error = np.array([ data_set['T0_sigma_minus'], data_set['T0_sigma_plus'] ])
+      name = data_set['name']   
+      ax.errorbar( data_z+delta_z, data_mean/1e4, yerr=data_error/1e4, label=name, fmt='o', color= color_data_4, zorder=2)
 
-  if plot_bolton:
-    delta_z = -0.025/2
-    data_set = data_thermal_history_Bolton_2014
-    data_z = data_set['z']
-    data_mean = data_set['T0'] 
-    data_error = np.array([ data_set['T0_sigma_minus'], data_set['T0_sigma_plus'] ])
-    name = data_set['name']   
-    ax.errorbar( data_z+delta_z, data_mean/1e4, yerr=data_error/1e4, label=name, fmt='o', color= color_data_5, zorder=2)
+    if plot_bolton:
+      delta_z = -0.025/2
+      data_set = data_thermal_history_Bolton_2014
+      data_z = data_set['z']
+      data_mean = data_set['T0'] 
+      data_error = np.array([ data_set['T0_sigma_minus'], data_set['T0_sigma_plus'] ])
+      name = data_set['name']   
+      ax.errorbar( data_z+delta_z, data_mean/1e4, yerr=data_error/1e4, label=name, fmt='o', color= color_data_5, zorder=2)
 
 
 
@@ -232,25 +247,25 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, data_sets_gamma=None, t
         gamma = data_set['gamma'] + 1
         gamma_0 = gamma
         z0 = z.copy()
-        color = colors[data_id]
         if interpolate_lines:
           z_interp = np.linspace( z[0], z[-1], n_samples_interp ) 
           gamma = interp_line_cubic( z, z_interp, gamma )
           z = z_interp
         if 'label' in data_set: label = data_set['label']
         else: label = ''
-        color = f'C{data_id%10}'
         if 'line_color' in data_set: color = data_set['line_color']    
-        ax.plot( z, gamma, c=color, zorder=1, label=label, alpha=alpha, lw=1.5 )
+        else: color = f'C{data_id%10}'
+        ax.plot( z, gamma, c=color, zorder=1, label=label, alpha=1, lw=1.5 )
         if plot_interval:
           high = data_set['high'] + 1
           low  = data_set['low']  + 1
-          if data_id == 0:
-            low[14] *= 0.99
-            low[13] *= 0.99
-            low[12] *= 0.99
-            low[11] *= 0.99
-            high[11] *= 1.01
+          # if data_id == 0:
+            # low[14] *= 0.99
+            # low[13] *= 0.99
+            # low[12] *= 0.99
+            # low[11] *= 0.99
+            # high[11] *= 1.01
+            
         #   # high[12] *= 1.005
           #   # low[12] *= 0.995
           #   # high[11] *= 1.008
@@ -263,52 +278,54 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, data_sets_gamma=None, t
           if interpolate_lines:
             high = interp_line_cubic( z0, z_interp, high )
             low  = interp_line_cubic( z0, z_interp, low )
-          ax.fill_between( z, high, low, alpha=alpha, zorder=1, color=color )  
-
-    data_set = data_thermal_history_Gaikwad_2020a
-    data_z = data_set['z']
-    data_mean = data_set['gamma'] 
-    data_error =  np.array([ data_set['gamma_sigma_minus'], data_set['gamma_sigma_plus'] ])
-    name = data_set['name']   
-    ax.errorbar( data_z, data_mean, yerr=data_error, label=name, fmt='o', color= color_data_1, zorder=2)
-    
-    data_set = data_thermal_history_Gaikwad_2020b
-    data_z = data_set['z']
-    data_mean = data_set['gamma'] 
-    data_error = np.array([  data_set['gamma_sigma_minus'], data_set['gamma_sigma_plus'] ])
-    name = data_set['name']   
-    ax.errorbar( data_z, data_mean, yerr=data_error, label=name, fmt='o', color= color_data_0, zorder=2)
-    
-    data_set = data_thermal_history_Boera_2019
-    data_z = data_set['z']
-    data_mean = data_set['gamma'] 
-    data_error = np.array([ data_set['gamma_sigma_minus'],  data_set['gamma_sigma_plus'] ])
-    name = data_set['name']   
-    ax.errorbar( data_z, data_mean, yerr=data_error, label=name, fmt='o', color= color_data_2, zorder=2)
-            
-    delta_z = 0.025        
-    data_set = data_thermal_history_Hiss_2018
-    data_z = data_set['z']
-    data_mean = data_set['gamma'] 
-    data_error = np.array([ data_set['gamma_sigma_minus'],  data_set['gamma_sigma_plus'] ])
-    name = data_set['name']   
-    ax.errorbar( data_z+delta_z, data_mean, yerr=data_error, label=name, fmt='o', color= color_data_3, zorder=2)
-    
-    delta_z = -0.025        
-    data_set = data_thermal_history_Walther_2019
-    data_z = data_set['z']
-    data_mean = data_set['gamma'] 
-    data_error = np.array([ data_set['gamma_sigma_minus'],  data_set['gamma_sigma_plus'] ])
-    name = data_set['name']   
-    ax.errorbar( data_z+delta_z, data_mean, yerr=data_error, label=name, fmt='o', color= color_data_4, zorder=2)
-    
-    delta_z = -0.025/2
-    data_set = data_thermal_history_Bolton_2014
-    data_z = data_set['z']
-    data_mean = data_set['gamma'] 
-    data_error = np.array([ data_set['gamma_sigma_minus'], data_set['gamma_sigma_plus'] ])
-    name = data_set['name']   
-    ax.errorbar( data_z+delta_z, data_mean, yerr=data_error, label=name, fmt='o', color= color_data_5, zorder=2)
+          ax.fill_between( z, high, low, alpha=alpha, zorder=1, color=color ) 
+           
+           
+    if show_data:
+      data_set = data_thermal_history_Gaikwad_2020a
+      data_z = data_set['z']
+      data_mean = data_set['gamma'] 
+      data_error =  np.array([ data_set['gamma_sigma_minus'], data_set['gamma_sigma_plus'] ])
+      name = data_set['name']   
+      ax.errorbar( data_z, data_mean, yerr=data_error, label=name, fmt='o', color= color_data_1, zorder=2)
+      
+      data_set = data_thermal_history_Gaikwad_2020b
+      data_z = data_set['z']
+      data_mean = data_set['gamma'] 
+      data_error = np.array([  data_set['gamma_sigma_minus'], data_set['gamma_sigma_plus'] ])
+      name = data_set['name']   
+      ax.errorbar( data_z, data_mean, yerr=data_error, label=name, fmt='o', color= color_data_0, zorder=2)
+      
+      data_set = data_thermal_history_Boera_2019
+      data_z = data_set['z']
+      data_mean = data_set['gamma'] 
+      data_error = np.array([ data_set['gamma_sigma_minus'],  data_set['gamma_sigma_plus'] ])
+      name = data_set['name']   
+      ax.errorbar( data_z, data_mean, yerr=data_error, label=name, fmt='o', color= color_data_2, zorder=2)
+              
+      delta_z = 0.025        
+      data_set = data_thermal_history_Hiss_2018
+      data_z = data_set['z']
+      data_mean = data_set['gamma'] 
+      data_error = np.array([ data_set['gamma_sigma_minus'],  data_set['gamma_sigma_plus'] ])
+      name = data_set['name']   
+      ax.errorbar( data_z+delta_z, data_mean, yerr=data_error, label=name, fmt='o', color= color_data_3, zorder=2)
+      
+      delta_z = -0.025        
+      data_set = data_thermal_history_Walther_2019
+      data_z = data_set['z']
+      data_mean = data_set['gamma'] 
+      data_error = np.array([ data_set['gamma_sigma_minus'],  data_set['gamma_sigma_plus'] ])
+      name = data_set['name']   
+      ax.errorbar( data_z+delta_z, data_mean, yerr=data_error, label=name, fmt='o', color= color_data_4, zorder=2)
+      
+      delta_z = -0.025/2
+      data_set = data_thermal_history_Bolton_2014
+      data_z = data_set['z']
+      data_mean = data_set['gamma'] 
+      data_error = np.array([ data_set['gamma_sigma_minus'], data_set['gamma_sigma_plus'] ])
+      name = data_set['name']   
+      ax.errorbar( data_z+delta_z, data_mean, yerr=data_error, label=name, fmt='o', color= color_data_5, zorder=2)
 
       
 

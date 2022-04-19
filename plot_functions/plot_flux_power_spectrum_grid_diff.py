@@ -26,23 +26,20 @@ matplotlib.rcParams['mathtext.rm'] = 'serif'
 
 
 
-
-
-def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_colors=None, sim_data_sets=None, black_background=False, high_z_only=False, plot_ps_normalized=False, ps_data_dir= root_dir + 'lya_statistics/data/', show_middle=False, 
-                              ps_samples=None, data_labels=None, linewidth=1, line_color=None, line_alpha=1, c_boera=None, fig_name=None, plot_interval=False, plot_boeraC=False, HL_key='Highest_Likelihood',
-                              plot_diff=False  ):
+def Plot_Power_Spectrum_Grid_diff( output_dir, ps_data=None, scales='large', line_colors=None, sim_data_sets=None, black_background=False, high_z_only=False, plot_ps_normalized=False, ps_data_dir= root_dir + 'lya_statistics/data/', show_middle=False, 
+                              ps_samples=None, data_labels=None, linewidth=1, line_color=None, line_alpha=1, c_boera=None, fig_name=None, plot_interval=False, plot_boeraC=False, HL_key='Highest_Likelihood' ):
   
   if system == 'Lux' or system == 'Summit': matplotlib.use('Agg')
   import matplotlib.pyplot as plt
 
 
-  fig_height = 5
+  fig_height = 7
   fig_width = 16
   fig_dpi = 300
   
   if high_z_only: fig_height = 8
 
-  label_size = 18
+  label_size = 16
   figure_text_size = 18
   legend_font_size = 12
   tick_label_size_major = 15
@@ -89,6 +86,13 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
   data_gaikwad = load_data_gaikwad( data_filename )
   data_z_gaikwad = data_gaikwad['z_vals']
   
+  
+  file_name = ps_data_dir + 'simulated_power_spectrum_HM12_corrected.pkl'
+  data_HM12 = Load_Pickle_Directory( file_name )
+  print( data_HM12.keys() )
+  data_boss = data_HM12['Boss']
+  data_boera = data_HM12['Boera']
+  data_irsic = data_HM12['Irsic']
   
   z_vals_small_scale  = [ 4.2, 4.6, 5.0, 5.4 ]
   z_vals_large_scale  = [ 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4 ]
@@ -169,6 +173,7 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
     print( 'WRNING: Plotting Corrected Boera P(k)')
     # plot_boera = False
   
+  plot_walther  = False
   
   if scales == 'small_z5': 
     ncols, nrows = 1, 1
@@ -189,17 +194,25 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
   
   if scales == 'all_and_z2':  
     nrows, ncols = 3, 5
-    fig_height = 4
+    fig_height = 5
   
   hspace = 0.02
   # if show_middle: hspace = 0.1
+  
+  f = 4
+  main_length = 6 * f
+  sub_length = 2 * f
+  h_length = main_length + sub_length + 1
 
-  if plot_diff: nrows, ncols = 4, 4
+  fig = plt.figure(0)
+  fig.set_size_inches(fig_width, fig_height*nrows )
+  fig.clf()
+
+  gs = plt.GridSpec(h_length*nrows, ncols)
+  gs.update(hspace=0.0, wspace=0.02, )
+
 
   
-  fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(fig_width,fig_height*nrows))
-  plt.subplots_adjust( hspace = hspace, wspace=0.02)
-
 
   c_pchw18 = pylab.cm.viridis(.7)
   c_hm12 = pylab.cm.cool(.3)
@@ -245,6 +258,7 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
     blue = blues[4]
     color_line = blue
 
+  c_boss = c_boera = c_irsic = 'C4'
   
 
   for index, current_z in enumerate( z_vals ):
@@ -254,12 +268,10 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
     indx_j = index % ncols
     indx_i = index//ncols
 
-    if nrows > 1: ax = ax_l[indx_i][indx_j]
-    else: 
-      if ncols == 1 and nrows == 1: ax = ax_l
-      else: ax = ax_l[indx_j]
-    
-    
+
+    ax  = plt.subplot(gs[indx_i*h_length:indx_i*h_length+main_length, indx_j])
+    ax1 = plt.subplot(gs[indx_i*h_length+main_length:indx_i*h_length+main_length+sub_length, indx_j])
+  
     
     if scales == 'middle': flags[indx_i,  indx_j] = 1
     
@@ -317,21 +329,22 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
         if 'ls' in data_sim: ls = data_sim['ls']
         lw = 1.5
         if 'lw' in data_sim: ls = data_sim['lw']
-        if not plot_diff: ax.plot( k, delta, linewidth=lw, label=label, zorder=1, color=line_color, ls=ls  )        
-        else: 
-          k_reference, delta_reference = k, delta
-          ax.axhline( y=0, linewidth=lw, label=label, zorder=1, color=line_color, ls=ls )
+        ax.plot( k, delta, linewidth=lw, label=label, zorder=1, color=line_color, ls=ls  )        
+        k_reference, delta_reference = k, delta
+        ax1.axhline( y=0, linewidth=lw, label=label, zorder=1, color=line_color, ls=ls )
         # if sim_id == 0:
         if 'higher' in data:
           high = data['higher'] * factor
           low  = data['lower'] * factor
-          high *= 1.05
-          low *= 0.95
-          if plot_diff:
-            high = ( high - delta ) / delta
-            low  = ( low  - delta ) / delta
+          # high *= 1.05
+          # low *= 0.95
+          high *= 1.03
+          low *= 0.97
           ax.fill_between( k, high, low, color=line_color, alpha=0.4 )
-
+          high = ( high - delta_reference ) / delta_reference
+          low  = ( low  - delta_reference ) / delta_reference
+          ax1.fill_between( k, high, low, color=line_color, alpha=0.4 )
+          
     if sim_data_sets:
       for sim_data in sim_data_sets:
         # sim_z_vals = sim_data['z']
@@ -381,19 +394,20 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
         data_k = data_boss[data_index]['k_vals']
         data_delta_power = data_boss[data_index]['delta_power']
         data_delta_power_error = data_boss[data_index]['delta_power_error']
-        if not plot_diff: d_boss = ax.errorbar( data_k, data_delta_power, yerr=data_delta_power_error, fmt='o', c=c_boss, label='', zorder=2)
-        else:
-          indices = ( data_k >= k_reference.min() ) * ( data_k <= k_reference.max())
-          data_k = data_k[indices]
-          data_delta_power = data_delta_power[indices]
-          data_delta_power_error = data_delta_power_error[indices]
-          delta_interp = interpolate_1d_linear( data_k, k_reference, delta_reference, log_y=True )
-          data_delta_power = ( data_delta_power - delta_interp ) / delta_interp
-          data_delta_power_error =  data_delta_power_error / delta_interp
-          d_boss = ax.errorbar( data_k, data_delta_power, yerr=data_delta_power_error, fmt='o', c=c_boss, label='', zorder=2)
+        d_boss = ax.errorbar( data_k, data_delta_power, yerr=data_delta_power_error, fmt='o', c=c_boss, label='', zorder=2)
+
+        indices = ( data_k >= k_reference.min() ) * ( data_k <= k_reference.max())
+        data_k = data_k[indices]
+        data_delta_power = data_delta_power[indices]
+        data_delta_power_error = data_delta_power_error[indices]
+        delta_interp = interpolate_1d_linear( data_k, k_reference, delta_reference, log_y=True )
+        data_delta_power = ( data_delta_power - delta_interp ) / delta_interp
+        data_delta_power_error =  data_delta_power_error / delta_interp
+        d_boss = ax1.errorbar( data_k, data_delta_power, yerr=data_delta_power_error, fmt='o', c=c_boss, label='', zorder=2)
         
                 
       if indx_i == 0 and indx_j == 0:
+        label_boss = 'HM12'
         ax.errorbar( [1e2], [1e2], yerr=1, fmt='o', c=c_boss, label=label_boss, zorder=2)
         
 
@@ -402,6 +416,8 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
       z_diff = np.abs( data_z_irsic - current_z )
       diff_min = z_diff.min()
       factor = 1.0
+      label_irsic = 'Irsic et al. (2017)'
+      label_irsic = ''
       if diff_min < 1e-1:
         data_index = np.where( z_diff == diff_min )[0][0]
         data_z_local = data_z_irsic[data_index]
@@ -409,27 +425,27 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
         data_k = data_irsic[data_index]['k_vals']
         data_delta_power = data_irsic[data_index]['delta_power']
         data_delta_power_error = data_irsic[data_index]['delta_power_error']
-        label_irsic = 'Irsic et al. (2017)'
         if current_z == 3.2: factor = 0.96
         if current_z == 4.2: factor = 1.04
         data_delta_power *= factor
-        if not plot_diff: d_irsic = ax.errorbar( data_k, data_delta_power, yerr=data_delta_power_error, fmt='o', c=c_irsic, label='', zorder=2)
-        else:
-          indices = ( data_k >= k_reference.min() ) * ( data_k <= k_reference.max())
-          data_k = data_k[indices]
-          data_delta_power = data_delta_power[indices]
-          data_delta_power_error = data_delta_power_error[indices]
-          delta_interp = interpolate_1d_linear( data_k, k_reference, delta_reference, log_y=True )
-          data_delta_power = ( data_delta_power - delta_interp ) / delta_interp
-          data_delta_power_error =  data_delta_power_error / delta_interp
-          d_irsic = ax.errorbar( data_k, data_delta_power, yerr=data_delta_power_error, fmt='o', c=c_irsic, label='', zorder=2)
-      
+        d_irsic = ax.errorbar( data_k, data_delta_power, yerr=data_delta_power_error, fmt='o', c=c_irsic, label='', zorder=2)
+
+        indices = ( data_k >= k_reference.min() ) * ( data_k <= k_reference.max())
+        data_k = data_k[indices]
+        data_delta_power = data_delta_power[indices]
+        data_delta_power_error = data_delta_power_error[indices]
+        delta_interp = interpolate_1d_linear( data_k, k_reference, delta_reference, log_y=True )
+        data_delta_power = ( data_delta_power - delta_interp ) / delta_interp 
+        data_delta_power_error =  data_delta_power_error / delta_interp
+        d_irsic = ax1.errorbar( data_k, data_delta_power, yerr=data_delta_power_error, fmt='o', c=c_irsic, label='', zorder=2)
+        
         
       if indx_i == 1 and indx_j == 0:
         ax.errorbar( [1e2], [1e2], yerr=1, fmt='o', c=c_irsic, label=label_irsic, zorder=2)
         
     if plot_boera:
       label_boera ='Boera et al. (2019)'
+      label_boera = ''
       # Add Boera data
       z_diff = np.abs( data_z_b - current_z )
       diff_min = z_diff.min()
@@ -442,17 +458,17 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
         data_delta_power_error = data_boera[data_index]['delta_power_error']
         if current_z == 4.2: factor = 0.97
         data_delta_power *= factor
-        if not plot_diff: d_boera = ax.errorbar( data_k, data_delta_power, yerr=data_delta_power_error, fmt='o', c=c_boera, label=label_boera, zorder=2 )
-        else:
-          indices = ( data_k >= k_reference.min() ) * ( data_k <= k_reference.max())
-          data_k = data_k[indices]
-          data_delta_power = data_delta_power[indices]
-          data_delta_power_error = data_delta_power_error[indices]
-          delta_interp = interpolate_1d_linear( data_k, k_reference, delta_reference, log_y=True )
-          data_delta_power = ( data_delta_power - delta_interp ) / delta_interp
-          data_delta_power_error =  data_delta_power_error / delta_interp
-          d_boera = ax.errorbar( data_k, data_delta_power, yerr=data_delta_power_error, fmt='o', c=c_boera, label=label_boera, zorder=2 )
-          
+        d_boera = ax.errorbar( data_k, data_delta_power, yerr=data_delta_power_error, fmt='o', c=c_boera, label=label_boera, zorder=2 )
+
+        indices = ( data_k >= k_reference.min() ) * ( data_k <= k_reference.max())
+        data_k = data_k[indices]
+        data_delta_power = data_delta_power[indices]
+        data_delta_power_error = data_delta_power_error[indices]
+        delta_interp = interpolate_1d_linear( data_k, k_reference, delta_reference, log_y=True )
+        data_delta_power = ( data_delta_power - delta_interp ) / delta_interp
+        data_delta_power_error =  data_delta_power_error / delta_interp
+        d_boera = ax1.errorbar( data_k, data_delta_power, yerr=data_delta_power_error, fmt='o', c=c_boera, label=label_boera, zorder=2 )
+        # 
       if indx_i == 2 and indx_j == 0:
         ax.errorbar( [1e2], [1e2], yerr=1, fmt='o', c=c_boera, label=label_boera, zorder=2)
         
@@ -478,25 +494,28 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
       # Add Walther data
       z_diff = np.abs( data_z_w - current_z )
       diff_min = z_diff.min()
+      k_max = 0.1
       if diff_min < 1e-1:
         data_index = np.where( z_diff == diff_min )[0][0]
         data_z_local = data_z_w[data_index]
         data_k = data_walther[data_index]['k_vals']
-        data_delta_power = data_walther[data_index]['delta_power']
-        data_delta_power_error = data_walther[data_index]['delta_power_error']
+        indices = data_k <= k_max
+        data_k = data_k[indices] 
+        data_delta_power = data_walther[data_index]['delta_power'][indices]
+        data_delta_power_error = data_walther[data_index]['delta_power_error'][indices]
         mfc = 'w'
         if black_background: mfc = 'k'
-        if not plot_diff: d_walther = ax.errorbar( data_k, data_delta_power, yerr=data_delta_power_error, fmt='o', c=c_walther,   label='', zorder=2, mfc=mfc)
-        else:
-          indices = ( data_k >= k_reference.min() ) * ( data_k <= k_reference.max())
-          data_k = data_k[indices]
-          data_delta_power = data_delta_power[indices]
-          data_delta_power_error = data_delta_power_error[indices]
-          delta_interp = interpolate_1d_linear( data_k, k_reference, delta_reference, log_y=True )
-          data_delta_power = ( data_delta_power - delta_interp ) / delta_interp
-          data_delta_power_error =  data_delta_power_error / delta_interp
-          d_walther = ax.errorbar( data_k, data_delta_power, yerr=data_delta_power_error, fmt='o', c=c_walther,   label='', zorder=2, mfc=mfc)
-          
+        d_walther = ax.errorbar( data_k, data_delta_power, yerr=data_delta_power_error, fmt='o', c=c_walther,   label='', zorder=2, mfc=mfc)
+
+        indices = ( data_k >= k_reference.min() ) * ( data_k <= k_reference.max())
+        data_k = data_k[indices]
+        data_delta_power = data_delta_power[indices]
+        data_delta_power_error = data_delta_power_error[indices]
+        delta_interp = interpolate_1d_linear( data_k, k_reference, delta_reference, log_y=True )
+        data_delta_power = ( data_delta_power - delta_interp ) / delta_interp
+        data_delta_power_error =  data_delta_power_error / delta_interp
+        d_walther = ax1.errorbar( data_k, data_delta_power, yerr=data_delta_power_error, fmt='o', c=c_walther,   label='', zorder=2, mfc=mfc)
+        
       if indx_i == 0 and indx_j == 0:
         ax.errorbar( [1e2], [1e2], yerr=1, fmt='o', c=c_walther, label=label_walther, zorder=2, mfc=mfc)
     
@@ -652,7 +671,7 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
       # if indx_i == 2: y_min, y_max = 2.5e-2, 2e-0
       x_min, x_max = 2e-3, 2.2e-1
       if indx_i == 0: y_min, y_max = 6e-3, 9e-2
-      if indx_i == 1: y_min, y_max = 9.e-3, 2.5e-1
+      if indx_i == 1: y_min, y_max = 6.e-3, 2.5e-1
       if indx_i == 2: y_min, y_max = 7.e-3, 8e-1
       
     if scales == 'small_z5':
@@ -662,42 +681,52 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
       
     if high_z_only: y_min, y_max = 5e-2, 3
     
-    
-      
-      
-    if plot_diff: y_min, y_max = -0.5, 0.5
+  
 
 
     ax.set_xlim( x_min, x_max )
     ax.set_ylim( y_min, y_max )
     ax.set_xscale('log')
-    if not plot_diff: ax.set_yscale('log')
-
+    ax.set_yscale('log')
+    ax1.set_xscale('log')
+    ax1.set_xlim( x_min, x_max )
+    ax1.set_ylim( -0.5, 0.5 )
+    if indx_i == nrows-1: ax1.set_ylim( -0.9, 0.9 )
+    
 
     [sp.set_linewidth(border_width) for sp in ax.spines.values()]
 
 
     ax.tick_params(axis='both', which='major', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in' )
     ax.tick_params(axis='both', which='minor', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in')
+    ax1.tick_params(axis='both', which='major', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in' )
+    ax1.tick_params(axis='both', which='minor', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in')
 
 
     # if indx_i != nrows-1 and not show_middle:ax.set_xticklabels([])
     # if indx_i != nrows-1 :ax.set_xticklabels([])
-    if nrows > 1 and indx_i == 0 :ax.set_xticklabels([])
-    if indx_i == 1 and indx_j != 4  :ax.set_xticklabels([])
-    
+    if nrows > 1 and indx_i != nrows - 1 :
+      ax.set_xticklabels([])
+      ax1.set_xticklabels([])
+  
+    # if indx_i == 1 and indx_j != 4 :
+    #   ax.set_xticklabels([])
+    #   ax.set_xticklabels([])
+  
     if indx_j > 0:
       ax.set_yticklabels([])
       ax.tick_params(axis='y', which='minor', labelsize=0 )
+      ax1.set_yticklabels([])
+      ax1.tick_params(axis='y', which='minor', labelsize=0 )
 
 
 
     if indx_j == 0: 
-      if not plot_diff:  ax.set_ylabel( r'$\pi^{\mathregular{-1}} \,k \,P\,(k)$', fontsize=label_size, color= text_color )
-      else:   ax.set_ylabel( r'$\Delta P\,(k) / P\,(k) $', fontsize=label_size, color= text_color )
+      ax.set_ylabel( r'$\pi^{\mathregular{-1}} \,k \,P\,(k)$', fontsize=label_size, color= text_color )
+      ax1.set_ylabel( r'$\Delta P\,(k) / P\,(k) $', fontsize=label_size-2, color= text_color )
     
     # if indx_i == nrows-1: ax.set_xlabel( r'$ k   \,\,\,  [\mathrm{s}\,\mathrm{km}^{-1}] $',  fontsize=label_size, color= text_color )
-    if indx_i == nrows-1 : ax.set_xlabel( r'$k$  [s km$^{\mathrm{\mathregular{-1}}}$]', fontsize=label_size, color=text_color )
+    if indx_i == nrows-1 : ax1.set_xlabel( r'$k$  [s km$^{\mathrm{\mathregular{-1}}}$]', fontsize=label_size, color=text_color )
     if scales == 'all' and indx_i == nrows-2 and indx_j==4: ax.set_xlabel( r'$k$  [s km$^{\mathrm{\mathregular{-1}}}$]', fontsize=label_size, color=text_color )
 
     if black_background: 
@@ -705,15 +734,11 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
       ax.set_facecolor('k')
       [ spine.set_edgecolor(text_color) for spine in list(ax.spines.values()) ]
 
-  if scales == 'all' and not plot_diff:
+  if scales == 'all' :
     ax = ax_l[2][4]
     print( 'Turning axis off')
     ax.set_axis_off()
     
-  if scales == 'all' and  plot_diff:
-    ax = ax_l[2][4]
-    print( 'Turning axis off')
-    ax.set_axis_off()
       
   if scales == 'middle':
     for i in range( nrows ):
@@ -729,7 +754,7 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
   fileName = output_dir + f'flux_ps_grid_{scales}'
   if plot_ps_normalized: fileName += f'_{name}'
   if high_z_only: fileName += '_highZ'
-  if plot_diff : fileName += '_diff'
+  fileName += '_diff'
   fileName += '.png'
   # fileName += '.pdf'
   if fig_name is not None: fileName = output_dir + fig_name

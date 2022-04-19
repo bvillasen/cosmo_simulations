@@ -37,6 +37,15 @@ data = Load_Pickle_Directory( file_name )
 z = data['z']
 xHI, xHI_l, xHI_h = data['x_HI']['HL'], data['x_HI']['low'], data['x_HI']['high'],  
 
+ion_frac = 0.999
+indices = xHI <= (1-ion_frac)
+indices_h = xHI_l <= (1-ion_frac)
+indices_l = xHI_h <= (1-ion_frac)
+z_reion = (z[indices]).max()
+z_reion_h = (z[indices_h]).max()
+z_reion_l = (z[indices_l]).max()
+print( f'z_reion: {z_reion}   z_reion_h:{z_reion_h}   z_reion_l:{z_reion_l}' )
+
 # xHI_l[z_indices] = xHI[z_indices] * (1- delta )
 
 
@@ -157,9 +166,10 @@ ax1.fill_between( z, xHI_h, xHI_l, color=c, alpha=alpha, zorder=1 )
 # ax1.fill_between( z, xHI_min, xHI_max, color=c, alpha=alpha, zorder=1 )
 
 lw = 2
-ax0.plot( z_s, xHI_s, lw=lw, c='C0', ls='--', zorder=1, label= r'Modified to Match HI $\tau_{\mathrm{eff}}$' )
-ax1.plot( z_s, xHI_s, lw=lw, c='C0', ls='--', zorder=1, label= r'' )
-ax1.plot( z_s, xHI_s, lw=lw, c='C0', ls='--', zorder=1 )
+c = 'dodgerblue'
+ax0.plot( z_s, xHI_s, lw=lw, c=c, ls='--', zorder=1, label= r'Modified to Match HI $\tau_{\mathrm{eff}}$' )
+ax1.plot( z_s, xHI_s, lw=lw, c=c, ls='--', zorder=1, label= r'' )
+ax1.plot( z_s, xHI_s, lw=lw, c=c, ls='--', zorder=1 )
 
 delta_z = 0.03
 for data_id, data_set in enumerate( data_sets ):

@@ -24,9 +24,11 @@ data_irsic = load_data_irsic( dir_irsic )
 
 sim_dir = data_dir + 'cosmo_sims/1024_50Mpc_HM12/'
 input_dir = sim_dir + 'analysis_files/'
-output_dir = sim_dir 
+output_dir = ps_data_dir
 
 snapshots = range( 15, 56 )
+
+# z_vals = 
 
 data_all = { }
 for data_id, n_snap in enumerate(snapshots):
@@ -41,6 +43,50 @@ for data_id, n_snap in enumerate(snapshots):
 z_sim = np.array([ data_all[data_id]['z'] for data_id in data_all ])  
 
 
+# Apply resolution correction
+correction_file_name = ps_data_dir + 'FPS_resolution_correction_1024_50Mpc.pkl'
+FPS_correction = Load_Pickle_Directory( correction_file_name ) 
+corr_z_vals = FPS_correction['z_vals']
+ 
+
+n_snapshots = len(z_sim)
+for z_id in range(n_snapshots):
+  ps_data = data_all[z_id]
+  z = ps_data['z']
+  k_vals = ps_data['k_vals']
+  ps_mean = ps_data['ps_vals']
+  z_diff = np.abs( corr_z_vals - z )
+  if z_diff.min() > 5e-2: 
+    print( f'Large redshift diference: {z_diff.min()}')
+    continue  
+  z_indx = np.where( z_diff == z_diff.min() )[0]
+  if len( z_indx ) != 1 :
+    print( f'ERROR: Unable to match the redshift of the correction fator. {z} -> {correction_z_vals[z_indx]}  ')
+    exit(-1)
+  z_indx = z_indx[0]
+  print( z_id, z, z_indx)
+  correction = FPS_correction[z_indx]
+  correction_k_vals = correction['k_vals']
+  correction_ps_factor = correction['delta_factor']
+  indices = correction_ps_factor > 1
+  new =  correction_ps_factor[indices] - 1
+  correction_ps_factor[indices] = 1 + new * 1
+  k_diff = np.abs( k_vals - correction_k_vals )
+  print( f'{z} {correction_ps_factor}')
+  if k_diff.sum() > 1e-6:
+     print(f'ERROR: Large k difference for FPS correction: {k_diff.sum()}.')
+     exit(-1)
+  ps_mean = ps_mean / correction_ps_factor
+  if z in [3.0, 3.2]:
+    k_l = 0.01
+    indices = k_vals >= k_l
+    n = indices.sum()
+    factor = np.linspace( 1, 1.2, n)
+    ps_mean[indices] *= factor
+  ps_data['ps_vals'] = ps_mean
+  
+
+
 data_set = data_tau_HeII_Worserc_2019
 data_z = data_set['z']
 data_tau = data_set['tau']
@@ -53,10 +99,10 @@ for z in data_z:
 tau_vals = np.array( tau_vals )
 simulated_tau_HeII = { 'z':data_z, 'tau':tau_vals, 'tau_sigma':data_sigma, 'name':'Simulated HM12' }
 Write_Pickle_Directory( simulated_tau_HeII, output_dir+'simulated_tau_HeII_HM12.pkl')
-   
 
 
-  
+
+
 
 data_sets = {'Boss':data_boss, 'Boera':data_boera, 'Irsic':data_irsic }
 simulated_ps = {}
@@ -96,4 +142,5 @@ for data_name in data_sets:
   simulated_ps[data_name]['z_vals'] = z_data
 
 
-Write_Pickle_Directory( simulated_ps, output_dir+'simulated_power_spectrum_HM12.pkl')
+
+Write_Pickle_Directory( simulated_ps, output_dir+'simulated_power_spectrum_HM12_corrected.pkl')

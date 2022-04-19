@@ -58,7 +58,7 @@ def Plot_HI_Photoionization( output_dir, rates_data=None, figure_name='fig_photh
         print( 'Plotting interval')
         low    = data_in['lower'] / 1e-12  
         high   = data_in['higher'] / 1e-12 
-        high[207] *= 0.96
+        # high[207] *= 0.96
         ax.fill_between( z, high, low, alpha=0.5, zorder=1, color=color  )
   # rates_data = samples_uvb_rates['photoionization_HI']
   # rates_z  = rates_data['z']

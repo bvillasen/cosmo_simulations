@@ -15,14 +15,16 @@ from tools import *
 from plot_thermal_history import Plot_T0_gamma_evolution
 from colors import *
 
-grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_P19m_np4_nsim400/'
+
+proj_dir = data_dir + 'projects/thermal_history/'
+grid_dir = proj_dir + 'data/sim_grid/1024_P19m_np4_nsim400/'
 mcmc_dir = grid_dir + 'fit_mcmc/'
 
 data_boss_irsic_boera = 'fit_results_covariance_systematic'
 
 black_background = False
 
-output_dir = data_dir + 'figures/thermal_history/paper/'
+output_dir = proj_dir + 'figures/'
 if black_background: output_dir += 'black_background/'
 create_directory( output_dir )
 
@@ -52,5 +54,5 @@ data_to_plot_gamma = { 0: data_gamma }
 data_to_plot_gamma[0]['label'] = 'This Work (Best-Fit)'
 data_to_plot_gamma[0]['line_color'] = color
 
-Plot_T0_gamma_evolution( output_dir, data_sets=data_to_plot, label='', fig_name='fig_T0_evolution.png', black_background=black_background, plot_interval=True, interpolate_lines=True,   )
+# Plot_T0_gamma_evolution( output_dir, data_sets=data_to_plot, label='', fig_name='fig_T0_evolution.png', black_background=black_background, plot_interval=True, interpolate_lines=True,   )
 Plot_T0_gamma_evolution( output_dir, data_sets=data_to_plot, data_sets_gamma=data_to_plot_gamma,  label='', fig_name='fig_T0_gamma_evolution.png', black_background=black_background, plot_interval=True, interpolate_lines=True )

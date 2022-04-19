@@ -76,7 +76,7 @@ norm = tau_range['HL'][indx] / tau_sigmoid['HL'][indx]
 tau = tau_sigmoid['HL']
 tau[indices] *= factor * norm
 
-ax.plot( z_integral, tau, ls='--', lw=lw, c='C0', label= r'Modified to Match HI $\tau_{\mathrm{eff}}$', zorder=5 )
+ax.plot( z_integral, tau, ls='--', lw=lw, c='dodgerblue', label= r'Modified to Match HI $\tau_{\mathrm{eff}}$', zorder=5 )
 
 tau_planck = 0.0561 
 sigma_tau = 0.0071

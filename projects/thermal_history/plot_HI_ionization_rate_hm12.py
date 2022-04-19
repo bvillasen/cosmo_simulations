@@ -31,9 +31,9 @@ create_directory( output_dir )
 
 param_vals = {}
 param_vals[0] = [ 0.38, 0.60 ]
-param_vals[1] = [ 0.77, 0.84 ]
+param_vals[1] = [ 0.72, 0.74 ]
 param_vals[2] = [ 0.18, 0.34 ]
-param_vals[3] = [ -0.33, 0.05 ]
+param_vals[3] = [ 0.18, 0.2 ]
 
   
 param_combinations = Get_Parameters_Combination( param_vals )  
@@ -77,7 +77,7 @@ for root_key in keys:
     rates_range[root_key][key] = { 'z':z, 'max': np.array(rates_max), 'min':np.array(rates_min) }
 
 # params_HL = { 'scale_He':0.45, 'scale_H':0.77, 'deltaZ_He':0.31, 'deltaZ_H':0.1 }
-params_HL = { 'scale_He':0.47, 'scale_H':0.81, 'deltaZ_He':0.25, 'deltaZ_H':-0.09 }
+params_HL = { 'scale_He':0.47, 'scale_H':0.71, 'deltaZ_He':0.25, 'deltaZ_H':0.19 }
 rates_data = Copy_Grakle_UVB_Rates( rates_P19 )
 rates_HL = Modify_Rates_From_Grackle_File( params_HL,  rates_data=rates_data, extrapolate='spline' )
 
@@ -89,19 +89,19 @@ rates_data = {}
 ion_HI = rates_HL['UVBRates']['Chemistry']['k24']
 high = rates_range['Chemistry']['k24']['max']
 low  = rates_range['Chemistry']['k24']['min']
-indices = z > 6.2
-high[indices] *= 10
-z_l, z_m, z_r = 1.5, 2.0, 2.4
-indices_l = ( z >= z_l ) * ( z <= z_m )
-n = indices_l.sum()
-v_m = 1.04
-factor_l = np.linspace( 1, v_m, n )
-indices_r = ( z >= z_m ) * ( z <= z_r )
-n = indices_r.sum()
-factor_r = np.linspace( v_m, 1, n )
-high[indices_l] *= factor_l
-high[indices_r] *= factor_r 
-rates_data[0] = { 'z':z, 'photoionization':ion_HI, 'higher':high, 'lower':low, 'label':'This Work (Best-Fit)' }
+# indices = z > 6.2
+# high[indices] *= 10
+# z_l, z_m, z_r = 1.5, 2.0, 2.4
+# indices_l = ( z >= z_l ) * ( z <= z_m )
+# n = indices_l.sum()
+# v_m = 1.04
+# factor_l = np.linspace( 1, v_m, n )
+# indices_r = ( z >= z_m ) * ( z <= z_r )
+# n = indices_r.sum()
+# factor_r = np.linspace( v_m, 1, n )
+# high[indices_l] *= factor_l
+# high[indices_r] *= factor_r 
+rates_data[0] = { 'z':z, 'photoionization':ion_HI, 'higher':high, 'lower':low, 'label':'Best-Fit to HM12' }
 rates_data[0]['line_color'] = line_color
 rates_data[0]['ls'] = '-'
 rates_data[0]['lw'] = 3.5
@@ -137,15 +137,18 @@ z_r = 6.1
 indices = z >= z_r 
 ion_HI_sig[indices] = ion_HI[indices]
 
-rates_data[1] = { 'z':z, 'photoionization':ion_HI_sig, 'label': r'Modified to Match HI $\tau_{\mathrm{eff}}$'  }
-rates_data[1]['line_color'] = 'dodgerblue'
-rates_data[1]['ls'] = '--'
-rates_data[1]['lw'] = 2.5
+grackle_file_name = base_dir + 'rates_uvb/data/CloudyData_UVB_HM2012.h5'
+rates_HM12 = Load_Grackle_File( grackle_file_name )
+rates_HM12 = Extend_Rates_Redshift( max_delta_z, rates_HM12, log=False )
 
 
+params_HL = { 'scale_He':1, 'scale_H':1, 'deltaZ_He':0., 'deltaZ_H':0. }
+rates_HM12 = Modify_Rates_From_Grackle_File( params_HL,  rates_data=rates_HM12, extrapolate='spline' )
+z = rates_HM12['UVBRates']['z']
+ion = rates_HM12['UVBRates']['Chemistry']['k24']
+rates_data[1] = { 'z':z, 'photoionization':ion, 'label':'HM12' }
+rates_data[1]['line_color'] = 'C4'
+rates_data[1]['ls'] = '-'
+rates_data[1]['lw'] = 3.5
 
-
-
-
-
-Plot_HI_Photoionization( output_dir, rates_data=rates_data, figure_name='Gamma_HI', show_low_z=True, black_background=black_background )
+Plot_HI_Photoionization( output_dir, rates_data=rates_data, figure_name='Gamma_HI_hm12', show_low_z=True, black_background=black_background )

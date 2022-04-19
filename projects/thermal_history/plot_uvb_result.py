@@ -24,7 +24,7 @@ param_vals[1] = [ 0.6, 0.73, 0.86, 1.0 ]
 param_vals[2] = [ -0.1, 0.2, 0.5, 0.8 ]
 param_vals[3] = [ -0.6, -0.4, -0.2, 0.0, 0.2 ]
 
-max_delta_z = 0.2
+max_delta_z = 0.1
 
 # Load the Original Rates
 grackle_file_name = base_dir + 'rates_uvb/data/CloudyData_UVB_Puchwein2019_cloudy.h5'
@@ -72,7 +72,7 @@ param_combinations = Get_Parameters_Combination( param_vals )
 
 grackle_file_name = base_dir + 'rates_uvb/data/CloudyData_UVB_Puchwein2019_cloudy.h5'
 rates_P19 = Load_Grackle_File( grackle_file_name )
-max_delta_z = 0.05
+max_delta_z = 0.1
 rates_P19 = Extend_Rates_Redshift( max_delta_z, rates_P19, log=True )
 
 rates_all = {}
@@ -100,10 +100,25 @@ for root_key in keys:
         vmin = min( vmin, rate_val )          
       rates_max.append( vmax )
       rates_min.append( vmin )
-    rates_range[root_key][key] = { 'z':z, 'max': np.array(rates_max), 'min':np.array(rates_min) }
+    rates_max = np.array( rates_max )  
+    rates_min = np.array( rates_min )
+    print(key)
+    if key in [ 'k24', 'k26' ]:
+      z_l, z_m, z_r = 1.5, 2.0, 2.4
+      indices_l = ( z >= z_l ) * ( z <= z_m )
+      n = indices_l.sum()
+      v_m = 1.04
+      factor_l = np.linspace( 1, v_m, n )
+      indices_r = ( z >= z_m ) * ( z <= z_r )
+      n = indices_r.sum()
+      factor_r = np.linspace( v_m, 1, n )
+      rates_max[indices_l] *= factor_l
+      rates_max[indices_r] *= factor_r 
+    rates_range[root_key][key] = { 'z':z, 'max':rates_max, 'min':rates_min }
 
 
-params_HL = { 'scale_He':0.47, 'scale_H':0.81, 'deltaZ_He':0.25, 'deltaZ_H':-0.09 }
+
+params_HL = { 'scale_He':0.47, 'scale_H':0.81, 'deltaZ_He':0.25, 'deltaZ_H':-0.1 }
 rates_data = Copy_Grakle_UVB_Rates( rates_P19 )
 rates_HL = Modify_Rates_From_Grackle_File( params_HL,  rates_data=rates_data, extrapolate='spline' )
 
@@ -114,6 +129,7 @@ alpha = 2.5
 input_rates = Copy_Grakle_UVB_Rates( rates_HL )
 rates_sigmoid = Modify_UVB_Rates_sigmoid( input_rates, z_range, alpha, x0 )
 
+
 # Load the Original Rates
 grackle_file_name =  base_dir + 'rates_uvb/data/CloudyData_UVB_Puchwein2019_cloudy.h5'
 grackle_data = Load_Grackle_File( grackle_file_name )
@@ -123,25 +139,26 @@ input_rates = Copy_Grakle_UVB_Rates( P19_rates )
 
 
 rates_data = {}
-# rates_data[0] = P19_rates
 
 
-parameter_values = { 'scale_He':  0.47,
-                     'scale_H':   0.81,
-                     'deltaZ_He': 0.25,
-                     'deltaZ_H':  -0.07 }
-
-input_rates = Copy_Grakle_UVB_Rates( P19_rates )
-modP19_rates = Modify_Rates_From_Grackle_File( parameter_values, rates_data=input_rates )
 
 
+grackle_file_name = base_dir + 'rates_uvb/data/CloudyData_UVB_Puchwein2019_cloudy.h5'
+r_P19 = Load_Grackle_File( grackle_file_name )
+r_P19 = Extend_Rates_Redshift( 0.1, r_P19, log=False )
+
+p_HL = { 'scale_He':0.47, 'scale_H':0.77, 'deltaZ_He':0.25, 'deltaZ_H':0.05 }
+rates_data_0 = Copy_Grakle_UVB_Rates( r_P19 )
+r_HL = Modify_Rates_From_Grackle_File( p_HL,  rates_data=rates_data_0, extrapolate='spline' )
 
 x0 = 0
-z_range = ( 4.8, 5.9 )
-alpha =  3
-input_rates = Copy_Grakle_UVB_Rates( P19_rates )
+z_range = ( 4.8, 6.12 )
+alpha = 2.5
+input_rates = Copy_Grakle_UVB_Rates( r_HL )
 rates_sigmoid = Modify_UVB_Rates_sigmoid( input_rates, z_range, alpha, x0 )
-rates_modified = Modify_Rates_From_Grackle_File( parameter_values, rates_data=rates_sigmoid )
+rates_modified = rates_sigmoid
+
+
   
 
 fit_all = { 'Chemistry':{}, 'Photoheating':{} }
@@ -198,8 +215,8 @@ plt.subplots_adjust( hspace = 0.0, wspace=0.16)
 border_width = 2
 
 text_color = 'black'
-color_modified = 'C0'
-color_P19  = 'C3'
+color_modified = 'dodgerblue'
+color_P19  = 'red'
 color_HM12 = 'C9'
 color_fit = 'black'
 
@@ -267,11 +284,20 @@ for i in range(nrows):
     z_sig = rates_modified['UVBRates']['z']
     rates_sig = rates_modified['UVBRates'][root_key][key]
     if key in [ 'k24', 'k26', 'piHI', 'piHeI']:
-      interval = [ 5.5, 6.2 ]
+      interval = [ 6.1, 6.3 ]
       indices = select_interval( interval, z_sig )
       n = len(indices)
-      factor = np.linspace( 1., 1.7, n)
-      rates_sig[indices] *= factor 
+      factor = np.linspace( 1., 0.8, n)
+      rates_sig[indices] *= factor
+      
+      z_l =4.6
+      indices = z_sig <= z_l 
+      rates_sig[indices] = fit[indices]
+      
+      z_r = 6.1
+      indices = z >= z_r 
+      rates_sig[indices] = fit[indices]
+       
     ax.plot( z_sig, rates_sig, '--', c=color_modified, lw=2.5, label= r'Modified to Match HI $\tau_{\mathrm{eff}}$', zorder=4)
     
     z_P19 = rates_P19['UVBRates']['z']

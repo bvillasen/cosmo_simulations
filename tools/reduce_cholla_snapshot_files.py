@@ -17,8 +17,8 @@ else:
 # print_out = False
 print_out = True if rank == 0 else False
 
-data_type = 'hydro'
-# data_type = 'particles'
+# data_type = 'hydro'
+data_type = 'particles'
 
 verify_output_number = True
 
@@ -33,14 +33,14 @@ if data_type == 'particles': fields_list = fields_particles
 if data_type == 'hydro': file_name_base = '.h5'
 if data_type == 'particles': file_name_base = '_particles.h5' 
 
-root_dir = data_dir + 'cosmo_sims/rescaled_P19/wdm/1024_50Mpc_wdm_m0.5kev/'
+root_dir = data_dir + 'cosmo_sims/2048_50Mpc_V22/'
 input_dir  = root_dir + f'snapshot_files/'
 output_dir = root_dir + f'reduced_snapshots_{data_type}_density/'
 if rank == 0: create_directory( output_dir )
 
 
-snapshot_ids = range( 1, 97 )
-files_per_snapshot = 16
+snapshot_ids = range( 0, 200  )
+files_per_snapshot = 512
 local_files = split_indices( range(files_per_snapshot), rank, n_procs )
 n_snapshots = len( snapshot_ids )
 print( f'proc_id: {rank}  local_files: {local_files}'  )

@@ -116,17 +116,26 @@ for data_id in ps_samples:
        print(f'ERROR: Large k difference for FPS correction: {k_diff.sum()}.')
        exit(-1)
     ps_mean = ps_mean / correction_ps_factor
+    if z >= 4.0:
+      k_l = 0.08
+      indices = k_vals >= k_l
+      n = indices.sum()
+      factor = np.linspace( 1, 1.2, n)
+      ps_mean[indices] *= factor
     ps_data['Highest_Likelihood'] = ps_mean
     if data_id == 0:
       ps_h = ps_h / correction_ps_factor
       ps_l = ps_l / correction_ps_factor
+      if z >= 4.0:
+        ps_h[indices] *= factor
+        ps_l[indices] *= factor
       ps_data['higher'] = ps_h
       ps_data['lower'] = ps_l
 
 
 
 
-factor = 1.15
+factor = 1.12
 samples_rescaled = {}
 for z_id in samples_ps.keys():
   if z_id == 'z_vals': 
@@ -140,7 +149,7 @@ for z_id in samples_ps.keys():
 ps_samples[1] = samples_rescaled
 
 ps_samples[0]['line_color'] = 'k'
-ps_samples[1]['line_color'] = 'C0'
+ps_samples[1]['line_color'] = 'dodgerblue'
 ps_samples[1]['ls'] = '--'
 
 data_labels = [ 'This Work (Best-Fit)', r'Modified to Match HI $\tau_{\mathrm{eff}}$' ]

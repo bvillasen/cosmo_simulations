@@ -88,7 +88,7 @@ def Compute_Flux_Power_Spectrum( data_Flux, print_string='', k_edges=None, cente
     flux_power_spectrum = flux_power_spectrum 
     skewers_power_spectrum.append( flux_power_spectrum )
     print_progress( skewer_id+1, n_skewers, start, extra_line=extra_line )
-    
+  print('')  
   skewers_power_spectrum = np.array( skewers_power_spectrum ) 
   mean_power_spectrum = skewers_power_spectrum.mean( axis=0 ) 
   data_ps = { 'mean':mean_power_spectrum, 'k_vals':k_vals, 'skewers_ps':skewers_power_spectrum }
