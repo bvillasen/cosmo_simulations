@@ -29,7 +29,7 @@ colors_lines = [ 'k']
 
 def Plot_T0_gamma_evolution( output_dir, data_sets=None, data_sets_gamma=None, time_axis=None, points_T0=None, 
   label='', fig_name='fig_T0_evolution', black_background=False, interpolate_lines=False, n_samples_interp=200, plot_interval=False,
-  T0_min = None, z_max=None, show_data=True ):
+  T0_min = None, z_max=None, show_data=True, xlim=None ):
   
   
   tick_size_major, tick_size_minor = 6, 4
@@ -59,6 +59,7 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, data_sets_gamma=None, t
     
   ymin, ymax = 0.5, 2
   xmin, xmax = 1.9, 7.0
+  if xlim is not None:xmin, xmax = xlim
   if z_max is not None: xmax = z_max 
   
   if T0_min is not None: ymin=T0_min
@@ -330,6 +331,7 @@ def Plot_T0_gamma_evolution( output_dir, data_sets=None, data_sets_gamma=None, t
       
 
     ymin, ymax = 0.8, 2.2
+    ymin, ymax = 0.8, 1.5
     ax.tick_params(axis='both', which='major', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major  )
     ax.tick_params(axis='both', which='minor', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor  )
     ax.set_ylabel( r'$\gamma$', fontsize=font_size, color=text_color  )

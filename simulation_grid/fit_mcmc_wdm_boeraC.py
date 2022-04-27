@@ -31,13 +31,17 @@ ps_data_dir = base_dir + '/lya_statistics/data/'
 
 # Fields to Fit using the mcmc
 fields_to_fit = 'P(k)+'
-data_ps_sets = [ 'Boera' ]
-# data_ps_sets = [ 'BoeraC' ]
+# data_ps_sets = [ 'Boera' ]
+data_ps_sets = [ 'BoeraC' ]
 
 # error_type = 'sigma'
 error_type = 'covmatrix'
 
-independent_redshift = True
+cross_factors = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0 ]
+cross_elements_factor = cross_factors[rank]
+print( f'proc_id: {rank}   cross_elements_factor: {cross_elements_factor}' )
+
+independent_redshift = False
 use_inv_wdm = True
 
 fit_name = ''
@@ -49,8 +53,7 @@ fit_name = fit_name[:-1]
 data_label = data_label[:-3]
 
 fit_name += f'_{error_type}'
-# fit_name += '_noHighK_1_new'
-# fit_name += '_noLowK_8'
+fit_name += f'_cross_factor_{cross_elements_factor}'
 
 print(f'Data Label: {data_label} {fit_name}')
 
@@ -62,7 +65,7 @@ if extra_label is not None: fit_name += f'_{extra_label}'
 mcmc_dir = root_dir + 'fit_mcmc/'
 if rank == 0: create_directory( mcmc_dir )
 output_dir = mcmc_dir + f'fit_results_{fields_to_fit}_{fit_name}/'
-if rank == 0: create_directory( output_dir, )
+create_directory( output_dir )
 if independent_redshift: 
   z_indx = rank
   output_dir += f'fit_redshift/'
@@ -115,8 +118,7 @@ if independent_redshift:
 no_use_delta_p = True 
 
 data_systematic_uncertainties = None
-data_covariance = { 'P(k)': { 'type': { 'Boera':'local',  }, 'factor': { 'Boera':1.0, } } }
-# data_covariance = { 'P(k)': { 'type': { 'BoeraC':'local',  }, 'factor': { 'BoeraC':1.0, } } }
+data_covariance = { 'P(k)': { 'type': { 'BoeraC':'local',  }, 'factor': { 'BoeraC':cross_elements_factor } } }
 
 ps_parameters = { 'range':ps_range, 'data_dir':ps_data_dir, 'data_sets':data_ps_sets  }
 comparable_data = Get_Comparable_Composite( fields_to_fit, z_min, z_max, ps_parameters=ps_parameters, log_ps=False, 

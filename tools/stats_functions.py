@@ -89,9 +89,9 @@ def get_highest_probability_interval( bin_centers, distribution, fill_sum, log=F
   if np.any(bin_centers[1:] == bin_centers[:-1]): 
     print( f'WARNING: 1D HPI: duplicate in bin_centers {bin_centers}')
     exit(-1)
-  if max / bin_centers.sum() > fill_sum:
+  if distribution.max() / distribution.sum() > fill_sum:
      print( f'WARNING: 1D HPI: fill sum contained on one bin')
-     return max, max, max, max / bin_centers.sum()
+     return distribution.max(), distribution.max(), distribution.max(), distribution.max() / distribution.sum()
   if n_interpolate: 
     bin_centers_interp = np.linspace( min, max, n_interpolate )
     # distribution = np.interp( bin_centers_interp, bin_centers, distribution )

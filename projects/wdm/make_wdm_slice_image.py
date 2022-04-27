@@ -22,7 +22,7 @@ black_background = False
 
 proj_dir = data_dir + 'projects/wdm/'
 input_dir  = proj_dir + 'figures/wdm_slice/images/'
-output_dir = proj_dir + 'figures/wdm_slice/images/composite/'
+output_dir = proj_dir + 'figures/'
 create_directory( output_dir )
 
 
@@ -90,7 +90,7 @@ tick_color = 'black'
 labelsize = 14
 tick_label_size_major, tick_label_size_minor = 11, 10
 tick_size_major, tick_size_minor = 5, 3
-tick_width_major, tick_width_minor = 1.5, 1
+tick_width_major, tick_width_minor = 1.9, 1
 border_width = 1.4
 
 if black_background:
@@ -105,10 +105,10 @@ im = plt.imshow( mp_image, cmap=colormap, extent=(0, nx, ny, 0 ) )
 
 
 line_y = ny-150
-line_x = 250
+line_x = 200
 line_length = 400
 plt.text( line_x + 14, line_y-33, '30 cMpc', fontsize=14, color='white'  )
-plt.plot( [line_x, line_x+line_length], [line_y, line_y], lw=2.5, c='white')
+plt.plot( [line_x, line_x+line_length], [line_y, line_y], lw=1.5, c='white')
 
 tick_labels = [ 0.3,  0.5, 1.0,  2.0,  4.0, 6.0, 'CDM' ] 
 tick_vals =   [ 2.5,  1.8, 1.3,  0.85, 0.5, 0.2, 0.001 ]
@@ -169,7 +169,7 @@ cax   = inset_axes(ax,
 cbar = fig.colorbar(im, cax=cax )
 [sp.set_linewidth(1.2) for sp in cbar.ax.spines.values()]
 cbar.ax.tick_params(axis='both', which='major', direction='in', color=tick_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major  )
-cbar.set_label( r'$\rho_\mathrm{gas}$   [$\mathregular{M}\!_\odot \mathregular{kpc}^{\mathregular{-3}}$]', fontsize=labelsize-2, color=text_color)
+cbar.set_label( r'$\rho_\mathrm{gas}$   [$\mathregular{M}\!_\odot \mathregular{kpc}^{\mathregular{-3}}$]', fontsize=labelsize-2, color=text_color, labelpad=-2 )
 cbar.ax.set_yticks( tick_vals, labels=tick_labels )
 # divider = make_axes_locatable(ax)
 # cax = divider.append_axes("right", size="5%", pad=0.05)
@@ -182,7 +182,7 @@ axtop.tick_params(axis='x', which='minor', direction='in', color=tick_color, lab
 
 ax.set_xlabel( r'Redshift   $z$', fontsize=labelsize, color=text_color)
 ax.set_ylabel( r'$m_\mathrm{WDM}$   [keV]', fontsize=labelsize, labelpad=-5, color=text_color )
-axtop.set_xlabel( 'Time after the Big Bang   [Gyr]', fontsize=labelsize - 2, color=text_color, labelpad=5)
+axtop.set_xlabel( 'Time after the Big Bang  [Gyr]', fontsize=labelsize - 2, color=text_color, labelpad=5)
 
 [sp.set_linewidth(border_width) for sp in ax.spines.values()]
 

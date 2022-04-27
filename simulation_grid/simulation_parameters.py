@@ -1,8 +1,8 @@
-import os
+import os, sys
+cosmo_dir = os.path.dirname(os.getcwd()) + '/'
+sys.path.append( cosmo_dir + 'tools')
+from tools import *
 
-# system = 'Lux'
-# system = 'Shamrock'
-# system = 'Summit'
 system = None
 system = os.getenv('SYSTEM_NAME')
 if not system:
@@ -12,15 +12,8 @@ print( f'System: {system}')
 
 n_points = 1024
 
-grid_name = f'{n_points}_P19m_np4_nsim400'
-# grid_name = f'{n_points}_wdmgrid_nsim200_deltaZ_0p0'
-# grid_name = f'{n_points}_wdmgrid_nsim200_deltaZ_0p5'
-# grid_name = f'{n_points}_wdmgrid_nsim200_deltaZ_n0p5'
-# grid_name = f'{n_points}_wdmgrid_nsim600'
-# grid_name = f'{n_points}_wdmgrid_cdm'
-# grid_name = f'{n_points}_wdmgrid_large_mwdm'
-# grid_name = f'{n_points}_wdmgrid_nsim900'
-# grid_name = f'{n_points}_wdmgrid_extended_beta'
+# grid_name = f'{n_points}_P19m_np4_nsim400'
+grid_name = f'{n_points}_wdmgrid_extended_beta'
 # grid_name = f'{n_points}_wdmgrid_cdm_extended_beta'
 
 if system == 'Lux':
@@ -43,6 +36,12 @@ if system == 'Summit':
 
 if system == 'Tornado':
   root_dir   = f'/home/bruno/Desktop/ssd_0/data/cosmo_sims/sim_grid/{grid_name}/'
+  ics_dir    = f'/home/bruno/Desktop/ssd_0/data/cosmo_sims/sim_grid/ics/'
+  cholla_dir = '/home/bruno/cholla/'    
+  n_gpus     = 1
+
+if system == 'MacBook':
+  root_dir   = data_dir + f'cosmo_sims/sim_grid/{grid_name}/'
   ics_dir    = f'/home/bruno/Desktop/ssd_0/data/cosmo_sims/sim_grid/ics/'
   cholla_dir = '/home/bruno/cholla/'    
   n_gpus     = 1

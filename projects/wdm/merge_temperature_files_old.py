@@ -22,17 +22,17 @@ else:
   rank = 0
   n_procs = 1
 
-grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_extended_beta/'
-# grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_cdm_extended_beta/'
+# grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim600/'
+grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_cdm/'
 fit_name = 'fit_results_P(k)+_Boera_covmatrix'
 input_dir = grid_dir + f'fit_mcmc/{fit_name}/temperature_evolution/'
 output_dir = grid_dir + f'fit_mcmc/{fit_name}/temperature_evolution/merged_files/'
 if rank == 0: create_directory( output_dir )
 
-files = [ f for f in os.listdir(input_dir) if f[0] == 's' ]
-files.sort()
-n_files = len(files)
-# n_files = 4500000
+# files = [ f for f in os.listdir(input_dir) if f[0] == 's' ]
+# files.sort()
+# n_files = len(files)
+n_files = 4500000
 if rank == 0:print( f'N files: {n_files}')
 
 ids_global = np.arange(0, n_files, 1, dtype=int)
@@ -48,13 +48,12 @@ out_file_name = output_dir + f'samples_T0_evolution_id_{rank}.h5'
 file_exits = os.path.isfile(out_file_name)
 
 if not file_exits:
-
+  
   z_vals = None
   T0_vals = []
   time_start = time.time()
   for sim_id,file_id in enumerate(selected_files):
-    # file_name = input_dir + f'solution_{file_id}.h5'
-    file_name = input_dir + files[file_id]
+    file_name = input_dir + f'solution_{file_id}.h5'
     file = h5.File( file_name, 'r' )
     if z_vals is None: z_vals = file['z'][...]
     T0 = file['temperature'][...]
@@ -86,7 +85,7 @@ for file_id in range(n_procs):
   in_file.close()
   T0_vals_all.append(T0)
   selected_files_all.append( selected_files )
-
+  
 selected_files_all = np.concatenate( selected_files_all )
 selected_files_all.sort()
 n_files = len( selected_files_all )
@@ -95,7 +94,7 @@ file_diff = np.abs( files_ids - selected_files_all).sum()
 print( f'file_diff: {file_diff}' ) 
 T0_vals_all = np.concatenate( T0_vals_all, axis=0 )
 print( f'T0 shape: {T0_vals_all.shape}')
-
+  
 output_dir = grid_dir + f'fit_mcmc/{fit_name}/'
 out_file_name = output_dir + f'samples_T0_evolution.h5'
 out_file = h5.File( out_file_name, 'w' )

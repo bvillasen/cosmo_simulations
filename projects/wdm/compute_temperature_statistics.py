@@ -14,8 +14,8 @@ sys.path.append( cosmo_dir + 'lya_statistics/data' )
 from tools import *
 from stats_functions import get_highest_probability_interval
 
-# grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_nsim600/'
-grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_cdm/'
+grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_extended_beta/'
+# grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_cdm_extended_beta/'
 fit_name = 'fit_results_P(k)+_Boera_covmatrix'
 input_dir = grid_dir + f'fit_mcmc/{fit_name}/'
 output_dir = grid_dir + f'fit_mcmc/{fit_name}/'

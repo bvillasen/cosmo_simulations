@@ -13,6 +13,9 @@ grid_name = '1024_wdmgrid_extended_beta'
 grid_names = [ grid_name ]
 
 data_name = 'fit_results_P(k)+_Boera_covmatrix'
+fit_name = '_noHighK_1_new'
+# fit_name = '_noLowK_8'
+data_name = f'fit_results_P(k)+_Boera_covmatrix{fit_name}'
 data_labels = [ '' ]
 
 
@@ -65,10 +68,10 @@ corner_labels = { 'inv_wdm_mass':r'$m_{\mathrm{WDM}}^{-1}$  [keV$^{-1}$]', 'scal
 param_labels = { 'inv_wdm_mass':r'$m_{\mathrm{WDM}}^{-1}$', 'scale_H_ion': r'$\beta$',
                   'scale_H_Eheat': r'$\alpha_{\mathrm{E}}$', 'deltaZ_H':r'$\Delta z$' }
 
-ticks = {0:[0., 0.1, 0.2, 0.3, 0.4], 1:[0.4, 0.6, 0.8, 1.0, 1.2, 01.4], 2:[ 0.6, 0.8, 1.0, 1.2,], 3:[ -0.5, -0.25, 0, 0.25, 0.5,]}
-limits = {0:( 0, 0.45 ), 1:( 0.8, 1.5 ), 2:( 0.4, 1.15 ), 3:( -0.5, 0.5 )}
+ticks = {0:[0., 0.1, 0.2, 0.3, 0.4], 1:[0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6], 2:[ 0.6, 0.8, 1.0, 1.2, 1.4, 1.6], 3:[ -0.5, -0.25, 0, 0.25, 0.5,]}
+limits = {0:( 0, 0.45 ), 1:( 0.8, 1.5 ), 2:( 0.4, 1.2 ), 3:( -0.5, 0.5 )}
 
 Plot_Corner( samples_all['param'], data_labels, corner_labels, output_dir, n_bins_1D=20, n_bins_2D=35, 
              lower_mask_factor=500, multiple=True, show_label=True, HL_vals=params_HL, ticks=ticks, 
-             limits=limits, param_values=param_values, black_background=False, figure_name='corner_wdm.png', 
+             limits=limits, param_values=param_values, black_background=False, figure_name=f'corner_wdm{fit_name}.png', 
              param_names=p_names, param_labels=param_labels)

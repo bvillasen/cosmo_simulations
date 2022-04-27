@@ -513,7 +513,7 @@ def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_rang
     diagonal = cov_matrices_all.diagonal()
     sigma = delta_ps_sigma_all
     diagonal_only = False
-    if 'modify_diagonal_only' in systematic_uncertainties['P(k)']  and systematic_uncertainties['P(k)']['modify_diagonal_only']: 
+    if  systematic_uncertainties is not None and 'modify_diagonal_only' in systematic_uncertainties['P(k)']  and systematic_uncertainties['P(k)']['modify_diagonal_only']: 
       diagonal_only = True
       print( ' WARNING: Systematic uncertainties modyfy only the diagonal of the covariance matrix')
     for i in range(n):

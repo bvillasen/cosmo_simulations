@@ -33,9 +33,20 @@ dir_data_boera = ps_data_dir + 'data_power_spectrum_boera_2019/'
 data_boera = load_data_boera( dir_data_boera )
 
 error_type = 'covmatrix'
+fit_name = '_noHighK_1_new' 
+# fit_name = '_noLowK_8' 
+# n_low = 8 
+n_high = 1
 grid_names = [ '1024_wdmgrid_extended_beta', '1024_wdmgrid_cdm_extended_beta' ] 
 data_name = f'fit_results_P(k)+_Boera_{error_type}'
 data_labels = [ 'Boera Sigma', 'Boera Cov M' ]
+
+
+k_lim_max = np.sqrt(10**(-.7 -.1 *n_high) * 10**(-.7 -.1 *(n_high-1)))
+# k_lim_max = 1
+
+k_lim_min = -1
+# k_lim_min = np.sqrt(10**(-2.2 +.1 *n_low) * 10**(-2.2 +.1 *(n_low-1)))
 
 HL_key = 'Highest_Likelihood'
 # HL_key = 'mean'
@@ -49,6 +60,7 @@ sim_labels = [ 'Best Fit', 'Best Fit CDM', ]
 data_all = {} 
 for data_id, grid_name in enumerate(grid_names):
   input_dir = base_dir + f'{grid_name}/fit_mcmc/{data_name}/observable_samples/'
+  if data_id == 0: input_dir = base_dir + f'{grid_name}/fit_mcmc/{data_name}{fit_name}/observable_samples/'  
   file_name = input_dir + 'samples_power_spectrum.pkl'
   data = Load_Pickle_Directory( file_name )
   data_sim = {}
@@ -192,6 +204,11 @@ for i in range( ncols ):
     
     if data_id == sim_reff_indx:  ax2.errorbar( data_k, delta_ps_data, yerr=delta_sigma, fmt='o', c=data_color, label=data_label, zorder=3)
     
+  # ax1.fill_between( [k_lim_max, 1], [-1, -1 ], [1000, 1000], color='gray', alpha=0.4 )
+  # ax2.fill_between( [k_lim_max, 1], [-1, -1 ], [1000, 1000], color='gray', alpha=0.4 )
+  ax1.fill_between( [-1, k_lim_min], [-1, -1 ], [1000, 1000], color='gray', alpha=0.4 )
+  ax2.fill_between( [-1, k_lim_min], [-1, -1 ], [1000, 1000], color='gray', alpha=0.4 )
+  
   
   ps_data_vector = np.concatenate( sum_matrix['data']['ps'] )
   ps_sim_vector_0 = np.concatenate( sum_matrix[0]['ps'] )
@@ -252,7 +269,7 @@ for data_id in data_all:
 fig.align_ylabels()
   
   
-figure_name = output_dir + f'flux_ps_wdm.png'
+figure_name = output_dir + f'flux_ps_wdm{fit_name}.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
 

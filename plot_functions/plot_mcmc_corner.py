@@ -166,9 +166,13 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
             hl_val = HL_vals[j]
             # print( f_interp(hl_val), f_interp(bin_centers_interp).max())
             # ax.axvline( x=hl_val, ymin=0, ymax=f_interp(hl_val)[0], ls='--', lw=hl_line_width, color=hl_color, alpha=hl_alpha )
+            if hl_val < bin_centers_interp.min(): hl_val = bin_centers_interp.min()
+            if hl_val > bin_centers_interp.max(): hl_val = bin_centers_interp.max()
             print( hl_val, bin_centers_interp.min(), bin_centers_interp.max())
             ax.plot( [hl_val, hl_val], [-1*f_interp(hl_val), f_interp(hl_val)], ls='--', lw=hl_line_width, color=hl_line_color, alpha=hl_alpha, zorder=2 )
             fill_sum = 0.68
+            if i == 2:
+              print( bin_centers, distribution )
             v_l, v_r, v_max,  sum = get_highest_probability_interval( bin_centers, distribution, fill_sum, log=False, n_interpolate=100000, print_eval=False)
             print( f'Eval f(l): {f_interp(v_l)}  f(r): {f_interp(v_r)}  sum: {sum}')
             vals_simgna = np.linspace( v_l, v_r, 1000 )
@@ -282,7 +286,6 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
     text = '95% Confidence Interval:'  
     plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=22+font_add, color=text_color )
     
-    # p_name = 'scale_H'
     p_name = param_names[0]
     p_vals = param_values[p_name]
     val = p_vals['value']
@@ -291,7 +294,6 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
     label = param_labels[p_name][1:-1]
     text_0 =  f'{label}' + ' \,\,= \mathregular{ ' + f'{val:.2f}' + '}^{+\mathregular{' + f'{delta_h:.2f}' + '}}_{-\mathregular{' +f'{delta_l:.2f}' + '}}'
     
-    # p_name = 'scale_He'
     p_name = param_names[1]
     p_vals = param_values[p_name]
     val = p_vals['value']
@@ -309,7 +311,6 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
       plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=25+font_add, color=text_color )
       text_y -= offset_y
     
-    # p_name = 'deltaZ_H'
     p_name = param_names[2]
     p_vals = param_values[p_name]
     val = p_vals['value']
@@ -318,17 +319,18 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
     label = param_labels[p_name][1:-1]
     text_0 =  f'{label}' + ' \,\,= \mathregular{ ' + f'{val:.2f}' + '}^{+\mathregular{' + f'{delta_h:.2f}' + '}}_{-\mathregular{' +f'{delta_l:.2f}' + '}}'
     
-    # p_name = 'deltaZ_He'
-    p_name = param_names[3]
-    p_vals = param_values[p_name]
-    val = p_vals['value']
-    delta_h = p_vals['delta_h']
-    delta_l = p_vals['delta_l']  
-    label = param_labels[p_name][1:-1]
-    text_1 =  f'{label}' + ' = \mathregular{ ' + f'{val:.2f}' + '}^{+\mathregular{' + f'{delta_h:.2f}' + '}}_{-\mathregular{' +f'{delta_l:.2f}' + '}}'
-    
+    if len(param_names) ==4:
+      p_name = param_names[3]
+      p_vals = param_values[p_name]
+      val = p_vals['value']
+      delta_h = p_vals['delta_h']
+      delta_l = p_vals['delta_l']  
+      label = param_labels[p_name][1:-1]
+      text_1 =  f'{label}' + ' = \mathregular{ ' + f'{val:.2f}' + '}^{+\mathregular{' + f'{delta_h:.2f}' + '}}_{-\mathregular{' +f'{delta_l:.2f}' + '}}'
+      
     # text_lines = [ r'$\Delta z_{\mathrm{H}}\,\,=\mathregular{0.05}^{+\mathregular{0.03}}_{-\mathregular{0.03}}$', r'$\Delta z_{\mathrm{He}}=\mathregular{0.27}^{+\mathregular{0.06}}_{-\mathregular{0.06}}$', ]
-    text_lines = [ r'${0}$'.format(text_0) , r'${0}$'.format(text_1) ]
+    if len(param_names) ==4: text_lines = [ r'${0}$'.format(text_0) , r'${0}$'.format(text_1) ]
+    if len(param_names) ==3: text_lines = [ r'${0}$'.format(text_0)  ]
     
     text_x = text_x + .2
     text_y = 0.82 + offset_y_add

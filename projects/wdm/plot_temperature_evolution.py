@@ -17,11 +17,13 @@ from data_thermal_history import *
 from interpolation_functions import interp_line_cubic
 
 fit_name = 'fit_results_P(k)+_Boera_covmatrix'
-output_dir = data_dir + f'figures/wdm/'
+
+proj_dir = data_dir + 'projects/wdm/'
+output_dir = proj_dir + f'figures/'
 create_directory( output_dir )
 
 
-grid_names = [ '1024_wdmgrid_nsim600', '1024_wdmgrid_cdm' ]
+grid_names = [ '1024_wdmgrid_extended_beta', '1024_wdmgrid_cdm_extended_beta' ]
 
 sim_labels = [ 'Best Fit', 'Best Fit CDM', ]
  
@@ -63,7 +65,7 @@ plot_gaikwad = True
 
 fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(figure_width*ncols,6*nrows))
 
-n_samples_interp = 100
+n_samples_interp = 1000
 
 plot_key = 'mean'
 for sim_id in stats_all:

@@ -160,10 +160,10 @@ def Interpolate_4D( p0, p1, p2, p3, data_to_interpolate, field, sub_field, SG, c
   else: delta = ( p_val - p_val_l ) / ( p_val_r - p_val_l )
   if delta < 0:
     print( f'ERROR:  Negative delta when interpolating p_val:{p_val} v_l:{p_val_l}  v_r:{p_val_r}  delta:{delta}')
-    exit(-1)
+    # exit(-1)
   if delta > 1:
     print( f'ERROR: delta > 1 when interpolating p_val:{p_val} v_l:{p_val_l}  v_r:{p_val_r}  delta:{delta}')
-    exit(-1) 
+    # exit(-1) 
      
   if param_id == 0:
     #This is the base case of the recursion

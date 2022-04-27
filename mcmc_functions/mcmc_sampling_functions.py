@@ -226,7 +226,19 @@ def mcmc_model_3D( comparable_data, comparable_grid, field, sub_field, SG, error
   def mcmc_model_3D( comparable_grid=comparable_grid, SG=SG, p0=params_mcmc[0]['sampler'], p1=params_mcmc[1]['sampler'], p2=params_mcmc[2]['sampler']   ):
     mean_interp = Interpolate_3D( p0, p1, p2, comparable_grid, field, sub_field, SG ) 
     return mean_interp
-  densObsrv = pymc.Normal(field, mu=mcmc_model_3D, tau=1./(comparable_data[field]['sigma']**2), value=comparable_data[field]['mean'], observed=True)
+  mean  = comparable_data[field]['mean']
+  sigma = comparable_data[field]['sigma']
+  if error_type == 'covariance_matrix':
+    print( 'WARNING: Using covariance matrix for the likelihood calculation')
+    cov_matrix = comparable_data[field]['covariance_matrix']
+    precision_matrix = np.linalg.inv( cov_matrix )
+    densObsrv = pymc.MvNormal( field, mu=mcmc_model_3D, tau=precision_matrix, value=mean, observed=True)
+  elif error_type == 'sigma':
+    print( 'WARNING: Using sigma for the likelihood calculation')  
+    densObsrv = pymc.Normal(field, mu=mcmc_model_3D, tau=1./(sigma**2), value=mean, observed=True)
+  else:
+    print( 'ERROR: Not a valid error_type')
+    return None, None
   return locals(), params_mcmc
    
   
