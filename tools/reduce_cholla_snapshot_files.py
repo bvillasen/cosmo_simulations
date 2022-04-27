@@ -37,6 +37,7 @@ root_dir = data_dir + 'cosmo_sims/2048_50Mpc_V22/'
 input_dir  = root_dir + f'snapshot_files/'
 output_dir = root_dir + f'reduced_snapshots_{data_type}_density/'
 if rank == 0: create_directory( output_dir )
+comm.Barrier()
 
 
 snapshot_ids = range( 0, 259  )
