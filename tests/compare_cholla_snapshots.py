@@ -33,7 +33,7 @@ snapshots = np.arange( 1, 12, 1, dtype=int )
 snapshots_local = split_array_mpi( snapshots, rank, n_procs )
 print( f'rank: {rank}  snapshots_local:{snapshots_local}' )
 
-sim_dir = data_dir + f'cosmo_sims/{n_cells}_50Mpc/'
+sim_dir = data_dir + f'cosmo_sims/{n_cells}_50Mpc_adiabatic/'
 input_dir_0 = sim_dir + 'snapshot_files_gpu/'
 input_dir_1 = sim_dir + 'snapshot_files_cpu/'
 
