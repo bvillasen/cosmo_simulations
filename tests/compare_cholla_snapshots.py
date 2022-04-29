@@ -50,8 +50,8 @@ if rank ==0: create_directory( output_dir )
 if rank ==0: print( f'Input 0: {input_dir_0}')
 if rank ==0: print( f'Input 1: {input_dir_1}')
 
-# data_type = 'hydro'
-data_type = 'particles'
+data_type = 'hydro'
+# data_type = 'particles'
 precision = np.float64
 box_size = [ Lbox, Lbox, Lbox ]
 grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
