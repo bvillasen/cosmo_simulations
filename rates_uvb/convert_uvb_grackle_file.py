@@ -1,9 +1,9 @@
 import numpy as np
 import h5py as h5
 
-in_file_name =  '/Users/bruno/Desktop/Dropbox/Developer/cholla/src/cooling_grackle/CloudyData_UVB_Puchwein2019_cloudy.h5'
-in_file_name =  '/Users/bruno/Desktop/uvb_rates_V21_grackle.h5'
-out_file_name = '/Users/bruno/Desktop/uvb_rates_V21.txt'
+
+in_file_name =  'data/UVB_rates_V22.h5'
+out_file_name = 'data/uvb_rates_V22.txt'
 
 print( f'Loading File: {in_file_name}' )
 file = h5.File( in_file_name, 'r' ) 
