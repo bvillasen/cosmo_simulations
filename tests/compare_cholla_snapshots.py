@@ -35,7 +35,7 @@ print( f'rank: {rank}  snapshots_local:{snapshots_local}' )
 
 sim_dir = data_dir + f'cosmo_sims/{n_cells}_50Mpc_adiabatic/'
 input_dir_0 = sim_dir + 'snapshot_files_gpu/'
-input_dir_1 = sim_dir + 'snapshot_files_cpu/'
+input_dir_1 = sim_dir + 'snapshot_files/'
 
 # sim_dir = data_dir + f'cosmo_sims/{n_cells}_50Mpc/'
 # input_dir_0 = sim_dir + 'snapshot_files_cosmo/'
