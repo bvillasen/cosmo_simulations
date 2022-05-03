@@ -40,7 +40,7 @@ if rank == 0: create_directory( output_dir )
 comm.Barrier()
 
 
-snapshot_ids = range( 0, 259  )
+snapshot_ids = range( 0, 340  )
 files_per_snapshot = 512
 local_files = split_indices( range(files_per_snapshot), rank, n_procs )
 n_snapshots = len( snapshot_ids )
