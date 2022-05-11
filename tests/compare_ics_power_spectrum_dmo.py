@@ -36,6 +36,7 @@ dx, dy, dz = Lbox/nx, Lbox/ny, Lbox/nz
 
 # snapshots = [ 0  ]
 snapshots = [ 0, 2, 4, 6, 8, 10, 12, 13  ]
+snapshots.reverse()
 
 power_spectrum_all = {}
 
@@ -56,39 +57,47 @@ for snap_id in snapshots:
 
 figure_width = 4
 text_color = 'black'  
-nrows = 2
+nrows = 1
 ncols = 1
 fig_height = 1 * figure_width
 fig_width = ncols * figure_width
 h_length = 4
 main_length = 3
-# fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(fig_width, fig_height) )
-# plt.subplots_adjust( hspace = 0.0, wspace=0.16)
+fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(fig_width, fig_height) )
+plt.subplots_adjust( hspace = 0.0, wspace=0.16)
+# 
+# fig = plt.figure(0)
+# fig.set_size_inches(fig_width, fig_height )
+# fig.clf()
+# 
+# gs = plt.GridSpec(h_length, ncols)
+# gs.update(hspace=0.0, wspace=0.18, )
 
-fig = plt.figure(0)
-fig.set_size_inches(fig_width, fig_height )
-fig.clf()
 
-gs = plt.GridSpec(h_length, ncols)
-gs.update(hspace=0.0, wspace=0.18, )
+# i = 0
+# data_type = 'particles' 
+# ax1 = plt.subplot(gs[0:main_length, i])
+# ax2 = plt.subplot(gs[main_length:h_length, i])
 
 
-i = 0
-data_type = 'particles' 
-ax1 = plt.subplot(gs[0:main_length, i])
-ax2 = plt.subplot(gs[main_length:h_length, i])
-
+ax1 = ax_l
 for snap_id in snapshots:
+  z = power_spectrum_all[snap_id][data_type][0]['z']
   k_vals = power_spectrum_all[snap_id][data_type][0]['k_vals'] 
   ps_0   = power_spectrum_all[snap_id][data_type][0]['power_spectrum']
   ps_1   = power_spectrum_all[snap_id][data_type][1]['power_spectrum']
 
-  ax1.plot( k_vals, ps_0  )
+  label = r'$z=$' +f'{z:.1f}'
+  ax1.plot( k_vals, ps_0, label= label  )
   ax1.plot( k_vals, ps_1, ls='--'  )
 
 ax1.set_xscale('log')
 ax1.set_yscale('log')
 
+ax1.set_xlabel(r'$k$  [$h\, \mathrm{Mpc^{-1}}$]')
+ax1.set_ylabel(r'$P(k)$')
+
+ax1.legend(frameon=False, loc=3, fontsize=8)
 
 figure_name  = output_dir + 'power_spectrum_comparison_dmo.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
