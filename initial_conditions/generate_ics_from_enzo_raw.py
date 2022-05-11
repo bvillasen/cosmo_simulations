@@ -27,15 +27,20 @@ if 'hydro' in types:     ics_hydro = True
 if 'particles' in types: ics_particles = True
 
 
-# Box Size
-Lbox = 50000.0    #kpc/h
-n_points = 2048
-n_boxes  = 1024
+# # Box Size
+# Lbox = 50000.0    #kpc/h
+# n_points = 2048
+# n_boxes  = 1024
 
 # # Box Size
 # Lbox = 25000.0    #kpc/h
 # n_points = 1024
 # n_boxes  = 128
+
+# Box Size
+Lbox = 25000.0    #kpc/h
+n_points = 2048
+n_boxes  = 512
 
 # # Box Size
 # Lbox = 50000.0    #kpc/h
