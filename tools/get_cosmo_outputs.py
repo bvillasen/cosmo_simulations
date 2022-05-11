@@ -5,17 +5,23 @@ from tools import *
 
 output_dir = home_dir + 'Desktop/' 
 
-n_snaps = 171
-z_start, z_end = 2, 0
-a_start, a_end = 1/(z_start+1), 1/(z_end+1),
-a_vals = np.linspace( a_start, a_end, n_snaps )
-outfile_name = output_dir + f'outputs_cosmo_z_{z_start}_{z_end}_{n_snaps}.txt'
-np.savetxt( outfile_name, a_vals )
-print( f'Saved File: {outfile_name}' )
+# n_snaps = 171
+# z_start, z_end = 2, 0
+# a_start, a_end = 1/(z_start+1), 1/(z_end+1),
+# a_vals = np.linspace( a_start, a_end, n_snaps )
+# outfile_name = output_dir + f'outputs_cosmo_z_{z_start}_{z_end}_{n_snaps}.txt'
+# np.savetxt( outfile_name, a_vals )
+# print( f'Saved File: {outfile_name}' )
 
-z_vals = np.array([ 100., 60., 20., 10.0, 9.0, 8.0, 7.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0, 0.0 ])
+# z_vals = np.array([ 100., 60., 20., 10.0, 9.0, 8.0, 7.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0, 0.0 ])
+# a_vals = 1./(z_vals + 1)
+# outfile_name = output_dir + f'outputs_cosmo_testing_14.txt'
+# np.savetxt( outfile_name, a_vals )
+# print( f'Saved File: {outfile_name}' )
+
+z_vals = np.array([ 100., 60., 40., 20.0, 15.0, 10.0 ])
 a_vals = 1./(z_vals + 1)
-outfile_name = output_dir + f'outputs_cosmo_testing_14.txt'
+outfile_name = output_dir + f'outputs_cosmo_high_z_6.txt'
 np.savetxt( outfile_name, a_vals )
 print( f'Saved File: {outfile_name}' )
 
