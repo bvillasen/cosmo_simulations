@@ -18,8 +18,8 @@ input_dir = sim_dir + 'snapshot_files/'
 output_dir = sim_dir + 'power_spectrum_files/'
 create_directory( output_dir )
 
-# data_type = 'hydro'
-data_type = 'particles'
+data_type = 'hydro'
+# data_type = 'particles'
 
 snap_ids = range(6)
 
