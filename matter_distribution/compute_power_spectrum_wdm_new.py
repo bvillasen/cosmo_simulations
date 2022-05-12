@@ -12,7 +12,7 @@ from power_spectrum_functions import get_power_spectrum
 
 
 sim_name = '1024_25Mpc_cdm'
-base_dir = data_dir + 'cosmo_sims/wdm_sim/'
+base_dir = data_dir + 'cosmo_sims/wdm_sims/'
 sim_dir  = base_dir + f'{sim_name}/'
 input_dir = sim_dir + 'snapshot_files/'
 output_dir = sim_dir + 'power_spectrum_files/'
