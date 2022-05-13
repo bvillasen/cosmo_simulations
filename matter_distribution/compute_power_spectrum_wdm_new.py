@@ -10,7 +10,7 @@ from tools import *
 from load_data import load_snapshot_data_distributed
 from power_spectrum_functions import get_power_spectrum
 
-use_mpi = True
+use_mpi = False
 if use_mpi:
   from mpi4py import MPI
   comm = MPI.COMM_WORLD
