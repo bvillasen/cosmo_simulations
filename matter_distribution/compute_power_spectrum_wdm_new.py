@@ -12,8 +12,10 @@ from power_spectrum_functions import get_power_spectrum
 
 
 # sim_name = '1024_25Mpc_cdm'
+sim_name = '2048_25Mpc_m3.0kev'
+# sim_name = '1024_25Mpc_cdm'
 # sim_name = '1024_25Mpc_m3.0kev'
-sim_name = '1024_25Mpc_dmo_cdm'
+# sim_name = '1024_25Mpc_dmo_cdm'
 # sim_name = '1024_25Mpc_dmo_m3.0kev'
 base_dir = data_dir + 'cosmo_sims/wdm_sims/'
 sim_dir  = base_dir + f'{sim_name}/'
@@ -26,8 +28,11 @@ data_type = 'particles'
 
 snap_ids = range(6)
 
+# n_cells = 1024
+n_cells = 2048
+
+
 Lbox = 25000.0    #kpc/h
-n_cells = 1024
 box_size = [ Lbox, Lbox, Lbox ]
 grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
 precision = np.float64
