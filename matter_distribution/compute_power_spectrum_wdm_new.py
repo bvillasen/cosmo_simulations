@@ -30,7 +30,7 @@ base_dir = data_dir + 'cosmo_sims/wdm_sims/'
 sim_dir  = base_dir + f'{sim_name}/'
 input_dir = sim_dir + 'snapshot_files/'
 output_dir = sim_dir + 'power_spectrum_files/'
-create_directory( output_dir )
+if rank == 0: create_directory( output_dir )
 
 # data_type = 'hydro'
 data_type = 'particles'
