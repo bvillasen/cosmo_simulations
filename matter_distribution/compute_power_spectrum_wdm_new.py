@@ -52,7 +52,7 @@ for snap_id in snap_ids:
   z = snap_data['Current_z']
   density = snap_data['density']
   print( f'Computing Power Spectrum  snap_id: {snap_id}  z:{z}' )
-  power_spectrum, k_vals, n_in_bin = get_power_spectrum( density, Lbox, nx, ny, nz, dx, dy, dz,  n_kSamples=n_bins )
+  power_spectrum, k_vals, n_in_bin = get_power_spectrum( density, Lbox, nx, ny, nz, dx, dy, dz,  n_kSamples=n_bins, fft_shift=False )
   sim_data[snap_id] = { 'z':z, 'k_vals':k_vals, 'power_spectrum':power_spectrum, 'n_in_bin':n_in_bin }
   # break
 
