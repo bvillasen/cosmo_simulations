@@ -11,11 +11,11 @@ def get_delta_k( dens, nx, ny, nz, dx, dy, dz, fft_shift=True ):
   fft_kz = 2*np.pi*np.fft.fftfreq( nz, d=dz )
   if fft_shift:
     FT2 = np.fft.fftshift(FT2)
-    kx = np.fft.fftshift( fft_kx )
-    ky = np.fft.fftshift( fft_ky )
-    kz = np.fft.fftshift( fft_kz )
+    fft_kx = np.fft.fftshift( fft_kx )
+    fft_ky = np.fft.fftshift( fft_ky )
+    fft_kz = np.fft.fftshift( fft_kz )
   delta_k2 = FT2
-  return delta_k2, kx, ky, kz
+  return delta_k2, fft_kx, fft_ky, fft_kz
 
 
 
