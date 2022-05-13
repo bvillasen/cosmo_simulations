@@ -10,9 +10,18 @@ from tools import *
 from load_data import load_snapshot_data_distributed
 from power_spectrum_functions import get_power_spectrum
 
+use_mpi = True
+if use_mpi:
+  from mpi4py import MPI
+  comm = MPI.COMM_WORLD
+  rank = comm.Get_rank()
+  n_procs = comm.Get_size()
+else:
+  rank = 0
+  n_procs = 1
 
-sim_name = '2048_25Mpc_cdm'
-# sim_name = '2048_25Mpc_m3.0kev'
+# sim_name = '2048_25Mpc_cdm'
+sim_name = '2048_25Mpc_m3.0kev'
 # sim_name = '1024_25Mpc_cdm'
 # sim_name = '1024_25Mpc_m3.0kev'
 # sim_name = '1024_25Mpc_dmo_cdm'
@@ -27,6 +36,8 @@ create_directory( output_dir )
 data_type = 'particles'
 
 snap_ids = range(6)
+snaps_local = split_array_mpi( array, rank, n_procs, adjacent=False )
+
 
 # n_cells = 1024
 n_cells = 2048
@@ -44,18 +55,15 @@ nx, ny, nz = grid_size
 dx, dy, dz = Lbox/nx, Lbox/ny, Lbox/nz
 
 
-sim_data = {}
-
-snap_id = snap_ids[0]
-for snap_id in snap_ids:
+for snap_id in snaps_local:
   snap_data = load_snapshot_data_distributed( data_type, fields,  snap_id, input_dir,  box_size, grid_size, precision  )
   z = snap_data['Current_z']
   density = snap_data['density']
   print( f'Computing Power Spectrum  snap_id: {snap_id}  z:{z}' )
   power_spectrum, k_vals, n_in_bin = get_power_spectrum( density, Lbox, nx, ny, nz, dx, dy, dz,  n_kSamples=n_bins, fft_shift=False )
-  sim_data[snap_id] = { 'z':z, 'k_vals':k_vals, 'power_spectrum':power_spectrum, 'n_in_bin':n_in_bin }
+  sim_data = { 'z':z, 'k_vals':k_vals, 'power_spectrum':power_spectrum, 'n_in_bin':n_in_bin }
   # break
 
-file_name = output_dir + f'power_spectrum_{data_type}.pkl'
-Write_Pickle_Directory( sim_data, file_name )
+  file_name = output_dir + f'power_spectrum_{data_type}_{snap_id}.pkl'
+  Write_Pickle_Directory( sim_data, file_name )
 
