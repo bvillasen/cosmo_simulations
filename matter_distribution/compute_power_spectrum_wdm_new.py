@@ -36,7 +36,8 @@ if rank == 0: create_directory( output_dir )
 data_type = 'particles'
 
 snap_ids = range(6)
-snaps_local = split_array_mpi( array, rank, n_procs, adjacent=False )
+snaps_local = split_array_mpi( snap_ids, rank, n_procs, adjacent=False )
+print(f'rank: {rank}  snaps_local: {snaps_local}' )
 
 
 # n_cells = 1024
