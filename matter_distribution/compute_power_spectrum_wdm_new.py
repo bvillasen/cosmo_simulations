@@ -12,15 +12,17 @@ from power_spectrum_functions import get_power_spectrum
 
 
 # sim_name = '1024_25Mpc_cdm'
-sim_name = '1024_25Mpc_m3.0kev'
+# sim_name = '1024_25Mpc_m3.0kev'
+sim_name = '1024_25Mpc_dmo_cdm'
+# sim_name = '1024_25Mpc_dmo_m3.0kev'
 base_dir = data_dir + 'cosmo_sims/wdm_sims/'
 sim_dir  = base_dir + f'{sim_name}/'
 input_dir = sim_dir + 'snapshot_files/'
 output_dir = sim_dir + 'power_spectrum_files/'
 create_directory( output_dir )
 
-data_type = 'hydro'
-# data_type = 'particles'
+# data_type = 'hydro'
+data_type = 'particles'
 
 snap_ids = range(6)
 
