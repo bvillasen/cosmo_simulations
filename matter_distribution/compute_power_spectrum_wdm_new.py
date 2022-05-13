@@ -11,12 +11,12 @@ from load_data import load_snapshot_data_distributed
 from power_spectrum_functions import get_power_spectrum
 
 
-# sim_name = '2048_25Mpc_cdm'
+sim_name = '2048_25Mpc_cdm'
 # sim_name = '2048_25Mpc_m3.0kev'
 # sim_name = '1024_25Mpc_cdm'
 # sim_name = '1024_25Mpc_m3.0kev'
 # sim_name = '1024_25Mpc_dmo_cdm'
-sim_name = '1024_25Mpc_dmo_m3.0kev'
+# sim_name = '1024_25Mpc_dmo_m3.0kev'
 base_dir = data_dir + 'cosmo_sims/wdm_sims/'
 sim_dir  = base_dir + f'{sim_name}/'
 input_dir = sim_dir + 'snapshot_files/'
@@ -28,8 +28,8 @@ data_type = 'particles'
 
 snap_ids = range(6)
 
-n_cells = 1024
-# n_cells = 2048
+# n_cells = 1024
+n_cells = 2048
 
 
 Lbox = 25000.0    #kpc/h
