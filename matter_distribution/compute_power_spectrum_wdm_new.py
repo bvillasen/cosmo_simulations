@@ -20,8 +20,8 @@ else:
   rank = 0
   n_procs = 1
 
-sim_name = '2048_25Mpc_cdm'
-# sim_name = '2048_25Mpc_m3.0kev'
+# sim_name = '2048_25Mpc_cdm'
+sim_name = '2048_25Mpc_m3.0kev'
 # sim_name = '1024_25Mpc_cdm'
 # sim_name = '1024_25Mpc_m3.0kev'
 # sim_name = '1024_25Mpc_dmo_cdm'
