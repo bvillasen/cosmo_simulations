@@ -31,7 +31,7 @@ input_dir = sim_dir + f'snapshot_files_{data_name}_hydro/'
 output_dir  = sim_dir + 'figures/'
 if rank == 0: create_directory( output_dir ) 
 
-slice_start, slice_depth = 64, 128
+slice_start, slice_depth = 0, 256
 
 precision = np.float64
 Lbox = 50000.0    #kpc/h
