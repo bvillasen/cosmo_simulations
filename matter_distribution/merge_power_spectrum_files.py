@@ -10,7 +10,8 @@ from tools import *
 
 
 
-type = 'hydro'
+# type = 'hydro'
+type = 'particles'
 
 # sim_name = '2048_25Mpc_cdm'
 sim_name = '2048_25Mpc_m3.0kev'
