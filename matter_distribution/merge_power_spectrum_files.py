@@ -26,5 +26,5 @@ for indx in range(6):
   data_all[indx] = data
 
 
-file_name = file_name = input_dir + f'power_spectrum_{type}.pkl'
+file_name = file_name = output_dir + f'power_spectrum_{type}.pkl'
 Write_Pickle_Directory( data_all, file_name )
