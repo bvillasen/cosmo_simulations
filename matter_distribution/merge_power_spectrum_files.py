@@ -12,8 +12,8 @@ from tools import *
 
 type = 'hydro'
 
-sim_name = '2048_25Mpc_cdm'
-# sim_name = '2048_25Mpc_m3.0kev'
+# sim_name = '2048_25Mpc_cdm'
+sim_name = '2048_25Mpc_m3.0kev'
 base_dir = data_dir + 'cosmo_sims/wdm_sims/'
 sim_dir  = base_dir + f'{sim_name}/'
 input_dir = sim_dir + 'power_spectrum_files/split/'
