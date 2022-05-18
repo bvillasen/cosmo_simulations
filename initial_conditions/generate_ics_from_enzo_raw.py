@@ -50,7 +50,7 @@ n_boxes  = 128
 L_Mpc = int( Lbox / 1000)
 
 input_dir = data_dir + f'cosmo_sims/ics/enzo/wdm/{n_points}_dmo_{L_Mpc}Mpc_cdm/raw/'
-output_dir = data_dir + f'cosmo_sims/ics/wdm/{n_points}_dmo_{L_Mpc}Mpc_cdm/'
+output_dir = data_dir + f'cosmo_sims/ics/{n_points}_dmo_{L_Mpc}Mpc_cdm/'
 # input_dir = data_dir + f'cosmo_sims/ics/enzo/{n_points}_hydro_{L_Mpc}Mpc_cdm/raw/'
 # output_dir = data_dir + f'cosmo_sims/ics/{n_points}_{L_Mpc}Mpc_cdm/'
 
