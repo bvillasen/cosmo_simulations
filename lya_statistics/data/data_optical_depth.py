@@ -227,5 +227,5 @@ sigma_tau = data_Fan[3]
 type = data_Fan[4]
 indices_data = np.where( type == 0 )
 indices_lower = np.where( type == -1 )
-data_optical_depth_Fan_2006 = {'name': 'Fan et al (2016)', 'z':z[indices_data], 'tau':tau[indices_data], 'tau_sigma':sigma_tau[indices_data] } 
+data_optical_depth_Fan_2006 = {'name': 'Fan et al. (2006)', 'z':z[indices_data], 'tau':tau[indices_data], 'tau_sigma':sigma_tau[indices_data] } 
 data_optical_depth_Fan_2006['lower_limits'] = { 'z':z[indices_lower], 'tau':tau[indices_lower], 'tau_sigma':sigma_tau[indices_lower] }
