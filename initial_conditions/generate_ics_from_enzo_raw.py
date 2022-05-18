@@ -33,7 +33,7 @@ if 'particles' in types: ics_particles = True
 # n_boxes  = 1024
 
 # Box Size
-Lbox = 10000.0    #kpc/h
+Lbox = 5000.0    #kpc/h
 n_points = 1024
 n_boxes  = 128
 
