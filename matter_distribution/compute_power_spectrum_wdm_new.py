@@ -32,8 +32,8 @@ input_dir = sim_dir + 'snapshot_files/'
 output_dir = sim_dir + 'power_spectrum_files/'
 if rank == 0: create_directory( output_dir )
 
-# data_type = 'hydro'
-data_type = 'particles'
+data_type = 'hydro'
+# data_type = 'particles'
 
 snap_ids = np.arange(6)
 snaps_local = split_array_mpi( snap_ids, rank, n_procs, adjacent=False )
