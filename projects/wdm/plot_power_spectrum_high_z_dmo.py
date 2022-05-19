@@ -20,7 +20,8 @@ output_dir = proj_dir + 'figures/pk_high_z/'
 create_directory( output_dir )
 
 n_points = 1024
-sim_base_name = f'{n_points}_25Mpc_dmo'
+L_Mpc = 5
+sim_base_name = f'{n_points}_{L_Mpc}Mpc_dmo'
 sim_names = [ 'cdm', 'm3.0kev' ]
 
 
@@ -33,13 +34,23 @@ sim_names = [ 'cdm', 'm3.0kev' ]
 #   data = Load_Pickle_Directory( file_name )
 #   data_hydro[sim_id] = data
 # 
+# data_type = 'particles'
+# data_particles = {}
+# for sim_id, sim_name in enumerate(sim_names):
+#   input_dir = base_dir + f'{sim_base_name}_{sim_name}/power_spectrum_files/'
+#   file_name = input_dir + f'power_spectrum_{data_type}.pkl'
+#   data = Load_Pickle_Directory( file_name )
+#   data_particles[sim_id] = data
+
 data_type = 'particles'
 data_particles = {}
 for sim_id, sim_name in enumerate(sim_names):
-  input_dir = base_dir + f'{sim_base_name}_{sim_name}/power_spectrum_files/'
-  file_name = input_dir + f'power_spectrum_{data_type}.pkl'
-  data = Load_Pickle_Directory( file_name )
-  data_particles[sim_id] = data
+  data_particles[sim_id] = {}
+  for snap_id in range(6):
+    input_dir = base_dir + f'{sim_base_name}_{sim_name}/power_spectrum_files/'
+    file_name = input_dir + f'power_spectrum_{data_type}_{snap_id}.pkl'
+    data = Load_Pickle_Directory( file_name )
+    data_particles[sim_id][snap_id] = data
   
 diff_particles = {}
 data = data_particles
@@ -155,8 +166,8 @@ ax1.tick_params(axis='both', which='minor', direction='in', color=text_color, la
 ax2.tick_params(axis='both', which='major', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major  )
 ax2.tick_params(axis='both', which='minor', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor  )
   
-figure_name = output_dir + f'flux_ps_1024_dmo.png'
-if diff_log: figure_name = output_dir + f'flux_ps_1024_dmo_log.png'
+figure_name = output_dir + f'flux_ps_1024_{L_Mpc}Mpc_dmo.png'
+if diff_log: figure_name = output_dir + f'flux_ps_1024_{L_Mpc}Mpc_dmo_log.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
 

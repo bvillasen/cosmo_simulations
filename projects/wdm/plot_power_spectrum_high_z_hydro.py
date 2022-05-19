@@ -19,7 +19,7 @@ proj_dir = data_dir + 'projects/wdm/'
 output_dir = proj_dir + 'figures/pk_high_z/'
 create_directory( output_dir )
 
-n_points = 2048
+n_points = 1024
 sim_base_name = f'{n_points}_25Mpc'
 sim_names = [ 'cdm', 'm3.0kev' ]
 
@@ -28,18 +28,23 @@ sim_names = [ 'cdm', 'm3.0kev' ]
 data_type = 'hydro'
 data_hydro = {}
 for sim_id, sim_name in enumerate(sim_names):
-  input_dir = base_dir + f'{sim_base_name}_{sim_name}/power_spectrum_files/'
-  file_name = input_dir + f'power_spectrum_{data_type}.pkl'
-  data = Load_Pickle_Directory( file_name )
-  data_hydro[sim_id] = data
-# 
+  data_hydro[sim_id] = {}
+  for snap_id in range(6):
+    input_dir = base_dir + f'{sim_base_name}_{sim_name}/power_spectrum_files/'
+    file_name = input_dir + f'power_spectrum_{data_type}_{snap_id}.pkl'
+    data = Load_Pickle_Directory( file_name )
+    data_hydro[sim_id][snap_id] = data
+
 data_type = 'particles'
 data_particles = {}
 for sim_id, sim_name in enumerate(sim_names):
-  input_dir = base_dir + f'{sim_base_name}_{sim_name}/power_spectrum_files/'
-  file_name = input_dir + f'power_spectrum_{data_type}.pkl'
-  data = Load_Pickle_Directory( file_name )
-  data_particles[sim_id] = data
+  data_particles[sim_id] = {}
+  for snap_id in range(6):
+    input_dir = base_dir + f'{sim_base_name}_{sim_name}/power_spectrum_files/'
+    file_name = input_dir + f'power_spectrum_{data_type}_{snap_id}.pkl'
+    data = Load_Pickle_Directory( file_name )
+    data_particles[sim_id][snap_id] = data
+
   
 diff_particles = {}
 data = data_particles
