@@ -22,8 +22,8 @@ else:
 
 # sim_name = '2048_25Mpc_cdm'
 # sim_name = '2048_25Mpc_m3.0kev'
-sim_name = '1024_25Mpc_cdm'
-# sim_name = '1024_25Mpc_m3.0kev'
+# sim_name = '1024_25Mpc_cdm'
+sim_name = '1024_25Mpc_m3.0kev'
 # sim_name = '1024_5Mpc_dmo_cdm'
 # sim_name = '1024_5Mpc_dmo_m3.0kev'
 base_dir = data_dir + 'cosmo_sims/wdm_sims/'
