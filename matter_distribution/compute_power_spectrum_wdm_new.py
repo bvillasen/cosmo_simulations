@@ -10,7 +10,7 @@ from tools import *
 from load_data import load_snapshot_data_distributed
 from power_spectrum_functions import get_power_spectrum
 
-use_mpi = False
+use_mpi = True
 if use_mpi:
   from mpi4py import MPI
   comm = MPI.COMM_WORLD
@@ -25,7 +25,7 @@ else:
 # sim_name = '1024_25Mpc_cdm'
 # sim_name = '1024_25Mpc_m3.0kev'
 sim_name = '1024_10Mpc_dmo_cdm'
-# sim_name = '1024_25Mpc_dmo_m3.0kev'
+# sim_name = '1024_10Mpc_dmo_m3.0kev'
 base_dir = data_dir + 'cosmo_sims/wdm_sims/'
 sim_dir  = base_dir + f'{sim_name}/'
 input_dir = sim_dir + 'snapshot_files/'
@@ -65,8 +65,8 @@ for snap_id in snaps_local:
   sim_data = { 'z':z, 'k_vals':k_vals, 'power_spectrum':power_spectrum, 'n_in_bin':n_in_bin }
   data_all[snap_id] = sim_data
   
-  # file_name = output_dir + f'power_spectrum_{data_type}_{snap_id}.pkl'
-  # Write_Pickle_Directory( sim_data, file_name )
+  file_name = output_dir + f'power_spectrum_{data_type}_{snap_id}.pkl'
+  Write_Pickle_Directory( sim_data, file_name )
 
-file_name = output_dir + f'power_spectrum_{data_type}.pkl'
-Write_Pickle_Directory( data_all, file_name )
+# file_name = output_dir + f'power_spectrum_{data_type}.pkl'
+# Write_Pickle_Directory( data_all, file_name )
