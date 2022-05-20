@@ -20,10 +20,12 @@ else:
   rank = 0
   n_procs = 1
 
+sim_name = '2048_10Mpc_dmo_cdm'
+# sim_name = '2048_10Mpc_dmo_m3.0kev'
 # sim_name = '2048_25Mpc_cdm'
 # sim_name = '2048_25Mpc_m3.0kev'
 # sim_name = '1024_25Mpc_cdm'
-sim_name = '1024_25Mpc_m3.0kev'
+# sim_name = '1024_25Mpc_m3.0kev'
 # sim_name = '1024_5Mpc_dmo_cdm'
 # sim_name = '1024_5Mpc_dmo_m3.0kev'
 base_dir = data_dir + 'cosmo_sims/wdm_sims/'
@@ -40,11 +42,11 @@ snaps_local = split_array_mpi( snap_ids, rank, n_procs, adjacent=False )
 print(f'rank: {rank}  snaps_local: {snaps_local}' )
 
 
-n_cells = 1024
-# n_cells = 2048
+# n_cells = 1024
+n_cells = 2048
 
 
-Lbox = 25000.0    #kpc/h
+Lbox = 10000.0    #kpc/h
 box_size = [ Lbox, Lbox, Lbox ]
 grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
 precision = np.float64
