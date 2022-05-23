@@ -31,8 +31,8 @@ n_cells = 256
 snapshots = [1]
 
 sim_dir = '/gpfs/alpine/csc380/proj-shared/cholla/'
-input_dir_0 = sim_dir + 'cosmo_256_50Mpc'
-input_dir_1 = sim_dir + 'trey/summit/'
+input_dir_0 = sim_dir + 'cosmo_256_50Mpc/snapshot_files/'
+input_dir_1 = sim_dir + 'trey/summit/snapshot_files/'
 
 data_type = 'hydro'
 # data_type = 'particles'
