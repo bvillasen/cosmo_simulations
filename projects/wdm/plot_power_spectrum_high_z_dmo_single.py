@@ -24,50 +24,45 @@ L_Mpc = 10
 sim_base_name = f'{n_points}_{L_Mpc}Mpc_dmo'
 sim_names = [ 'cdm', 'm3.0kev' ]
 
+sim_base_names = [ '1024_25Mpc_dmo', '1024_10Mpc_dmo', '1024_5Mpc_dmo', '2048_10Mpc_dmo', ]
+labels = ['N=1024  L=25', 'N=1024  L=10', 'N=1024  L=5', 'N=2048  L=10' ]
+dx_vals = [ 25/1024, 10/1024, 5/1024,  10/2048 ]
 
-
-# data_type = 'hydro'
-# data_hydro = {}
-# for sim_id, sim_name in enumerate(sim_names):
-#   input_dir = base_dir + f'{sim_base_name}_{sim_name}/power_spectrum_files/'
-#   file_name = input_dir + f'power_spectrum_{data_type}.pkl'
-#   data = Load_Pickle_Directory( file_name )
-#   data_hydro[sim_id] = data
-# 
-# data_type = 'particles'
-# data_particles = {}
-# for sim_id, sim_name in enumerate(sim_names):
-#   input_dir = base_dir + f'{sim_base_name}_{sim_name}/power_spectrum_files/'
-#   file_name = input_dir + f'power_spectrum_{data_type}.pkl'
-#   data = Load_Pickle_Directory( file_name )
-#   data_particles[sim_id] = data
+diff_all = {}
+z_id = 0
 
 data_type = 'particles'
-data_particles = {}
-for sim_id, sim_name in enumerate(sim_names):
-  data_particles[sim_id] = {}
-  for snap_id in range(6):
-    input_dir = base_dir + f'{sim_base_name}_{sim_name}/power_spectrum_files/'
-    file_name = input_dir + f'power_spectrum_{data_type}_{snap_id}.pkl'
-    data = Load_Pickle_Directory( file_name )
-    data_particles[sim_id][snap_id] = data
-  
-diff_particles = {}
-data = data_particles
-for i in range(6):
-  z_0 = data[0][i]['z']
-  z_1 = data[1][i]['z']
+
+for data_id, sim_base_name in enumerate(sim_base_names):
+  data_particles = {}
+  for sim_id, sim_name in enumerate(sim_names):
+    data_particles[sim_id] = {}
+    for snap_id in range(6):
+      input_dir = base_dir + f'{sim_base_name}_{sim_name}/power_spectrum_files/'
+      if data_id == 0: 
+        file_name = input_dir + f'power_spectrum_{data_type}.pkl'
+        data = Load_Pickle_Directory( file_name )[snap_id]
+      else:  
+        file_name = input_dir + f'power_spectrum_{data_type}_{snap_id}.pkl'
+        data = Load_Pickle_Directory( file_name )
+      data_particles[sim_id][snap_id] = data
+      
+  diff_particles = {}
+  data = data_particles
+  dx = dx_vals[data_id]
+  z_0 = data[0][z_id]['z']
+  z_1 = data[1][z_id]['z']
   z_diff = z_0 - z_1
   # print( z_diff )
-  k_vals_0 = data[0][i]['k_vals']
-  k_vals_1 = data[1][i]['k_vals']
+  k_vals_0 = data[0][z_id]['k_vals']
+  k_vals_1 = data[1][z_id]['k_vals']
   k_diff =  k_vals_0 - k_vals_1 
   k_vals = k_vals_0
-  pk_0 = data[0][i]['power_spectrum']
-  pk_1 = data[1][i]['power_spectrum']
+  pk_0 = data[0][z_id]['power_spectrum'] * dx**6 
+  pk_1 = data[1][z_id]['power_spectrum'] * dx**6
   pk_diff = ( pk_1 - pk_0 ) / pk_0
-  diff_particles[i] = { 'k_vals':k_vals_0, 'pk_diff':pk_diff }
-  
+  diff_particles = { 'k_vals':k_vals_0, 'pk_diff':pk_diff, 'pk_0':pk_0, 'pk_1':pk_1 }
+  diff_all[data_id] = diff_particles
 
 
 
@@ -127,26 +122,21 @@ ax2.axhline( y=1, ls='--', c='red')
 
 colors = [ 'C0', 'C2', 'C3', 'C4', 'C5', 'C6' ]
 
-for i in range(6):
-  id = 6 - i -1
-  sim_id = 0
-  z = data_particles[sim_id][id]['z']
-  k_0  = data_particles[sim_id][id]['k_vals']
-  pk_0 = data_particles[sim_id][id]['power_spectrum']
-  label = r'$z = {0:.0f}$'.format( z )
+for i in range(4):
+  
+  data = diff_all[i]
+  k = data['k_vals']
+  pk_0 = data['pk_0']
+  pk_1 = data['pk_1']
+  pk_diff = data['pk_diff']
+  label = labels[i]
   c = colors[i]
-  ax1.plot( k_0, pk_0, label=label, c=c )
-
-
-  sim_id = 1
-  z = data_particles[sim_id][id]['z']
-  k_1  = data_particles[sim_id][id]['k_vals']
-  pk_1 = data_particles[sim_id][id]['power_spectrum']
-  c = colors[i]
-  ax1.plot( k_1, pk_1, ls='--', c=c )
+  
+  ax1.plot( k, pk_0, label=label, c=c )
+  ax1.plot( k, pk_1, ls='--', c=c )
 
   diff = pk_1 / pk_0
-  ax2.plot( k_0, diff, c=c )
+  ax2.plot( k, diff, c=c )
 
 
 diff_log =True
@@ -165,16 +155,16 @@ ax1.tick_params(axis='both', which='major', direction='in', color=text_color, la
 ax1.tick_params(axis='both', which='minor', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor  )  
 ax2.tick_params(axis='both', which='major', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major  )
 ax2.tick_params(axis='both', which='minor', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor  )
-  
-figure_name = output_dir + f'flux_ps_{n_points}_{L_Mpc}Mpc_dmo.png'
-if diff_log: figure_name = output_dir + f'flux_ps_{n_points}_{L_Mpc}Mpc_dmo_log.png'
+
+figure_name = output_dir + f'ps_diff_zid_{z_id}.png'
+if diff_log: figure_name = output_dir +  f'ps_diff_zid_{z_id}.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
 
-
-
-
-
-  
-  
-  
+# 
+# 
+# 
+# 
+# 
+# 
+# 
