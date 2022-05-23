@@ -37,8 +37,8 @@ input_dir_0 = sim_dir + 'cosmo_256_50Mpc/snapshot_files/'
 
 
 
-data_type = 'hydro'
-# data_type = 'particles'
+# data_type = 'hydro'
+data_type = 'particles'
 precision = np.float64
 box_size = [ Lbox, Lbox, Lbox ]
 grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
