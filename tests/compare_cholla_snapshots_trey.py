@@ -30,9 +30,12 @@ n_cells = 256
 
 snapshots = [1]
 
+dir_names = [ 'summit', 'crusher', 'crusher-orig' ]
+
 sim_dir = '/gpfs/alpine/csc380/proj-shared/cholla/'
 input_dir_0 = sim_dir + 'cosmo_256_50Mpc/snapshot_files/'
-input_dir_1 = sim_dir + 'trey/summit/snapshot_files/'
+
+
 
 data_type = 'hydro'
 # data_type = 'particles'
@@ -43,35 +46,38 @@ grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
 fields = [ 'density' ]
 diff = {}
 
+for dir_name in dir_names: 
+  print( f'Dir name: {dir_name}' )
+  input_dir_1 = sim_dir + f'trey/{dir_name}/snapshot_files/'
 
-v_min = 1e-10
-for n_snapshot in snapshots:
-  print('')
-  data_0 = load_snapshot_data_distributed( data_type, fields, n_snapshot, input_dir_0, box_size, grid_size,  precision, show_progess=False )
-  data_1 = load_snapshot_data_distributed( data_type, fields, n_snapshot, input_dir_1, box_size, grid_size,  precision, show_progess=False )
-  z_0 = data_0['Current_z']
-  z_1 = data_1['Current_z']
-  if np.abs( z_0 - z_0 ) > 1e-3: print( f'Large redshift difference: {z_0}  {z_1}' )
-  z = z_0
-  
-  if 'z' not in diff: diff['z'] = []
-  diff['z'].append(z)          
-  
-  for field in fields:
-    dens_0 = data_0[field]
-    dens_1 = data_1[field]
+  v_min = 1e-10
+  for n_snapshot in snapshots:
+    print('')
+    data_0 = load_snapshot_data_distributed( data_type, fields, n_snapshot, input_dir_0, box_size, grid_size,  precision, show_progess=False )
+    data_1 = load_snapshot_data_distributed( data_type, fields, n_snapshot, input_dir_1, box_size, grid_size,  precision, show_progess=False )
+    z_0 = data_0['Current_z']
+    z_1 = data_1['Current_z']
+    if np.abs( z_0 - z_0 ) > 1e-3: print( f'Large redshift difference: {z_0}  {z_1}' )
+    z = z_0
     
-    if field in [ 'density' ]:
-      dens_0[dens_0<v_min] = v_min
-      dens_1[dens_1<v_min] = v_min
+    if 'z' not in diff: diff['z'] = []
+    diff['z'].append(z)          
     
-    if field not in diff: diff[field] = [] 
-    diff_vals = np.abs( dens_0 - dens_1 ) / dens_0
-    diff_max = diff_vals.max()
-    diff[field].append( diff_max )
-    
-    id_max = np.where( diff_vals == diff_max )
-    
-    print( f'n: {n_snapshot:03}  z: {z:.2f}  Diff {data_type} {field} min: {diff_vals.min():.3e}   max: {diff_vals.max():.3e}   Mean: {diff_vals.mean():.3e} ')
-    # print( f'n: {n_snapshot:03}  z: {z:.2f}  Diff {data_type} {field} min: {diff_vals.min():.3e}   max: {diff_vals.max():.3e}   Mean: {diff_vals.mean():.3e}   id_diff_max:{id_max}')
+    for field in fields:
+      dens_0 = data_0[field]
+      dens_1 = data_1[field]
+      
+      if field in [ 'density' ]:
+        dens_0[dens_0<v_min] = v_min
+        dens_1[dens_1<v_min] = v_min
+      
+      if field not in diff: diff[field] = [] 
+      diff_vals = np.abs( dens_0 - dens_1 ) / dens_0
+      diff_max = diff_vals.max()
+      diff[field].append( diff_max )
+      
+      id_max = np.where( diff_vals == diff_max )
+      
+      print( f'n: {n_snapshot:03}  z: {z:.2f}  Diff {data_type} {field} min: {diff_vals.min():.3e}   max: {diff_vals.max():.3e}   Mean: {diff_vals.mean():.3e} ')
+      # print( f'n: {n_snapshot:03}  z: {z:.2f}  Diff {data_type} {field} min: {diff_vals.min():.3e}   max: {diff_vals.max():.3e}   Mean: {diff_vals.mean():.3e}   id_diff_max:{id_max}')
 
