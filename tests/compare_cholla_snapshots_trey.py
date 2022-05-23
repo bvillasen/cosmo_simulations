@@ -45,7 +45,7 @@ diff = {}
 
 
 v_min = 1e-10
-for n_snapshot in snapshots_local:
+for n_snapshot in snapshots:
   print('')
   data_0 = load_snapshot_data_distributed( data_type, fields, n_snapshot, input_dir_0, box_size, grid_size,  precision, show_progess=False )
   data_1 = load_snapshot_data_distributed( data_type, fields, n_snapshot, input_dir_1, box_size, grid_size,  precision, show_progess=False )
