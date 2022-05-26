@@ -33,7 +33,8 @@ data_type = args[0]
 # sim_name = '1024_5Mpc_dmo_cdm'
 # sim_name = '1024_5Mpc_dmo_m3.0kev'
 
-sim_name = '1024_25Mpc_cdm'
+# sim_name = '1024_25Mpc_cdm'
+sim_name = '1024_25Mpc_m4.0kev'
 
 density_types = [ 'cic', 'tsc' ]
 
