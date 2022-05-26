@@ -45,7 +45,7 @@ for density_type in density_types:
   if rank == 0: create_directory( output_dir )
 
 
-  snap_ids = np.arange(6)
+  snap_ids = np.arange(9)
   snaps_local = split_array_mpi( snap_ids, rank, n_procs, adjacent=False )
   print(f'rank: {rank}  snaps_local: {snaps_local}' )
 
