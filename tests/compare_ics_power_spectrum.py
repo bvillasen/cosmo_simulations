@@ -68,7 +68,7 @@ fig_width = ncols * figure_width
 h_length = 4
 main_length = 3
 fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(fig_width, fig_height) )
-plt.subplots_adjust( hspace = 0.0, wspace=0.16)
+plt.subplots_adjust( hspace = 0.0, wspace=0.25)
 
 
 i = 0

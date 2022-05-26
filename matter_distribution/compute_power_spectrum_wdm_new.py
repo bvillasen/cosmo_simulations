@@ -20,33 +20,39 @@ else:
   rank = 0
   n_procs = 1
 
+args = sys.argsv[1:]
+data_type = args[0]
+# data_type = 'hydro'
+# data_type = 'particles'
+
 # sim_name = '2048_10Mpc_dmo_cdm'
-sim_name = '2048_10Mpc_dmo_m3.0kev'
+# sim_name = '2048_10Mpc_dmo_m3.0kev'
 # sim_name = '2048_25Mpc_cdm'
 # sim_name = '2048_25Mpc_m3.0kev'
-# sim_name = '1024_25Mpc_cdm'
 # sim_name = '1024_25Mpc_m3.0kev'
 # sim_name = '1024_5Mpc_dmo_cdm'
 # sim_name = '1024_5Mpc_dmo_m3.0kev'
-base_dir = data_dir + 'cosmo_sims/wdm_sims/'
+
+sim_name = '1024_25Mpc_cdm'
+
+density_type = 'cic'
+base_dir = data_dir + f'cosmo_sims/wdm_sims/{density_type}/'
 sim_dir  = base_dir + f'{sim_name}/'
 input_dir = sim_dir + 'snapshot_files/'
 output_dir = sim_dir + 'power_spectrum_files/'
 if rank == 0: create_directory( output_dir )
 
-# data_type = 'hydro'
-data_type = 'particles'
 
 snap_ids = np.arange(6)
 snaps_local = split_array_mpi( snap_ids, rank, n_procs, adjacent=False )
 print(f'rank: {rank}  snaps_local: {snaps_local}' )
 
 
-# n_cells = 1024
-n_cells = 2048
+n_cells = 1024
+# n_cells = 2048
 
 
-Lbox = 10000.0    #kpc/h
+Lbox = 25000.0    #kpc/h
 box_size = [ Lbox, Lbox, Lbox ]
 grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
 precision = np.float64
@@ -69,6 +75,3 @@ for snap_id in snaps_local:
   
   file_name = output_dir + f'power_spectrum_{data_type}_{snap_id}.pkl'
   Write_Pickle_Directory( sim_data, file_name )
-
-# file_name = output_dir + f'power_spectrum_{data_type}.pkl'
-# Write_Pickle_Directory( data_all, file_name )
