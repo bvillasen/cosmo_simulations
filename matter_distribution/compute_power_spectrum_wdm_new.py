@@ -36,7 +36,7 @@ data_type = args[0]
 sim_name = '1024_25Mpc_cdm'
 
 density_type = 'cic'
-base_dir = data_dir + f'cosmo_sims/wdm_sims/'
+base_dir = data_dir + f'cosmo_sims/wdm_sims/tsc/'
 sim_dir  = base_dir + f'{sim_name}/{density_type}/'
 input_dir = sim_dir + 'snapshot_files/'
 output_dir = sim_dir + 'power_spectrum_files/'
