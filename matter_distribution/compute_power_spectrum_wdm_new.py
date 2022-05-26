@@ -20,7 +20,7 @@ else:
   rank = 0
   n_procs = 1
 
-args = sys.argsv[1:]
+args = sys.argv[1:]
 data_type = args[0]
 # data_type = 'hydro'
 # data_type = 'particles'
