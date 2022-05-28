@@ -8,8 +8,8 @@ import pylab
 import pickle
 from matplotlib.legend_handler import HandlerTuple
 import os, sys
-root_dir = os.path.dirname(os.getcwd()) + '/'
-subDirectories = [x[0] for x in os.walk(root_dir)]
+cosmo_dir = os.path.dirname(os.path.dirname(os.getcwd())) + '/'
+subDirectories = [x[0] for x in os.walk(cosmo_dir)]
 sys.path.extend(subDirectories)
 from tools import *
 from load_tabulated_data import load_power_spectrum_table, load_data_irsic, load_data_boera, load_tabulated_data_viel, load_data_boss, load_data_gaikwad
@@ -22,13 +22,14 @@ import matplotlib.font_manager
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
 matplotlib.rcParams['mathtext.rm'] = 'serif'
 
-# ps_data_dir = root_dir + 'lya_statistics/data/'
+# ps_data_dir = cosmo_dir + 'lya_statistics/data/'
+# print(ps_data_dir)
+# 
 
 
 
 
-
-def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_colors=None, sim_data_sets=None, black_background=False, high_z_only=False, plot_ps_normalized=False, ps_data_dir= root_dir + 'lya_statistics/data/', show_middle=False, 
+def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_colors=None, sim_data_sets=None, black_background=False, high_z_only=False, plot_ps_normalized=False, ps_data_dir= cosmo_dir + 'lya_statistics/data/', show_middle=False, 
                               ps_samples=None, data_labels=None, linewidth=1, line_color=None, line_alpha=1, c_boera=None, fig_name=None, plot_interval=False, plot_boeraC=False, HL_key='Highest_Likelihood',
                               plot_diff=False  ):
   
@@ -592,6 +593,8 @@ def Plot_Power_Spectrum_Grid( output_dir, ps_data=None, scales='large', line_col
     if scales == 'small_highz':
       x_min, x_max = 4.5e-3, 2.4e-1
       if indx_i == 0: y_min, y_max = 5e-3, 1e0
+      x_min, x_max = 2.e-3, 2.4e-1
+      if indx_i == 0: y_min, y_max = 7e-3, 1.5e0
       
     if scales == 'small_highz_extended':
       x_min, x_max = 3e-3, 1.7e-1

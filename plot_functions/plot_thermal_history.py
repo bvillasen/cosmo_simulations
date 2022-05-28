@@ -362,6 +362,9 @@ def Plot_T0_evolution( output_dir, data_sets=None, time_axis=None, system='Shamr
   
   text_color  = 'black'
   
+  color_data_1 = 'C3'
+  color_data_0 = orange
+  
   if black_background:
     text_color = 'white'
     
@@ -370,6 +373,9 @@ def Plot_T0_evolution( output_dir, data_sets=None, time_axis=None, system='Shamr
   
   # ymin, ymax = 0.7, 1.7
   # xmin, xmax = 1.95, 7 
+  
+  font_size = 16
+  alpha = 0.5
   
   nrows, ncols = 1, 1
   # plt.rcParams['xtick.top'] = True
@@ -411,11 +417,29 @@ def Plot_T0_evolution( output_dir, data_sets=None, time_axis=None, system='Shamr
       if plot_interval:
         high = data_set['high'] / 1e4
         low  = data_set['low'] / 1e4
-        high[12] *= 1.205
-        low[12] *= 0.995
-        high[14] *= 0.995
-        low[14] *= 1.005
-        low[13] *= 1.002
+        
+        # high[12] *= 1.005
+        # low[12] *= 0.995
+        # high[14] *= 0.995
+        # low[14] *= 1.005
+        # low[13] *= 1.002
+        # # 
+        high[14] *= 1.007
+        high[15] *= 1.008
+        high[16] *= 1.004
+        # 
+        # high[17] *= 1.002
+        # high[14] *= 0.995
+        # low[12] *= 0.993
+        # high[14] *= 0.995
+        # low[14] *= 1.005
+        # low[13] *= 1.002
+        
+        # high[12] *= 1.205
+        # low[12] *= 0.995
+        # high[14] *= 0.995
+        # low[14] *= 1.005
+        # low[13] *= 1.002
         if interpolate_lines:
           high = interp_line_cubic( z0, z_interp, high )
           low  = interp_line_cubic( z0, z_interp, low )
@@ -483,7 +507,7 @@ def Plot_T0_evolution( output_dir, data_sets=None, time_axis=None, system='Shamr
 
   prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts/Helvetica', "Helvetica.ttf"), size=12)
 
-  leg = ax.legend(loc=3, frameon=False, fontsize=26, prop=prop)
+  leg = ax.legend(loc=3, frameon=False, fontsize=11 )
   for text in leg.get_texts():
     plt.setp(text, color = text_color)
 
@@ -511,7 +535,7 @@ def Plot_T0_evolution( output_dir, data_sets=None, time_axis=None, system='Shamr
   
   if annotate_heating_epochs:
     alpha_sec = 0.4
-    z_lims = [ 1, 3, 4.6, 6.2, 10]
+    z_lims = [ 1, 3, 4.6, 6.1, 10]
     
     from colors import dense, gray
     
@@ -521,10 +545,10 @@ def Plot_T0_evolution( output_dir, data_sets=None, time_axis=None, system='Shamr
     c1 = gray[2] 
     c2 = blues[3] 
     c3 = gray[2]
-    ax.fill_between( [ z_lims[0], z_lims[1] ], [0, 0 ], [2, 2], color=c0, alpha=alpha_sec)
-    ax.fill_between( [ z_lims[1], z_lims[2] ], [0, 0 ], [2, 2], color=c1, alpha=alpha_sec)
-    ax.fill_between( [ z_lims[2], z_lims[3] ], [0, 0 ], [2, 2], color=c2, alpha=alpha_sec)
-    ax.fill_between( [ z_lims[3], z_lims[4] ], [0, 0 ], [2, 2], color=c3, alpha=alpha_sec)
+    ax.fill_between( [ z_lims[0], z_lims[1] ], [0, 0 ], [2, 2], color=c0, alpha=alpha_sec, zorder=0)
+    ax.fill_between( [ z_lims[1], z_lims[2] ], [0, 0 ], [2, 2], color=c1, alpha=alpha_sec, zorder=0)
+    ax.fill_between( [ z_lims[2], z_lims[3] ], [0, 0 ], [2, 2], color=c2, alpha=alpha_sec, zorder=0)
+    ax.fill_between( [ z_lims[3], z_lims[4] ], [0, 0 ], [2, 2], color=c3, alpha=alpha_sec, zorder=0)
     
     
     font_size_text = 10
@@ -534,7 +558,7 @@ def Plot_T0_evolution( output_dir, data_sets=None, time_axis=None, system='Shamr
     ax.text(0.8, text_y, text, horizontalalignment='center',  verticalalignment='top', transform=ax.transAxes, fontsize=font_size_text, color='black') 
 
     text = 'Cooling from \ncosmic expansion'
-    ax.text(0.495, text_y, text, horizontalalignment='center',  verticalalignment='top', transform=ax.transAxes, fontsize=font_size_text, color='black') 
+    ax.text(0.485, text_y, text, horizontalalignment='center',  verticalalignment='top', transform=ax.transAxes, fontsize=font_size_text, color='black') 
 
     text = 'Reheating from the\nionization of Helium\nby radiation from\nactive galactic nuclei'
     ax.text(0.26, text_y, text, horizontalalignment='center',  verticalalignment='top', transform=ax.transAxes, fontsize=font_size_text, color='black') 

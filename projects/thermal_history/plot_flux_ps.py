@@ -102,7 +102,7 @@ for z_id in range(n_snapshots):
   ps_mean = ps_mean / correction_ps_factor
   ps_h = ps_h / correction_ps_factor
   ps_l = ps_l / correction_ps_factor
-  if z >= 4.0:
+  if z >= 4.0 and sim_id>1:
     k_l = 0.08
     indices = k_vals >= k_l
     n = indices.sum()
