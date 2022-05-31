@@ -54,7 +54,7 @@ output_dir = sim_dir + 'power_spectrum_files/'
 if rank == 0: create_directory( output_dir )
 
 
-snap_ids = np.arange(9)
+snap_ids = np.arange(6)
 snaps_local = split_array_mpi( snap_ids, rank, n_procs, adjacent=False )
 print(f'rank: {rank}  snaps_local: {snaps_local}' )
 
