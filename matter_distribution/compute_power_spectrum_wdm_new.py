@@ -74,6 +74,11 @@ dx, dy, dz = Lbox/nx, Lbox/ny, Lbox/nz
 
 data_all = {}
 for snap_id in snaps_local:
+  file_name = output_dir + f'power_spectrum_{data_type}_{snap_id}.pkl'
+  if os.path.isfile( file_name ): 
+    print( f'Skipping: {file_name}')
+    continue
+  
   snap_data = load_snapshot_data_distributed( data_type, fields,  snap_id, input_dir,  box_size, grid_size, precision  )
   z = snap_data['Current_z']
   density = snap_data['density']
@@ -82,5 +87,7 @@ for snap_id in snaps_local:
   sim_data = { 'z':z, 'k_vals':k_vals, 'power_spectrum':power_spectrum, 'n_in_bin':n_in_bin }
   data_all[snap_id] = sim_data
   
-  file_name = output_dir + f'power_spectrum_{data_type}_{snap_id}.pkl'
   Write_Pickle_Directory( sim_data, file_name )
+
+
+
