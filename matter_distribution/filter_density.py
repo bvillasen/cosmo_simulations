@@ -77,7 +77,7 @@ for cut_id in ids_local:
   print( ' Computing inverse fft')
   filtered_dm_density  = np.fft.ifftn(FT_dm).real
   filtered_gas_density = np.fft.ifftn(FT_gas).real   
-  file_name = output_dir + f'filtered_density_{cut_id}.h5'
+  file_name = output_dir + f'filtered_density_{snap_id}_{cut_id}.h5'
   file = h5.File( file_name, 'w' )
   file.attrs['z'] = z
   file.attrs['k_cut'] = k_cut
