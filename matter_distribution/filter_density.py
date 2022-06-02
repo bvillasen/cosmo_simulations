@@ -38,7 +38,7 @@ output_dir = sim_dir + 'density_files/'
 if rank == 0: create_directory( output_dir )
 
 
-k_file_name = output_dir + 'k_grid.h5'
+k_file_name = input_dir + 'k_grid.h5'
 print( f'Loading file: {k_file_name}' )
 file = h5.File( k_file_name, 'r' )
 
