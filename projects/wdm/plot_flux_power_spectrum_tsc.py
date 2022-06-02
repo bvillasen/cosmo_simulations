@@ -74,8 +74,8 @@ for sim_name in sim_names:
 
 
 
-flux_pk_data_all = {}
 flux_snapshots = [ 25, 29, 33 ]
+flux_pk_data_all = {}
 for sim_name in sim_names:
   flux_pk_data_all[sim_name] = {}
   for density_type in density_types:
@@ -93,8 +93,26 @@ for sim_name in sim_names:
       k  = k[indices]
       pk = pk * k / np.pi
       flux_pk_data_all[sim_name][density_type][snap_id] = { 'z':z, 'k':k, 'pk':pk }
-      
-        
+
+
+flux_pk_unnorm_data_all = {}
+for sim_name in sim_names:
+  flux_pk_unnorm_data_all[sim_name] = {}
+  for density_type in density_types:
+    flux_pk_unnorm_data_all[sim_name][density_type] = {}
+    for snap_id, n_snap in enumerate(flux_snapshots):
+      file_name = base_dir + f'{sim_base_name}_{sim_name}/{density_type}/flux_power_spectrum/flux_power_spectrum_{n_snap:03}.h5'
+      print( f'Loading File: {file_name}')
+      file = h5.File( file_name, 'r' )
+      z = file.attrs['current_z'][...]
+      pk = file['ps_mean'][...]
+      k  = file['k_vals'][...]
+      file.close()
+      indices = pk > 0
+      pk = pk[indices]
+      k  = k[indices]
+      pk = pk * k / np.pi
+      flux_pk_unnorm_data_all[sim_name][density_type][snap_id] = { 'z':z, 'k':k, 'pk':pk }        
 
 
 
@@ -156,6 +174,8 @@ snap_id = 2
 
 c_cic = 'C0'
 c_tsc = 'C1'
+
+plot_unnorm = False
 
 for i in range(3):
 
@@ -229,6 +249,8 @@ for i in range(3):
   
   if i == 2:
     
+    if plot_unnorm: flux_pk_data_all = flux_pk_unnorm_data_all
+    
     data_cdm_cic = flux_pk_data_all['cdm']['cic'][snap_id]
     data_cdm_tsc = flux_pk_data_all['cdm']['tsc'][snap_id]
     data_wdm_cic = flux_pk_data_all['m4.0kev']['cic'][snap_id]
@@ -288,6 +310,7 @@ for i in range(3):
   ax2.tick_params(axis='both', which='minor', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor  )
 
 figure_name = output_dir + f'flux_ps_{snap_id}.png'
+if plot_unnorm: figure_name = output_dir + f'flux_ps_unnorm_{snap_id}.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
 

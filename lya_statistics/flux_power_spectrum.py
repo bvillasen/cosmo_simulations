@@ -69,7 +69,7 @@ def get_skewer_flux_power_spectrum( vel_Hubble, delta_F, d_log_k=None, n_bins=No
   return bin_centers, power_avrg
 
 
-def Compute_Flux_Power_Spectrum( data_Flux, print_string='', k_edges=None, centers_type='mult_mean' ):
+def Compute_Flux_Power_Spectrum( data_Flux, print_string='', k_edges=None, centers_type='mult_mean',  normalize_by_mean=True ):
   skewers_Flux = data_Flux['skewers_Flux']
   # Flux_mean = data_Flux['Flux_mean']
   Flux_mean = skewers_Flux.mean()
@@ -83,7 +83,8 @@ def Compute_Flux_Power_Spectrum( data_Flux, print_string='', k_edges=None, cente
   start = time.time()
   for skewer_id in range(n_skewers):
     flux = skewers_Flux[skewer_id]
-    delta_flux = flux / Flux_mean 
+    if normalize_by_mean: delta_flux = flux / Flux_mean
+    else: delta_flux = flux 
     k_vals, flux_power_spectrum = get_skewer_flux_power_spectrum( vel_Hubble, delta_flux, d_log_k=d_log_k, k_edges=k_edges, centers_type=centers_type )
     flux_power_spectrum = flux_power_spectrum 
     skewers_power_spectrum.append( flux_power_spectrum )

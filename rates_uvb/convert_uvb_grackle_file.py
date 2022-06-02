@@ -5,6 +5,11 @@ import h5py as h5
 in_file_name =  'data/UVB_rates_V22.h5'
 out_file_name = 'data/uvb_rates_V22.txt'
 
+in_file_name =  'data/CloudyData_UVB_HM2012.h5'
+out_file_name = 'data/uvb_rates_HM12.txt'
+
+
+
 print( f'Loading File: {in_file_name}' )
 file = h5.File( in_file_name, 'r' ) 
 uvb_rates = file['UVBRates']
