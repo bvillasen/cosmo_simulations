@@ -39,13 +39,30 @@ if rank == 0: create_directory( output_dir )
 
 
 k_file_name = input_dir + 'k_grid.h5'
-print( f'Loading file: {k_file_name}' )
+print( f'Loading File: {k_file_name}' )
 file = h5.File( k_file_name, 'r' )
 Kx = file['Kx'][...]
 Ky = file['Ky'][...]
 Kz = file['Kz'][...]
 file.close()
 K_mag = np.sqrt( Kz*Kz + Ky*Ky + Kx*Kx )
-  # 
-  # 
-  # file_name = output_dir + f'fft_density_{data_type}_{snap_id}.pkl'
+  
+  
+snap_id = 5  
+file_name = input_dir + f'fft_density_{data_type}_{snap_id}.pkl'
+print( f'Loading File: {file_name}' )
+file = h5.File( file_name, 'r')
+z = file.attrs['z']
+FT_density = file['FT'][...]
+
+
+k_cut = 300
+print( f'k_cut: {k_cut}' )
+FT = FT_density.copy()
+k_indices =  K_mag >= k_cut
+print(' Filtering')
+FT[indices] = 0
+print( ' Computing inverse fft')
+filtered_density = np.fft.ifftn(FT)   
+
+
