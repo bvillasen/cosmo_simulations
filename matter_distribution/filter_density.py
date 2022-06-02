@@ -33,7 +33,7 @@ density_type = 'cic'
 
 base_dir = data_dir + f'cosmo_sims/wdm_sims/tsc/'
 sim_dir  = base_dir + f'{sim_name}/{density_type}/'
-input_dir = sim_dir + 'snapshot_files/'
+input_dir = sim_dir + 'fft_files/'
 output_dir = sim_dir + 'density_files/'
 if rank == 0: create_directory( output_dir )
 
