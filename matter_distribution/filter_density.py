@@ -61,7 +61,7 @@ print( f'k_cut: {k_cut}' )
 FT = FT_density.copy()
 k_indices =  K_mag >= k_cut
 print(' Filtering')
-FT[indices] = 0
+FT[k_indices] = 0
 print( ' Computing inverse fft')
 filtered_density = np.fft.ifftn(FT)   
 
