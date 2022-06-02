@@ -53,9 +53,9 @@ dx, dy, dz = L_Mpc/nx, L_Mpc/ny, L_Mpc/nz
 # for snap_id in snaps_local:
 snap_id = 0
 file_name = output_dir + f'fft_density_{data_type}_{snap_id}.pkl'
-if os.path.isfile( file_name ): 
-  print( f'Skipping: {file_name}')
-  continue
+# if os.path.isfile( file_name ): 
+#   print( f'Skipping: {file_name}')
+#   continue
 
 snap_data = load_snapshot_data_distributed( data_type, fields,  snap_id, input_dir,  box_size, grid_size, precision  )
 z = snap_data['Current_z']
