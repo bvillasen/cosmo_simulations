@@ -45,6 +45,7 @@ Kx = file['Kx'][...]
 Ky = file['Ky'][...]
 Kz = file['Kz'][...]
 file.close()
+K_mag = np.sqrt( Kz*Kz + Ky*Ky + Kx*Kx )
   # 
   # 
   # file_name = output_dir + f'fft_density_{data_type}_{snap_id}.pkl'
