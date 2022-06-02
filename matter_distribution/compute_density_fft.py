@@ -21,9 +21,9 @@ else:
   n_procs = 1
 
 args = sys.argv[1:]
-# data_type = args[0]
+data_type = args[0]
 # data_type = 'hydro'
-data_type = 'particles'
+# data_type = 'particles'
 
 n_cells = 1024
 L_Mpc = 25
@@ -66,23 +66,22 @@ if not os.path.isfile( k_file_name ):
   k_file.create_dataset( 'Kz', data=Kx )
   k_file.close()
 
-# for snap_id in snaps_local:
-# snap_id = 0
-file_name = output_dir + f'fft_density_{data_type}_{snap_id}.pkl'
-if os.path.isfile( file_name ): 
-  print( f'Skipping: {file_name}')
-  continue
+for snap_id in snaps_local:
+  file_name = output_dir + f'fft_density_{data_type}_{snap_id}.pkl'
+  if os.path.isfile( file_name ): 
+    print( f'Skipping: {file_name}')
+    continue
 
-snap_data = load_snapshot_data_distributed( data_type, fields,  snap_id, input_dir,  box_size, grid_size, precision  )
-z = snap_data['Current_z']
-density = snap_data['density']
+  snap_data = load_snapshot_data_distributed( data_type, fields,  snap_id, input_dir,  box_size, grid_size, precision  )
+  z = snap_data['Current_z']
+  density = snap_data['density']
 
-print( 'Computing density FFT')
-FT = np.fft.fftn( density )
+  print( 'Computing density FFT')
+  FT = np.fft.fftn( density )
 
-file = h5.File( file_name, 'w' )
-file.attrs['z'] = z
-file.create_dataset( 'FT', data=FT )
-file.close()
-print( f'Saved File: {file_name}' )
+  file = h5.File( file_name, 'w' )
+  file.attrs['z'] = z
+  file.create_dataset( 'FT', data=FT )
+  file.close()
+  print( f'Saved File: {file_name}' )
    
