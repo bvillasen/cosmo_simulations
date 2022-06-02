@@ -64,16 +64,19 @@ z = file.attrs['z']
 FT_gas_density = file['FT'][...]
 file.close()
 
-k_cut = 300
-print( f'k_cut: {k_cut}' )
-FT_dm  = FT_dm_density.copy()
-FT_gas = FT_gas_density.copy()
-k_indices =  K_mag >= k_cut
-print(' Filtering')
-FT_dm[k_indices]  = 0
-FT_gas[k_indices] = 0
-print( ' Computing inverse fft')
-filtered_dm_density  = np.fft.ifftn(FT_dm).real
-filtered_gas_density = np.fft.ifftn(FT_gas).real   
+n_vals = 50
+k_cut_vals = np.logspace( -1, 2.36, n_vals ) 
 
-
+# k_cut = 300
+# print( f'k_cut: {k_cut}' )
+# FT_dm  = FT_dm_density.copy()
+# FT_gas = FT_gas_density.copy()
+# k_indices =  K_mag >= k_cut
+# print(' Filtering')
+# FT_dm[k_indices]  = 0
+# FT_gas[k_indices] = 0
+# print( ' Computing inverse fft')
+# filtered_dm_density  = np.fft.ifftn(FT_dm).real
+# filtered_gas_density = np.fft.ifftn(FT_gas).real   
+# 
+# 
