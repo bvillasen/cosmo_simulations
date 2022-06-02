@@ -66,7 +66,7 @@ if rank == 0: create_directory( output_dir )
 
 n_vals = 50
 k_cut_vals = np.logspace( -0.5, 2.36, n_vals ) 
-cut_ids = np.range( cut_ids )
+cut_ids = range( cut_ids )
 ids_local = split_array_mpi( cut_ids, rank, n_procs, adjacent=False )
 print( f'rank: {rank}   ids_local: {ids_local}' ) 
 
