@@ -42,6 +42,7 @@ slice_depth = 256
 
 for cut_id in ids_local:
   file_name = input_dir + f'filtered_density_{snap_id}_{cut_id}.h5'
+  print( f'Loading File: {file_name}' )
   file = h5.File( file_name, 'r' )
   z = file.attrs['z']
   k_cut = file.attrs['k_cut']
