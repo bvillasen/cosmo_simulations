@@ -50,23 +50,35 @@ fields = [ 'density' ]
 nx, ny, nz = grid_size
 dx, dy, dz = L_Mpc/nx, L_Mpc/ny, L_Mpc/nz
 
+k_file_name = output_dir + 'k_grid.h5'
+if not os.path.isfile( k_file_name ):
+  print( 'Computing K ')
+  fft_kx = 2*np.pi*np.fft.fftfreq( nx, d=dx )
+  fft_ky = 2*np.pi*np.fft.fftfreq( ny, d=dy )
+  fft_kz = 2*np.pi*np.fft.fftfreq( nz, d=dz )
+  Kz, Ky, Kx = np.meshgrid( fft_kz, fft_ky, fft_kx )
+  k_file = h5.File( k_file_name, 'w' )
+  k_file.create_dataset( 'fft_kx', data=fft_kx )
+  k_file.create_dataset( 'fft_ky', data=fft_ky )
+  k_file.create_dataset( 'fft_kz', data=fft_ky )
+  k_file.create_dataset( 'Kx', data=Kx )
+  k_file.create_dataset( 'Ky', data=Kx )
+  k_file.create_dataset( 'Kz', data=Kx )
+  k_file.close()
+
 # for snap_id in snaps_local:
-snap_id = 0
-file_name = output_dir + f'fft_density_{data_type}_{snap_id}.pkl'
+# snap_id = 0
+# file_name = output_dir + f'fft_density_{data_type}_{snap_id}.pkl'
 # if os.path.isfile( file_name ): 
 #   print( f'Skipping: {file_name}')
 #   continue
+# 
+# snap_data = load_snapshot_data_distributed( data_type, fields,  snap_id, input_dir,  box_size, grid_size, precision  )
+# z = snap_data['Current_z']
+# density = snap_data['density']
+# 
+# 
+# print( 'Computing density FFT')
+# FT = np.fft.fftn( density )
 
-snap_data = load_snapshot_data_distributed( data_type, fields,  snap_id, input_dir,  box_size, grid_size, precision  )
-z = snap_data['Current_z']
-density = snap_data['density']
-
-FT = np.fft.fftn( density )
-fft_kx = 2*np.pi*np.fft.fftfreq( nx, d=dx )
-fft_ky = 2*np.pi*np.fft.fftfreq( ny, d=dy )
-fft_kz = 2*np.pi*np.fft.fftfreq( nz, d=dz )
-
-Kz, Ky, Kx = np.meshgrid( fft_kz, fft_ky, fft_kx )
-
-
-  
+   
