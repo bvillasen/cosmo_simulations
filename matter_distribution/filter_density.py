@@ -10,7 +10,7 @@ from tools import *
 from load_data import load_snapshot_data_distributed
 from power_spectrum_functions import get_power_spectrum
 
-use_mpi = False
+use_mpi = True
 if use_mpi:
   from mpi4py import MPI
   comm = MPI.COMM_WORLD
@@ -65,7 +65,10 @@ if rank == 0: create_directory( output_dir )
 # file.close()
 
 n_vals = 50
-k_cut_vals = np.logspace( -1, 2.36, n_vals ) 
+k_cut_vals = np.logspace( -0.5, 2.36, n_vals ) 
+cut_ids = np.range( cut_ids )
+ids_local = split_array_mpi( cut_ids, rank, n_procs, adjacent=False )
+print( f'rank: {rank}   ids_local: {ids_local}' ) 
 
 # k_cut = 300
 # print( f'k_cut: {k_cut}' )
