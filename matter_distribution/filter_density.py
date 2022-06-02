@@ -49,20 +49,31 @@ K_mag = np.sqrt( Kz*Kz + Ky*Ky + Kx*Kx )
   
   
 snap_id = 5  
-file_name = input_dir + f'fft_density_{data_type}_{snap_id}.pkl'
+
+file_name = input_dir + f'fft_density_particles_{snap_id}.pkl'
 print( f'Loading File: {file_name}' )
 file = h5.File( file_name, 'r')
 z = file.attrs['z']
-FT_density = file['FT'][...]
+FT_dm_density = file['FT'][...]
+file.close()
 
+file_name = input_dir + f'fft_density_hydro_{snap_id}.pkl'
+print( f'Loading File: {file_name}' )
+file = h5.File( file_name, 'r')
+z = file.attrs['z']
+FT_gas_density = file['FT'][...]
+file.close()
 
 k_cut = 300
 print( f'k_cut: {k_cut}' )
-FT = FT_density.copy()
+FT_dm  = FT_dm_density.copy()
+FT_gas = FT_gas_density.copy()
 k_indices =  K_mag >= k_cut
 print(' Filtering')
-FT[k_indices] = 0
+FT_dm[k_indices]  = 0
+FT_gas[k_indices] = 0
 print( ' Computing inverse fft')
-filtered_density = np.fft.ifftn(FT).real   
+filtered_dm_density  = np.fft.ifftn(FT_dm).real
+filtered_gas_density = np.fft.ifftn(FT_gas).real   
 
 
