@@ -38,31 +38,31 @@ output_dir = sim_dir + 'density_files/'
 if rank == 0: create_directory( output_dir )
 
 
-# k_file_name = input_dir + 'k_grid.h5'
-# print( f'Loading File: {k_file_name}' )
-# file = h5.File( k_file_name, 'r' )
-# Kx = file['Kx'][...]
-# Ky = file['Ky'][...]
-# Kz = file['Kz'][...]
-# file.close()
-# K_mag = np.sqrt( Kz*Kz + Ky*Ky + Kx*Kx )
+k_file_name = input_dir + 'k_grid.h5'
+print( f'Loading File: {k_file_name}' )
+file = h5.File( k_file_name, 'r' )
+Kx = file['Kx'][...]
+Ky = file['Ky'][...]
+Kz = file['Kz'][...]
+file.close()
+K_mag = np.sqrt( Kz*Kz + Ky*Ky + Kx*Kx )
   
   
-# snap_id = 5  
+snap_id = 5  
 
-# file_name = input_dir + f'fft_density_particles_{snap_id}.pkl'
-# print( f'Loading File: {file_name}' )
-# file = h5.File( file_name, 'r')
-# z = file.attrs['z']
-# FT_dm_density = file['FT'][...]
-# file.close()
-# 
-# file_name = input_dir + f'fft_density_hydro_{snap_id}.pkl'
-# print( f'Loading File: {file_name}' )
-# file = h5.File( file_name, 'r')
-# z = file.attrs['z']
-# FT_gas_density = file['FT'][...]
-# file.close()
+file_name = input_dir + f'fft_density_particles_{snap_id}.pkl'
+print( f'Loading File: {file_name}' )
+file = h5.File( file_name, 'r')
+z = file.attrs['z']
+FT_dm_density = file['FT'][...]
+file.close()
+
+file_name = input_dir + f'fft_density_hydro_{snap_id}.pkl'
+print( f'Loading File: {file_name}' )
+file = h5.File( file_name, 'r')
+z = file.attrs['z']
+FT_gas_density = file['FT'][...]
+file.close()
 
 n_vals = 50
 k_cut_vals = np.logspace( -0.5, 2.36, n_vals ) 
@@ -70,16 +70,25 @@ cut_ids = np.arange( n_vals )
 ids_local = split_array_mpi( cut_ids, rank, n_procs, adjacent=False )
 print( f'rank: {rank}   ids_local: {ids_local}' ) 
 
-# k_cut = 300
-# print( f'k_cut: {k_cut}' )
-# FT_dm  = FT_dm_density.copy()
-# FT_gas = FT_gas_density.copy()
-# k_indices =  K_mag >= k_cut
-# print(' Filtering')
-# FT_dm[k_indices]  = 0
-# FT_gas[k_indices] = 0
-# print( ' Computing inverse fft')
-# filtered_dm_density  = np.fft.ifftn(FT_dm).real
-# filtered_gas_density = np.fft.ifftn(FT_gas).real   
-# 
-# 
+for cut_id in ids_local:
+  k_cut = k_cut_vals[cut_id]
+  print( f'k_cut: {k_cut}' )
+  FT_dm  = FT_dm_density.copy()
+  FT_gas = FT_gas_density.copy()
+  k_indices =  K_mag >= k_cut
+  print(' Filtering')
+  FT_dm[k_indices]  = 0
+  FT_gas[k_indices] = 0
+  print( ' Computing inverse fft')
+  filtered_dm_density  = np.fft.ifftn(FT_dm).real
+  filtered_gas_density = np.fft.ifftn(FT_gas).real   
+  file_name = output_dir + f'filtered_density_{cut_id}.h5'
+  file = h5.File( file_name, 'w' )
+  file.attrs['z'] = z
+  file.attrs['k_cut'] = k_cut
+  file.create_dataset( 'dm',  data=filtered_dm_density )
+  file.create_dataset( 'gas', data=filtered_gas_density )
+  file.close()
+  print( f'Saved File: {file_name}' )
+  
+  
