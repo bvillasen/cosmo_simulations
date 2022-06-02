@@ -38,31 +38,31 @@ output_dir = sim_dir + 'density_files/'
 if rank == 0: create_directory( output_dir )
 
 
-k_file_name = input_dir + 'k_grid.h5'
-print( f'Loading File: {k_file_name}' )
-file = h5.File( k_file_name, 'r' )
-Kx = file['Kx'][...]
-Ky = file['Ky'][...]
-Kz = file['Kz'][...]
-file.close()
-K_mag = np.sqrt( Kz*Kz + Ky*Ky + Kx*Kx )
+# k_file_name = input_dir + 'k_grid.h5'
+# print( f'Loading File: {k_file_name}' )
+# file = h5.File( k_file_name, 'r' )
+# Kx = file['Kx'][...]
+# Ky = file['Ky'][...]
+# Kz = file['Kz'][...]
+# file.close()
+# K_mag = np.sqrt( Kz*Kz + Ky*Ky + Kx*Kx )
   
   
-snap_id = 5  
+# snap_id = 5  
 
-file_name = input_dir + f'fft_density_particles_{snap_id}.pkl'
-print( f'Loading File: {file_name}' )
-file = h5.File( file_name, 'r')
-z = file.attrs['z']
-FT_dm_density = file['FT'][...]
-file.close()
-
-file_name = input_dir + f'fft_density_hydro_{snap_id}.pkl'
-print( f'Loading File: {file_name}' )
-file = h5.File( file_name, 'r')
-z = file.attrs['z']
-FT_gas_density = file['FT'][...]
-file.close()
+# file_name = input_dir + f'fft_density_particles_{snap_id}.pkl'
+# print( f'Loading File: {file_name}' )
+# file = h5.File( file_name, 'r')
+# z = file.attrs['z']
+# FT_dm_density = file['FT'][...]
+# file.close()
+# 
+# file_name = input_dir + f'fft_density_hydro_{snap_id}.pkl'
+# print( f'Loading File: {file_name}' )
+# file = h5.File( file_name, 'r')
+# z = file.attrs['z']
+# FT_gas_density = file['FT'][...]
+# file.close()
 
 n_vals = 50
 k_cut_vals = np.logspace( -1, 2.36, n_vals ) 
