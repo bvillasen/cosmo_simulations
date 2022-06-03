@@ -51,7 +51,7 @@ nx, ny, nz = grid_size
 dx, dy, dz = L_Mpc/nx, L_Mpc/ny, L_Mpc/nz
 
 k_file_name = output_dir + 'k_grid.h5'
-if not os.path.isfile( k_file_name ):
+if not os.path.isfile( k_file_name ) and if rank==0:
   print( 'Computing K ')
   fft_kx = 2*np.pi*np.fft.fftfreq( nx, d=dx )
   fft_ky = 2*np.pi*np.fft.fftfreq( ny, d=dy )
@@ -65,6 +65,8 @@ if not os.path.isfile( k_file_name ):
   k_file.create_dataset( 'Ky', data=Ky )
   k_file.create_dataset( 'Kz', data=Kz )
   k_file.close()
+
+comm.Barrier()
 
 for snap_id in snaps_local:
   file_name = output_dir + f'fft_density_{data_type}_{snap_id}.pkl'
