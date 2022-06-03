@@ -76,7 +76,8 @@ for snap_id in snaps_local:
 
   snap_data = load_snapshot_data_distributed( data_type, fields,  snap_id, input_dir,  box_size, grid_size, precision  )
   z = snap_data['Current_z']
-  density = snap_data['density']
+  density = snap_data['density'] 
+  density /= density.mean()
 
   print( 'Computing density FFT')
   FT = np.fft.fftn( density )
