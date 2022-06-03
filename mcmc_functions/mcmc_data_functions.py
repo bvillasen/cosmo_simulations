@@ -385,8 +385,9 @@ def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_rang
     covariance_matrix_global = None
     if data_covariance is not None and data_name in data_covariance['type']:
       covariance_type = data_covariance['type'][data_name]
-      cross_elements_factor = data_covariance['factor'][data_name]
-      print( f' Loading Covariance Matrix: {covariance_type}  cross_elements_factor: {cross_elements_factor}')
+      cross_elements_factor = data_covariance['cross_elements_factor'][data_name]
+      sigma_factor = data_covariance['sigma_factor'][data_name]
+      print( f' Loading Covariance Matrix: {covariance_type}  cross_elements_factor: {cross_elements_factor}  sigma_factor: {sigma_factor}')
       if covariance_type == 'global':  covariance_matrix_global = data_set['full_covariance']
        
       
@@ -490,12 +491,14 @@ def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_rang
         #Append covariance matrix
         if cov_matrix_local is not None: 
           cov_matrix_local = rescale_matrix( cov_matrix_local, cross_elements_factor, 'cross_only')
+          cov_matrix_local *= sigma_factor**2
           covariance_matrices.append(cov_matrix_local) 
           ps_data[data_id]['cov_matrix'] = cov_matrix_local
           
         data_id += 1
     if covariance_matrix_global is not None: 
       covariance_matrix_global = rescale_matrix( covariance_matrix_global, cross_elements_factor, 'cross_only')
+      covariance_matrix_global *= sigma_factor**2
       covariance_matrices.append(covariance_matrix_global) 
   
   k_vals_all         = np.concatenate( data_kvals )

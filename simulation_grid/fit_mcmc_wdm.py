@@ -15,7 +15,7 @@ from plot_mcmc_functions import Plot_Comparable_Data, Plot_MCMC_Stats
 from mcmc_sampling_functions import get_mcmc_model
 from plot_mcmc_corner import Plot_Corner
 
-use_mpi = True
+use_mpi = False
 if use_mpi:
   from mpi4py import MPI
   comm = MPI.COMM_WORLD
@@ -37,7 +37,7 @@ data_ps_sets = [ 'Boera' ]
 # error_type = 'sigma'
 error_type = 'covmatrix'
 
-independent_redshift = True
+independent_redshift = False
 use_inv_wdm = True
 
 fit_name = ''
@@ -48,8 +48,10 @@ for data_set in data_ps_sets:
 fit_name = fit_name[:-1] 
 data_label = data_label[:-3]
 
+sigma_factor = 0.2
+
 fit_name += f'_{error_type}'
-# fit_name += '_noHighK_1_new'
+fit_name += f'_sigma_factor_{sigma_factor}'
 # fit_name += '_noLowK_8'
 
 print(f'Data Label: {data_label} {fit_name}')
@@ -115,7 +117,7 @@ if independent_redshift:
 no_use_delta_p = True 
 
 data_systematic_uncertainties = None
-data_covariance = { 'P(k)': { 'type': { 'Boera':'local',  }, 'factor': { 'Boera':1.0, } } }
+data_covariance = { 'P(k)': { 'type': { 'Boera':'local',  }, 'sigma_factor': { 'Boera':sigma_factor, }, 'cross_elements_factor': { 'Boera':1.0, } } }
 # data_covariance = { 'P(k)': { 'type': { 'BoeraC':'local',  }, 'factor': { 'BoeraC':1.0, } } }
 
 ps_parameters = { 'range':ps_range, 'data_dir':ps_data_dir, 'data_sets':data_ps_sets  }

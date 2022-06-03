@@ -62,8 +62,8 @@ if not os.path.isfile( k_file_name ):
   k_file.create_dataset( 'fft_ky', data=fft_ky )
   k_file.create_dataset( 'fft_kz', data=fft_ky )
   k_file.create_dataset( 'Kx', data=Kx )
-  k_file.create_dataset( 'Ky', data=Kx )
-  k_file.create_dataset( 'Kz', data=Kx )
+  k_file.create_dataset( 'Ky', data=Ky )
+  k_file.create_dataset( 'Kz', data=Kz )
   k_file.close()
 
 for snap_id in snaps_local:
