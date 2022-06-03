@@ -83,6 +83,7 @@ for snap_id in snaps_local:
 
   file = h5.File( file_name, 'w' )
   file.attrs['z'] = z
+  file.attrs['dens_mean'] = density.mean()
   file.create_dataset( 'FT', data=FT )
   file.close()
   print( f'Saved File: {file_name}' )
