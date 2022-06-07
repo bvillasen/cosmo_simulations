@@ -30,7 +30,8 @@ pk_gas = Load_Pickle_Directory( file_name_gas )
 
 
 slice_depth = 256
-cut_id = 40
+cut_id = 46
+# for cut_id in range(50):
 input_dir = sim_dir + 'density_slices/'
 file_name = input_dir + f'filtered_density_{snap_id}_{cut_id}_{slice_depth}.h5'
 print( f'Loading File: {file_name}' )
@@ -63,10 +64,17 @@ text_color  = 'black'
 
 
 fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(figure_width*ncols,6*nrows))
+plt.subplots_adjust( hspace = 0.1, wspace=0.02)
+  
 ax0, ax1, ax2, ax3 = ax_l
 
-ax0.plot( pk_dm['k_vals'], pk_dm['power_spectrum']   * pk_dm['k_vals']**3)
-ax0.plot( pk_gas['k_vals'], pk_gas['power_spectrum'] * pk_gas['k_vals']**3 )
+dx = 25/1025
+ax0.plot( pk_dm['k_vals'], pk_dm['power_spectrum']   * pk_dm['k_vals']**3  * dx**6, label='DM', zorder=2)
+ax0.plot( pk_gas['k_vals'], pk_gas['power_spectrum'] * pk_gas['k_vals']**3 * dx**6, label='Gas', zorder=2 )
+ax0.fill_between( [k_cut, 1000], [1e50, 1e50], [0, 0], color='gray', alpha=0.4, zorder=1)
+ax0.set_xlim( 0.2, 250 )
+ax0.set_ylim( 0.7, 9e3 )
+ax0.legend( loc=2, frameon=False, fontsize=label_size )
 ax0.set_ylabel( r'$k^3 \, P(k) $', fontsize=font_size, color=text_color  )
 ax0.set_xlabel( r'$k$  [$h$ Mpc$^{\mathrm{\mathregular{-1}}}$]', fontsize=font_size, color=text_color )
 ax0.tick_params(axis='both', which='major', direction='in', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major  )
@@ -74,10 +82,35 @@ ax0.tick_params(axis='both', which='minor', direction='in', color=text_color, la
 ax0.set_xscale( 'log')
 ax0.set_yscale( 'log')
 
-ax1.imshow( proj_dm )
+
+cmap = 'inferno'
+vmax = max( proj_dm.max(), proj_gas.max() ) 
+vmin = min( proj_dm.min(), proj_gas.min() )
+im = ax1.imshow( proj_dm, vmin=vmin, vmax=vmax, cmap=cmap )
+cbar = plt.colorbar(im, ax=ax1)
+cbar.set_label( r'$  \log_{10} \, \Delta_\mathrm{DM} $', fontsize=label_size )
+
+im = ax2.imshow( proj_gas, vmin=vmin, vmax=vmax, cmap=cmap )
+cbar = plt.colorbar(im, ax=ax2)
+cbar.set_label( r'$ \log_{10} \, \Delta_\mathrm{gas} $', fontsize=label_size )
 
 
-ax2.imshow( proj_gas )
+ax1.set_title( 'DM overdensity', fontsize=font_size )
+ax2.set_title( 'Gas overdensity', fontsize=font_size )
+ax1.set_xticks([])
+ax1.set_yticks([])
+ax2.set_xticks([])
+ax2.set_yticks([])
+
+delta = 0.4
+ratio = dens_gas / dens_dm - 1
+proj_ratio = ratio.sum( axis=0 ) / nz  
+im = ax3.imshow( proj_ratio, vmin=-delta, vmax=delta, cmap='coolwarm' )
+cbar = plt.colorbar(im, ax=ax3)
+cbar.set_label( r'$\Delta_\mathrm{gas} / \Delta_\mathrm{DM} - 1$', fontsize=label_size )
+ax3.set_xticks([])
+ax3.set_yticks([])
+
 
 figure_name = output_dir + f'filtered_density_{snap_id}_{cut_id}.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )

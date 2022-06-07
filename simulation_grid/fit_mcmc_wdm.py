@@ -90,7 +90,7 @@ custom_data = { 'P(k)': custom_ps_data }
 # sim_ids = [0]
 sim_ids = None
 SG = Simulation_Grid( parameters=Grid_Parameters, sim_params=sim_params, job_params=job_params, dir=root_dir )
-SG.Load_Grid_Analysis_Data( sim_ids=sim_ids, load_pd_fit=True, mcmc_fit_dir='fit_mcmc_delta_0_1.0', FPS_correction=FPS_resolution_correction, custom_data=custom_data )
+SG.Load_Grid_Analysis_Data( sim_ids=sim_ids, load_pd_fit=False, mcmc_fit_dir='fit_mcmc_delta_0_1.0', FPS_correction=FPS_resolution_correction, custom_data=custom_data )
 
 kmax = None
 kmin = None
@@ -117,7 +117,7 @@ if independent_redshift:
 no_use_delta_p = True 
 
 data_systematic_uncertainties = None
-data_covariance = { 'P(k)': { 'type': { 'Boera':'local',  }, 'sigma_factor': { 'Boera':sigma_factor, }, 'cross_elements_factor': { 'Boera':1.0, } } }
+data_covariance = { 'P(k)': { 'type': { 'Boera':'local',  }, 'sigma_factor': { 'Boera':sigma_factor }, 'cross_elements_factor': { 'Boera':1.0, } } }
 # data_covariance = { 'P(k)': { 'type': { 'BoeraC':'local',  }, 'factor': { 'BoeraC':1.0, } } }
 
 ps_parameters = { 'range':ps_range, 'data_dir':ps_data_dir, 'data_sets':data_ps_sets  }

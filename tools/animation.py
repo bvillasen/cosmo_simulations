@@ -8,11 +8,12 @@ from tools import *
 
 
 input_dir = data_dir + 'cosmo_sims/256_50Mpc/figures/phase_diagram/'
+input_dir = data_dir + 'projects/wdm/figures/filtered_density/'
 
 output_dir = home_dir + 'Desktop/'
-base_image_name = 'phase_diagram'
+base_image_name = 'filtered_density_5'
 
-out_anim_name = 'phase_diagram_grackle_cholla'
+out_anim_name = 'filtered_density'
 
 image_names = [ f for f in os.listdir(input_dir) if f.find(base_image_name) >= 0 and os.path.isfile(input_dir+f) ]
 image_names.sort()
@@ -40,7 +41,7 @@ if resize_images:
 
 
 start_frame = 0
-frame_rate = 6
+frame_rate = 2
 
 
 cmd = f'ffmpeg -framerate {frame_rate} -start_number {start_frame}  '

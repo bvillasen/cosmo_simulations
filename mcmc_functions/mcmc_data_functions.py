@@ -492,6 +492,7 @@ def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_rang
         if cov_matrix_local is not None: 
           cov_matrix_local = rescale_matrix( cov_matrix_local, cross_elements_factor, 'cross_only')
           cov_matrix_local *= sigma_factor**2
+          print( f'Multiplied local covariance matrix by sigma factor: {sigma_factor}' )
           covariance_matrices.append(cov_matrix_local) 
           ps_data[data_id]['cov_matrix'] = cov_matrix_local
           
@@ -499,6 +500,7 @@ def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_rang
     if covariance_matrix_global is not None: 
       covariance_matrix_global = rescale_matrix( covariance_matrix_global, cross_elements_factor, 'cross_only')
       covariance_matrix_global *= sigma_factor**2
+      print( f'Multiplied global covariance matrix by sigma factor: {sigma_factor}' )
       covariance_matrices.append(covariance_matrix_global) 
   
   k_vals_all         = np.concatenate( data_kvals )
@@ -519,12 +521,13 @@ def Get_Comparable_Power_Spectrum( ps_data_dir, z_min, z_max, data_sets, ps_rang
     if  systematic_uncertainties is not None and 'modify_diagonal_only' in systematic_uncertainties['P(k)']  and systematic_uncertainties['P(k)']['modify_diagonal_only']: 
       diagonal_only = True
       print( ' WARNING: Systematic uncertainties modyfy only the diagonal of the covariance matrix')
-    for i in range(n):
-      for j in range(n):
-        if diagonal_only and i != j: continue
-        sigma_0 = np.sqrt(diagonal[i] * diagonal[j])
-        sigma_1 = sigma[i] * sigma[j]
-        cov_matrices_all[i,j] *= sigma_1 / sigma_0
+      for i in range(n):
+        for j in range(n):
+          if diagonal_only and i != j: continue
+          sigma_0 = np.sqrt(diagonal[i] * diagonal[j])
+          sigma_1 = sigma[i] * sigma[j]
+          cov_matrices_all[i,j] *= sigma_1 / sigma_0 
+      cov_matrices_all *= sigma_factor**2
     ps_data_out['P(k)']['covariance_matrix']  = cov_matrices_all
   n_data_points = len( k_vals_all )
   print( f' N data points: {n_data_points}' )

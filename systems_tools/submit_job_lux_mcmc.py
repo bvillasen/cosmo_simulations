@@ -6,7 +6,7 @@ sys.path.append( root_dir + 'tools' )
 from tools import *
 
 
-job_name  = 'thermal_cdm' 
+job_name  = 'wdm_1.0' 
 n_mpi_tasks = 1
 n_nodes = 1
 n_tasks_per_node = 1
@@ -16,11 +16,11 @@ command = 'python'
 job_dir = home_dir + 'cosmo_simulations/simulation_grid/'
 command_params = 'fit_mcmc_wdm.py'
 
-# partition = 'comp-astro'
+partition = 'comp-astro'
 # partition = 'gpuq'
-partition = 'cpuq'
+# partition = 'cpuq'
 work_directory = '/home/brvillas/jobs/'
-output = work_directory + 'run_output_mcmc_wdm.log'
+output = work_directory + 'run_output_mcmc_wdm_sigma0.2.log'
 create_directory( work_directory )
 
 submit_str = f"""#!/bin/bash          
