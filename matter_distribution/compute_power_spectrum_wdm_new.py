@@ -33,10 +33,10 @@ data_type = args[0]
 # sim_name = '1024_5Mpc_dmo_cdm'
 # sim_name = '1024_5Mpc_dmo_m3.0kev'
 
-n_cells = 2048
-L_Mpc = 5
+n_cells = 1024
+L_Mpc = 25
 
-sim_name = f'{n_cells}_{L_Mpc}Mpc_cdm'
+sim_name = f'{n_cells}_{L_Mpc}Mpc_cdm_HM12'
 
 # density_types = [ 'cic', 'tsc' ]
 
@@ -54,7 +54,7 @@ output_dir = sim_dir + 'power_spectrum_files/'
 if rank == 0: create_directory( output_dir )
 
 
-snap_ids = np.arange(6)
+snap_ids = np.arange(9)
 snaps_local = split_array_mpi( snap_ids, rank, n_procs, adjacent=False )
 print(f'rank: {rank}  snaps_local: {snaps_local}' )
 
