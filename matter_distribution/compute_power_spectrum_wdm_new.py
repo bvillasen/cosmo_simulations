@@ -36,7 +36,7 @@ data_type = args[0]
 n_cells = 1024
 L_Mpc = 25
 
-sim_name = f'{n_cells}_{L_Mpc}Mpc_m4.0_HM12'
+sim_name = f'{n_cells}_{L_Mpc}Mpc_m4.0kev_HM12'
 
 # density_types = [ 'cic', 'tsc' ]
 
