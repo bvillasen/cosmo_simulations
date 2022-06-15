@@ -14,7 +14,7 @@ sys.path.extend(subDirectories)
 from load_data import load_snapshot_data_distributed
 from tools import *
 
-use_mpi = False
+use_mpi = True
 if use_mpi :
   from mpi4py import MPI
   comm = MPI.COMM_WORLD
@@ -47,30 +47,31 @@ n_slices = n_points // slice_depth
 slices = np.linspace( 0, n_slices-1, n_slices, dtype=int )
 slices_local = split_array_mpi( slices, rank, nprocs )
 print( f' Rank: {rank}  slices_local:{slices_local}' )
-# slice_id = 0
-# 
-# slice_start = slice_id * slice_depth
-# 
-# start = max( 0, slice_start )
-# end   = min( n_points, slice_start+slice_depth )
-# subgrid = [ [start, end], [0, n_points], [0, n_points] ]
-# 
-# n_snap = 5
-# data_snap = load_snapshot_data_distributed( data_type, fields, n_snap, input_dir, box_size, grid_size,  precision, subgrid=subgrid, show_progess=show_progess )
-# current_z = data_snap['Current_z']
-# 
-# print( f' Slice:  start:{start}   end:{end}' )
-# 
-# out_file_name = output_dir + f'slice_{n_snap}_start{slice_start}_depth{slice_depth}.h5'
-# outfile = h5.File( out_file_name, 'w' )
-# outfile.attrs['current_z'] = current_z
-# 
-# for field in fields:
-#   data = data_snap[field]
-#   data_slice = data 
-#   # data_slice = data[slice_start:end, :, :] 
-#   outfile.create_dataset( field, data=data_slice )
-# 
-# outfile.close()
-# print( f'Saved File: {out_file_name}' )
-# 
+
+for slice_id in slices_local:
+
+  slice_start = slice_id * slice_depth
+
+  start = max( 0, slice_start )
+  end   = min( n_points, slice_start+slice_depth )
+  subgrid = [ [start, end], [0, n_points], [0, n_points] ]
+
+  n_snap = 5
+  data_snap = load_snapshot_data_distributed( data_type, fields, n_snap, input_dir, box_size, grid_size,  precision, subgrid=subgrid, show_progess=show_progess )
+  current_z = data_snap['Current_z']
+
+  print( f' Slice:  start:{start}   end:{end}' )
+
+  out_file_name = output_dir + f'slice_{n_snap}_start{slice_start}_depth{slice_depth}.h5'
+  outfile = h5.File( out_file_name, 'w' )
+  outfile.attrs['current_z'] = current_z
+
+  for field in fields:
+    data = data_snap[field]
+    data_slice = data 
+    # data_slice = data[slice_start:end, :, :] 
+    outfile.create_dataset( field, data=data_slice )
+
+  outfile.close()
+  print( f'Saved File: {out_file_name}' )
+
