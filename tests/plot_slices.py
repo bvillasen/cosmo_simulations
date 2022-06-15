@@ -48,6 +48,8 @@ snapshots = np.arange( 0, 6, 1, dtype=int )
 snapshots_local = split_array_mpi( snapshots, rank, n_procs )
 print( f'rank: {rank}  snapshots_local:{snapshots_local}' )
 
+cmap_dm = 'inferno'
+cmap_gas = 'viridis'
 
 for n_snapshot in snapshots_local:
 
