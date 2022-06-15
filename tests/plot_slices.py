@@ -53,7 +53,7 @@ for n_snapshot in snapshots_local:
 
   slices = {} 
   data_gas = load_snapshot_data_distributed( 'hydro', fields, n_snapshot, input_dir, box_size, grid_size, precision, subgrid=subgrid, show_progess=True )
-  data_particles = load_snapshot_data_distributed( 'particles', fields, n_snapshot, input_dir, box_size, grid_size, precision, subgrid=subgrid, show_progess=True )
+  data_dm  = load_snapshot_data_distributed( 'particles', fields, n_snapshot, input_dir, box_size, grid_size, precision, subgrid=subgrid, show_progess=True )
   z = data_gas['Current_z']
   dens_gas = data_gas['density']
   dens_dm  = data_dm['density']
