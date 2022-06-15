@@ -25,9 +25,15 @@ output_dir = home_dir + 'Desktop/'
 # np.savetxt( outfile_name, a_vals )
 # print( f'Saved File: {outfile_name}' )
 
-z_vals = np.array([ 100., 60., 40., 20.0, 8.0, 6.0, 5.0, 4.6, 4.2 ])
+# z_vals = np.array([ 100., 60., 40., 20.0, 8.0, 6.0, 5.0, 4.6, 4.2 ])
+# a_vals = 1./(z_vals + 1)
+# outfile_name = output_dir + f'outputs_cosmo_high_z_boera.txt'
+# np.savetxt( outfile_name, a_vals )
+# print( f'Saved File: {outfile_name}' )
+
+z_vals = np.array([ 50.0, 20.0, 8.0, 6.0, 5.0, 4.0 ])
 a_vals = 1./(z_vals + 1)
-outfile_name = output_dir + f'outputs_cosmo_high_z_boera.txt'
+outfile_name = output_dir + f'outputs_cosmo.txt'
 np.savetxt( outfile_name, a_vals )
 print( f'Saved File: {outfile_name}' )
 

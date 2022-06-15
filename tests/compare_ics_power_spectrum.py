@@ -12,13 +12,16 @@ from load_data import load_snapshot_data_distributed
 from power_spectrum_functions import get_power_spectrum
 
 
-sim_dir = data_dir + 'cosmo_sims/test_ics/'
-input_dir_0 = sim_dir + 'snapshot_files_music_hydro/'
-input_dir_1 = sim_dir + 'snapshot_files_python_hydro/'
+sim_dir = data_dir + 'cosmo_sims/cholla_cosmo_ics/'
+input_dir_0 = sim_dir + 'snapshot_files_music/'
+input_dir_1 = sim_dir + 'snapshot_files/'
 input_dirs = [ input_dir_0, input_dir_1 ]
 
 output_dir = sim_dir + 'figures/'
 create_directory( output_dir ) 
+
+name = 'real_filter'
+ics_ps = Load_Pickle_Directory( sim_dir + f'ics_python/ics_power_spectrum_{name}.pkl')
 
 data_type = 'particles'
 fields = [ 'density' ]
@@ -70,20 +73,24 @@ main_length = 3
 fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(fig_width, fig_height) )
 plt.subplots_adjust( hspace = 0.0, wspace=0.25)
 
+plot_python = False
 
 i = 0
 data_type = 'particles' 
 ax1 = ax_l[i]
+
 
 for snap_id in snapshots:
   z = power_spectrum_all[snap_id][data_type][0]['z'] 
   k_vals = power_spectrum_all[snap_id][data_type][0]['k_vals'] 
   ps_0   = power_spectrum_all[snap_id][data_type][0]['power_spectrum']
   ps_1   = power_spectrum_all[snap_id][data_type][1]['power_spectrum']
-
+  
+  c = f'C{snap_id}'
   label = r'$z=$' +f'{z:.1f}'
-  ax1.plot( k_vals, ps_0, label=label  )
-  ax1.plot( k_vals, ps_1, ls='--'  )
+  ax1.plot( k_vals, ps_0, c=c, label=label  )
+  ax1.plot( k_vals, ps_1, c=c, ls='--'  )
+  if plot_python: ax1.plot( ics_ps['k_vals'], ics_ps['ps_dm'] )
 
 ax1.set_xlabel(r'$k$  [$h\, \mathrm{Mpc^{-1}}$]')
 ax1.set_ylabel(r'DM $P(k)$')
@@ -105,9 +112,12 @@ for snap_id in snapshots:
   ps_0   = power_spectrum_all[snap_id][data_type][0]['power_spectrum']
   ps_1   = power_spectrum_all[snap_id][data_type][1]['power_spectrum']
 
+  
+  c = f'C{snap_id}'
   label = r'$z=$' +f'{z:.1f}'
-  ax1.plot( k_vals, ps_0, label=label  )
-  ax1.plot( k_vals, ps_1, ls='--'  )
+  ax1.plot( k_vals, ps_0, c=c, label=label  )
+  ax1.plot( k_vals, ps_1, c=c, ls='--'  )
+  if plot_python: ax1.plot( ics_ps['k_vals'], ics_ps['ps_gas'] )
   
 ax1.set_xlabel(r'$k$  [$h\, \mathrm{Mpc^{-1}}$]')
 ax1.set_ylabel(r'Gas $P(k)$')
@@ -119,7 +129,7 @@ ax1.set_yscale('log')
 
 ax1.legend(frameon=False, loc=3, fontsize=8)
 
-figure_name  = output_dir + 'power_spectrum_comparison_hydro.png'
+figure_name  = output_dir + f'power_spectrum_comparison_CHOLLA_chemistry.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
 
