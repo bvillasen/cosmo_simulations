@@ -45,7 +45,7 @@ slice_depth = 128
 
 n_slices = n_points // slice_depth
 slices = np.linspace( 0, n_slices-1, n_slices, dtype=int )
-slices_local = split_array_mpi( slices, rank, n_procs )
+slices_local = split_array_mpi( slices, rank, nprocs )
 print( f' Rank: {rank}  slices_local:{slices_local}' )
 # slice_id = 0
 # 
