@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from mpl_toolkits.axes_grid1 import ImageGrid
 import pickle
-root_dir = os.path.dirname(os.getcwd()) + '/'
+root_dir = os.path.dirname(os.path.dirname(os.getcwd())) + '/'
 subDirectories = [x[0] for x in os.walk(root_dir)]
 sys.path.extend(subDirectories)
 from load_data import load_snapshot_data_distributed
