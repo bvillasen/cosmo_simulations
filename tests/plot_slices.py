@@ -61,6 +61,9 @@ for n_snapshot in snapshots_local:
   slice_gas = dens_gas.sum( axis=0 ) / slice_depth
   slice_dm  = dens_dm.sum( axis=0 ) / slice_depth
   
+  slice_gas = np.log10( slice_gas )
+  slice_dm  = np.log10( slice_dm )
+  
   label_size = 16
   figure_text_size = 16
   tick_label_size_major = 15
