@@ -85,7 +85,7 @@ for n_snapshot in snapshots_local:
 
 
   ax_l[0].imshow( slice_dm, cmap=cmap_dm )
-  ax_l[1].imshow( slice_dm, cmap=cmap_gas )
+  ax_l[1].imshow( slice_gas, cmap=cmap_gas )
   ax_l[0].text(0.1, 0.93, r'$z=${0:.1f}'.format(z), horizontalalignment='center',  verticalalignment='center', transform=ax_l[0].transAxes, fontsize=figure_text_size, color=text_color) 
     
   for i in range(2):
@@ -93,7 +93,6 @@ for n_snapshot in snapshots_local:
     ax_l[i].set_yticks([])
 
   figure_name = output_dir + f'slice_{n_snapshot}.png' 
-  if absolute_difference: figure_name = output_dir + f'slices_comparison_absolute_{n_snapshot}.png'
   fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
   print( f'Saved Figure: {figure_name}' )
 
