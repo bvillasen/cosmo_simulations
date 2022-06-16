@@ -27,7 +27,7 @@ else:
 show_progess = False
 if rank == 0: show_progess = True
 
-sim_dir    = data_dir + f'cosmo_sims/cholla_ics/2048_25Mpc/'
+sim_dir    = data_dir + f'cosmo_sims/2048_25Mpc_V22/'
 input_dir  = sim_dir + 'snapshot_files/'
 output_dir = sim_dir + 'slices_gas_density/'
 if rank == 0: create_directory( output_dir )
