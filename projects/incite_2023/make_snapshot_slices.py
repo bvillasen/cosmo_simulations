@@ -48,6 +48,7 @@ slices = np.linspace( 0, n_slices-1, n_slices, dtype=int )
 slices_local = split_array_mpi( slices, rank, nprocs )
 print( f' Rank: {rank}  slices_local:{slices_local}' )
 
+n_snap = 6
 for slice_id in slices_local:
 
   slice_start = slice_id * slice_depth
@@ -56,7 +57,6 @@ for slice_id in slices_local:
   end   = min( n_points, slice_start+slice_depth )
   subgrid = [ [start, end], [0, n_points], [0, n_points] ]
 
-  n_snap = 5
   data_snap = load_snapshot_data_distributed( data_type, fields, n_snap, input_dir, box_size, grid_size,  precision, subgrid=subgrid, show_progess=show_progess )
   current_z = data_snap['Current_z']
 
