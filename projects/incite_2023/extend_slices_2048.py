@@ -7,6 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from mpl_toolkits.axes_grid1 import ImageGrid
+import palettable
 import pickle
 root_dir = os.path.dirname(os.path.dirname(os.getcwd())) + '/'
 subDirectories = [x[0] for x in os.walk(root_dir)]
@@ -28,8 +29,8 @@ show_progess = False
 if rank == 0: show_progess = True
 
 sim_dir    = data_dir + f'cosmo_sims/cholla_ics/2048_25Mpc/'
-input_dir  = sim_dir + 'snapshot_files_crusher/'
-output_dir = sim_dir + 'slices_gas_density_crusher/'
+input_dir = sim_dir + 'slices_gas_density/'
+output_dir  = sim_dir + 'slices_gas_density_extended/'
 if rank == 0: create_directory( output_dir )
   
 n_points = 2048
@@ -41,37 +42,40 @@ precision = np.float32
 fields = [ 'density' ]
 data_type = 'hydro'
 
-slice_depth = 128 
+slice_depth = 1024
 
 n_slices = n_points // slice_depth
 slices = np.linspace( 0, n_slices-1, n_slices, dtype=int )
 slices_local = split_array_mpi( slices, rank, nprocs )
 print( f' Rank: {rank}  slices_local:{slices_local}' )
 
-for slice_id in slices_local:
+n_snap = 5
 
+for slice_id in slices_local:
   slice_start = slice_id * slice_depth
 
-  start = max( 0, slice_start )
-  end   = min( n_points, slice_start+slice_depth )
-  subgrid = [ [start, end], [0, n_points], [0, n_points] ]
+  file_name = input_dir + f'slice_{n_snap}_start{slice_start}_depth{slice_depth}.h5'
+  print( f'Loading File: {file_name}' )
+  file = h5.File( file_name, 'r' )
 
-  n_snap = 5
-  data_snap = load_snapshot_data_distributed( data_type, fields, n_snap, input_dir, box_size, grid_size,  precision, subgrid=subgrid, show_progess=show_progess )
-  current_z = data_snap['Current_z']
-
-  print( f' Slice:  start:{start}   end:{end}' )
-
-  out_file_name = output_dir + f'slice_{n_snap}_start{slice_start}_depth{slice_depth}.h5'
-  outfile = h5.File( out_file_name, 'w' )
-  outfile.attrs['current_z'] = current_z
-
-  for field in fields:
-    data = data_snap[field]
-    data_slice = data 
-    # data_slice = data[slice_start:end, :, :] 
-    outfile.create_dataset( field, data=data_slice )
-
-  outfile.close()
-  print( f'Saved File: {out_file_name}' )
+  density = file['density'][...]
+  file.close()
+  
+  nz, ny, nx = density.shape
+  
+  n_ghost = 256
+  density_extended = np.zeros( [nz, ny+2*n_ghost, nx+2*n_ghost ])
+  density_extended[:, n_ghost:-n_ghost, n_ghost:-n_ghost] = density
+  density_extended[:,:n_ghost,:] = density_extended[:,-2*n_ghost:-n_ghost,:]
+  density_extended[:,-n_ghost:,:] = density_extended[:,n_ghost:2*n_ghost,:]
+  density_extended[:,:,:n_ghost] = density_extended[:,:,-2*n_ghost:-n_ghost]
+  density_extended[:,:,-n_ghost:] = density_extended[:,:,n_ghost:2*n_ghost] 
+  
+  
+  file_name = output_dir + f'slice_{n_snap}_start{slice_start}_depth{slice_depth}.h5'
+  file = h5.File( file_name, 'w' )
+  
+  file.create_dataset( 'density', data=density_extended )
+  file.close()
+  print( f'Saved File: {file_name}' )
 
