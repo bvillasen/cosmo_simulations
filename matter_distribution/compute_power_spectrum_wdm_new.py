@@ -33,10 +33,10 @@ data_type = args[0]
 # sim_name = '1024_5Mpc_dmo_cdm'
 # sim_name = '1024_5Mpc_dmo_m3.0kev'
 
-n_cells = 1024
-L_Mpc = 25
+n_cells = 2048
+L_Mpc = 5
 
-sim_name = f'{n_cells}_{L_Mpc}Mpc_cdm_adiabatic'
+sim_name = f'{n_cells}_{L_Mpc}Mpc_cdm_HM12'
 
 # density_types = [ 'cic', 'tsc' ]
 
@@ -88,6 +88,4 @@ for snap_id in snaps_local:
   data_all[snap_id] = sim_data
   
   Write_Pickle_Directory( sim_data, file_name )
-
-
 
