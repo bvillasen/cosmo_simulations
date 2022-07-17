@@ -22,7 +22,8 @@ from matrix_functions import Merge_Matrices
 
 
 ps_data_dir = cosmo_dir + 'lya_statistics/data/'
-data_name = 'fit_results_P(k)+_Boera'
+# data_name = 'fit_results_P(k)+_Boera'
+# data_name = 'fit_results_P(k)+_Boera_covmatrix_RT_corrected'
 base_dir = data_dir + 'cosmo_sims/sim_grid/'
 
 proj_dir = data_dir + 'projects/wdm/'
@@ -34,7 +35,7 @@ data_boera = load_data_boera( dir_data_boera )
 
 error_type = 'covmatrix'
 grid_names = [ '1024_wdmgrid_extended_beta', '1024_wdmgrid_cdm_extended_beta' ] 
-data_name = f'fit_results_P(k)+_Boera_{error_type}'
+data_name = f'fit_results_P(k)+_Boera_{error_type}_RT_corrected'
 data_labels = [ 'Boera Sigma', 'Boera Cov M' ]
 
 HL_key = 'Highest_Likelihood'
@@ -252,7 +253,8 @@ for data_id in data_all:
 fig.align_ylabels()
   
   
-figure_name = output_dir + f'flux_ps_wdm.png'
+# figure_name = output_dir + f'flux_ps_wdm.png'
+figure_name = output_dir + f'flux_ps_wdm_RT_corrected.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
 

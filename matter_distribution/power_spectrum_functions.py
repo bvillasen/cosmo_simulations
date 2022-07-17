@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 
 def get_delta_k( dens, nx, ny, nz, dx, dy, dz, fft_shift=True ):
   delta_dens = ( dens - dens.mean() ) / dens.mean()
-  FT = np.fft.fftn( delta_dens,  )
+  d3 = dx * dy * dz
+  FT = np.fft.fftn( delta_dens * d3 )
   FT2 = FT.real*FT.real + FT.imag*FT.imag
   fft_kx = 2*np.pi*np.fft.fftfreq( nx, d=dx )
   fft_ky = 2*np.pi*np.fft.fftfreq( ny, d=dy )
@@ -23,7 +24,8 @@ def get_delta_k_memory_save( dens, nx, ny, nz, dx, dy, dz, fft_shift=True ):
   dens_mean = dens.mean()
   dens = ( dens - dens_mean ) / dens_mean
   print(' Computing Fourier Transform')
-  FT = np.fft.fftn( dens  )
+  d3 = dx * dy * dz
+  FT = np.fft.fftn( dens * d3  )
   print(' Computing FT Magnitude')
   FT = FT.real*FT.real + FT.imag*FT.imag
   fft_kx = 2*np.pi*np.fft.fftfreq( nx, d=dx )

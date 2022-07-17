@@ -9,11 +9,12 @@ from tools import *
 from plot_mcmc_corner import Plot_Corner
 from mcmc_sampling_functions import Get_Highest_Likelihood_Params
 
-grid_name = '1024_wdmgrid_cdm_extended_beta'
+grid_name = '1024_wdmgrid_extended_beta'
 grid_names = [ grid_name ]
 
 data_name = 'fit_results_P(k)+_Boera_covmatrix_RT_corrected'
 data_labels = [ '' ]
+
 
 proj_dir = data_dir + 'projects/wdm/'
 output_dir = proj_dir + f'figures/'
@@ -36,15 +37,14 @@ for data_id,grid_name in enumerate(grid_names):
   samples_all['param'][data_id] = param_samples
 
   # # Get the Highest_Likelihood parameter values 
-  params_HL = Get_Highest_Likelihood_Params( param_samples, n_bins=20 )
+  params_HL = Get_Highest_Likelihood_Params( param_samples, n_bins=30 )
   # params_HL = None
   
-  # params_HL[2] = 0.80
+  # params_HL[2] = 0.78
 
   stats = pickle.load( open( stats_file, 'rb' ) )
 
-
-p_names = [ 'scale_H_ion', 'scale_H_Eheat', 'deltaZ_H' ]
+p_names = [ 'inv_wdm_mass', 'scale_H_ion', 'scale_H_Eheat', 'deltaZ_H' ]
 
 param_values = {}
 for p_id, p_name in enumerate(p_names):
@@ -58,25 +58,17 @@ for p_id, p_name in enumerate(p_names):
   param_values[p_name]['value'] = val
   param_values[p_name]['delta_h'] = delta_h
   param_values[p_name]['delta_l'] = delta_l
-  
-  
+
 corner_labels = { 'inv_wdm_mass':r'$m_{\mathrm{WDM}}^{-1}$  [keV$^{-1}$]', 'scale_H_ion': r'$\beta$',
                   'scale_H_Eheat': r'$\alpha_{\mathrm{E}}$', 'deltaZ_H':r'$\Delta z$' }
 
 param_labels = { 'inv_wdm_mass':r'$m_{\mathrm{WDM}}^{-1}$', 'scale_H_ion': r'$\beta$',
                   'scale_H_Eheat': r'$\alpha_{\mathrm{E}}$', 'deltaZ_H':r'$\Delta z$' }
 
-ticks = { 0:[ 0.9,  1.0, 1.1, 1.2,  1.3 ], 1:[  0.8, 0.9, 1.0 ], 2:[ -0.5, -0.25, 0, 0.25, 0.5,]}
-limits = { 0:( 0.9, 1.3 ), 1:( 0.7, 1.1 ), 2:( -0.5, 0.5 )}
+ticks = {0:[0., 0.1, 0.2, 0.3, 0.4], 1:[0.4, 0.6, 0.8, 1.0, 1.2, 01.4], 2:[ 0.6, 0.8, 1.0, 1.2,], 3:[ -0.5, -0.25, 0, 0.25, 0.5,]}
+limits = {0:( 0, 0.45 ), 1:( 0.8, 1.5 ), 2:( 0.4, 1.15 ), 3:( -0.5, 0.5 )}
 
-ticks = { 0:[ 0.9,  1.0, 1.1, 1.2,  1.3, 1.4 ], 1:[ 0.6,  0.7,  0.8, 0.9,  ], 2:[ -0.5, -0.25, 0, 0.25, 0.5,]}
-limits = { 0:( 0.9, 1.4 ), 1:( 0.65, 0.95 ), 2:( -0.5, 0.5 )}
-
-Plot_Corner( samples_all['param'], data_labels, corner_labels, output_dir, n_bins_1D=40, n_bins_2D=40, 
+Plot_Corner( samples_all['param'], data_labels, corner_labels, output_dir, n_bins_1D=20, n_bins_2D=35, 
              lower_mask_factor=500, multiple=True, show_label=True, HL_vals=params_HL, ticks=ticks, 
-             limits=limits, param_values=param_values, black_background=False, figure_name='corner_cdm_RT_corrected.png', 
+             limits=limits, param_values=param_values, black_background=False, figure_name='corner_wdm_RT_corrected.png', 
              param_names=p_names, param_labels=param_labels)
-
-# Plot_Corner( samples_all['param'], data_labels, corner_labels, output_dir, n_bins_1D=40, n_bins_2D=40, 
-#              lower_mask_factor=500, multiple=True, show_label=True, HL_vals=params_HL, ticks=ticks, 
-#              limits=limits, param_values=None, black_background=False, figure_name='corner_cdm.png', show_param_values=True)

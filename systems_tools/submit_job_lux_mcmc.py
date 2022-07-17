@@ -6,7 +6,7 @@ sys.path.append( root_dir + 'tools' )
 from tools import *
 
 
-job_name  = 'wdm_1.0' 
+job_name  = 'wdm_RT_corrected' 
 n_mpi_tasks = 1
 n_nodes = 1
 n_tasks_per_node = 1
@@ -14,13 +14,13 @@ time = '24:00:00'
 command = 'python'
 
 job_dir = home_dir + 'cosmo_simulations/simulation_grid/'
-command_params = 'fit_mcmc_wdm.py'
+command_params = 'fit_mcmc_wdm_RT_corrected.py'
 
 partition = 'comp-astro'
 # partition = 'gpuq'
 # partition = 'cpuq'
 work_directory = '/home/brvillas/jobs/'
-output = work_directory + 'run_output_mcmc_wdm_sigma0.2.log'
+output = work_directory + 'run_output_mcmc_wdm_RT_corrected_sigma_factor_0.5.log'
 create_directory( work_directory )
 
 submit_str = f"""#!/bin/bash          

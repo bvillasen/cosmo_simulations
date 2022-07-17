@@ -7,8 +7,8 @@ from tools import *
 
 
 job_name  = 'thermal_cdm' 
-n_mpi_tasks = 240
-n_nodes = 6
+n_mpi_tasks = 320
+n_nodes = 8
 n_tasks_per_node = 40
 time = '24:00:00'
 command = 'python'
@@ -16,11 +16,11 @@ command = 'python'
 job_dir = home_dir + 'thermal_IGM/'
 command_params = 'run_termal_wdm_chain.py'
 
-partition = 'comp-astro'
+# partition = 'comp-astro'
 # partition = 'gpuq'
-# partition = 'cpuq'
+partition = 'cpuq'
 work_directory = '/home/brvillas/jobs/'
-output = work_directory + 'run_output_thermal_wdm.log'
+output = work_directory + 'run_output_thermal_wdm_RT_corrected_cdm.log'
 create_directory( work_directory )
 
 submit_str = f"""#!/bin/bash          

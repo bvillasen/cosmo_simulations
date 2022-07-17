@@ -148,7 +148,7 @@ gs.update(hspace=0.0, wspace=0.18, )
 
 
 label_l = '1024  L=25 Mpc/h'
-label_l = '2048  L=5 Mpc/h'
+label_h = '2048  L=5 Mpc/h'
 
 for i in range(3):
 

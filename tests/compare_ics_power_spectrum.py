@@ -14,7 +14,7 @@ from power_spectrum_functions import get_power_spectrum
 
 sim_dir = data_dir + 'cosmo_sims/cholla_cosmo_ics/'
 input_dir_0 = sim_dir + 'snapshot_files_music/'
-input_dir_1 = sim_dir + 'snapshot_files/'
+input_dir_1 = sim_dir + 'snapshot_files_cholla/'
 input_dirs = [ input_dir_0, input_dir_1 ]
 
 output_dir = sim_dir + 'figures/'
@@ -37,8 +37,8 @@ Lbox = 50.0    #Mpc/h
 nx, ny, nz = grid_size
 dx, dy, dz = Lbox/nx, Lbox/ny, Lbox/nz
 
-# snapshots = [0]
-snapshots = [ 0, 2, 4, 6, 8, 10, 12, 13  ]
+snapshots = [0]
+# snapshots = [ 0, 2, 4, 6, 8, 10, 12, 13  ]
 snapshots.reverse()
 
 power_spectrum_all = {}
@@ -56,6 +56,11 @@ for snap_id in snapshots:
       print( f'Computing Power Spectrum  snap_id: {snap_id}  z:{z}' )
       power_spectrum, k_vals, n_in_bin = get_power_spectrum( density, Lbox, nx, ny, nz, dx, dy, dz,  n_kSamples=n_bins )
       power_spectrum_all[snap_id][data_type][data_id] = { 'z': z, 'k_vals': k_vals, 'power_spectrum':power_spectrum }
+      
+      data_pk = { 'Lbox':Lbox, 'n_bins':n_bins, 'k_vals':k_vals, 'power_spectrum':power_spectrum      }
+      if data_id == 0: 
+        file_name = sim_dir + f'ics_power_spectrum_music_{data_type}.pkl'
+        Write_Pickle_Directory( data_pk, file_name ) 
 
 z_vals = np.array( z_vals )
 a_vals = 1./( z_vals + 1 )

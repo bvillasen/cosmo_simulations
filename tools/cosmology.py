@@ -5,7 +5,7 @@ from rk4 import RK4_step
 
 class Cosmology:
   
-  def __init__(self, z_start):
+  def __init__(self, z_start=100):
     # Initializa Planck 2018 parameters
     self.H0 = 67.66
     self.Omega_M = 0.3111
@@ -13,7 +13,7 @@ class Cosmology:
     self.Omega_b = 0.0497
     self.h = self.H0 / 100.
     self.rho_crit =  3*(self.H0*1e-3)**2/(8*np.pi* Gcosmo) * Msun / (kpc*100)**3 #kg cm^-3
-    self.rho_gas_mean = self.rho_crit * self.Omega_b   #kg cm^-3
+    self.rho_gas_mean = self.rho_crit * self.Omega_b / Msun * (kpc*100)**3  / self.h**2  #kg cm^-3
     self.z_start = z_start
     self.n_points = 1000000
     self.z_array = None

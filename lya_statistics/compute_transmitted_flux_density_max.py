@@ -14,6 +14,9 @@ from data_optical_depth import data_optical_depth_Bosman_2021
 from load_skewers import load_skewers_multiple_axis
 from spectra_functions import Compute_Skewers_Transmitted_Flux
 from flux_power_spectrum import Compute_Flux_Power_Spectrum
+from constants_cosmo import Mpc, Myear, Gcosmo, Msun, kpc
+from cosmology import Cosmology
+
 
 use_mpi = True
 if use_mpi:
@@ -47,9 +50,26 @@ files_local = split_array_mpi( files, rank, n_procs )
 
 print( f'rank: {rank}  files_local:{files_local}' )
 
+cosmo = Cosmology(z_start=100)
+rho_mean = cosmo.rho_gas_mean / Msun * (kpc*100)**3 / cosmo.h**2 # h^2 Msun / kpc^3
+
+delta_max = 10
+
+# n_file = 25
 for n_file in files_local:
 
   skewer_dataset = Load_Skewers_File( n_file, input_dir, axis_list=axis_list, fields_to_load=field_list )
+
+  density = skewer_dataset['density']
+  HI_density = skewer_dataset['HI_density']
+  HI_fraction = HI_density / density
+  temperature = skewer_dataset['temperature']
+  delta = density / rho_mean
+  indices = ( delta > delta_max ) * ( temperature < 1e5 )
+  dens_cut = density.copy()
+  dens_cut[indices] = rho_mean * delta_max
+  HI_dens_cut = HI_fraction * dens_cut
+
 
   # Cosmology parameters
   cosmology = {}
@@ -57,12 +77,14 @@ for n_file in files_local:
   cosmology['Omega_M'] = skewer_dataset['Omega_M']
   cosmology['Omega_L'] = skewer_dataset['Omega_L']
   cosmology['current_z'] = skewer_dataset['current_z']
-  
-  skewers_data = { field:skewer_dataset[field] for field in field_list }
-  
+
+  skewers_data = { field:skewer_dataset[field] for field in field_list if field != 'HI_density' }
+  skewers_data['HI_density'] = HI_dens_cut
+
+
   data_Flux = Compute_Skewers_Transmitted_Flux( skewers_data, cosmology, box )
-  
-  out_file_name = output_dir + f'lya_flux_{n_file:03}.h5'
+
+  out_file_name = output_dir + f'lya_flux_{n_file:03}_delta_max_{delta_max}.h5'
   file = h5.File( out_file_name, 'w' )
   file.attrs['current_z'] = skewer_dataset['current_z']
   file.attrs['Flux_mean'] = data_Flux['Flux_mean']

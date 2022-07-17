@@ -57,7 +57,7 @@ def get_HPI_2D( hist_2D, frac_final ):
 def compute_distribution( values, n_bins=None, log=False, edges=None, normalize_to_bin_width=False, normalize_to_interval=False ):
   if log: values = np.log10( values )
   val_min, val_max = values.min(), values.max()
-  if not edges: edges = np.linspace( val_min, val_max, n_bins+1 )
+  if edges is None: edges = np.linspace( val_min, val_max, n_bins+1 )
   hist, edges = np.histogram( values, bins=edges )
   # print( edges )
   hist = hist.astype( np.float )
@@ -75,6 +75,7 @@ def compute_distribution( values, n_bins=None, log=False, edges=None, normalize_
   if normalize_to_interval:
     interval = centers[-1] - centers[0]
     distribution /= interval
+  distribution /= distribution.sum()
   return distribution, centers
 
 
@@ -104,6 +105,7 @@ def get_highest_probability_interval( bin_centers, distribution, fill_sum, log=F
   n = len( distribution )
   v_max = distribution.max()
   id_max = np.where( distribution == v_max )[0]
+  print( f'id_max: {id_max}  x_max: {bin_centers[id_max]}  y_max:{v_max}' )
   sum_val = distribution.sum()
   # if len( id_max ) > 1:
   #   print('ERROR: Unable to find unique maximum in distribution')

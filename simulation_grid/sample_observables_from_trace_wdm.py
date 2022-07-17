@@ -30,18 +30,10 @@ independent_redshift = False
 # Directories 
 ps_data_dir = base_dir + '/lya_statistics/data/'
 
-# data_name = 'fit_results_P(k)+_BoeraC'
-# data_name = 'fit_results_P(k)+_Boera'
-# data_name = 'fit_results_P(k)+_Viel'
-# data_name = 'fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_NOT_CORRECTED'
-# data_name = 'fit_results_P(k)+tau_HeII_Boss_Irsic_Boera_systematic'
-# data_name = 'fit_results_P(k)+_Boera_sigma'
+
 # data_name = 'fit_results_P(k)+_Boera_covmatrix'
-data_name = 'fit_results_P(k)+_Boera_covmatrix_noHighK_1_new'
-# data_name = 'fit_results_P(k)+_Boera_covmatrix_noLowK_8'
+data_name = 'fit_results_P(k)+_Boera_covmatrix_RT_corrected'
 
-
-# data_name = 'fit_results_P(k)+_BoeraC_covmatrix'
 
 if independent_redshift: data_name += f'/fit_redshift/redshift_{z_indx}'
 mcmc_dir = root_dir + 'fit_mcmc/'
@@ -126,13 +118,13 @@ if FPS_resolution_correction is not None: file_name = output_dir + 'samples_powe
 samples_ps = Sample_Power_Spectrum_from_Trace( param_samples, data_grid_power_spectrum, SG, hpi_sum=hpi_sum, n_samples=n_samples, params_HL=params_HL, output_trace=True )
 Write_Pickle_Directory( samples_ps, file_name )
 
-# # Obtain distribution of the other fields
-# file_name = output_dir + 'samples_fields.pkl' 
-# # field_list = ['T0', 'gamma', 'tau', 'tau_HeII']
-# field_list = ['T0', 'tau']
-# if load_global_properties: fields_list.append( 'z_ion_H' )
-# samples_fields = Sample_Fields_from_Trace( field_list, param_samples, data_grid, SG, hpi_sum=hpi_sum, n_samples=n_samples, params_HL=params_HL, output_trace=True)
-# Write_Pickle_Directory( samples_fields, file_name )
-# 
+# Obtain distribution of the other fields
+file_name = output_dir + 'samples_fields.pkl' 
+# field_list = ['T0', 'gamma', 'tau', 'tau_HeII']
+field_list = ['T0', 'tau']
+if load_global_properties: fields_list.append( 'z_ion_H' )
+samples_fields = Sample_Fields_from_Trace( field_list, param_samples, data_grid, SG, hpi_sum=hpi_sum, n_samples=n_samples, params_HL=params_HL, output_trace=True)
+Write_Pickle_Directory( samples_fields, file_name )
+
 
 

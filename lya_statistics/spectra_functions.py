@@ -46,7 +46,7 @@ def get_optical_depth_velocity( current_z, H, dr, dv, n_HI_los, vel_peculiar_los
   
   n_points = len( n_HI )
   
-  if space == 'real': velocity = vel_Hubble
+  if space == 'real':       velocity = vel_Hubble
   elif space == 'redshift': velocity = vel_Hubble + vel_peculiar
   else: 
     print ('ERROR: Invalid space ( Real or Redshift )')
@@ -131,7 +131,7 @@ def compute_optical_depth( cosmology, box, skewer, space='redshift', method='err
   
 
 
-def Compute_Skewers_Transmitted_Flux( skewers_data, cosmology, box, print_string='' ):
+def Compute_Skewers_Transmitted_Flux( skewers_data, cosmology, box, print_string='', space='redshift' ):
   # Compute the Transmitted Flux along all the skewers
   n_skewers = skewers_data['HI_density'].shape[0]
   
@@ -147,13 +147,13 @@ def Compute_Skewers_Transmitted_Flux( skewers_data, cosmology, box, print_string
     skewer_data['temperature'] = skewers_data['temperature'][skewer_id]
     skewer_data['velocity']    = skewers_data['los_velocity'][skewer_id]
 
-    tau_los_data = compute_optical_depth( cosmology, box, skewer_data  )
+    tau_los_data = compute_optical_depth( cosmology, box, skewer_data, space=space  )
     los_vel_hubble = tau_los_data['vel_Hubble']
     los_tau = tau_los_data['tau']
     los_F = np.exp( -los_tau )
     skewers_Flux.append( los_F )
     
-    extra_line = f'Computing Flux along Skewers.{print_string}'
+    extra_line = f'Computing {space} Lya Flux along skewers. {print_string}'
     print_progress( skewer_id+1, n_skewers, start, extra_line=extra_line )
   
   skewers_Flux = np.array( skewers_Flux )
