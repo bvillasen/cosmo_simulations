@@ -78,8 +78,8 @@ output_dir = data_dir + f'cosmo_sims/ics/wdm/{n_points}_{L_Mpc}Mpc_wdm_m{m_wdm:.
 # input_dir  = data_dir + 'cosmo_sims/test_ics/ics_music/256_50Mpc/raw/'
 # output_dir = data_dir + 'cosmo_sims/test_ics/ics_music/256_50Mpc/raw/'
 
-input_dir  = data_dir + 'tiled_ics/enzo/16_1Mpc/raw/'
-output_dir = data_dir + 'tiled_ics/16_1Mpc/'
+# input_dir  = data_dir + 'tiled_ics/enzo/16_1Mpc/raw/'
+# output_dir = data_dir + 'tiled_ics/16_1Mpc/'
 
 create_directory( output_dir )
 output_dir += f'ics_{n_boxes}_z100/'

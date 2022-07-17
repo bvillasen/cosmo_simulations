@@ -62,7 +62,8 @@ plt.subplots_adjust( hspace = 0.1, wspace=0.15)
 x_labels = [ r'$\rho_\mathrm{gas}/\bar{\rho}$', r'$\rho_\mathrm{HI}/\bar{\rho}$', r'$\tau$'  ]
 y_labels = [ r'$f(\rho_\mathrm{gas}/\bar{\rho})$', r'$f(\rho_\mathrm{HI}/\bar{\rho})$', r'$f(\tau)$'  ]
 
-x_range = [ [1e-2, 1e2], [1e-2, 1e2], [0, 10] ]
+x_range = [ [1e-2, 1e2], [1e-6, 1e2], [0, 10] ]
+y_max = [ .025, .012, .01]
 
 for i in range(3):
   
@@ -78,6 +79,7 @@ for i in range(3):
     ax.plot( bin_centers, distribution )
   
   if i in [ 0, 1 ]: ax.set_xscale('log')
+  
 
 
   # ax.text(0.1, 0.95, r'$z=${0:.1f}'.format(z), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
@@ -92,7 +94,12 @@ for i in range(3):
   [sp.set_linewidth(border_width) for sp in ax.spines.values()]
   
   ax.set_xlim( x_range[i][0], x_range[i][1] )
+  ax.set_ylim( 0, y_max[i])
 
 figure_name = output_dir + f'distributions.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
+
+
+
+

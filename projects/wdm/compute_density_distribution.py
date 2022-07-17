@@ -52,8 +52,8 @@ for data_name in names:
 
     overdensity = density / cosmo.rho_gas_mean
 
-    v_min, v_max = 0.001, 2e4
-    n_samples = 500
+    v_min, v_max = 0.001, 100
+    n_samples = 100
     bin_edges = np.logspace( np.log10(v_min), np.log10(v_max), n_samples )
     distribution, bin_centers = compute_distribution( overdensity, edges=bin_edges, normalize_to_interval=True )
 
