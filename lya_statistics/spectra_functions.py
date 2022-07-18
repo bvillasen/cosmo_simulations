@@ -6,6 +6,28 @@ root_dir = os.path.dirname(os.getcwd()) + '/'
 sys.path.append( root_dir + 'tools')
 from tools import print_line_flush, print_progress
 
+
+def Rescale_Optical_Depth_To_F_Mean_Diff( alpha, F_mean, tau_los  ):
+  # print(alpha)
+  tau_los_rescaled = tau_los * alpha
+  F_los_rescaled = np.exp( - tau_los_rescaled )
+  F_mean_rescaled = F_los_rescaled.mean()
+  diff = F_mean_rescaled - F_mean
+  return diff
+
+def Rescale_Optical_Depth_To_F_Mean( tau_los, F_mean ):
+  from scipy import optimize
+  tau_eff = -np.log( F_mean )
+  guess = tau_eff / tau_los.mean()
+  alpha = optimize.newton(Rescale_Optical_Depth_To_F_Mean_Diff, guess, args=(F_mean, tau_los ) ) 
+  tau_los_rescaled = alpha * tau_los
+  F_los_rescaled = np.exp( - tau_los_rescaled )
+  F_mean_rescaled = F_los_rescaled.mean()
+  diff = np.abs( F_mean_rescaled - F_mean ) / F_mean
+  if diff > 1e-6: print( 'WARNING: Rescaled F_mean mismatch: {F_mean_rescaled}   {f_mean}')
+  return  tau_los_rescaled, alpha
+
+
 def get_Doppler_parameter( T, chem_type='HI' ):
   if chem_type == 'HI':   M = cgs.M_p
   if chem_type == 'HeII': M = 4 * cgs.M_p

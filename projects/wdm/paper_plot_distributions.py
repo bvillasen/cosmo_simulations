@@ -15,7 +15,8 @@ output_dir = proj_dir + 'figures/'
 
 n_snap = 29
 
-data_names = [ 'cdm', 'wdm_m4.0kev', 'wdm_m3.0kev', 'wdm_m2.0kev', 'wdm_m1.0kev' ]
+data_names = [ 'cdm', 'wdm_m4.0kev', 'wdm_m3.0kev',  'wdm_m2.0kev', 'wdm_m1.0kev' ]
+labels = [ 'CDM', r'$m_\mathrm{WDM}=4.0 \,keV$', r'$m_\mathrm{WDM}=3.0 \,keV$', r'$m_\mathrm{WDM}=2.0 \,keV$', r'$m_\mathrm{WDM}=1.0 \,keV$']
 
 input_dir = base_dir + 'density_distribution/'
 data_density = {}
@@ -56,14 +57,14 @@ text_color = 'k'
 nrows, ncols = 1, 3
 
 fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(figure_width*ncols,6*nrows))
-plt.subplots_adjust( hspace = 0.1, wspace=0.15)
+plt.subplots_adjust( hspace = 0.1, wspace=0.2 )
 
 
 x_labels = [ r'$\rho_\mathrm{gas}/\bar{\rho}$', r'$\rho_\mathrm{HI}/\bar{\rho}$', r'$\tau$'  ]
 y_labels = [ r'$f(\rho_\mathrm{gas}/\bar{\rho})$', r'$f(\rho_\mathrm{HI}/\bar{\rho})$', r'$f(\tau)$'  ]
 
-x_range = [ [1e-2, 1e2], [1e-6, 1e2], [0, 10] ]
-y_max = [ .025, .012, .01]
+x_range = [ [1e-2, 1e2], [1e-6, 1e-1], [0, 10] ]
+y_max = [ .06, .05, .03]
 
 for i in range(3):
   
@@ -75,16 +76,16 @@ for i in range(3):
     bin_centers = data[data_id]['bin_centers']
     distribution = data[data_id]['distribution']
     
-
-    ax.plot( bin_centers, distribution )
+    label = labels[data_id]
+    ax.plot( bin_centers, distribution, label=label )
   
   if i in [ 0, 1 ]: ax.set_xscale('log')
   
 
 
-  # ax.text(0.1, 0.95, r'$z=${0:.1f}'.format(z), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
+  ax.text(0.9, 0.95, r'$z=${0:.1f}'.format(z), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
 
-  ax.legend( frameon=False, loc=1, fontsize=12)
+  if i == 0: ax.legend( frameon=False, loc=4, fontsize=12)
 
   ax.set_ylabel( y_labels[i], fontsize=label_size, color= text_color )  
   ax.set_xlabel( x_labels[i], fontsize=label_size, color=text_color )

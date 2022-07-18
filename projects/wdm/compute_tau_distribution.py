@@ -58,8 +58,8 @@ for data_name in names:
     
     tau = -np.log( skewers_Flux )
      
-    v_min, v_max = 1e-3, 50
-    n_samples = 1000
+    v_min, v_max = 1e-3, 15
+    n_samples = 150
     bin_edges = np.logspace( np.log10(v_min), np.log10(v_max), n_samples )
     distribution, bin_centers = compute_distribution( tau, edges=bin_edges, normalize_to_interval=True )
     

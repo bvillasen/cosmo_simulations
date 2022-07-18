@@ -25,10 +25,10 @@ else:
   rank = 0
   n_procs = 1
 
-base_dir = data_dir + 'cosmo_sims/wdm_sims/50Mpc_boxes/'
+base_dir = data_dir + 'cosmo_sims/wdm_sims/compare_wdm/'
 
 # Box parameters
-Lbox = 50000.0 #kpc/h
+Lbox = 25000.0 #kpc/h
 box = {'Lbox':[ Lbox, Lbox, Lbox ] }
 
 
@@ -37,7 +37,7 @@ n_skewers_list  = [ 'all', 'all', 'all']
 skewer_ids_list = [ 'all', 'all', 'all']
 field_list = [ 'HI_density', 'los_velocity', 'temperature' ]
 
-sim_names = [ d for d in os.listdir(base_dir) if d.find('1024_50Mpc') == 0 and os.path.isdir(base_dir+d) ]
+sim_names = [ d for d in os.listdir(base_dir) if d.find('1024_25Mpc') == 0 and os.path.isdir(base_dir+d) ]
 n_sim = len(sim_names)
 if rank == 0: print( sim_names )
 
@@ -47,7 +47,6 @@ print( f'rank: {rank}  local_indices:{local_indices}' )
 
 for indx in local_indices:  
 
-  # sim_name = '1024_50Mpc_cdm'
 
   sim_name = sim_names[indx]
   sim_dir = base_dir + sim_name + '/'
@@ -57,18 +56,22 @@ for indx in local_indices:
 
   snap_ids =  [ 25, 29, 33 ]
   for snap_id in snap_ids:
-
+    
+    # for space in [ 'real', 'redshift']:
+    space = 'real'
+    space = 'redshift'
+    
     skewer_dataset = Load_Skewers_File( snap_id, input_dir, axis_list=axis_list, fields_to_load=field_list )
     cosmology = {}
     cosmology['H0'] = skewer_dataset['H0']
     cosmology['Omega_M'] = skewer_dataset['Omega_M']
     cosmology['Omega_L'] = skewer_dataset['Omega_L']
     cosmology['current_z'] = skewer_dataset['current_z']
-    skewers_data_cdm = { field:skewer_dataset[field] for field in field_list }
+    skewers_data = { field:skewer_dataset[field] for field in field_list }
 
-    out_file_name = output_dir + f'lya_flux_{snap_id:03}.h5'
+    out_file_name = output_dir + f'lya_flux_{space}_{snap_id:03}.h5'
     if not os.path.isfile( out_file_name ):
-      data_Flux_cdm = Compute_Skewers_Transmitted_Flux( skewers_data_cdm, cosmology, box  )
+      data_Flux_cdm = Compute_Skewers_Transmitted_Flux( skewers_data, cosmology, box, space=space  )
       file = h5.File( out_file_name, 'w' )
       file.attrs['current_z'] = skewer_dataset['current_z']
       file.attrs['Flux_mean'] = data_Flux_cdm['Flux_mean']

@@ -7,6 +7,27 @@ subDirectories = [x[0] for x in os.walk(root_dir)]
 sys.path.extend(subDirectories)
 from constants_cosmo import eV_to_ergs
 
+def convert_grackle_file( in_file_name, out_file_name ):
+  file = h5.File( in_file_name, 'r' ) 
+  uvb_rates = file['UVBRates']
+  z = uvb_rates['z'][...]
+
+  # Ionization Rates
+  ion_HI   = uvb_rates['Chemistry']['k24'][...]
+  ion_HeI  = uvb_rates['Chemistry']['k26'][...]
+  ion_HeII = uvb_rates['Chemistry']['k25'][...]
+
+  # Heating Rates
+  heat_HI   = uvb_rates['Photoheating']['piHI'][...]
+  heat_HeI  = uvb_rates['Photoheating']['piHeI'][...]
+  heat_HeII = uvb_rates['Photoheating']['piHeII'][...] 
+
+  data_out = np.array([ z, ion_HI, heat_HI, ion_HeI, heat_HeI, ion_HeII, heat_HeII ]).T
+  header = 'z   photoionization_HI   photoheating_HI   photoionization_HeI   photoheating_HeI   photoionization_HeII   photoheating_HeII '
+  np.savetxt( out_file_name, data_out, header=header )
+  print( f'Saved File: {out_file_name}')
+
+
 
 def sigmoid( x, alpha=1, x0=0 ):
   sig = 1 / ( 1 + np.exp( -alpha * (x + x0) ))

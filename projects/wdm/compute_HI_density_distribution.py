@@ -49,10 +49,12 @@ for data_name in names:
     skewer_dataset = Load_Skewers_File( n_file, input_dir, axis_list=axis_list, fields_to_load=field_list )
     z = skewer_dataset['current_z']
     HI_density = skewer_dataset['HI_density']
+    
+    overdensity = HI_density / cosmo.rho_gas_mean
 
 
-    v_min, v_max = 1e-8, 1e4
-    n_samples = 1000
+    v_min, v_max = 1e-7, 1e0
+    n_samples = 150
     bin_edges = np.logspace( np.log10(v_min), np.log10(v_max), n_samples )
     distribution, bin_centers = compute_distribution( HI_density, edges=bin_edges, normalize_to_interval=True )
     
