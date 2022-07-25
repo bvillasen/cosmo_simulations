@@ -53,12 +53,13 @@ for data_name in names:
     overdensity = density / cosmo.rho_gas_mean
 
     v_min, v_max = 0.001, 100
-    n_samples = 150
+    n_samples = 275
     bin_edges = np.logspace( np.log10(v_min), np.log10(v_max), n_samples )
-    distribution, bin_centers = compute_distribution( overdensity, edges=bin_edges, normalize_to_interval=True )
+    distribution, bin_centers = compute_distribution( overdensity, edges=bin_edges, normalize_to_interval=False )
 
     data_out = { 'z':z, 'distribution':distribution, 'bin_centers':bin_centers }
     file_name = output_dir + f'density_distribution_{data_name}_{n_file}.pkl'
+    # file_name = output_dir + f'density_distribution_{data_name}_{n_file}_normalized.pkl'
     Write_Pickle_Directory( data_out, file_name )
 
 

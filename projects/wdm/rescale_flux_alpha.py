@@ -25,7 +25,7 @@ else:
   rank = 0
   n_procs = 1
 
-base_dir = data_dir + 'cosmo_sims/wdm_sims/compare_wdm/'
+base_dir = data_dir + 'cosmo_sims/wdm_sims/compare_alpha/'
 
 # Box parameters
 Lbox = 25000.0 #kpc/h
@@ -34,20 +34,22 @@ box = {'Lbox':[ Lbox, Lbox, Lbox ] }
 
 axis_list = [ 'x', 'y', 'z' ]
 n_skewers_list  = [ 'all', 'all', 'all']
-skewer_ids_list = [ 'all', 'all', 'all']
+skewer_ids_list = [ 'all', 'all', 'alentel']
 field_list = [ 'HI_density', 'los_velocity', 'temperature' ]
 
 
-sim_names = [ d for d in os.listdir(base_dir) if d.find('1024_25Mpc') == 0 and os.path.isdir(base_dir+d) ]
-sim_names.sort()
+sim_names = [ 'sim_0', 'sim_1', 'sim_2', 'sim_3', 'sim_4', 'sim_5', 'sim_6' ]
 n_sim = len(sim_names)
+alpha_vals = [ 1.6, 1.4, 1.2, 1.0, 0.8, 0.6, 0.4 ]
+
+
 
 snap_ids =  [ 25, 29, 33 ]
 for snap_id in snap_ids:
 
   for space in [ 'real', 'redshift']:
 
-    reference_name = '1024_25Mpc_cdm'
+    reference_name = 'sim_3'
     sim_dir = base_dir + reference_name + '/'
     input_dir  = sim_dir + 'transmitted_flux/'
     

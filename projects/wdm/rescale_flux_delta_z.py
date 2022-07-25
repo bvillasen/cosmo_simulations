@@ -25,7 +25,7 @@ else:
   rank = 0
   n_procs = 1
 
-base_dir = data_dir + 'cosmo_sims/wdm_sims/compare_wdm/'
+base_dir = data_dir + 'cosmo_sims/wdm_sims/compare_delta_z/'
 
 # Box parameters
 Lbox = 25000.0 #kpc/h
@@ -38,20 +38,23 @@ skewer_ids_list = [ 'all', 'all', 'all']
 field_list = [ 'HI_density', 'los_velocity', 'temperature' ]
 
 
-sim_names = [ d for d in os.listdir(base_dir) if d.find('1024_25Mpc') == 0 and os.path.isdir(base_dir+d) ]
-sim_names.sort()
+sim_names = [ 'sim_0', 'sim_1', 'sim_2', 'sim_3', 'sim_4', 'sim_5', 'sim_6' ]
 n_sim = len(sim_names)
+delta_z_vals = [ -0.75, -0.5, -0.25, 0.0, 0.25, 0.5, 0.75 ]
+
+rescale_T0 = False
 
 snap_ids =  [ 25, 29, 33 ]
 for snap_id in snap_ids:
 
   for space in [ 'real', 'redshift']:
 
-    reference_name = '1024_25Mpc_cdm'
+    reference_name = 'sim_3'
     sim_dir = base_dir + reference_name + '/'
     input_dir  = sim_dir + 'transmitted_flux/'
     
     in_file_name = input_dir + f'lya_flux_{space}_{snap_id:03}.h5'
+    if rescale_T0: in_file_name = input_dir + f'lya_flux_{space}_{snap_id:03}_rescaled_T0.h5'
     file = h5.File( in_file_name, 'r' )
     z = file.attrs['current_z']
     reference_skewers_Flux = file['skewers_Flux'][...]
@@ -65,6 +68,7 @@ for snap_id in snap_ids:
       output_dir = sim_dir + 'transmitted_flux/'
 
       in_file_name = input_dir + f'lya_flux_{space}_{snap_id:03}.h5'
+      if rescale_T0: in_file_name = input_dir + f'lya_flux_{space}_{snap_id:03}_rescaled_T0.h5'
       file = h5.File( in_file_name, 'r' )
       z = file.attrs['current_z']
       vel_Hubble = file['vel_Hubble'][...]
@@ -82,6 +86,7 @@ for snap_id in snap_ids:
       print( f'{sim_name}     Simulation: {sim_F_mean}   Reference: {reference_F_mean}   Rescaled:{F_mean_rescaled}' )
 
       out_file_name = input_dir + f'lya_flux_{space}_{snap_id:03}_rescaled_tau.h5'
+      if rescale_T0: out_file_name = input_dir + f'lya_flux_{space}_{snap_id:03}_rescaled_T0_rescaled_tau.h5'
       file = h5.File( out_file_name, 'w' )
       file.attrs['current_z'] = z
       file.attrs['Flux_mean'] = F_mean_rescaled
