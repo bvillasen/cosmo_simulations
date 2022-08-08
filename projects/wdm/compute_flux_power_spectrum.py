@@ -15,24 +15,25 @@ from load_skewers import load_skewers_multiple_axis
 from spectra_functions import Compute_Skewers_Transmitted_Flux
 from flux_power_spectrum import Compute_Flux_Power_Spectrum
 
-base_dir = data_dir + 'cosmo_sims/wdm_sims/new/'
+base_dir = data_dir + 'cosmo_sims/wdm_sims/compare_wdm/1024_25Mpc_m3.0kev/'
 input_dir = base_dir + 'transmitted_flux/'
 output_dir = base_dir + 'flux_power_spectrum/'
 create_directory( output_dir )
 
-# snap_ids = [ 25, 29, 33 ]
-snap_ids = [ 10, 11, 12, 13, 14, 15 ]
+snap_ids = [ 25, 29, 33 ]
+# snap_ids = [ 10, 11, 12, 13, 14, 15 ]
+
+# data_name = f'cdm_{space}_{snap_id:03}'
+# data_name = f'wdm_{space}_{snap_id:03}'
+# data_name = f'wdm_{space}_{snap_id:03}_replaced_cdm_density'
+# data_name = f'wdm_{space}_{snap_id:03}_replaced_cdm_temperature'
+# data_name = f'wdm_{space}_{snap_id:03}_replaced_cdm_velocity'
 
 for space in [ 'redshift', 'real']:
 
   for snap_id in snap_ids:
 
-    # data_name = f'cdm_{space}_{snap_id:03}'
-    data_name = f'wdm_{space}_{snap_id:03}'
-    # data_name = f'wdm_{space}_{snap_id:03}_replaced_cdm_density'
-    # data_name = f'wdm_{space}_{snap_id:03}_replaced_cdm_temperature'
-    # data_name = f'wdm_{space}_{snap_id:03}_replaced_cdm_velocity'
-
+    data_name = f'{space}_{snap_id:03}'
     in_file_name = input_dir + f'lya_flux_{data_name}.h5'
     out_file_name = output_dir + f'flux_ps_{data_name}.h5'
 
@@ -44,12 +45,13 @@ for space in [ 'redshift', 'real']:
     file.close()
 
     data_Flux = { 'vel_Hubble':vel_Hubble, 'skewers_Flux':skewers_Flux }
-
+    
+    
     data_ps = Compute_Flux_Power_Spectrum( data_Flux )
     k_vals = data_ps['k_vals']
     skewers_ps = data_ps['skewers_ps']
     ps_mean = data_ps['mean']
-
+    
     file = h5.File( out_file_name, 'w' )
     file.attrs['current_z'] = current_z
     file.create_dataset( 'k_vals', data=data_ps['k_vals'] )

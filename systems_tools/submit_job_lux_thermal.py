@@ -6,7 +6,7 @@ sys.path.append( root_dir + 'tools' )
 from tools import *
 
 
-job_name  = 'thermal_cdm' 
+job_name  = 'thermal_wdm' 
 n_mpi_tasks = 320
 n_nodes = 8
 n_tasks_per_node = 40
@@ -17,11 +17,18 @@ job_dir = home_dir + 'thermal_IGM/'
 command_params = 'run_termal_wdm_chain.py'
 
 # partition = 'comp-astro'
-# partition = 'gpuq'
-partition = 'cpuq'
-work_directory = '/home/brvillas/jobs/'
-output = work_directory + 'run_output_thermal_wdm_RT_corrected_cdm.log'
+partition = 'gpuq'
+# partition = 'cpuq'
+work_directory = '/home/brvillas/jobs/wdm_thermal/'
 create_directory( work_directory )
+
+# output = work_directory + 'run_output_RT_corrected_cdm.log'
+# output = work_directory + 'run_output_cdm.log'
+
+output = work_directory + 'run_output_RT_corrected_wdm.log'
+# output = work_directory + 'run_output_wdm.log'
+
+# output = work_directory + 'run_output_RT_corrected.log'
 
 submit_str = f"""#!/bin/bash          
 #SBATCH --job-name={job_name}    

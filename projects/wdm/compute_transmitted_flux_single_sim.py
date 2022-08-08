@@ -38,7 +38,9 @@ skewer_ids_list = [ 'all', 'all', 'all']
 field_list = [ 'HI_density', 'los_velocity', 'temperature' ]
 
 
+# sim_name = '1024_25Mpc_cdm'
 sim_name = '1024_25Mpc_m3.0kev'
+
 sim_dir = base_dir + sim_name + '/'
 input_dir  = sim_dir + 'skewers_files/'
 output_dir = sim_dir + 'transmitted_flux/'

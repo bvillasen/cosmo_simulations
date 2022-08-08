@@ -5,7 +5,7 @@ from rk4 import RK4_step
 
 class Cosmology:
   
-  def __init__(self, z_start=100):
+  def __init__(self, z_start=100, get_a=False ):
     # Initializa Planck 2018 parameters
     self.H0 = 67.66
     self.Omega_M = 0.3111
@@ -20,7 +20,7 @@ class Cosmology:
     self.a_array = None
     self.t_array = None
     
-    self.integrate_scale_factor()
+    if get_a: self.integrate_scale_factor()
     
   def get_Hubble( self, current_a ):
       a_dot = self.H0 * np.sqrt( self.Omega_M/current_a + self.Omega_L*current_a**2  )  

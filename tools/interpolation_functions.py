@@ -250,7 +250,7 @@ def interpolate_1d_linear( x_interp, x, y, log_y=False ):
 
      
 def interp_line_cubic( x, x_interp, y ):
-  func = interp.interp1d( x, y, kind='cubic' )
+  func = interp.interp1d( x, y, kind='cubic', fill_value='extrapolate' )
   return func(x_interp)
 
 

@@ -23,10 +23,11 @@ else:
   n_procs = 1
 
 proj_dir = data_dir + 'projects/wdm/'
-output_dir = proj_dir + 'data/density_distribution/'
+output_dir = proj_dir + 'data/density_distribution_25Mpc/'
 create_directory( output_dir )
 
-base_dir = data_dir + 'cosmo_sims/wdm_sims/50Mpc_boxes/'
+# base_dir = data_dir + 'cosmo_sims/wdm_sims/50Mpc_boxes/'
+base_dir = data_dir + 'cosmo_sims/wdm_sims/compare_wdm/'
 
 axis_list = [ 'x', 'y', 'z' ]
 n_skewers_list = [ 'all', 'all', 'all']
@@ -38,13 +39,14 @@ cosmo = Cosmology()
 n_bins = 200
 
 files = [ 25, 29, 33 ]
-names = [ 'cdm', 'wdm_m1.0kev', 'wdm_m2.0kev', 'wdm_m3.0kev', 'wdm_m4.0kev' ]
+# names = [ 'cdm', 'wdm_m1.0kev', 'wdm_m2.0kev', 'wdm_m3.0kev', 'wdm_m4.0kev' ]
+names = [ 'cdm', 'm1.0kev', 'm2.0kev', 'm3.0kev', 'm4.0kev' ]
 
 for data_name in names:
 
   for n_file in files:
 
-    sim_name = f'1024_50Mpc_{data_name}'
+    sim_name = f'1024_25Mpc_{data_name}'
     input_dir = base_dir + sim_name + '/skewers_files/'
     skewer_dataset = Load_Skewers_File( n_file, input_dir, axis_list=axis_list, fields_to_load=field_list )
     z = skewer_dataset['current_z']

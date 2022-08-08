@@ -23,7 +23,7 @@ else:
   n_procs = 1
 
 proj_dir = data_dir + 'projects/wdm/'
-output_dir = proj_dir + 'data/flux_distribution/'
+output_dir = proj_dir + 'data/flux_distribution_25Mpc/'
 create_directory( output_dir )
 
 # base_dir = data_dir + 'cosmo_sims/wdm_sims/50Mpc_boxes/'
@@ -37,6 +37,8 @@ field_list = [ 'HI_density',  ]
 n_bins = 80
 
 files = [ 25, 29, 33 ]
+# files = [ 29 ]
+
 # names = [ 'cdm', 'wdm_m1.0kev', 'wdm_m2.0kev', 'wdm_m3.0kev', 'wdm_m4.0kev' ]
 names = [ 'cdm', 'm1.0kev', 'm2.0kev', 'm3.0kev', 'm4.0kev' ]
 
@@ -69,7 +71,9 @@ for data_name in names:
     # bin_edges = np.linspace( v_min, v_max, n_samples )
     distribution, bin_centers = compute_distribution( flux, edges=bin_edges, normalize_to_interval=False )
     
-    data_out = { 'z':z, 'distribution':distribution, 'bin_centers':bin_centers, 'F_mean':flux.mean() }
+    F_mean = flux.mean()
+    print( sim_name, F_mean )
+    data_out = { 'z':z, 'distribution':distribution, 'bin_centers':bin_centers, 'F_mean':F_mean }
     file_name = output_dir + f'flux_distribution_{data_name}_{n_file}.pkl'
     Write_Pickle_Directory( data_out, file_name )
 

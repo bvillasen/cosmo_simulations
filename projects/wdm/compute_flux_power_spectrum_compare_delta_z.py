@@ -15,17 +15,11 @@ from load_skewers import load_skewers_multiple_axis
 from spectra_functions import Compute_Skewers_Transmitted_Flux
 from flux_power_spectrum import Compute_Flux_Power_Spectrum
 
-base_dir = data_dir + 'cosmo_sims/wdm_sims/new/'
-input_dir = base_dir + 'transmitted_flux/'
-output_dir = base_dir + 'flux_power_spectrum/'
-create_directory( output_dir )
 
 snap_ids = [ 25, 29, 33 ]
 # snap_ids = [ 10, 11, 12, 13, 14, 15 ]
 
-base_dir = data_dir
-
-base_dir = data_dir + 'cosmo_sims/wdm_sims/compare_alpha/'
+base_dir = data_dir + 'cosmo_sims/wdm_sims/compare_delta_z/'
 
 sim_names = [ d for d in os.listdir(base_dir) if d.find('sim') == 0 and os.path.isdir(base_dir+d) ]
 n_sim = len(sim_names)
@@ -42,8 +36,8 @@ for sim_name in sim_names:
 
     for snap_id in snap_ids:
       
-      data_name = f'{space}_{snap_id:03}'
-      # data_name = f'{space}_{snap_id:03}_rescaled_tau'
+      # data_name = f'{space}_{snap_id:03}'
+      data_name = f'{space}_{snap_id:03}_rescaled_T0'
       
       
       in_file_name = input_dir + f'lya_flux_{data_name}.h5'

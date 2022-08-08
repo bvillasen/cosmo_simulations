@@ -10,13 +10,27 @@ from colors import *
 from figure_functions import *
 from stats_functions import get_HPI_2D, get_highest_probability_interval
 
+# hist_1D_line_color = 'C0'
+# hist_2D_colormap = palettable.cmocean.sequential.Ice_20_r.mpl_colormap
+# 
+# color_map_0 = palettable.cmocean.sequential.Ice_20_r
+# color_map_1 = palettable.cmocean.sequential.Amp_20
+# color_map_2 = palettable.cmocean.sequential.Tempo_20
+# color_map_3 = palettable.cmocean.sequential.Dense_20
+# color_map_4 = palettable.cmocean.sequential.Algae_20
+# color_map_5 = palettable.scientific.sequential.Devon_20_r
+# color_map_6 = palettable.scientific.sequential.Davos_20_r
+# color_map_7 = palettable.scientific.sequential.LaPaz_20_r
+oslo = palettable.scientific.sequential.Oslo_20_r
+
 
 
 def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2D=30, 
     ticks=None, lower_mask_factor=50, multiple=False, system='Shamrock', show_label=True, 
     HL_vals=None, show_best_fit=False, limits=None, param_values=None, black_background=False,
-    bins=None, legend_loc=0, figure_name='corner.png', show_param_values=False, param_names=None,
-    param_labels=None ):
+    bins=None, legend_loc=2, figure_name='corner.png', show_param_values=False, param_names=None,
+    param_labels=None, samples_outline=None, param_font_size=25, cmap=oslo, samples_outline_color='C1', outline_label='',
+    line_color_index=None, legend_ncol=1 ):
   
   
 
@@ -37,7 +51,7 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
   color = 'C0'
   data_color = 'C9'
   font_size = 22
-  legend_font_size = 16
+  legend_font_size = 13
   label_size = 30
   alpha = 0.6
   fig_size = 5
@@ -50,20 +64,9 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
   tick_width = 2
   border_width = 2.0
   hist_1D_line_width = 3.09
-  hist_1D_line_color = 'C0'
-  hist_2D_colormap = palettable.cmocean.sequential.Ice_20_r.mpl_colormap
-  
-  color_map_0 = palettable.cmocean.sequential.Ice_20_r
-  color_map_1 = palettable.cmocean.sequential.Amp_20
-  color_map_2 = palettable.cmocean.sequential.Tempo_20
-  color_map_3 = palettable.cmocean.sequential.Dense_20
-  color_map_4 = palettable.cmocean.sequential.Algae_20
-  color_map_5 = palettable.scientific.sequential.Devon_20_r
-  color_map_6 = palettable.scientific.sequential.Davos_20_r
-  color_map_7 = palettable.scientific.sequential.LaPaz_20_r
-  color_map_7 = palettable.scientific.sequential.Oslo_20_r
+
   # color_map_list = [ color_map_0, color_map_2, color_map_1, color_map_4 ]
-  color_map_list = [ color_map_7 ]
+  # color_map_list = [ color_map_7,  ]
   
   text_color = 'black'
   
@@ -132,11 +135,13 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
       for data_id in samples_multiple:
         samples = samples_multiple[data_id]
         
-        colormap = color_map_list[data_id]
+        # colormap = color_map_list[data_id]
+        colormap = cmap
         hist_2D_colormap = colormap.mpl_colormap
         contour_colormap = colormap.mpl_colors
         n_colors = len( contour_colormap )
-        line_color = contour_colormap[n_colors//2]
+        if line_color_index is None: line_color_index = n_colors//2
+        line_color = contour_colormap[line_color_index]
         if black_background: line_color = palettable.colorbrewer.sequential.Blues_9_r.mpl_colors[4]
         contour_colors = [contour_colormap[n_colors//2], contour_colormap[-1]]
         
@@ -149,7 +154,7 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
             bins_1D = np.linspace( bin_min, bin_max, n_bin )
             print( f"Bins 1D: {bins_1D}" )
           hist, bin_edges = np.histogram( trace, bins=bins_1D ) 
-          # hist = hist / hist.sum()
+          # hist = hist.astype(np.float) / hist.sum()
           bin_centers = ( bin_edges[:-1] + bin_edges[1:] ) / 2.
           bin_width = bin_centers[0] - bin_centers[1]  
           bin_centers_interp = np.linspace( bin_centers[0], bin_centers[-1], 100000 )
@@ -200,6 +205,25 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
           max = f_interp(bin_centers_interp).max()
           # ax.set_ylim( -max/20, max*1.1 )
         
+          if samples_outline is not None:
+            samples = samples_outline[data_id]
+            name  = samples[j]['name']
+            trace = samples[j]['trace']
+            bins_1D = n_bins_1D 
+            if bins is not None and bins[j] is not None: 
+              bin_min, bin_max, n_bin = bins[j]['min'], bins[j]['max'], bins[j]['n'] 
+              bins_1D = np.linspace( bin_min, bin_max, n_bin )
+              print( f"Bins 1D: {bins_1D}" )
+            hist, bin_edges = np.histogram( trace, bins=bins_1D ) 
+            # hist = hist.astype(np.float) / hist.sum()
+            bin_centers = ( bin_edges[:-1] + bin_edges[1:] ) / 2.
+            bin_width = bin_centers[0] - bin_centers[1]  
+            bin_centers_interp = np.linspace( bin_centers[0], bin_centers[-1], 100000 )
+            f_interp  = interp.interp1d( bin_centers, hist,  kind='cubic' )
+            ax.plot( bin_centers_interp, f_interp(bin_centers_interp), ls='--',  color=samples_outline_color, linewidth=hist_1D_line_width, label=outline_label, zorder=0, alpha=1.0  )
+          
+            
+        
         if plot_type == '2D':
           trace_y = samples[j]['trace']
           trace_x = samples[i]['trace']
@@ -225,7 +249,7 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
           
         
         if add_data_label and show_label:
-          leg = ax.legend( loc=legend_loc, frameon=False, fontsize=legend_font_size)
+          leg = ax.legend( loc=legend_loc, frameon=False, fontsize=legend_font_size, ncol=legend_ncol)
           for text in leg.get_texts():
             plt.setp(text, color = text_color)
             
@@ -284,7 +308,7 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
     text_x = 0.46
     text_y = 0.855 + offset_y_add
     text = '95% Confidence Interval:'  
-    plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=22+font_add, color=text_color )
+    plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=int(param_font_size*0.9)+font_add, color=text_color )
     
     p_name = param_names[0]
     p_vals = param_values[p_name]
@@ -305,10 +329,10 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
     # text_1 = r'$\beta_{\mathrm{He}}=\mathregular{0.44}^{+\mathregular{0.06}}_{-\mathregular{0.07}}$'
     text_lines = [ r'${0}$'.format(text_0) , r'${0}$'.format(text_1) ]
     # text_x = 0.56
-    text_y = 0.82 + offset_y_add
+    text_y = 0.81 + offset_y_add
     offset_y = 0.05
     for text in text_lines:
-      plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=25+font_add, color=text_color )
+      plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=param_font_size+font_add, color=text_color )
       text_y -= offset_y
     
     p_name = param_names[2]
@@ -333,10 +357,10 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
     if len(param_names) ==3: text_lines = [ r'${0}$'.format(text_0)  ]
     
     text_x = text_x + .2
-    text_y = 0.82 + offset_y_add
+    text_y = 0.81 + offset_y_add
     # offset_y = 0.04
     for text in text_lines:
-      plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=25+font_add, color=text_color )
+      plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=param_font_size+font_add, color=text_color )
       text_y -= offset_y
   
   if black_background:

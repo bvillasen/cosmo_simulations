@@ -24,9 +24,12 @@ else:
 
 grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_extended_beta/'
 # grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_cdm_extended_beta/'
-fit_name = 'fit_results_P(k)+_Boera_covmatrix'
-input_dir = grid_dir + f'fit_mcmc/{fit_name}/temperature_evolution/'
-output_dir = grid_dir + f'fit_mcmc/{fit_name}/temperature_evolution/merged_files/'
+
+# fit_name = 'fit_results_P(k)+_Boera_covmatrix'
+fit_name = 'fit_results_P(k)+_Boera_covmatrix_RT_corrected'
+
+input_dir = grid_dir + f'fit_mcmc/{fit_name}/temperature_evolution_new/'
+output_dir = input_dir + f'merged_files/'
 if rank == 0: create_directory( output_dir )
 
 files = [ f for f in os.listdir(input_dir) if f[0] == 's' ]
@@ -97,7 +100,7 @@ T0_vals_all = np.concatenate( T0_vals_all, axis=0 )
 print( f'T0 shape: {T0_vals_all.shape}')
 
 output_dir = grid_dir + f'fit_mcmc/{fit_name}/'
-out_file_name = output_dir + f'samples_T0_evolution.h5'
+out_file_name = output_dir + f'samples_T0_evolution_new.h5'
 out_file = h5.File( out_file_name, 'w' )
 out_file.create_dataset( 'z', data=z_vals )
 out_file.create_dataset( 'T0', data=T0_vals_all )

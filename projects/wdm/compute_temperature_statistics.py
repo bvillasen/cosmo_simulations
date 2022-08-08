@@ -16,13 +16,16 @@ from stats_functions import get_highest_probability_interval
 
 grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_extended_beta/'
 # grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_cdm_extended_beta/'
-fit_name = 'fit_results_P(k)+_Boera_covmatrix'
+
+# fit_name = 'fit_results_P(k)+_Boera_covmatrix'
+fit_name = 'fit_results_P(k)+_Boera_covmatrix_RT_corrected'
+
 input_dir = grid_dir + f'fit_mcmc/{fit_name}/'
 output_dir = grid_dir + f'fit_mcmc/{fit_name}/'
 create_directory( output_dir )
 
 
-file_name = input_dir + f'samples_T0_evolution.h5'
+file_name = input_dir + f'samples_T0_evolution_new.h5'
 print( f'Loading File: {file_name}' )
 file = h5.File( file_name, 'r' )
 z = file['z'][...]
@@ -52,7 +55,7 @@ mean = np.array(mean)
 max  = np.array(max)
 stats = {'percentile':fill_sum, 'z':z, 'low':low, 'high':high, 'mean':mean, 'max':max }
 
-out_file_name = output_dir + 'T0_stats.pkl'
+out_file_name = output_dir + 'T0_stats_new.pkl'
 Write_Pickle_Directory( stats, out_file_name )
 
 

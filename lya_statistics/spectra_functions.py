@@ -77,7 +77,7 @@ def get_optical_depth_velocity( current_z, H, dr, dv, n_HI_los, vel_peculiar_los
   b_all = get_Doppler_parameter( temp, chem_type=chem_type ) 
   tau_los = np.zeros(n_points) #Initialize arrays of zeros for the total optical delpth along the line of sight
     
-  if method=='error_function':
+  if method == 'error_function':
     #Loop over each cell
     for j in range(n_points):
       #Get  local values of the cell
@@ -85,8 +85,49 @@ def get_optical_depth_velocity( current_z, H, dr, dv, n_HI_los, vel_peculiar_los
       y_l = ( ( v_j - 0.5 * H_cgs * dr_cgs ) - velocity ) / b_all
       y_r = ( ( v_j + 0.5 * H_cgs * dr_cgs ) - velocity ) / b_all
       tau_val = Lya_sigma  / H_cgs  * np.sum( n_HI * ( erf(y_r) - erf(y_l) ) ) / 2
+      tau_los[j] = tau_val
+    
+  elif method == 'gaussian':
+    #Loop over each cell
+    for j in range(n_points):
+      #Get  local values of the cell
+      v_j = vel_Hubble[j]                      #Hubble Velocity of the cell
+      gauss_profile = n_HI * np.exp( -( (v_j - velocity) / b_all )**2 ) / ( np.sqrt( np.pi ) * b_all ) * dv_Hubble
+      tau_val = Lya_sigma  / H_cgs  * gauss_profile.sum()
+      # print( tau_val )
       tau_los[j] = tau_val 
-            
+  
+
+  elif method == 'gaussian_pecvel_grad':
+    #Loop over each cell
+    grad_vpec = np.zeros_like( vel_peculiar )
+    grad_vpec[1:-1] = ( vel_peculiar[2:] - vel_peculiar[:-2] ) / ( 2 * dr_cgs )
+    grad_vpec[0]    = ( vel_peculiar[1]  - vel_peculiar[0]  ) / (  dr_cgs )
+    grad_vpec[-1]   = ( vel_peculiar[-1] - vel_peculiar[-2]  ) / ( dr_cgs )
+    
+    delta_vpec = np.zeros_like( vel_peculiar )
+    delta_vpec[1:-1] = vel_peculiar[2:] - vel_peculiar[:-2] 
+    delta_vpec[0]    = vel_peculiar[1]  - vel_peculiar[-1]  
+    delta_vpec[-1]   =  vel_peculiar[0] - vel_peculiar[-1]   
+    
+    print( f'H_cgs:  {H_cgs}' )
+    print( f'dr_cgs: {dr_cgs}' )
+    print( f'v_pec: {vel_peculiar/1e5}')
+    print( f'grad_vpec: {grad_vpec/H_cgs}')
+    # grad_vpec *= 0
+    for j in range(n_points):
+      #Get  local values of the cell
+      v_j = vel_Hubble[j]                      #Hubble Velocity of the cell
+      du_dx =   H_cgs + grad_vpec  
+      du = dv_Hubble + delta_vpec / 2
+      dx = np.abs( du / du_dx )
+      gauss_profile = n_HI * np.exp( -( (v_j - velocity) / b_all )**2 ) / ( np.sqrt( np.pi ) * b_all ) * dx
+      tau_val = Lya_sigma  * gauss_profile.sum()
+      # print( tau_val )
+      tau_los[j] = tau_val          
+
+  else: print( f'ERROR: Method {method} is not supported ')
+              
   # Trim the ghost cells from the global optical depth 
   tau_los    = tau_los[n_ghost:-n_ghost]
   vel_Hubble = vel_Hubble[n_ghost:-n_ghost] * 1e-5 # km/seg
@@ -153,11 +194,11 @@ def compute_optical_depth( cosmology, box, skewer, space='redshift', method='err
   
 
 
-def Compute_Skewers_Transmitted_Flux( skewers_data, cosmology, box, print_string='', space='redshift' ):
+def Compute_Skewers_Transmitted_Flux( skewers_data, cosmology, box, print_string='', space='redshift', method='error_function' ):
   # Compute the Transmitted Flux along all the skewers
   n_skewers = skewers_data['HI_density'].shape[0]
   
-  skewers_Flux = []
+  skewers_Flux, skewers_tau = [], []
   start = time.time()
   for skewer_id in range(n_skewers):
 
@@ -169,19 +210,21 @@ def Compute_Skewers_Transmitted_Flux( skewers_data, cosmology, box, print_string
     skewer_data['temperature'] = skewers_data['temperature'][skewer_id]
     skewer_data['velocity']    = skewers_data['los_velocity'][skewer_id]
 
-    tau_los_data = compute_optical_depth( cosmology, box, skewer_data, space=space  )
+    tau_los_data = compute_optical_depth( cosmology, box, skewer_data, space=space, method=method  )
     los_vel_hubble = tau_los_data['vel_Hubble']
     los_tau = tau_los_data['tau']
+    skewers_tau.append( los_tau )
     los_F = np.exp( -los_tau )
     skewers_Flux.append( los_F )
     
     extra_line = f'Computing {space} Lya Flux along skewers. {print_string}'
     print_progress( skewer_id+1, n_skewers, start, extra_line=extra_line )
   
+  skewers_tau = np.array( skewers_tau )
   skewers_Flux = np.array( skewers_Flux )
   Flux_mean = skewers_Flux.mean()
   vel_Hubble = los_vel_hubble
-  data_out = { 'vel_Hubble':vel_Hubble, 'Flux_mean':Flux_mean, 'skewers_Flux':skewers_Flux }
+  data_out = { 'vel_Hubble':vel_Hubble, 'Flux_mean':Flux_mean, 'skewers_Flux':skewers_Flux, 'skewers_tau': skewers_tau }
   return data_out
 
 
