@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 import os, sys, time
 from pathlib import Path
 import h5py as h5
@@ -20,7 +21,7 @@ base_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_extended_beta/fit_mcmc/'
 n_bins = 100
 bins_1D = np.linspace( 0, 1, n_bins )
 
-fit_names = [ 'fit_results_P(k)+_Boera_covmatrix_sigma_factor_0.5', 'fit_results_P(k)+_Boera_covmatrix' ]
+fit_names = [ 'fit_results_P(k)+_Boera_covmatrix_limited_data', 'fit_results_P(k)+_Boera_covmatrix' ]
 
 data_all = {}
 for data_id, fit_name in enumerate(fit_names):
@@ -34,7 +35,7 @@ for data_id, fit_name in enumerate(fit_names):
   data_all[data_id] = { 'bin_centers':bin_centers.copy(), 'distribution':distribution.copy() }
 
 colors = [ light_orange, 'C0'  ]   
-labels = [ 'Reduced uncertainty', 'Observed uncertainty']
+labels = [ r'Fit to $k \leq 0.1 \, \mathrm{s \, km^{-1}}$ data points', 'Fit to all data points']
 
 fig_width = 8
 fig_dpi = 300
@@ -65,7 +66,7 @@ plt.subplots_adjust( hspace = 0.1, wspace=0.2 )
 for data_id in data_all:
   
   ls = '-'
-  if data_id == 1: ls = '--'
+  # if data_id == 1: ls = '--'
 
   data = data_all[data_id]
   bin_centers = data['bin_centers']
@@ -74,29 +75,31 @@ for data_id in data_all:
   bin_centers_interp = np.linspace( 0, bin_centers[-1], 100000 )
   f_interp  = interp.interp1d( bin_centers, distribution,  kind='cubic', fill_value='extrapolate' )
   label = labels[data_id]
-  ax.plot( bin_centers_interp, f_interp(bin_centers_interp), ls=ls,   color=colors[data_id], linewidth=lw, label=label, zorder=3  )
+  ax.plot( bin_centers_interp, f_interp(bin_centers_interp), ls=ls,   color=colors[data_id], linewidth=lw, label=label, zorder=4-data_id   )
   # ax.plot( bin_centers, distribution ,   color=colors[data_id], linewidth=lw, label=label,   )
 
-  if data_id == 0:
-    hl_color = 'gray' 
-    hl_line_width = 2.5 
-    
-    hl_val = 0.0
-    fill_sum = 0.68
-    v_l, v_r, v_max,  sum = get_highest_probability_interval( bin_centers, distribution, fill_sum, log=False, n_interpolate=100000, print_eval=False)
-    ax.plot( [v_max, v_max], [-1*f_interp(v_max), f_interp(v_max)], ls='--', lw=hl_line_width, color=hl_line_color, alpha=hl_alpha, zorder=2 )      
-    print( f'Eval f(l): {f_interp(v_l)}  f(r): {f_interp(v_r)}  sum: {sum}')
-    vals_simgna = np.linspace( v_l, v_r, 1000 )
-    sigma_l = hl_val - v_l
-    sigma_r = v_r - hl_val
-    ax.fill_between( vals_simgna, f_interp(vals_simgna), color=hl_color, alpha=0.5, zorder=1)
-    fill_sum = 0.95
-    v_l, v_r, v_max,  sum = get_highest_probability_interval( bin_centers, distribution, fill_sum, log=False, n_interpolate=100000, print_eval=False)
-    print( f'Eval f(l): {f_interp(v_l)}  f(r): {f_interp(v_r)}  sum: {sum}')
-    vals_simgna = np.linspace( v_l, v_r, 1000 )
-    two_sigma_l = hl_val - v_l
-    two_sigma_r = v_r - hl_val
-    ax.fill_between( vals_simgna, f_interp(vals_simgna), color=hl_color, alpha=0.3, zorder=1)
+  # if data_id == 0:
+  hl_color = 'gray' 
+  hl_line_width = 2.5 
+  
+  fill_sum = 0.68
+  v_l, v_r, v_max,  sum = get_highest_probability_interval( bin_centers, distribution, fill_sum, log=False, n_interpolate=100000, print_eval=False)
+  if data_id == 0: v_l, v_max = 0, 0.001
+  ax.plot( [v_max, v_max], [-1*f_interp(v_max), f_interp(v_max)], ls='--', lw=hl_line_width, color=colors[data_id], alpha=hl_alpha, zorder=3-data_id )      
+  
+  print( f'Eval f(l): {f_interp(v_l)}  f(r): {f_interp(v_r)}  sum: {sum}')
+  vals_simgna = np.linspace( v_l, v_r, 1000 )
+  sigma_l = v_max - v_l
+  sigma_r = v_r - v_max
+  ax.fill_between( vals_simgna, f_interp(vals_simgna), color=colors[data_id], alpha=0.5, zorder=2-data_id)
+  fill_sum = 0.95
+  v_l, v_r, v_max,  sum = get_highest_probability_interval( bin_centers, distribution, fill_sum, log=False, n_interpolate=100000, print_eval=False)
+  if data_id ==0: v_l, v_max = 0, 0.001
+  print( f'Eval f(l): {f_interp(v_l)}  f(r): {f_interp(v_r)}  sum: {sum}')
+  vals_simgna = np.linspace( v_l, v_r, 1000 )
+  two_sigma_l = v_max - v_l
+  two_sigma_r = v_r - v_max
+  ax.fill_between( vals_simgna, f_interp(vals_simgna), color=colors[data_id], alpha=0.3, zorder=1-data_id)
 
 
 ax.legend( frameon=False, loc=2, fontsize=legend_font_size)
@@ -110,11 +113,11 @@ ax.tick_params(axis='both', which='minor', color=text_color, labelcolor=text_col
 
 [sp.set_linewidth(border_width) for sp in ax.spines.values()]
 
-ax.set_xlim( 0, 0.4 )
-ax.set_ylim( 0, 0.17 )
+ax.set_xlim( 0, 0.42 )
+ax.set_ylim( 0, 0.071 )
 
 
-figure_name = output_dir + f'mwdm_reduced_sigma.png'
+figure_name = output_dir + f'mwdm_limited_data_color.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
 

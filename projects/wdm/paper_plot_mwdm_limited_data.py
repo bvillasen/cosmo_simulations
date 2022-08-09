@@ -52,6 +52,11 @@ text_color = 'k'
 
 nrows, ncols = 1, 1
 
+hl_line_color = 'black'
+hl_color = 'gray' 
+hl_line_width = 2.5 
+hl_alpha = 1.0
+
 lw = 3.0
 
 fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(figure_width*ncols,6*nrows))
@@ -69,28 +74,32 @@ for data_id in data_all:
   bin_centers_interp = np.linspace( 0, bin_centers[-1], 100000 )
   f_interp  = interp.interp1d( bin_centers, distribution,  kind='cubic', fill_value='extrapolate' )
   label = labels[data_id]
-  ax.plot( bin_centers_interp, f_interp(bin_centers_interp), ls=ls,   color=colors[data_id], linewidth=lw, label=label,   )
+  ax.plot( bin_centers_interp, f_interp(bin_centers_interp), ls=ls,   color=colors[data_id], linewidth=lw, label=label, zorder=3   )
   # ax.plot( bin_centers, distribution ,   color=colors[data_id], linewidth=lw, label=label,   )
 
-  if data_id == 0:
-    hl_color = 'gray' 
-    hl_line_width = 2.5 
+  hl_color = 'gray' 
+  hl_line_width = 2.5 
+  
+  hl_val = 0.0
+  fill_sum = 0.68
+  v_l, v_r, v_max,  sum = get_highest_probability_interval( bin_centers, distribution, fill_sum, log=False, n_interpolate=100000, print_eval=False)
+  v_max = 0.001
+  if data_id == 0:ax.plot( [v_max, v_max], [-1*f_interp(v_max), f_interp(v_max)], ls='--', lw=hl_line_width, color=hl_line_color, alpha=hl_alpha, zorder=2 )      
+  
+  print( f'Eval f(l): {f_interp(v_l)}  f(r): {f_interp(v_r)}  sum: {sum}')
+  vals_simgna = np.linspace( 0, v_r, 1000 )
+  sigma_l = hl_val - v_l
+  sigma_r = v_r - hl_val
+  if data_id == 0: ax.fill_between( vals_simgna, f_interp(vals_simgna), color=hl_color, alpha=0.5, zorder=1)
+  fill_sum = 0.95
+  v_l, v_r, v_max,  sum = get_highest_probability_interval( bin_centers, distribution, fill_sum, log=False, n_interpolate=100000, print_eval=False)
+  print( f'Eval f(l): {f_interp(v_l)}  f(r): {f_interp(v_r)}  sum: {sum}')
+  vals_simgna = np.linspace( 0, v_r, 1000 )
+  two_sigma_l = hl_val - v_l
+  two_sigma_r = v_r - hl_val
+  if data_id == 0: ax.fill_between( vals_simgna, f_interp(vals_simgna), color=hl_color, alpha=0.3, zorder=1)
+
     
-    hl_val = 0.0
-    fill_sum = 0.68
-    v_l, v_r, v_max,  sum = get_highest_probability_interval( bin_centers, distribution, fill_sum, log=False, n_interpolate=100000, print_eval=False)
-    print( f'Eval f(l): {f_interp(v_l)}  f(r): {f_interp(v_r)}  sum: {sum}')
-    vals_simgna = np.linspace( 0, v_r, 1000 )
-    sigma_l = hl_val - v_l
-    sigma_r = v_r - hl_val
-    ax.fill_between( vals_simgna, f_interp(vals_simgna), color=hl_color, alpha=0.5, zorder=1)
-    fill_sum = 0.95
-    v_l, v_r, v_max,  sum = get_highest_probability_interval( bin_centers, distribution, fill_sum, log=False, n_interpolate=100000, print_eval=False)
-    print( f'Eval f(l): {f_interp(v_l)}  f(r): {f_interp(v_r)}  sum: {sum}')
-    vals_simgna = np.linspace( 0, v_r, 1000 )
-    two_sigma_l = hl_val - v_l
-    two_sigma_r = v_r - hl_val
-    ax.fill_between( vals_simgna, f_interp(vals_simgna), color=hl_color, alpha=0.3, zorder=1)
 
 
 ax.legend( frameon=False, loc=2, fontsize=legend_font_size)
