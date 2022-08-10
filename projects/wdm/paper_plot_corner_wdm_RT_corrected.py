@@ -52,8 +52,9 @@ for p_id, p_name in enumerate(p_names):
   param_values[p_name] = {}
   val = params_HL[p_id]
   p_stats = stats[p_name]
-  low = p_stats['quantiles'][2.5]
-  high = p_stats['quantiles'][97.5]
+  # low = p_stats['quantiles'][2.5]
+  # high = p_stats['quantiles'][97.5]
+  low, high = p_stats['95% HPD interval']
   delta_l = val - low
   delta_h = high - val
   param_values[p_name]['value'] = val

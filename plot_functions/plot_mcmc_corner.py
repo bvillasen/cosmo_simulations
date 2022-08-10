@@ -156,7 +156,8 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
           hist, bin_edges = np.histogram( trace, bins=bins_1D ) 
           # hist = hist.astype(np.float) / hist.sum()
           bin_centers = ( bin_edges[:-1] + bin_edges[1:] ) / 2.
-          bin_width = bin_centers[0] - bin_centers[1]  
+          bin_width = bin_centers[0] - bin_centers[1]
+          if i == 0: bin_centers[0] = 0  
           bin_centers_interp = np.linspace( bin_centers[0], bin_centers[-1], 100000 )
           f_interp  = interp.interp1d( bin_centers, hist,  kind='cubic' )
           data_label = data_labels[data_id]
@@ -186,6 +187,7 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
             ax.fill_between( vals_simgna, f_interp(vals_simgna), color=hl_color, alpha=0.5, zorder=1)
             fill_sum = 0.95
             v_l, v_r, v_max,  sum = get_highest_probability_interval( bin_centers, distribution, fill_sum, log=False, n_interpolate=100000, print_eval=False)
+            
             print( f'Eval f(l): {f_interp(v_l)}  f(r): {f_interp(v_r)}  sum: {sum}')
             vals_simgna = np.linspace( v_l, v_r, 1000 )
             two_sigma_l = hl_val - v_l
