@@ -19,23 +19,23 @@ from colors import *
 
 
 proj_dir = data_dir + 'projects/wdm/'
-output_dir = proj_dir + f'figures/'
+output_dir = proj_dir + f'figures/paper_revision/'
 create_directory( output_dir )
 
 
-grid_names = [ '1024_wdmgrid_extended_beta', '1024_wdmgrid_cdm_extended_beta' ]
+grid_name =  '1024_wdmgrid_extended_beta'
 
-sim_labels = [ 'Best Fit WDM Grid', 'Best Fit CDM-Only Grid', ]
+fit_names = ['fit_results_P(k)+_Boera_covmatrix', 'fit_results_P(k)+T0_Boera_covmatrix' ]
+sim_labels = [  r'$P\,(k) $ constraint', r'$P\,(k)\, + \, T_0$ constraint',  ]
 
 
-black_background = True 
+black_background = False
 
-fit_name = 'fit_results_P(k)+_Boera_covmatrix'
 stats_all = {}
-for sim_id, grid_name in enumerate(grid_names):
+for sim_id, fit_name in enumerate(fit_names):
   grid_dir = data_dir + f'cosmo_sims/sim_grid/{grid_name}/'
   input_dir = grid_dir + f'fit_mcmc/{fit_name}/'
-  file_name = input_dir + 'T0_stats.pkl'
+  file_name = input_dir + 'T0_stats_new.pkl'
   stats = Load_Pickle_Directory( file_name )
   stats_all[sim_id] = stats
 

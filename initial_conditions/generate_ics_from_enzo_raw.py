@@ -43,9 +43,9 @@ if 'particles' in types: ics_particles = True
 # n_boxes  = 512
 
 # Box Size
-Lbox = 25000.0    #kpc/h
-n_points = 1024
-n_boxes  = 128
+Lbox = 100000.0    #kpc/h
+n_points = 256
+n_boxes  = 8
 
 # # Box Size
 # Lbox = 1000.0    #kpc/h
@@ -59,11 +59,14 @@ L_Mpc = int( Lbox / 1000)
 # input_dir = data_dir + f'cosmo_sims/ics/enzo/wdm/{n_points}_hydro_{L_Mpc}Mpc_cdm/raw/'
 # output_dir = data_dir + f'cosmo_sims/ics/wdm/{n_points}_{L_Mpc}Mpc_cdm/'
 
-m_wdm = 3.0
-# input_dir = data_dir + f'cosmo_sims/ics/enzo/wdm/{n_points}_dmo_{L_Mpc}Mpc_wdm_m{m_wdm:.1f}kev/raw/'
-# output_dir = data_dir + f'cosmo_sims/ics/wdm/{n_points}_dmo_{L_Mpc}Mpc_wdm_m{m_wdm:.1f}kev/'
-input_dir = data_dir + f'cosmo_sims/ics/enzo/wdm/{n_points}_hydro_{L_Mpc}Mpc_wdm_m{m_wdm:.1f}kev_new/raw/'
-output_dir = data_dir + f'cosmo_sims/ics/wdm/{n_points}_{L_Mpc}Mpc_wdm_m{m_wdm:.1f}kev_new/'
+input_dir = data_dir + f'cosmo_sims/cholla_ics/{n_points}_{L_Mpc}Mpc/ics_music/raw/'
+output_dir = data_dir + f'cosmo_sims/cholla_ics/{n_points}_{L_Mpc}Mpc/ics_music/'
+# 
+# m_wdm = 3.0
+# # input_dir = data_dir + f'cosmo_sims/ics/enzo/wdm/{n_points}_dmo_{L_Mpc}Mpc_wdm_m{m_wdm:.1f}kev/raw/'
+# # output_dir = data_dir + f'cosmo_sims/ics/wdm/{n_points}_dmo_{L_Mpc}Mpc_wdm_m{m_wdm:.1f}kev/'
+# input_dir = data_dir + f'cosmo_sims/ics/enzo/wdm/{n_points}_hydro_{L_Mpc}Mpc_wdm_m{m_wdm:.1f}kev_new/raw/'
+# output_dir = data_dir + f'cosmo_sims/ics/wdm/{n_points}_{L_Mpc}Mpc_wdm_m{m_wdm:.1f}kev_new/'
 
 # input_dir = data_dir + f'cosmo_sims/ics/enzo/wdm/{n_points}_hydro_{L_Mpc}Mpc_cdm/raw/'
 # output_dir = data_dir + f'cosmo_sims/ics/wdm/{n_points}_{L_Mpc}Mpc_cdm/'

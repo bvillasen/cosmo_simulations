@@ -25,17 +25,15 @@ ps_data_dir = cosmo_dir + 'lya_statistics/data/'
 base_dir = data_dir + 'cosmo_sims/sim_grid/'
 
 proj_dir = data_dir + 'projects/wdm/'
-output_dir = proj_dir + 'figures/paper_revision/'
+output_dir = proj_dir + 'figures/'
 create_directory( output_dir )
-
-black_background = False
 
 dir_data_boera = ps_data_dir + 'data_power_spectrum_boera_2019/'
 data_boera = load_data_boera( dir_data_boera )
 
 error_type = 'covmatrix'
 grid_names = [ '1024_wdmgrid_extended_beta', '1024_wdmgrid_cdm_extended_beta' ] 
-data_name = f'fit_results_P(k)+_Boera_{error_type}'
+data_name = f'fit_results_P(k)+_Boera_{error_type}_RT_corrected'
 data_labels = [ 'Boera Sigma', 'Boera Cov M' ]
 
 HL_key = 'Highest_Likelihood'
@@ -87,11 +85,6 @@ sim_colors = [ 'dodgerblue', yellows[3] ]
 
 sim_colors = [ 'midnightblue', 'orange' ]
 
-if black_background: 
-  # sim_colors = [ 'cornflowerblue', 'orange' ]
-  sim_colors = [ 'dodgerblue', 'orange' ]
-  data_color = light_red
-
 import matplotlib
 import matplotlib.font_manager
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
@@ -105,9 +98,9 @@ h_length = 4
 main_length = 3
 
 fig_dpi = 300
-label_size = 21
-figure_text_size = 17
-legend_font_size = 17
+label_size = 22
+figure_text_size = 18
+legend_font_size = 18
 tick_label_size_major = 18
 tick_label_size_minor = 14
 tick_size_major = 8
@@ -116,11 +109,6 @@ tick_width_major = 2.5
 tick_width_minor = 2
 border_width = 2
 text_color = 'k'
-
-
-if black_background:
-  text_color = 'white'
-
 
 linewidth = 2
 bars_alpha = [ 0.7, 0.5 ]
@@ -136,8 +124,7 @@ gs.update(hspace=0.0, wspace=0.18, )
 xmin, xmax = 0.0045, 0.25
 y_lims = [ [6e-3, 4e-1], [9e-3, 5.5e-1], [1.5e-2, 7.5e-1] ]
 delta_ylims = [ [-0.4, 0.7], [-0.3, 0.35], [-0.3, 0.5 ] ]
-# delta_ticks = [ [0.0, 0.5], [-.2, 0, .2], [0.0, 0.4]]
-delta_ticks = [ [1.0, 1.5], [-.2+1, 1, 1.2], [1.0, 0.4+1]]
+delta_ticks = [ [0.0, 0.5], [-.2, 0, .2], [0.0, 0.4]]
 sim_reff_indx = 0 
 
 sim_factor  = [ 1.03, 1.03, 1.02 ]
@@ -187,23 +174,17 @@ for i in range( ncols ):
     data_sim_reff = data_all[sim_reff_indx][i]
     k_reff = data_sim_reff['k_vals']
     ps_reff = data_sim_reff[HL_key] 
-    # delta_ps = ( ps_sim - ps_reff ) / ps_reff  
-    # delta_h = ( ps_sim_h - ps_reff ) / ps_reff 
-    # delta_l = ( ps_sim_l - ps_reff ) / ps_reff 
-    delta_ps = ps_sim / ps_reff  
-    delta_h  = ps_sim_h  / ps_reff 
-    delta_l  = ps_sim_l  / ps_reff 
+    delta_ps = ( ps_sim - ps_reff ) / ps_reff
+    delta_h = ( ps_sim_h - ps_reff ) / ps_reff
+    delta_l = ( ps_sim_l - ps_reff ) / ps_reff
     
     ax2.plot( k_sim, delta_ps ,linewidth=linewidth,  zorder=2, color=line_color, alpha=line_alpha )
     ax2.fill_between( k_sim, delta_h, delta_l, color=line_color, alpha=bar_alpha, zorder=1)
     
     sim_ps_interp = 10**np.interp( np.log10(data_k), np.log10(k_sim), np.log10(ps_sim) ) 
-    # delta_ps_data = ( data_ps - sim_ps_interp ) / sim_ps_interp
-    # delta_ps_data_h = ( data_ps_sigma ) / sim_ps_interp
-    # delta_ps_data_l = ( data_ps_sigma ) / sim_ps_interp    
-    delta_ps_data =  data_ps  / sim_ps_interp
-    delta_ps_data_h =  data_ps_sigma  / sim_ps_interp
-    delta_ps_data_l =  data_ps_sigma  / sim_ps_interp
+    delta_ps_data = ( data_ps - sim_ps_interp ) / sim_ps_interp
+    delta_ps_data_h = ( data_ps_sigma ) / sim_ps_interp
+    delta_ps_data_l = ( data_ps_sigma ) / sim_ps_interp
     delta_sigma = [ delta_ps_data_h, delta_ps_data_l]
     
     
@@ -220,7 +201,7 @@ for i in range( ncols ):
   cov_matrix = Merge_Matrices( sum_matrix['data']['covmatrix'])
   cov_matrix_inv = np.linalg.inv( cov_matrix )
   
-  if i == 0:   leg = ax1.legend(  loc=3, frameon=False, fontsize=legend_font_size, labelcolor=text_color    )
+  if i == 0:   leg = ax1.legend(  loc=3, frameon=False, fontsize=legend_font_size    )
   
   
     
@@ -239,21 +220,13 @@ for i in range( ncols ):
 
   ax2.tick_params(axis='both', which='major', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in' )
   ax2.tick_params(axis='both', which='minor', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in')
-  # ax2.set_ylabel( r'$ \Delta P\,(k) / P\,(k)$', fontsize=label_size, color= text_color )  
-  ax2.set_ylabel( r'$ P\,(k) / P_{\mathrm{WDM}}\,(k)$', fontsize=label_size, color= text_color )  
+  ax2.set_ylabel( r'$ \Delta P\,(k) / P\,(k)$', fontsize=label_size, color= text_color )  
   ax2.set_xlabel( r'$k$  [s km$^{\mathrm{\mathregular{-1}}}$]', fontsize=label_size, color=text_color, labelpad=-5 )
   ax2.set_xscale('log')
   [sp.set_linewidth(border_width) for sp in ax2.spines.values()]
   ax2.set_xlim( xmin, xmax )
-  ax2.set_ylim( delta_ylims[i][0] + 1, delta_ylims[i][1] + 1 )
+  ax2.set_ylim( delta_ylims[i][0], delta_ylims[i][1] )
   ax2.set_yticks( delta_ticks[i] )
-
-  if black_background: 
-    fig.patch.set_facecolor('black') 
-    ax1.set_facecolor('k')
-    ax2.set_facecolor('k')
-    [ spine.set_edgecolor(text_color) for spine in list(ax1.spines.values()) ]
-    [ spine.set_edgecolor(text_color) for spine in list(ax2.spines.values()) ]
 
 delta_vector_0 = ps_sim_vector_0 - ps_data_vector
 delta_vector_1 = ps_sim_vector_1 - ps_data_vector
@@ -273,18 +246,15 @@ L1 = np.exp( ln_L_1 )
 ax1 = plt.subplot(gs[0:main_length, 0])
 
 M_vals = [ M_0, M_1 ]
-pos_x = 0.65
+pos_x = 0.66
 for data_id in data_all:
-  txt = r'$\chi^2= \sum_z \Delta^{T} \mathbf{C}^{-1} \Delta=$' + f'{M_vals[data_id]:.1f}'
-  pos_y = 0.235 - 0.095*data_id
+  txt = r'$\chi^2=\Delta^{T} \mathbf{C}^{-1} \Delta=$' + f'{M_vals[data_id]:.1f}'
+  pos_y = 0.24 - 0.075*data_id
   ax1.text(pos_x, pos_y, txt, horizontalalignment='center',  verticalalignment='center', transform=ax1.transAxes, fontsize=legend_font_size-1, color=sim_colors[data_id]) 
   
 fig.align_ylabels()
-
-
-    
-figure_name = output_dir + f'flux_ps_wdm_fit.png'
-if black_background: figure_name = output_dir + f'flux_ps_wdm_fit_black.png'
+  
+figure_name = output_dir + f'flux_ps_wdm_fit_RT_corrected.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
 

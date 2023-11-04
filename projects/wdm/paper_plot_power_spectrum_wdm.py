@@ -13,7 +13,9 @@ from colors import *
 
 proj_dir = data_dir + 'projects/wdm/'
 base_dir = data_dir + 'cosmo_sims/wdm_sims/compare_wdm/'
-output_dir = proj_dir + 'figures/'
+output_dir = proj_dir + 'figures/paper_revision/'
+
+black_background = False 
 
 n_snap = 29
 
@@ -67,6 +69,10 @@ tick_width_minor = 1.5
 border_width = 1.5
 text_color = 'k'
 
+if black_background:
+  text_color = 'white'
+  colors[0] = 'white'
+
 
 nrows, ncols = 1, 1
 h_length = 4
@@ -111,7 +117,7 @@ for data_id in data:
   ps_reff = data[ref_id]['ps_mean']
   ps_diff = ps_mean / ps_reff 
 
-  if data_id == ref_id: ax2.axhline( y=1., c='k', ls='--', zorder=zorder) 
+  if data_id == ref_id: ax2.axhline( y=1., c=colors[0], ls='--', zorder=zorder) 
   else: ax2.plot( k_vals, ps_diff, c=color, label=label, zorder=zorder, lw=lw )
 
 
@@ -124,7 +130,7 @@ ax2.fill_between( [0, k_min], [-1, -1 ], [1000, 1000], color='gray', alpha=alpha
 ax2.fill_between( [k_max, 1], [-1, -1 ], [1000, 1000], color='gray', alpha=alpha )
 
 ax1.text(0.9, 0.95, r'$z=${0:.1f}'.format(z), horizontalalignment='center',  verticalalignment='center', transform=ax1.transAxes, fontsize=figure_text_size, color=text_color) 
-ax1.legend( frameon=False, loc=3, fontsize=legend_font_size)
+ax1.legend( frameon=False, loc=3, fontsize=legend_font_size, labelcolor=text_color )
 
 
 ax1.set_ylabel( r'$\pi^{\mathregular{-1}} \,k \,P\,(k)$', fontsize=label_size, color= text_color )  
@@ -151,8 +157,18 @@ ax2.set_xlim( x_range[0], x_range[1] )
 ax2.set_ylim(0, 2 )
 
 fig.align_ylabels()
+
+if black_background: 
+  fig.patch.set_facecolor('black') 
+  ax1.set_facecolor('k')
+  ax2.set_facecolor('k')
+  [ spine.set_edgecolor(text_color) for spine in list(ax1.spines.values()) ]
+  [ spine.set_edgecolor(text_color) for spine in list(ax2.spines.values()) ]
+  
+  
 # 
 figure_name = output_dir + f'flux_ps_wdm.png'
+if black_background: figure_name = output_dir + f'flux_ps_wdm_black.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
 

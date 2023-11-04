@@ -23,6 +23,8 @@ n_data = len( data_names )
 
 n_snap = 29
 
+black_background = True
+
 space = 'redshift'
 data_redshift = {}
 for data_id, data_name in enumerate(data_names):
@@ -54,6 +56,7 @@ for data_id, data_name in enumerate(data_names):
 
 colors = [ 'k', sky_blue,  ocean_green, light_orange, light_red  ]   
 
+
 fig_width = 8
 fig_dpi = 300
 label_size = 18
@@ -68,6 +71,11 @@ tick_width_minor = 1.5
 border_width = 1.5
 text_color = 'k'
 
+if black_background:
+  text_color = 'white'
+  colors[0] = 'white'
+
+
 
 nrows, ncols = 1, 1
 
@@ -76,7 +84,7 @@ plt.subplots_adjust( hspace = 0.1, wspace=0.2 )
 
 
 colors = [  dark_blue,  ocean_green ]
-# colors = [  light_orange, light_red  ]
+# if black_background: colors = [  light_orange, light_red  ]
 
 labels = [  r'$m_\mathregular{WDM}=5.0 \,\mathregular{keV}$', r'$m_\mathregular{WDM}=4.0 \,\mathregular{keV}$' ]
 
@@ -135,12 +143,12 @@ alpha = 0.25
 ax.fill_between( [0, k_min], [-1, -1 ], [1000, 1000], color='gray', alpha=alpha )
 ax.fill_between( [k_max, 1], [-1, -1 ], [1000, 1000], color='gray', alpha=alpha )
 
-ax.axhline( y=1., c='k', ls='--', zorder=2, lw=2 ) 
+ax.axhline( y=1., c=text_color, ls='--', zorder=2, lw=2 ) 
 
-ax.legend( frameon=False, loc=3, fontsize=12)
+ax.legend( frameon=False, loc=3, fontsize=12 , labelcolor=text_color)
 plt.legend([(1,colors[0],"-", line_widths[0]), (1,colors[1],"-", line_widths[1]), (2,colors[0],colors[1],"-", line_widths[0]), (2,colors[0],colors[1],"--",line_widths[1])], 
            [labels[0], labels[1], 'Redshift space', 'Real space'],
-           handler_map={tuple: AnyObjectHandler()}, frameon=False, fontsize=legend_font_size)
+           handler_map={tuple: AnyObjectHandler()}, frameon=False, fontsize=legend_font_size, labelcolor=text_color)
 
 ax.text(0.09, 0.35, r'$z=${0:.1f}'.format(z), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
 
@@ -156,9 +164,15 @@ ax.tick_params(axis='both', which='minor', color=text_color, labelcolor=text_col
 ax.set_xscale('log')
 [sp.set_linewidth(border_width) for sp in ax.spines.values()]
 
+if black_background: 
+  fig.patch.set_facecolor('black') 
+  ax.set_facecolor('k')
+  [ spine.set_edgecolor(text_color) for spine in list(ax.spines.values()) ]
+  
 
 
 figure_name = output_dir + f'flux_ps_ratio_real_space.png'
+if black_background: figure_name = output_dir + f'flux_ps_ratio_real_space_black.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
 

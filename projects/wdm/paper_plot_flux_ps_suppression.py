@@ -1,3 +1,4 @@
+from calendar import TextCalendar
 import os, sys, time
 from pathlib import Path
 import h5py as h5
@@ -16,6 +17,8 @@ base_dir = data_dir + 'cosmo_sims/wdm_sims/'
 
 n_snap = 29
 space = 'redshift'
+
+black_background = True
 
 
 data_names = [ 'cdm', 'm5.0kev', 'm4.0kev', 'm3.0kev', 'm2.0kev'  ]
@@ -156,6 +159,11 @@ tick_width_minor = 2
 border_width = 2
 text_color = 'k'
 
+if black_background:
+  text_color = 'white'
+  colors[0] = 'white'
+
+
 
 nrows, ncols = 1, 3
 fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(figure_width*ncols,fig_height*nrows))
@@ -237,11 +245,11 @@ for i in range(ncols):
   ax.fill_between( [0, k_min], [-1, -1 ], [1000, 1000], color='gray', alpha=alpha )
   ax.fill_between( [k_max, 1], [-1, -1 ], [1000, 1000], color='gray', alpha=alpha )
 
-  ax.axhline( y=1., c='k', ls='--', zorder=2, lw=2 ) 
+  ax.axhline( y=1., c=text_color, ls='--', zorder=2, lw=2 ) 
 
   legend_color = 'k'
   legend_alpha = 0.1
-  ax.legend( frameon=False, loc=legend_locs[i], fontsize=legend_font_size, facecolor=legend_color, framealpha=legend_alpha )
+  ax.legend( frameon=False, loc=legend_locs[i], fontsize=legend_font_size, facecolor=legend_color, framealpha=legend_alpha, labelcolor=text_color )
 
   if i == 0: ax.text(0.12, 0.33, r'$z=${0:.1f}'.format(z), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
 
@@ -258,7 +266,14 @@ for i in range(ncols):
 
   ax.set_xscale('log')
 
+  if black_background: 
+    fig.patch.set_facecolor('black') 
+    ax.set_facecolor('k')
+    [ spine.set_edgecolor(text_color) for spine in list(ax.spines.values()) ]
+    
+
 figure_name = output_dir + f'flux_ps_suppression.png'
+if black_background: figure_name = output_dir + f'flux_ps_suppression_black.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
 

@@ -33,6 +33,7 @@ ocean_blue = haline[-3]
 ocean_green = haline[4]
 sky_blue = purple_blue[4]
 dark_purple = purples[-1]
+light_purple = purples[5]
 
 dense = palettable.cmocean.sequential.Dense_20_r
 gray = palettable.cmocean.sequential.Gray_20_r

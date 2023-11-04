@@ -87,16 +87,18 @@ for data_id,data_name in enumerate(data_names):
   param_samples = pickle.load( open( samples_file, 'rb' ) )
   samples_outline['param'][data_id] = param_samples
   
-oslo = palettable.scientific.sequential.Oslo_20_r
-tempo = palettable.cmocean.sequential.Tempo_20
+tempo = palettable.cmocean.sequential.Tempo_20_r
 devon = palettable.scientific.sequential.Devon_20_r  
+amp = palettable.cmocean.sequential.Amp_20_r
 
-samples_outline_cmap = oslo
-samples_outline_color = samples_outline_cmap.mpl_colors[len(samples_outline_cmap.mpl_colors)//2] 
+colormap = amp
+# samples_outline_cmap = oslo
+# samples_outline_color = samples_outline_cmap.mpl_colors[len(samples_outline_cmap.mpl_colors)//2] 
+samples_outline_color = light_blue
 
 Plot_Corner( samples_all['param'], data_labels, corner_labels, output_dir, n_bins_1D=20, n_bins_2D=35, 
              lower_mask_factor=500, multiple=True, show_label=True, HL_vals=params_HL, ticks=ticks, 
-             limits=limits, param_values=param_values, black_background=False, figure_name='corner_wdm_RT_corrected.png', 
-             param_names=p_names, param_labels=param_labels, cmap=tempo, line_color_index=10, 
+             limits=limits, param_values=param_values, black_background=True, figure_name='corner_wdm_RT_corrected_black.png', 
+             param_names=p_names, param_labels=param_labels, cmap=colormap, line_color=light_red, line_color_index=10, 
              samples_outline=samples_outline['param'], samples_outline_color=samples_outline_color, outline_label='Uniform UVB',
              legend_ncol=2 )

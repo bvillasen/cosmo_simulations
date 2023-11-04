@@ -102,7 +102,8 @@ params = SG.parameters
 stats_file   = output_dir + 'fit_mcmc.pkl'
 samples_file = output_dir + 'samples_mcmc.pkl'
 
-nIter = 500000 
+#nIter = 500000 
+nIter = 50000 
 nBurn = nIter // 5
 nThin = 1
 model, params_mcmc = get_mcmc_model( comparable_data, comparable_grid, fields_to_fit, 'mean', SG, error_type='covariance_matrix' )

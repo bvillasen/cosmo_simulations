@@ -6,29 +6,21 @@ sys.path.append( root_dir + 'tools' )
 from tools import *
 
 
-job_name  = 'thermal_wdm' 
-n_mpi_tasks = 80
-n_nodes = 2
-n_tasks_per_node = 40
-time = '24:00:00'
+job_name  = 'mcmc_wdm' 
+n_mpi_tasks = 1
+n_nodes = 1
+n_tasks_per_node = 1
+time = '48:00:00'
 command = 'python'
 
-job_dir = home_dir + 'thermal_IGM/'
-command_params = 'run_termal_wdm_chain_T0.py'
+job_dir = home_dir + 'cosmo_simulations/simulation_grid/'
+command_params = f'fit_mcmc_wdm_T0.py '
 
 partition = 'comp-astro'
 # partition = 'gpuq'
-# partition = 'cpuq'
-work_directory = '/home/brvillas/jobs/wdm_thermal/'
+work_directory = '/home/brvillas/jobs/'
+output = work_directory + 'run_output_mcmc_wdm_T0.log'
 create_directory( work_directory )
-
-output = work_directory + 'run_output_wdm_T0.log'
-# output = work_directory + 'run_output_cdm.log'
-
-# output = work_directory + 'run_output_RT_corrected_wdm.log'
-# output = work_directory + 'run_output_wdm.log'
-
-# output = work_directory + 'run_output_RT_corrected.log'
 
 submit_str = f"""#!/bin/bash          
 #SBATCH --job-name={job_name}    
@@ -63,7 +55,6 @@ print(f'Changing dir: {work_directory}' )
 os.chdir( job_dir )
 if partition == 'comp-astro': partition_key = 'comp'
 if partition == 'gpuq':       partition_key = 'gpu'
-if partition == 'cpuq':       partition_key = 'cpu'
 exclude_nodes = []
 exclude_comand = '' 
 for node in exclude_nodes:

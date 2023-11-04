@@ -40,6 +40,7 @@ field_list = [ 'los_velocity', 'density'  ]
 n_bins = 200
 vel_min = 1e-3
 
+
 data_all = {}
 for type in [ 'cdm', 'wdm' ]:
   data_all[type] = {}
@@ -51,13 +52,18 @@ for type in [ 'cdm', 'wdm' ]:
     skewer_dataset = Load_Skewers_File( n_file, input_dir, axis_list=axis_list, fields_to_load=field_list )
     z = skewer_dataset['current_z']
     los_velocity = skewer_dataset['los_velocity']
-    los_velocity[los_velocity<vel_min] = vel_min
-    density = skewer_dataset['density'] / cosmo.rho_gas_mean
-    indices = density > 1
-    los_velocity = los_velocity[indices]
-    distribution, centers = compute_distribution( los_velocity, n_bins=n_bins, log=True )
+    los_velocity = np.abs( los_velocity )
+    # los_velocity[los_velocity<vel_min] = vel_min
+
+    delta_vel = []
+    for skewer in los_velocity:
+      delta = skewer[2:] - skewer[:-2]
+      delta_vel.append( delta )
+    delta_vel = np.abs( np.array( delta_vel ) ) 
     
-    start = 5
+    distribution, centers = compute_distribution( delta_vel, n_bins=n_bins, log=True )
+    
+    start = 0
     data_all[type][snap_id] = { 'z':z, 'bin_centers':centers[start:] , 'distribution':distribution[start:] }
 
 
@@ -99,7 +105,7 @@ fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(figure_width*ncols,6*n
 plt.subplots_adjust( hspace = 0.1, wspace=0.15)
 
 
-for i in range(2):
+for i in range(1):
 
   if i == 0: 
    type = 'cdm'
@@ -115,6 +121,8 @@ for i in range(2):
     z = data[snap_id]['z']
     bin_centers  = data[snap_id]['bin_centers']
     distribution = data[snap_id]['distribution']
+    distribution[distribution < 1e-5] = 1e-5
+    distribution = np.log10( distribution )
 
     label = ''
     if i == 0:
@@ -132,9 +140,9 @@ ax.set_xlabel( r'$v\,_\mathrm{LOS}$  [km/s]', fontsize=label_size, color=text_co
 ax.tick_params(axis='both', which='major', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in' )
 ax.tick_params(axis='both', which='minor', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in')
 
-ax.set_xlim( 0.002, 300 )
-ax.set_ylim( 0.0, 0.02 )
+ax.set_xlim( 0.002, 200 )
+# ax.set_ylim( 0.0, 0.1 )
 
-figure_name = output_dir + f'los_velocity_distribution_dense_gas.png'
+figure_name = output_dir + f'delta_los_velocity_distribution.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )

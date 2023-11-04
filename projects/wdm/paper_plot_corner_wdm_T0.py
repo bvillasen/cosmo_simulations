@@ -13,12 +13,12 @@ from mcmc_sampling_functions import Get_Highest_Likelihood_Params
 grid_name = '1024_wdmgrid_extended_beta'
 
 data_name = 'fit_results_P(k)+_Boera_covmatrix'
-data_names = [ 'fit_results_P(k)+_Boera_covmatrix_RT_corrected'  ]
-data_labels = [ 'Patchy UVB' ]
+data_names = [ 'fit_results_P(k)+T0_Boera_covmatrix'  ]
+data_labels = [ r'$P\,(k) \, + \, T_0$ constraint',  ]
 
 
 proj_dir = data_dir + 'projects/wdm/'
-output_dir = proj_dir + f'figures/'
+output_dir = proj_dir + f'figures/paper_revision/'
 create_directory( output_dir )
 
 samples_all = {}
@@ -89,14 +89,21 @@ for data_id,data_name in enumerate(data_names):
   
 oslo = palettable.scientific.sequential.Oslo_20_r
 tempo = palettable.cmocean.sequential.Tempo_20
-devon = palettable.scientific.sequential.Devon_20_r  
+amp = palettable.cmocean.sequential.Amp_20
+devon = palettable.scientific.sequential.Devon_20_r
+davos = palettable.scientific.sequential.Davos_20_r  
 
 samples_outline_cmap = oslo
 samples_outline_color = samples_outline_cmap.mpl_colors[len(samples_outline_cmap.mpl_colors)//2] 
 
-Plot_Corner( samples_all['param'], data_labels, corner_labels, output_dir, n_bins_1D=20, n_bins_2D=35, 
-             lower_mask_factor=500, multiple=True, show_label=True, HL_vals=params_HL, ticks=ticks, 
-             limits=limits, param_values=param_values, black_background=False, figure_name='corner_wdm_RT_corrected.png', 
-             param_names=p_names, param_labels=param_labels, cmap=tempo, line_color_index=10, 
-             samples_outline=samples_outline['param'], samples_outline_color=samples_outline_color, outline_label='Uniform UVB',
-             legend_ncol=2 )
+
+cmap = amp
+ymax = [0.18, 0.26, 0.24, 0.09]
+outline_label = r'$P\,(k)$ constraint'
+
+Plot_Corner( samples_all['param'], data_labels, corner_labels, output_dir, n_bins_1D=20, n_bins_2D=50, 
+             lower_mask_factor=1e2, multiple=True, show_label=True, HL_vals=params_HL, ticks=ticks, 
+             limits=limits, param_values=param_values, black_background=False, figure_name='corner_wdm_T0.png', 
+             param_names=p_names, param_labels=param_labels, cmap=cmap, line_color_index=10, 
+             samples_outline=samples_outline['param'], samples_outline_color=samples_outline_color, outline_label=outline_label,
+             legend_ncol=1, ymax=ymax )

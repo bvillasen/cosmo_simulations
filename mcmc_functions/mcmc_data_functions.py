@@ -9,7 +9,7 @@ sys.path.extend(subDirectories)
 from tools import *
 from load_tabulated_data import load_power_spectrum_table, load_data_boera, load_tabulated_data_viel, load_data_boss, load_data_irsic
 from data_optical_depth_HeII import data_tau_HeII_Worserc_2019
-from data_thermal_history import data_thermal_history_Gaikwad_2020a, data_thermal_history_Gaikwad_2020b
+from data_thermal_history import data_thermal_history_Gaikwad_2020a, data_thermal_history_Gaikwad_2020b, data_thermal_history_Boera_2019
 from data_optical_depth import *
 from matrix_functions import Merge_Matrices, rescale_matrix
 
@@ -297,10 +297,32 @@ def Get_Comparable_Tau( z_min, z_max, factor_sigma_tau_becker=1, factor_sigma_ta
   comparable['sigma'] = sigma[indices]
   return comparable
 
+
+##################################################################################################################################
+
+def Get_Comparable_T0_Boera():
+  print( 'Loading Boera T0 Data: ')
+  data_set = data_thermal_history_Boera_2019 
+  z = data_set['z']
+  data_mean  = data_set['T0']
+  data_sigma = ( data_set['T0_sigma_plus'] + data_set['T0_sigma_minus'] )*0.5 
+  n_samples = len(data_sigma)
+  comparable = {}
+  comparable['z'] = z
+  comparable['mean'] = data_mean
+  comparable['sigma'] = data_sigma
+  print( f' WARNING: Building T0 covariance matrix from sigma only. n_samples:{n_samples}')
+  cov_matrix = np.zeros( [n_samples, n_samples])
+  for i in range( n_samples):
+    cov_matrix[i,i] = data_sigma[i]**2
+  comparable['covariance_matrix'] = cov_matrix
+  print( f' N data points: {len(data_mean)} ' )
+  return comparable
+  
 ##################################################################################################################################
 
 def Get_Comparable_T0_Gaikwad():
-  print( 'Loading T0 Data: ')
+  print( 'Loading Gaikwad T0 Data: ')
   data_sets = [ data_thermal_history_Gaikwad_2020b, data_thermal_history_Gaikwad_2020a ]
   z = np.concatenate( [ds['z'] for ds in data_sets ])
   data_mean  = np.concatenate( [ds['T0'] for ds in data_sets ])
@@ -574,7 +596,8 @@ def Get_Comparable_Composite( fields, z_min, z_max, verbose=False, ps_parameters
       if 'covariance_matrix' in comparable_ps_all: 
         covariance_matrices.append(comparable_ps_all['covariance_matrix'])
     if field == 'T0':  
-      comparable_field = Get_Comparable_T0_Gaikwad()
+      # comparable_field = Get_Comparable_T0_Gaikwad()
+      comparable_field = Get_Comparable_T0_Boera()
       append_comparable = True
     if field == 'tau': 
       comparable_field = Get_Comparable_Tau( z_min, z_max, factor_sigma_tau_becker=factor_sigma_tau_becker, factor_sigma_tau_keating=factor_sigma_tau_keating )

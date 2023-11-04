@@ -18,6 +18,8 @@ n_snap = 29
 
 do_50Mpc = False
 
+black_background = True
+
 data_names = [ 'cdm', 'm4.0kev', 'm3.0kev',  'm2.0kev', 'm1.0kev' ]
 
 if do_50Mpc:data_names = [ 'cdm', 'wdm_m4.0kev', 'wdm_m3.0kev',  'wdm_m2.0kev', 'wdm_m1.0kev' ]
@@ -41,7 +43,9 @@ for data_id, data_name in enumerate(data_names):
 
 data_all = [ data_density, data_flux ]
 
-colors = [ 'k', sky_blue,  ocean_green, light_orange, light_red  ]   
+colors = [ 'k', sky_blue,  ocean_green, light_orange, light_red  ]  
+
+
 
 fig_width = 8
 fig_dpi = 300
@@ -56,6 +60,11 @@ tick_width_major = 2
 tick_width_minor = 1.5
 border_width = 1.5
 text_color = 'k'
+
+if black_background:
+  text_color = 'white'
+  colors[0] = 'white'
+
 
 nrows, ncols = 1, 2
 
@@ -107,8 +116,9 @@ for i in range(2):
   if i == 1:  
     y_line = arr_length * 1.2
     delta = 0.03
-    plt.plot( [f_min*(1-delta), f_max* (1+delta)], [y_line, y_line], c='k' )
-    ax.text( 0.425, .11, r'$\overline{F}$', horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=15, color=text_color) 
+    plt.plot( [f_min*(1-delta), f_max* (1+delta)], [y_line, y_line], c='lightgray' )
+    # ax.text( 0.425, .11, r'$\overline{F}$', horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=15, color=text_color) 
+    ax.text( 0.419, .115, r'$\langle F \rangle$', horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=15, color=text_color) 
 
   
   ax.set_xscale('log')
@@ -119,7 +129,7 @@ for i in range(2):
 
   loc = 1
   if i == 1: loc = 2   
-  ax.legend( frameon=False, loc=loc, fontsize=legend_font_size)
+  ax.legend( frameon=False, loc=loc, fontsize=legend_font_size, labelcolor=text_color)
 
   ax.set_ylabel( y_labels[i], fontsize=label_size, color= text_color )  
   ax.set_xlabel( x_labels[i], fontsize=label_size, color=text_color )
@@ -131,8 +141,16 @@ for i in range(2):
   ax.set_xlim( x_range[i][0], x_range[i][1] )
   ax.set_ylim( 0, y_max[i])
 
-figure_name = output_dir + f'density_flux_distributions.png'
-if do_50Mpc: figure_name = output_dir + f'density_flux_distributions_50Mpc.png'
+  if black_background: 
+    fig.patch.set_facecolor('black') 
+    ax.set_facecolor('k')
+    [ spine.set_edgecolor(text_color) for spine in list(ax.spines.values()) ]
+    
+
+figure_name = output_dir + f'density_flux_distributions'
+if do_50Mpc: figure_name = output_dir + f'density_flux_distributions_50Mpc'
+if black_background: figure_name += '_black'
+figure_name += '.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
 

@@ -30,7 +30,7 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
     HL_vals=None, show_best_fit=False, limits=None, param_values=None, black_background=False,
     bins=None, legend_loc=2, figure_name='corner.png', show_param_values=False, param_names=None,
     param_labels=None, samples_outline=None, param_font_size=25, cmap=oslo, samples_outline_color='C1', outline_label='',
-    line_color_index=None, legend_ncol=1 ):
+    line_color_index=None, legend_ncol=1, line_color=None, scale_log=[], ymax=None ):
   
   
 
@@ -79,13 +79,14 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
   
   # black_background = False
   if black_background:
-    color_map_0 = palettable.cmocean.sequential.Ice_20
+    # color_map_0 = palettable.cmocean.sequential.Ice_20
     # color_map_0 = palettable.matplotlib.Inferno_20
-    color_map_list = [ color_map_0, color_map_1, color_map_3, color_map_3, color_map_4 ]
+    # color_map_list = [ color_map_0, color_map_1, color_map_3, color_map_3, color_map_4 ]
     text_color = 'white'
-    tick_label_size = 18
-    label_size = 32
+    # tick_label_size = 18
+    # label_size = 32
     marker_color = 'black'
+    hl_color = 'lightgray'
 
   sharex = 'col'
   if ticks is not None: sharex = 'none'
@@ -141,8 +142,8 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
         contour_colormap = colormap.mpl_colors
         n_colors = len( contour_colormap )
         if line_color_index is None: line_color_index = n_colors//2
-        line_color = contour_colormap[line_color_index]
-        if black_background: line_color = palettable.colorbrewer.sequential.Blues_9_r.mpl_colors[4]
+        # if black_background: line_color = palettable.colorbrewer.sequential.Blues_9_r.mpl_colors[4]
+        if line_color is None: line_color = contour_colormap[line_color_index]
         contour_colors = [contour_colormap[n_colors//2], contour_colormap[-1]]
         
         if plot_type == '1D':
@@ -153,8 +154,11 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
             bin_min, bin_max, n_bin = bins[j]['min'], bins[j]['max'], bins[j]['n'] 
             bins_1D = np.linspace( bin_min, bin_max, n_bin )
             print( f"Bins 1D: {bins_1D}" )
+          
+
+          
           hist, bin_edges = np.histogram( trace, bins=bins_1D ) 
-          # hist = hist.astype(np.float) / hist.sum()
+          hist = hist.astype(np.float) / hist.sum()
           bin_centers = ( bin_edges[:-1] + bin_edges[1:] ) / 2.
           bin_width = bin_centers[0] - bin_centers[1]
           if i == 0: bin_centers[0] = 0  
@@ -163,6 +167,7 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
           data_label = data_labels[data_id]
           if add_data_label: label = f'{data_label}' 
           else: label = ''
+            
           ax.plot( bin_centers_interp, f_interp(bin_centers_interp),   color=line_color, linewidth=hist_1D_line_width, label=label, zorder=3  )
           # ax.plot( bin_centers, hist,   color=line_color, linewidth=hist_1D_line_width  ), 
           # ax.step( bin_centers, hist, where='mid',  color=line_color, linewidth=hist_1D_line_width  )
@@ -217,14 +222,18 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
               bins_1D = np.linspace( bin_min, bin_max, n_bin )
               print( f"Bins 1D: {bins_1D}" )
             hist, bin_edges = np.histogram( trace, bins=bins_1D ) 
-            # hist = hist.astype(np.float) / hist.sum()
+            hist = hist.astype(np.float) / hist.sum()
+            if i == 2:
+              hist *= 0.875
             bin_centers = ( bin_edges[:-1] + bin_edges[1:] ) / 2.
             bin_width = bin_centers[0] - bin_centers[1]  
             bin_centers_interp = np.linspace( bin_centers[0], bin_centers[-1], 100000 )
             f_interp  = interp.interp1d( bin_centers, hist,  kind='cubic' )
             ax.plot( bin_centers_interp, f_interp(bin_centers_interp), ls='--',  color=samples_outline_color, linewidth=hist_1D_line_width, label=outline_label, zorder=0, alpha=1.0  )
           
-            
+          if name in scale_log: ax.set_xscale('log')
+          
+        ax.set_ylim(0,None )
         
         if plot_type == '2D':
           trace_y = samples[j]['trace']
@@ -287,7 +296,8 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
         y_lims = limits[j] 
         ax.set_xlim( x_lims[0], x_lims[1] )
         if j > i: ax.set_ylim( y_lims[0], y_lims[1] )
-        if j == i: ax.set_ylim(-1,None)
+        if ymax is not None:
+          if j == i: ax.set_ylim(0,ymax[i])
 
   
   if show_param_values:
@@ -365,8 +375,6 @@ def Plot_Corner( samples, data_label, labels, output_dir, n_bins_1D=20, n_bins_2
       plt.text( text_x, text_y, text, transform=fig.transFigure, fontsize=param_font_size+font_add, color=text_color )
       text_y -= offset_y
   
-  if black_background:
-    output_dir += 'black_background/'  
   
   figure_name = output_dir + figure_name
   fig.savefig( figure_name, bbox_inches='tight', dpi=400, facecolor=fig.get_facecolor() )

@@ -28,22 +28,15 @@ Lbox = 50000.0    #kpc/h
 # n_cells = 1024
 n_cells = 256
 
-snapshots = np.arange( 1, 12, 1, dtype=int )
-# snapshots = np.arange( 0, 170, 1, dtype=int )
+snapshots = np.arange( 1, 16, dtype=int )
+# snapshots = np.arange( 0, 1, dtype=int )
 snapshots_local = split_array_mpi( snapshots, rank, n_procs )
 print( f'rank: {rank}  snapshots_local:{snapshots_local}' )
 
-sim_dir = data_dir + f'cosmo_sims/{n_cells}_50Mpc/'
-input_dir_0 = sim_dir + 'snapshot_files_cpu/'
-input_dir_1 = sim_dir + 'snapshot_files/'
+sim_dir = data_dir + f'cosmo_sims/cholla_ics/'
+input_dir_0 = sim_dir + '256_50Mpc/snapshot_files_ics_music_0/'
+input_dir_1 = sim_dir + '256_50Mpc/snapshot_files_ics_music/'
 
-# sim_dir = data_dir + f'cosmo_sims/{n_cells}_50Mpc/'
-# input_dir_0 = sim_dir + 'snapshot_files_cosmo/'
-# input_dir_1 = sim_dir + 'snapshot_files_merge_grackle/'
-
-
-# input_dir_0 = data_dir + 'cosmo_sims/1024_50Mpc_adiabatic/snapshot_files_caar/'
-# input_dir_1 = data_dir + 'cosmo_sims/1024_50Mpc_adiabatic/sim_cosmo/snapshot_files/'
 
 output_dir  = sim_dir + 'figures/'
 if rank ==0: create_directory( output_dir ) 
@@ -60,7 +53,8 @@ grid_size = [ n_cells, n_cells, n_cells ] #Size of the simulation grid
 
 # fields = [ 'density', 'momentum_x', 'momentum_y', 'momentum_z', 'GasEnergy', 'Energy'  ]
 # fields = [ 'density', 'grav_potential' ]
-fields = [ 'density' ]
+# fields = [ 'density', 'temperature' ]
+fields = [ 'density'  ]
 diff = {}
 
 
@@ -95,3 +89,6 @@ for n_snapshot in snapshots_local:
     print( f'n: {n_snapshot:03}  z: {z:.2f}  Diff {data_type} {field} min: {diff_vals.min():.3e}   max: {diff_vals.max():.3e}   Mean: {diff_vals.mean():.3e} ')
     # print( f'n: {n_snapshot:03}  z: {z:.2f}  Diff {data_type} {field} min: {diff_vals.min():.3e}   max: {diff_vals.max():.3e}   Mean: {diff_vals.mean():.3e}   id_diff_max:{id_max}')
 
+    # 
+    # temperature = data_1['temperature']
+    # print( f'temperature: {temperature.min()}    {temperature.max()}     {temperature.mean()} ' )

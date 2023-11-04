@@ -18,17 +18,17 @@ from tools import *
 from cosmology import Cosmology
 from constants_cosmo import Myear
 
-black_background = False
+black_background = True
 
 proj_dir = data_dir + 'projects/wdm/'
-input_dir  = proj_dir + 'figures/wdm_slice/images/'
+input_dir  = proj_dir + 'data/wdm_slice/images/'
 output_dir = proj_dir + 'figures/'
 create_directory( output_dir )
 
 
 # Initialize Cosmology
 z_start = 10000
-cosmo = Cosmology( z_start )
+cosmo = Cosmology( z_start=z_start, get_a=True )
 cosmo_z = cosmo.z_vals
 cosmo_t = cosmo.t_vals / Myear / 1000 #Gyear
 

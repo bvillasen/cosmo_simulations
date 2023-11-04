@@ -18,7 +18,8 @@ grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_extended_beta/'
 # grid_dir = data_dir + 'cosmo_sims/sim_grid/1024_wdmgrid_cdm_extended_beta/'
 
 # fit_name = 'fit_results_P(k)+_Boera_covmatrix'
-fit_name = 'fit_results_P(k)+_Boera_covmatrix_RT_corrected'
+fit_name = 'fit_results_P(k)+T0_Boera_covmatrix'
+# fit_name = 'fit_results_P(k)+_Boera_covmatrix_RT_corrected'
 
 input_dir = grid_dir + f'fit_mcmc/{fit_name}/'
 output_dir = grid_dir + f'fit_mcmc/{fit_name}/'
